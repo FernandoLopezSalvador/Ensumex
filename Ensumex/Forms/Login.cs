@@ -1,3 +1,5 @@
+using Ensumex.Forms;
+
 namespace Ensumex
 {
     public partial class Login : Form
@@ -53,6 +55,12 @@ namespace Ensumex
         private void btn_cerrar_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void btn_login_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            new Principal().Show();
         }
     }
 }

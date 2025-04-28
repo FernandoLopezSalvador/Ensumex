@@ -117,6 +117,7 @@
             btn_login.TabIndex = 3;
             btn_login.Text = "Acceder";
             btn_login.UseVisualStyleBackColor = false;
+            btn_login.Click += btn_login_Click;
             // 
             // linkLabel1
             // 
