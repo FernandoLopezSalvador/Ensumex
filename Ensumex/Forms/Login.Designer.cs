@@ -32,12 +32,13 @@
             panel1 = new Panel();
             pictureBox3 = new PictureBox();
             text_usuario = new TextBox();
-            textcontraseña = new TextBox();
+            text_contraseña = new TextBox();
             label2 = new Label();
             btn_login = new Button();
             linkLabel1 = new LinkLabel();
             btn_cerrar = new PictureBox();
             bn_minimizar = new PictureBox();
+            lbl_error = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)btn_cerrar).BeginInit();
@@ -46,7 +47,7 @@
             // 
             // panel1
             // 
-            panel1.BackColor = Color.LimeGreen;
+            panel1.BackColor = Color.Green;
             panel1.Controls.Add(pictureBox3);
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
@@ -75,22 +76,23 @@
             text_usuario.Size = new Size(406, 25);
             text_usuario.TabIndex = 1;
             text_usuario.Text = "Usuario";
+            text_usuario.TextChanged += text_usuario_TextChanged;
             text_usuario.Enter += text_usuario_Enter;
             text_usuario.Leave += text_usuario_Leave;
             // 
-            // textcontraseña
+            // text_contraseña
             // 
-            textcontraseña.BackColor = Color.FromArgb(15, 15, 15);
-            textcontraseña.BorderStyle = BorderStyle.None;
-            textcontraseña.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textcontraseña.ForeColor = Color.DimGray;
-            textcontraseña.Location = new Point(312, 153);
-            textcontraseña.Name = "textcontraseña";
-            textcontraseña.Size = new Size(406, 25);
-            textcontraseña.TabIndex = 2;
-            textcontraseña.Text = "Contraseña";
-            textcontraseña.Enter += textcontraseña_Enter;
-            textcontraseña.Leave += textcontraseña_Leave;
+            text_contraseña.BackColor = Color.FromArgb(15, 15, 15);
+            text_contraseña.BorderStyle = BorderStyle.None;
+            text_contraseña.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            text_contraseña.ForeColor = Color.DimGray;
+            text_contraseña.Location = new Point(312, 141);
+            text_contraseña.Name = "text_contraseña";
+            text_contraseña.Size = new Size(406, 25);
+            text_contraseña.TabIndex = 2;
+            text_contraseña.Text = "Contraseña";
+            text_contraseña.Enter += textcontraseña_Enter;
+            text_contraseña.Leave += textcontraseña_Leave;
             // 
             // label2
             // 
@@ -111,7 +113,7 @@
             btn_login.FlatAppearance.MouseOverBackColor = Color.FromArgb(64, 64, 64);
             btn_login.FlatStyle = FlatStyle.Flat;
             btn_login.ForeColor = Color.LightGray;
-            btn_login.Location = new Point(312, 215);
+            btn_login.Location = new Point(312, 187);
             btn_login.Name = "btn_login";
             btn_login.Size = new Size(408, 40);
             btn_login.TabIndex = 3;
@@ -125,7 +127,7 @@
             linkLabel1.AutoSize = true;
             linkLabel1.Font = new Font("Century Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             linkLabel1.LinkColor = Color.DimGray;
-            linkLabel1.Location = new Point(402, 281);
+            linkLabel1.Location = new Point(412, 291);
             linkLabel1.Name = "linkLabel1";
             linkLabel1.Size = new Size(222, 20);
             linkLabel1.TabIndex = 4;
@@ -154,18 +156,33 @@
             bn_minimizar.TabStop = false;
             bn_minimizar.Click += bn_minimizar_Click;
             // 
+            // lbl_error
+            // 
+            lbl_error.AutoSize = true;
+            lbl_error.BackColor = Color.Transparent;
+            lbl_error.FlatStyle = FlatStyle.Flat;
+            lbl_error.ForeColor = Color.Red;
+            lbl_error.Location = new Point(312, 251);
+            lbl_error.Name = "lbl_error";
+            lbl_error.Size = new Size(97, 20);
+            lbl_error.TabIndex = 9;
+            lbl_error.Text = "Erro_Mensaje";
+            lbl_error.Visible = false;
+            lbl_error.Click += label1_Click;
+            // 
             // Login
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(15, 15, 15);
             ClientSize = new Size(780, 330);
+            Controls.Add(lbl_error);
             Controls.Add(bn_minimizar);
             Controls.Add(btn_cerrar);
             Controls.Add(linkLabel1);
             Controls.Add(btn_login);
             Controls.Add(label2);
-            Controls.Add(textcontraseña);
+            Controls.Add(text_contraseña);
             Controls.Add(text_usuario);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
@@ -186,12 +203,13 @@
 
         private Panel panel1;
         private TextBox text_usuario;
-        private TextBox textcontraseña;
+        private TextBox text_contraseña;
         private Label label2;
         private Button btn_login;
         private LinkLabel linkLabel1;
         private PictureBox btn_cerrar;
         private PictureBox pictureBox3;
         private PictureBox bn_minimizar;
+        private Label lbl_error;
     }
 }
