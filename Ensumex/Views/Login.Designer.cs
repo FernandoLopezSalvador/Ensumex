@@ -47,7 +47,7 @@
             // 
             // panel1
             // 
-            panel1.BackColor = Color.Green;
+            panel1.BackColor = Color.DarkGreen;
             panel1.Controls.Add(pictureBox3);
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
@@ -61,7 +61,7 @@
             pictureBox3.Location = new Point(23, 55);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(200, 200);
-            pictureBox3.SizeMode = PictureBoxSizeMode.AutoSize;
+            pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox3.TabIndex = 0;
             pictureBox3.TabStop = false;
             // 
@@ -168,7 +168,6 @@
             lbl_error.TabIndex = 9;
             lbl_error.Text = "Erro_Mensaje";
             lbl_error.Visible = false;
-            lbl_error.Click += label1_Click;
             // 
             // Login
             // 
@@ -191,7 +190,6 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ((System.ComponentModel.ISupportInitialize)btn_cerrar).EndInit();
             ((System.ComponentModel.ISupportInitialize)bn_minimizar).EndInit();

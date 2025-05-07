@@ -1,8 +1,7 @@
 using System.Data.SqlClient;
 using Ensumex.Clases;
-using Ensumex.Clases.Domain;
-using Ensumex.Forms;
-using Ensumex.Clases.Domain; // Changed from 'using static Ensumex.Clases.Domain;' to 'using Ensumex.Clases.Domain;'
+using Ensumex.Models;
+using Ensumex.Forms; 
 
 namespace Ensumex
 {
@@ -38,6 +37,7 @@ namespace Ensumex
             {
                 text_usuario.Text = "Usuario";
                 text_usuario.ForeColor = Color.White;
+                text_contraseña.UseSystemPasswordChar = false;
             }
         }
 
@@ -60,25 +60,31 @@ namespace Ensumex
         {
             Application.Exit();
         }
-
+        //Funcion para validar el usuario y contraseña
         private void btn_login_Click(object sender, EventArgs e)
         {
+            if (!ValidarEntrada(text_usuario.Text, text_contraseña.Text)) return;
+
             if (text_usuario.Text != "Usuario")
             {
                 if (text_contraseña.Text != "Contraseña")
                 {
-                    UserModel userModel = new UserModel(); // Added this line to create an instance of UserModel.
-                    var validar = userModel.LoginUser(text_usuario.Text, text_contraseña.Text); // Updated to call LoginUser on UserModel.
-                    if(validar == true)
+                    UserModel userModel = new UserModel();
+                    bool validar = userModel.LoginUser(text_usuario.Text, text_contraseña.Text);
+
+                    if (validar)
                     {
+                        UsuarioLoginCache.Usuario = text_usuario.Text;
                         Principal principal = new Principal();
                         principal.Show();
+                        principal.FormClosed += logout;
                         this.Hide();
                     }
                     else
                     {
                         msgError("Usuario o contraseña incorrectos");
-                        text_contraseña.Clear();
+                        text_contraseña.UseSystemPasswordChar = false;
+                        text_contraseña.Text = "Contraseña";
                         text_usuario.Focus();
                     }
                 }
@@ -88,7 +94,7 @@ namespace Ensumex
         }
         private void msgError(string mensaje)
         {
-            lbl_error.Text = mensaje; // Corrected to use the 'mensaje' parameter instead of the method group 'msgError'.  
+            lbl_error.Text = mensaje;   
             lbl_error.Visible = true;
         }
 
@@ -107,6 +113,29 @@ namespace Ensumex
         private void label1_Click(object sender, EventArgs e)
         {
             
+        }
+        private void logout(object? sender, FormClosedEventArgs e)
+        {
+            text_contraseña.Text = "Contraseña";
+            text_contraseña.UseSystemPasswordChar = false;
+            text_usuario.Text = "Usuario";
+            lbl_error.Visible = false;
+            this.Show();
+        }
+
+        private bool ValidarEntrada(string usuario, string contraseña)
+        {
+            if (string.IsNullOrWhiteSpace(usuario) || usuario.Length < 3)
+            {
+                msgError("El usuario debe tener al menos 3 caracteres.");
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(contraseña) || contraseña.Length < 6)
+            {
+                msgError("La contraseña debe tener al menos 6 caracteres.");
+                return false;
+            }
+            return true;
         }
     }
 }

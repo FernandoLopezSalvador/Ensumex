@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Ensumex.Clases.DataAccess;
+using static Ensumex.Clases.Common;
+using Ensumex.Models;
 
 namespace Ensumex.Clases.Domain
 {
@@ -15,6 +17,6 @@ namespace Ensumex.Clases.Domain
             {
                 return usuarioDao.Login(usuario, contraseña);
             }
-        }
+       }
     
 }
