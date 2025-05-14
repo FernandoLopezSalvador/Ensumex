@@ -107,6 +107,7 @@ namespace Ensumex
                 else msgError("Ingrese su contraseña");
             }
             else msgError("Ingrese su usuario"); 
+            
         }
 
         private void txt_Usuariologin_MouseEnter(object sender, EventArgs e)

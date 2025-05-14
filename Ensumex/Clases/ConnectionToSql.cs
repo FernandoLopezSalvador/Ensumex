@@ -14,7 +14,7 @@ namespace Ensumex.Clases
         private readonly string connectionString;
         public ConnectionToSql()
         {
-            connectionString = "Server=ENSUMEX; Database=Ensumex; Integrated Security=True";
+            connectionString = "Server=localhost; Database=Ensumex; Integrated Security=True";
         }
 
         [Obsolete]
