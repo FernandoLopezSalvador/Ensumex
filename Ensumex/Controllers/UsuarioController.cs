@@ -15,6 +15,9 @@ namespace Ensumex.Controllers
 {
     internal class UsuarioController : ConnectionToSql
     {
+
+        // Método para iniciar sesión y encriptar la contraseña
+        [Obsolete]
         public bool GuardarUsuario(Usuarios usuario)
         {
             // 1) Encriptamos la contraseña.
@@ -40,14 +43,14 @@ namespace Ensumex.Controllers
                 // 3) Si no existe, insertamos con todos los parámetros correctamente:
                 using (var insertCmd = new SqlCommand(
                     @"INSERT INTO Usuarios 
-              (Usuario, Contraseña, Nombre, Posision, Correo) 
-              VALUES (@Usuario, @Contraseña, @Nombre, @Posision, @Correo)",
+                    (Usuario, Contraseña, Nombre, Posision, Correo) 
+                    VALUES (@Usuario, @Contraseña, @Nombre, @Posision, @Correo)",
                     connection))
                 {
                     insertCmd.Parameters.AddWithValue("@Usuario", usuario.Usuario);
                     insertCmd.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
                     insertCmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
-                    insertCmd.Parameters.AddWithValue("@Posision", usuario.Posision); // ojo: aquí va la propiedad que tengas en tu clase
+                    insertCmd.Parameters.AddWithValue("@Posision", usuario.Posision); 
                     insertCmd.Parameters.AddWithValue("@Correo", usuario.Correo);
 
                     int filasAfectadas = insertCmd.ExecuteNonQuery();
@@ -55,24 +58,7 @@ namespace Ensumex.Controllers
                 }
             }
         }
-        /*using (SqlConnection conexion = new SqlConnection())
-        {
-            conexion.Open();
-            string query = "INSERT INTO Usuarios (Usuario, Contraseña, Nombre, Posision, Correo) " +
-                           "VALUES (@Usuario, @Contraseña, @Nombre, @Posision, @Correo)";
-            using (SqlCommand comando = new SqlCommand(query, conexion))
-            {
-                comando.Parameters.AddWithValue("@Usuario", usuario.Usuario);
-                comando.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
-                comando.Parameters.AddWithValue("@Nombre", usuario.Nombre);
-                comando.Parameters.AddWithValue("@Posision", usuario.Posision);
-                comando.Parameters.AddWithValue("@Correo", usuario.Correo);
-
-                int resultado = comando.ExecuteNonQuery();
-                return resultado > 0;
-            }
-        }*/
-
+        // Método para iniciar sesión Y Obtener el Hash de la contraseña
         private string ObtenerHashSHA256(string texto)
         {
             using (SHA256 sha256 = SHA256.Create())

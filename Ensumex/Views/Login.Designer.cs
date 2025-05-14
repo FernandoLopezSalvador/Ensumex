@@ -29,97 +29,14 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
-            panel1 = new Panel();
-            pictureBox3 = new PictureBox();
-            text_usuario = new TextBox();
-            text_contraseña = new TextBox();
-            label2 = new Label();
-            btn_login = new Button();
             linkLabel1 = new LinkLabel();
-            btn_cerrar = new PictureBox();
-            bn_minimizar = new PictureBox();
             lbl_error = new Label();
-            panel1.SuspendLayout();
+            pictureBox3 = new PictureBox();
+            materialButton1 = new MaterialSkin.Controls.MaterialButton();
+            txt_Usuariologin = new MaterialSkin.Controls.MaterialTextBox2();
+            txt_contraseñalogin = new MaterialSkin.Controls.MaterialTextBox2();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)btn_cerrar).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)bn_minimizar).BeginInit();
             SuspendLayout();
-            // 
-            // panel1
-            // 
-            panel1.BackColor = Color.DarkGreen;
-            panel1.Controls.Add(pictureBox3);
-            panel1.Dock = DockStyle.Left;
-            panel1.Location = new Point(0, 0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(250, 330);
-            panel1.TabIndex = 0;
-            // 
-            // pictureBox3
-            // 
-            pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
-            pictureBox3.Location = new Point(23, 55);
-            pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(200, 200);
-            pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox3.TabIndex = 0;
-            pictureBox3.TabStop = false;
-            // 
-            // text_usuario
-            // 
-            text_usuario.BackColor = Color.FromArgb(15, 15, 15);
-            text_usuario.BorderStyle = BorderStyle.None;
-            text_usuario.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            text_usuario.ForeColor = Color.DimGray;
-            text_usuario.Location = new Point(312, 76);
-            text_usuario.Name = "text_usuario";
-            text_usuario.Size = new Size(406, 25);
-            text_usuario.TabIndex = 1;
-            text_usuario.Text = "Usuario";
-            text_usuario.TextChanged += text_usuario_TextChanged;
-            text_usuario.Enter += text_usuario_Enter;
-            text_usuario.Leave += text_usuario_Leave;
-            // 
-            // text_contraseña
-            // 
-            text_contraseña.BackColor = Color.FromArgb(15, 15, 15);
-            text_contraseña.BorderStyle = BorderStyle.None;
-            text_contraseña.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            text_contraseña.ForeColor = Color.DimGray;
-            text_contraseña.Location = new Point(312, 141);
-            text_contraseña.Name = "text_contraseña";
-            text_contraseña.Size = new Size(406, 25);
-            text_contraseña.TabIndex = 2;
-            text_contraseña.Text = "Contraseña";
-            text_contraseña.Enter += textcontraseña_Enter;
-            text_contraseña.Leave += textcontraseña_Leave;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Century Gothic", 19.8000011F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.ForeColor = Color.DimGray;
-            label2.Location = new Point(464, 0);
-            label2.Name = "label2";
-            label2.Size = new Size(106, 40);
-            label2.TabIndex = 4;
-            label2.Text = "Login";
-            // 
-            // btn_login
-            // 
-            btn_login.BackColor = Color.FromArgb(40, 40, 40);
-            btn_login.FlatAppearance.BorderSize = 0;
-            btn_login.FlatAppearance.MouseDownBackColor = Color.FromArgb(28, 28, 28);
-            btn_login.FlatAppearance.MouseOverBackColor = Color.FromArgb(64, 64, 64);
-            btn_login.FlatStyle = FlatStyle.Flat;
-            btn_login.ForeColor = Color.LightGray;
-            btn_login.Location = new Point(312, 187);
-            btn_login.Name = "btn_login";
-            btn_login.Size = new Size(408, 40);
-            btn_login.TabIndex = 3;
-            btn_login.Text = "Acceder";
-            btn_login.UseVisualStyleBackColor = false;
-            btn_login.Click += btn_login_Click;
             // 
             // linkLabel1
             // 
@@ -127,34 +44,12 @@
             linkLabel1.AutoSize = true;
             linkLabel1.Font = new Font("Century Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             linkLabel1.LinkColor = Color.DimGray;
-            linkLabel1.Location = new Point(412, 291);
+            linkLabel1.Location = new Point(325, 245);
             linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(222, 20);
+            linkLabel1.Size = new Size(180, 17);
             linkLabel1.TabIndex = 4;
             linkLabel1.TabStop = true;
             linkLabel1.Text = "¿Ha olvidado la contraseña?";
-            // 
-            // btn_cerrar
-            // 
-            btn_cerrar.Image = (Image)resources.GetObject("btn_cerrar.Image");
-            btn_cerrar.Location = new Point(760, 0);
-            btn_cerrar.Name = "btn_cerrar";
-            btn_cerrar.Size = new Size(20, 20);
-            btn_cerrar.SizeMode = PictureBoxSizeMode.Zoom;
-            btn_cerrar.TabIndex = 7;
-            btn_cerrar.TabStop = false;
-            btn_cerrar.Click += btn_cerrar_Click;
-            // 
-            // bn_minimizar
-            // 
-            bn_minimizar.Image = (Image)resources.GetObject("bn_minimizar.Image");
-            bn_minimizar.Location = new Point(734, 0);
-            bn_minimizar.Name = "bn_minimizar";
-            bn_minimizar.Size = new Size(20, 20);
-            bn_minimizar.SizeMode = PictureBoxSizeMode.Zoom;
-            bn_minimizar.TabIndex = 8;
-            bn_minimizar.TabStop = false;
-            bn_minimizar.Click += bn_minimizar_Click;
             // 
             // lbl_error
             // 
@@ -162,52 +57,136 @@
             lbl_error.BackColor = Color.Transparent;
             lbl_error.FlatStyle = FlatStyle.Flat;
             lbl_error.ForeColor = Color.Red;
-            lbl_error.Location = new Point(312, 251);
+            lbl_error.Location = new Point(229, 227);
             lbl_error.Name = "lbl_error";
-            lbl_error.Size = new Size(97, 20);
+            lbl_error.Size = new Size(77, 15);
             lbl_error.TabIndex = 9;
             lbl_error.Text = "Erro_Mensaje";
             lbl_error.Visible = false;
             // 
+            // pictureBox3
+            // 
+            pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
+            pictureBox3.Location = new Point(28, 64);
+            pictureBox3.Margin = new Padding(3, 2, 3, 2);
+            pictureBox3.Name = "pictureBox3";
+            pictureBox3.Size = new Size(175, 150);
+            pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox3.TabIndex = 0;
+            pictureBox3.TabStop = false;
+            // 
+            // materialButton1
+            // 
+            materialButton1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            materialButton1.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            materialButton1.Depth = 0;
+            materialButton1.HighEmphasis = true;
+            materialButton1.Icon = null;
+            materialButton1.Location = new Point(368, 188);
+            materialButton1.Margin = new Padding(4, 4, 4, 4);
+            materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            materialButton1.Name = "materialButton1";
+            materialButton1.NoAccentTextColor = Color.Empty;
+            materialButton1.Size = new Size(86, 36);
+            materialButton1.TabIndex = 3;
+            materialButton1.Text = "Acceder";
+            materialButton1.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            materialButton1.UseAccentColor = false;
+            materialButton1.UseVisualStyleBackColor = true;
+            materialButton1.Click += materialButton1_Click;
+            // 
+            // txt_Usuariologin
+            // 
+            txt_Usuariologin.AnimateReadOnly = false;
+            txt_Usuariologin.BackgroundImageLayout = ImageLayout.None;
+            txt_Usuariologin.CharacterCasing = CharacterCasing.Normal;
+            txt_Usuariologin.Depth = 0;
+            txt_Usuariologin.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            txt_Usuariologin.HideSelection = true;
+            txt_Usuariologin.LeadingIcon = null;
+            txt_Usuariologin.Location = new Point(229, 64);
+            txt_Usuariologin.Margin = new Padding(3, 2, 3, 2);
+            txt_Usuariologin.MaxLength = 32767;
+            txt_Usuariologin.MouseState = MaterialSkin.MouseState.OUT;
+            txt_Usuariologin.Name = "txt_Usuariologin";
+            txt_Usuariologin.PasswordChar = '\0';
+            txt_Usuariologin.PrefixSuffixText = null;
+            txt_Usuariologin.ReadOnly = false;
+            txt_Usuariologin.RightToLeft = RightToLeft.No;
+            txt_Usuariologin.SelectedText = "";
+            txt_Usuariologin.SelectionLength = 0;
+            txt_Usuariologin.SelectionStart = 0;
+            txt_Usuariologin.ShortcutsEnabled = true;
+            txt_Usuariologin.Size = new Size(355, 48);
+            txt_Usuariologin.TabIndex = 1;
+            txt_Usuariologin.TabStop = false;
+            txt_Usuariologin.TextAlign = HorizontalAlignment.Left;
+            txt_Usuariologin.TrailingIcon = null;
+            txt_Usuariologin.UseSystemPasswordChar = false;
+            txt_Usuariologin.MouseEnter += txt_Usuariologin_MouseEnter;
+            txt_Usuariologin.MouseLeave += txt_Usuariologin_MouseLeave;
+            // 
+            // txt_contraseñalogin
+            // 
+            txt_contraseñalogin.AnimateReadOnly = false;
+            txt_contraseñalogin.BackgroundImageLayout = ImageLayout.None;
+            txt_contraseñalogin.CharacterCasing = CharacterCasing.Normal;
+            txt_contraseñalogin.Depth = 0;
+            txt_contraseñalogin.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            txt_contraseñalogin.HideSelection = true;
+            txt_contraseñalogin.LeadingIcon = null;
+            txt_contraseñalogin.Location = new Point(229, 134);
+            txt_contraseñalogin.Margin = new Padding(3, 2, 3, 2);
+            txt_contraseñalogin.MaxLength = 32767;
+            txt_contraseñalogin.MouseState = MaterialSkin.MouseState.OUT;
+            txt_contraseñalogin.Name = "txt_contraseñalogin";
+            txt_contraseñalogin.PasswordChar = '\0';
+            txt_contraseñalogin.PrefixSuffixText = null;
+            txt_contraseñalogin.ReadOnly = false;
+            txt_contraseñalogin.RightToLeft = RightToLeft.No;
+            txt_contraseñalogin.SelectedText = "";
+            txt_contraseñalogin.SelectionLength = 0;
+            txt_contraseñalogin.SelectionStart = 0;
+            txt_contraseñalogin.ShortcutsEnabled = true;
+            txt_contraseñalogin.Size = new Size(355, 48);
+            txt_contraseñalogin.TabIndex = 2;
+            txt_contraseñalogin.TabStop = false;
+            txt_contraseñalogin.TextAlign = HorizontalAlignment.Left;
+            txt_contraseñalogin.TrailingIcon = null;
+            txt_contraseñalogin.UseSystemPasswordChar = false;
+            txt_contraseñalogin.MouseEnter += txt_contraseñalogin_MouseEnter;
+            txt_contraseñalogin.MouseLeave += txt_contraseñalogin_MouseLeave;
+            // 
             // Login
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(15, 15, 15);
-            ClientSize = new Size(780, 330);
+            ClientSize = new Size(626, 274);
+            Controls.Add(txt_contraseñalogin);
+            Controls.Add(txt_Usuariologin);
+            Controls.Add(materialButton1);
+            Controls.Add(pictureBox3);
             Controls.Add(lbl_error);
-            Controls.Add(bn_minimizar);
-            Controls.Add(btn_cerrar);
             Controls.Add(linkLabel1);
-            Controls.Add(btn_login);
-            Controls.Add(label2);
-            Controls.Add(text_contraseña);
-            Controls.Add(text_usuario);
-            Controls.Add(panel1);
-            FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "Login";
             Opacity = 0.9D;
+            Padding = new Padding(3, 48, 3, 2);
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form1";
-            panel1.ResumeLayout(false);
+            Text = "ENSUMEX";
+            FormClosing += Login_FormClosing;
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
-            ((System.ComponentModel.ISupportInitialize)btn_cerrar).EndInit();
-            ((System.ComponentModel.ISupportInitialize)bn_minimizar).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private Panel panel1;
-        private TextBox text_usuario;
-        private TextBox text_contraseña;
-        private Label label2;
-        private Button btn_login;
         private LinkLabel linkLabel1;
-        private PictureBox btn_cerrar;
-        private PictureBox pictureBox3;
-        private PictureBox bn_minimizar;
         private Label lbl_error;
+        private PictureBox pictureBox3;
+        private MaterialSkin.Controls.MaterialButton materialButton1;
+        private MaterialSkin.Controls.MaterialTextBox2 txt_Usuariologin;
+        private MaterialSkin.Controls.MaterialTextBox2 txt_contraseñalogin;
     }
 }

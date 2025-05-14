@@ -10,14 +10,17 @@ namespace Ensumex.Clases
 {
     public abstract class ConnectionToSql
     {
+        // Funcion para la conexion con la base de datos
         private readonly string connectionString;
         public ConnectionToSql()
         {
             connectionString = "Server=ENSUMEX; Database=Ensumex; Integrated Security=True";
         }
+
+        [Obsolete]
         protected SqlConnection GetConnection()
         {
-            return new SqlConnection(connectionString); // No changes needed here as the correct namespace is now used
+            return new SqlConnection(connectionString); 
         }
     }
 }

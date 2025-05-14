@@ -11,6 +11,7 @@ namespace Ensumex.Models
 {
     internal class ProductosDao: ConnectionToSql
     {
+        [Obsolete]
         public List<(string CLAVE, string Descripcion, string UnidadEntrada,decimal PU, decimal PrecioPublico, decimal PUMinimo,string TipoProducto)>ObtenerProductoss()
         {
             var productos = new List<(string CLAVE, string Descripcion, string UnidadEntrada, decimal PU, decimal PrecioPublico, decimal PUMinimo, string TipoProducto)>();

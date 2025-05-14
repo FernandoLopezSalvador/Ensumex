@@ -9,6 +9,7 @@ namespace Ensumex.Models
 {
     internal class CargaUsuario
     {
+        [Obsolete]
         public static void CargarDatosUsuario(Label lblUsuario, Label lblPosicion)
         {
             // Verifica que el usuario esté definido

@@ -10,29 +10,42 @@ using System.Windows.Forms;
 using Ensumex.Models;
 using Ensumex.Utils;
 using Ensumex.Views;
+using MaterialSkin;
+using MaterialSkin.Controls;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace Ensumex.Forms
 {
-    public partial class Principal : Form
+    public partial class ENSUMEX : MaterialForm
     {
-        public Principal()
+        [Obsolete]
+        public ENSUMEX()
         {
             InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
+            var materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
+            materialSkinManager.ColorScheme = new ColorScheme(
+            Primary.Green600,  // color base (verde Ensumex)
+            Primary.Green700,  // tono oscuro
+            Primary.Green400,  // tono claro
+            Accent.LightGreen200, // acento
+            TextShade.WHITE);
             menu_usuario.Renderer = new CustomMenuRenderer();
             panel1.Cursor = Cursors.Hand;
-            //CargarDatosUsuario();
             CargaUsuario.CargarDatosUsuario(lbl_usuario, lbl_posicion);
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            VentanaHelper.Cerrar(this);
+
 
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-            VentanaHelper.Minimizar(this);
+
         }
 
         private void txt_usuario_TextChanged(object sender, EventArgs e)
@@ -65,15 +78,13 @@ namespace Ensumex.Forms
 
         private void btn_inventario_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            Productos productos = new();
-            productos.Show();
+
 
         }
 
         private void pictureBox7_Click(object sender, EventArgs e)
         {
-            VentanaHelper.Maximizar(this);
+
         }
 
         private void lbl_cuenta_Click(object sender, EventArgs e)
@@ -89,7 +100,6 @@ namespace Ensumex.Forms
 
             }
         }
-
         public class CustomColorTable : ProfessionalColorTable
         {
             public override Color MenuStripGradientBegin => Color.FromArgb(30, 30, 30);
@@ -103,37 +113,6 @@ namespace Ensumex.Forms
                 this.Close();
             }
         }
-
-        private void btn_inventario_MouseEnter(object sender, EventArgs e)
-        {
-            btn_inventario.BackColor = Color.FromArgb(25, 239, 22);
-        }
-
-        private void btn_inventario_MouseLeave(object sender, EventArgs e)
-        {
-            btn_inventario.BackColor = Color.FromArgb(0, 81, 46);
-        }
-
-        private void btn_cotizacion_MouseEnter(object sender, EventArgs e)
-        {
-            btn_cotizacion.BackColor = Color.FromArgb(25, 239, 22);
-        }
-
-        private void btn_cotizacion_MouseLeave(object sender, EventArgs e)
-        {
-            btn_cotizacion.BackColor = Color.FromArgb(0, 81, 46);
-        }
-
-        private void btn_clientes_MouseEnter(object sender, EventArgs e)
-        {
-            btn_clientes.BackColor = Color.FromArgb(25, 239, 22);
-        }
-
-        private void btn_clientes_MouseLeave(object sender, EventArgs e)
-        {
-            btn_clientes.BackColor = Color.FromArgb(0, 81, 46);
-        }
-
         private void btn_cerrarsesion_MouseEnter(object sender, EventArgs e)
         {
             btn_cerrarsesion.BackColor = Color.FromArgb(25, 239, 22);
@@ -144,17 +123,18 @@ namespace Ensumex.Forms
             btn_cerrarsesion.BackColor = Color.FromArgb(0, 104, 56);
         }
 
+        [Obsolete]
         private void btn_cotizacion_Click(object sender, EventArgs e)
         {
-            this.Close();
-            Cotizaciones cotizacion = new();
-            cotizacion.Show();
+
         }
 
         private void pictureBox6_Click(object sender, EventArgs e)
         {
 
         }
+
+        [Obsolete]
         private void CargarDatosUsuario()
         {
             CargaUsuario.CargarDatosUsuario(lbl_usuario, lbl_posicion);
@@ -173,16 +153,64 @@ namespace Ensumex.Forms
 
         private void nuevoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            panel23 usiarios = new();
-            usiarios.Show();
+            CargarUserControl(new Users());
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            prueba prueba = new();
-            prueba.Show();
+
+        }
+
+        private void materialButton1_MouseEnter(object sender, EventArgs e)
+        {
+            btn_inventarioP.BackColor = Color.FromArgb(25, 239, 22);
+        }
+
+        private void btn_inventarioP_MouseLeave(object sender, EventArgs e)
+        {
+            btn_inventarioP.BackColor = Color.FromArgb(0, 104, 56);
+        }
+
+        private void btn_inventarioP_Click(object sender, EventArgs e)
+        {
+            CargarUserControl(new Product());
+        }
+
+        private void materialButton2_Click(object sender, EventArgs e)
+        {
+            CargarUserControl(new Cotiza());
+        }
+
+        private void btn_clientes_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ENSUMEX_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!VentanaHelper.ConfirmarCerrarFormulario())
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void materialSwitch1_CheckedChanged(object sender, EventArgs e)
+        {
+            var manager = MaterialSkin.MaterialSkinManager.Instance;
+            manager.Theme = manager.Theme == MaterialSkinManager.Themes.LIGHT
+                ? MaterialSkinManager.Themes.DARK
+                : MaterialSkinManager.Themes.LIGHT;
+        }
+        private void CargarUserControl(UserControl control)
+        {
+            panelContenedor.Controls.Clear();
+            control.Dock = DockStyle.Fill;
+            panelContenedor.Controls.Add(control);
+        }
+
+        private void administrarUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 } 

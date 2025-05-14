@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
 using Ensumex.Clases;
-using static Ensumex.Clases.DataAccess;
 using System.Security.Cryptography.X509Certificates;
 
 
@@ -15,6 +14,7 @@ namespace Ensumex.Models
 {
     public class UsuarioDao : ConnectionToSql
     {
+        [Obsolete]
         public bool Login(string usuario, string contraseña)
         {
             using (var connection = GetConnection())
@@ -28,12 +28,12 @@ namespace Ensumex.Models
                     command.Parameters.AddWithValue("@contraseña", contraseña);
                     command.CommandType = CommandType.Text;
                     int count = Convert.ToInt32(command.ExecuteScalar());
-                    //MessageBox.Show($"Usuario: {usuario}, Contraseña: {contraseña}, Resultado: {count}", "Depuración");
                     return count > 0;
                 }
             }
         }
 
+        [Obsolete]
         public (string Nombre, string Posicion) ObtenerDatosUsuario(string usuario)
         {
             if (string.IsNullOrEmpty(usuario))
@@ -58,6 +58,29 @@ namespace Ensumex.Models
                 }
             }
             return (null, null);
+        }
+
+        public DataTable ObtenerUsuarios()
+        {
+            DataTable dt = new DataTable();
+
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+                using (var command = new SqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandText = "SELECT Usuario, Nombre, Posision, Correo FROM Usuarios";
+                    command.CommandType = CommandType.Text;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        dt.Load(reader);
+                    }
+                }
+            }
+
+            return dt;
         }
     }
 }

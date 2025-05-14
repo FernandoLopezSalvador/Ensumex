@@ -8,29 +8,15 @@ namespace Ensumex.Utils
 {
     internal class VentanaHelper
     {
-        public static void Minimizar(Form form)
+        public static bool ConfirmarCerrarFormulario(string mensaje = "¿Está seguro que desea salir?")
         {
-            form.WindowState = FormWindowState.Minimized;
-        }
+            var result = MessageBox.Show(
+                   mensaje,
+                   "Confirmar salida",
+                   MessageBoxButtons.YesNo,
+                   MessageBoxIcon.Question);
 
-        public static void Maximizar(Form form)
-        {
-            if (form.WindowState == FormWindowState.Maximized)
-            {
-                form.WindowState = FormWindowState.Normal;
-            }
-            else
-            {
-                form.WindowState = FormWindowState.Maximized;
-            }
-        }
-
-        public static void Cerrar(Form form)
-        {
-            if (MessageBox.Show("¿Está seguro que desea sali?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-            {
-                Application.Exit();
-            }
+            return result == DialogResult.Yes;
         }
     }
 }

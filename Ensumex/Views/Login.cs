@@ -77,7 +77,7 @@ namespace Ensumex
         [Obsolete]
         private void materialButton1_Click(object sender, EventArgs e)
         {
-
+            
             if (!ValidarEntrada(txt_Usuariologin.Text, txt_contraseñalogin.Text)) return;
 
             if (txt_Usuariologin.Text != "Usuario")
@@ -106,7 +106,7 @@ namespace Ensumex
                 }
                 else msgError("Ingrese su contraseña");
             }
-            else msgError("Ingrese su usuario");
+            else msgError("Ingrese su usuario"); 
         }
 
         private void txt_Usuariologin_MouseEnter(object sender, EventArgs e)

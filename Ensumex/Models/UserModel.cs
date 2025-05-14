@@ -12,6 +12,7 @@ namespace Ensumex.Models
 {
     internal class UserModel: ConnectionToSql
     {
+        [Obsolete]
         public bool RegistrarUsuario(string usuario, string contraseña)
         {
             try
@@ -45,16 +46,17 @@ namespace Ensumex.Models
         }
 
         // Método para generar el hash de la contraseña
-       /* private string HashPassword(string password)
-        {
-            using (var sha256 = System.Security.Cryptography.SHA256.Create())
-            {
-                var bytes = Encoding.UTF8.GetBytes(password);
-                var hash = sha256.ComputeHash(bytes);
-                return Convert.ToBase64String(hash);
-            }
-        }*/
+        /* private string HashPassword(string password)
+         {
+             using (var sha256 = System.Security.Cryptography.SHA256.Create())
+             {
+                 var bytes = Encoding.UTF8.GetBytes(password);
+                 var hash = sha256.ComputeHash(bytes);
+                 return Convert.ToBase64String(hash);
+             }
+         }*/
 
+        [Obsolete]
         public bool LoginUser(string usuario, string contraseña)
         {
             string hash = ObtenerHashSHA256(contraseña);
@@ -73,7 +75,7 @@ namespace Ensumex.Models
                 }
             }
         }
-
+        // Método para obtener el hash SHA256 de la contraseña
         private string ObtenerHashSHA256(string texto)
         {
             using (SHA256 sha256 = SHA256.Create())

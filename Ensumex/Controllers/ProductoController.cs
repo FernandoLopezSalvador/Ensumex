@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-namespace Ensumex.Clases
+namespace Ensumex.Controllers
 {
-    internal class Common
+    internal class ProductoController
     {
-
     }
 }
