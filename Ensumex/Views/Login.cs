@@ -82,7 +82,7 @@ namespace Ensumex
             {
                 if (txt_contraseñalogin.Text != "Contraseña")
                 {
-                    UserModel userModel = new UserModel();
+                    Models.UserModel userModel = new Models.UserModel();
                     bool validar = userModel.LoginUser(txt_Usuariologin.Text, txt_contraseñalogin.Text);
                     // Si la validación es correcta, se cargan los datos del usuario
                     if (validar)

@@ -220,17 +220,7 @@ namespace Ensumex.Forms
 
         private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Archivos Excel (*.xlsx)|*.xlsx";
-            openFileDialog.Title = "Selecciona el archivo de clientes";
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                string rutaArchivo = openFileDialog.FileName;
-                // Aquí puedes llamar a tu método de importación de clientes
-                ClienteImporter.ImportarClientesDesdeExcel(rutaArchivo);
-                MessageBox.Show("Importación completada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+           
         }
     }
 } 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ensumex.Models;
 
-namespace Ensumex.Clases.Domain
+namespace Ensumex.Clases
 {
     
        public class UserModel

@@ -23,6 +23,7 @@ namespace Ensumex.Views
             // Carga todos los productos al inicio  
             CargarProductoss();
         }
+
         private void CargarProductoss(int? limite = 100)
         {
             try

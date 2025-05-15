@@ -113,7 +113,7 @@ namespace Ensumex.Views
                 tabla.SetWidths(new float[] { 1f, 3f, 1.5f, 1f });
 
                 // Encabezados de tabla
-                string[] headers = { "Clave", "Descripción", "Precio Unitario", "Cantidad", };
+                string[] headers = {"Clave","Descripción","Precio Unitario","Cantidad"};
 
                 foreach (string header in headers)
                 {
@@ -236,8 +236,8 @@ namespace Ensumex.Views
             {
                 MessageBox.Show("Ocurrió un error al generar el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
+
         private void CargarProductoss(int? limite = 100)
         {
             try
@@ -314,7 +314,6 @@ namespace Ensumex.Views
                 {
                     decimal subtotal = precio * cantidad * tasa;
                     row.Cells["Subtotal"].Value = subtotal;
-
                     ActualizarTotales();
                 }
             }

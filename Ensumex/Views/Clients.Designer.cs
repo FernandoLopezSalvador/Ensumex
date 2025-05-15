@@ -47,12 +47,12 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel1.Controls.Add(txt_buscar, 3, 1);
             tableLayoutPanel1.Controls.Add(label2, 2, 1);
             tableLayoutPanel1.Controls.Add(label1, 0, 1);
             tableLayoutPanel1.Controls.Add(cmb_clientes, 1, 1);
             tableLayoutPanel1.Controls.Add(btn_nuevoProducto, 1, 0);
             tableLayoutPanel1.Controls.Add(materialButton1, 2, 0);
+            tableLayoutPanel1.Controls.Add(txt_buscar, 3, 1);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
@@ -65,7 +65,6 @@
             // 
             // txt_buscar
             // 
-            txt_buscar.Anchor = AnchorStyles.None;
             txt_buscar.AnimateReadOnly = false;
             txt_buscar.BackgroundImageLayout = ImageLayout.None;
             txt_buscar.CharacterCasing = CharacterCasing.Normal;
@@ -73,7 +72,7 @@
             txt_buscar.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             txt_buscar.HideSelection = true;
             txt_buscar.LeadingIcon = null;
-            txt_buscar.Location = new Point(732, 72);
+            txt_buscar.Location = new Point(648, 66);
             txt_buscar.Margin = new Padding(3, 2, 3, 2);
             txt_buscar.MaxLength = 32767;
             txt_buscar.MouseState = MaterialSkin.MouseState.OUT;
@@ -86,7 +85,7 @@
             txt_buscar.SelectionLength = 0;
             txt_buscar.SelectionStart = 0;
             txt_buscar.ShortcutsEnabled = true;
-            txt_buscar.Size = new Size(44, 48);
+            txt_buscar.Size = new Size(212, 48);
             txt_buscar.TabIndex = 14;
             txt_buscar.TabStop = false;
             txt_buscar.TextAlign = HorizontalAlignment.Left;
