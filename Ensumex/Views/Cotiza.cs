@@ -236,7 +236,7 @@ namespace Ensumex.Views
             {
                 MessageBox.Show("Ocurrió un error al generar el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            
+
         }
         private void CargarProductoss(int? limite = 100)
         {
@@ -431,6 +431,11 @@ namespace Ensumex.Views
                 // Opcional: mostrar mensaje de error detallado
                 MessageBox.Show($"Se produjo un error al calcular el total: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }
