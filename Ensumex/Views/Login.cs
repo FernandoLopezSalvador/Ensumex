@@ -30,15 +30,13 @@ namespace Ensumex
         }
         private void bn_minimizar_Click(object sender, EventArgs e)
         {
-            this.WindowState = FormWindowState.Minimized;
+           
         }
 
         private void btn_cerrar_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+           
         }
-        //Funcion para validar el usuario y contraseña
-
         private void msgError(string mensaje)
         {
             lbl_error.Text = mensaje;
@@ -77,7 +75,7 @@ namespace Ensumex
         [Obsolete]
         private void materialButton1_Click(object sender, EventArgs e)
         {
-            
+
             if (!ValidarEntrada(txt_Usuariologin.Text, txt_contraseñalogin.Text)) return;
 
             if (txt_Usuariologin.Text != "Usuario")
@@ -106,23 +104,35 @@ namespace Ensumex
                 }
                 else msgError("Ingrese su contraseña");
             }
-            else msgError("Ingrese su usuario"); 
-            
+            else msgError("Ingrese su usuario");
         }
 
         private void txt_Usuariologin_MouseEnter(object sender, EventArgs e)
         {
-            if (txt_Usuariologin.Text == "Usuario")
-                txt_Usuariologin.Text = "";
+
         }
 
         private void txt_Usuariologin_MouseLeave(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txt_Usuariologin.Text))
-                txt_Usuariologin.Text = "Usuario";
+
         }
 
         private void txt_contraseñalogin_MouseEnter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txt_contraseñalogin_MouseLeave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Login_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
+
+        private void txt_contraseñalogin_Enter(object sender, EventArgs e)
         {
             if (txt_contraseñalogin.Text == "Contraseña")
             {
@@ -131,7 +141,7 @@ namespace Ensumex
             }
         }
 
-        private void txt_contraseñalogin_MouseLeave(object sender, EventArgs e)
+        private void txt_contraseñalogin_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txt_contraseñalogin.Text))
             {
@@ -140,9 +150,16 @@ namespace Ensumex
             }
         }
 
-        private void Login_FormClosing(object sender, FormClosingEventArgs e)
+        private void txt_Usuariologin_Enter(object sender, EventArgs e)
         {
-            
+            if (txt_Usuariologin.Text == "Usuario")
+                txt_Usuariologin.Text = "";
+        }
+
+        private void txt_Usuariologin_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txt_Usuariologin.Text))
+                txt_Usuariologin.Text = "Usuario";
         }
     }
 }

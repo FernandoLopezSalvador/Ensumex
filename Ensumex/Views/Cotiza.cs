@@ -30,6 +30,8 @@ namespace Ensumex.Views
             cmb_Descuento.Items.Add("5%");
             cmb_Descuento.Items.Add("10%");
             cmb_Descuento.Items.Add("15%");
+            cmb_Descuento.Items.Add("20%");
+            cmb_Descuento.Items.Add("25%");
             tbl_Cotizacion.Columns.Add("Clave", "Clave");
             tbl_Cotizacion.Columns.Add("Descripcion", "Descripción");
             tbl_Cotizacion.Columns.Add("UnidadEntrada", "Unidad de Entrada");
@@ -94,7 +96,8 @@ namespace Ensumex.Views
                 //doc.Add(new Paragraph("\nEstimado Cliente:" + txt_Nombrecliente.Text, fontNegrita));
                 if (!string.IsNullOrWhiteSpace(txt_Nombrecliente.Text))
                 {
-                    doc.Add(new Paragraph("\nEstimado Cliente: " + txt_Nombrecliente.Text, fontNegrita));
+                    doc.Add(new Paragraph("\nEstimado Cliente: ", fontNormal));
+                    doc.Add(new Paragraph(txt_Nombrecliente.Text, fontNegrita));
                 }
                 else
                 {
@@ -131,19 +134,6 @@ namespace Ensumex.Views
                     }
                 }
 
-                PdfPCell celdaInstalacion = new PdfPCell(new Phrase("MANO DE OBRA POR INSTALACIÓN", fontNormal));
-                celdaInstalacion.Colspan = 3;
-                celdaInstalacion.HorizontalAlignment = Element.ALIGN_RIGHT;
-                tabla.AddCell(celdaInstalacion);
-                tabla.AddCell(new Phrase(txt_Costoinstalacion.Text, fontNormal)); // Usando TextBox
-
-                // Costo de flete
-                PdfPCell celdaFlete = new PdfPCell(new Phrase("Costo por Envio/Flete", fontNormal));
-                celdaFlete.Colspan = 3;
-                celdaFlete.HorizontalAlignment = Element.ALIGN_RIGHT;
-                tabla.AddCell(celdaFlete);
-                tabla.AddCell(new Phrase(txt_Costoflete.Text, fontNormal)); // Usando TextBox
-
                 // Descuento
                 PdfPCell celdaDescuento = new PdfPCell(new Phrase("Descuento", fontNormal));
                 celdaDescuento.Colspan = 3;
@@ -157,6 +147,19 @@ namespace Ensumex.Views
                 celdaSubtotal.HorizontalAlignment = Element.ALIGN_RIGHT;
                 tabla.AddCell(celdaSubtotal);
                 tabla.AddCell(new Phrase(lbl_Subtotal.Text, fontNormal));
+
+                PdfPCell celdaInstalacion = new PdfPCell(new Phrase("MANO DE OBRA POR INSTALACIÓN", fontNormal));
+                celdaInstalacion.Colspan = 3;
+                celdaInstalacion.HorizontalAlignment = Element.ALIGN_RIGHT;
+                tabla.AddCell(celdaInstalacion);
+                tabla.AddCell(new Phrase(txt_Costoinstalacion.Text, fontNormal)); // Usando TextBox
+
+                // Costo de flete
+                PdfPCell celdaFlete = new PdfPCell(new Phrase("Costo por Envio/Flete", fontNormal));
+                celdaFlete.Colspan = 3;
+                celdaFlete.HorizontalAlignment = Element.ALIGN_RIGHT;
+                tabla.AddCell(celdaFlete);
+                tabla.AddCell(new Phrase(txt_Costoflete.Text, fontNormal)); // Usando TextBox
 
                 // Total
                 PdfPCell celdaTotal = new PdfPCell(new Phrase("Total", fontNegrita));
@@ -298,25 +301,6 @@ namespace Ensumex.Views
                 tbl_Cotizacion.Columns.Add(btnEliminar);
             }
         }
-        private void CalcularSubtotal()
-        {
-            decimal subtotal = 0;
-            foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
-            {
-                if (row.Cells["Subtotal"].Value != null)
-                {
-                    decimal precio;
-                    if (decimal.TryParse(row.Cells["Subtotal"].Value.ToString(), out precio))
-                    {
-                        subtotal += precio;
-                    }
-                }
-            }
-            lbl_Subtotal.Text = $"Subtotal: ${subtotal:F2}";
-            ActualizarTotalNeto();
-
-        }
-
         private void tbl_Cotizacion_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == tbl_Cotizacion.Columns["Cantidad"].Index ||
@@ -338,37 +322,8 @@ namespace Ensumex.Views
 
         private void cmb_Descuento_SelectedIndexChanged(object sender, EventArgs e)
         {
-            /*AplicarDescuento();
-            ActualizarTotalNeto();*/
             ActualizarTotales();
         }
-        private void AplicarDescuento()
-        {
-            if (decimal.TryParse(lbl_Subtotal.Text.Replace("Subtotal: $", ""), out decimal subtotal))
-            {
-                decimal descuento = 0;
-                switch (cmb_Descuento.SelectedItem.ToString())
-                {
-                    case "0%":
-                        descuento = 0;
-                        break;
-                    case "5%":
-                        descuento = subtotal * 0.05m;
-                        break;
-                    case "10%":
-                        descuento = subtotal * 0.10m;
-                        break;
-                    case "15%":
-                        descuento = subtotal * 0.15m;
-                        break;
-                }
-
-                // Mostrar solo el valor del descuento
-                lbl_costoDescuento.Text = $"{descuento:F2}";
-                ActualizarTotales();
-            }
-        }
-
         private void txt_Costoinstalacion_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)8) // 8 es el código ASCII para la tecla 'Backspace'
@@ -416,28 +371,6 @@ namespace Ensumex.Views
                         ActualizarTotales();
                     }
                 }
-            }
-        }
-
-        private void ActualizarTotalNeto()
-        {
-            try
-            {
-                // Obtener valores de los labels y textbox, con manejo de errores si están vacíos
-                decimal subtotal = decimal.TryParse(lbl_Subtotal.Text, out var sub) ? sub : 0;
-                decimal descuento = decimal.TryParse(lbl_costoDescuento.Text, out var desc) ? desc : 0;
-                decimal instalacion = decimal.TryParse(txt_Costoinstalacion.Text, out var inst) ? inst : 0;
-                decimal flete = decimal.TryParse(txt_Costoflete.Text, out var flt) ? flt : 0;
-
-                // Calcular total neto
-                decimal totalNeto = subtotal - descuento + instalacion + flete;
-
-                // Mostrar resultado con formato
-                lbl_TotalNeto.Text = totalNeto.ToString("C"); // Ej: $1,200.00
-            }
-            catch
-            {
-                lbl_TotalNeto.Text = "Error";
             }
         }
 

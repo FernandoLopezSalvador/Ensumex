@@ -83,7 +83,7 @@
             materialButton1.HighEmphasis = true;
             materialButton1.Icon = null;
             materialButton1.Location = new Point(368, 188);
-            materialButton1.Margin = new Padding(4, 4, 4, 4);
+            materialButton1.Margin = new Padding(4);
             materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
             materialButton1.Name = "materialButton1";
             materialButton1.NoAccentTextColor = Color.Empty;
@@ -123,6 +123,8 @@
             txt_Usuariologin.TextAlign = HorizontalAlignment.Left;
             txt_Usuariologin.TrailingIcon = null;
             txt_Usuariologin.UseSystemPasswordChar = false;
+            txt_Usuariologin.Enter += txt_Usuariologin_Enter;
+            txt_Usuariologin.Leave += txt_Usuariologin_Leave;
             txt_Usuariologin.MouseEnter += txt_Usuariologin_MouseEnter;
             txt_Usuariologin.MouseLeave += txt_Usuariologin_MouseLeave;
             // 
@@ -154,6 +156,8 @@
             txt_contraseñalogin.TextAlign = HorizontalAlignment.Left;
             txt_contraseñalogin.TrailingIcon = null;
             txt_contraseñalogin.UseSystemPasswordChar = false;
+            txt_contraseñalogin.Enter += txt_contraseñalogin_Enter;
+            txt_contraseñalogin.Leave += txt_contraseñalogin_Leave;
             txt_contraseñalogin.MouseEnter += txt_contraseñalogin_MouseEnter;
             txt_contraseñalogin.MouseLeave += txt_contraseñalogin_MouseLeave;
             // 
