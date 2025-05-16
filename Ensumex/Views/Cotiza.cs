@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Ensumex.Models;
+using Ensumex.Services;
+using Ensumex.Utils;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using iTextSharp.text.pdf;
-using iTextSharp.text;
-using Ensumex.Models;
-using Ensumex.Services;
-using System.Globalization;
 
 namespace Ensumex.Views
 {
@@ -53,7 +54,18 @@ namespace Ensumex.Views
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    GenerarPDFCotizacion(sfd.FileName);
+                    PDFGenerator.GenerarPDFCotizacion(
+                        rutaArchivo: sfd.FileName,
+                        nombreCliente: txt_Nombrecliente.Text,
+                        costoInstalacion: txt_Costoinstalacion.Text,
+                        costoFlete: txt_Costoflete.Text,
+                        subtotal: lbl_Subtotal.Text,
+                        total: lbl_TotalNeto.Text,
+                        descuento: lbl_costoDescuento.Text,
+                        tablaCotizacion: tbl_Cotizacion
+                    );
+
+                    // Limpiar campos
                     txt_Costoflete.Text = "";
                     txt_Costoinstalacion.Text = "";
                     txt_Direccioncliente.Text = "";
@@ -63,7 +75,7 @@ namespace Ensumex.Views
             }
         }
 
-        private void GenerarPDFCotizacion(string rutaArchivo)
+        /*private void GenerarPDFCotizacion(string rutaArchivo)
         {
             try
             {
@@ -236,7 +248,7 @@ namespace Ensumex.Views
             {
                 MessageBox.Show("Ocurrió un error al generar el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
+        }*/
 
         private void CargarProductoss(int? limite = 100)
         {
@@ -278,27 +290,51 @@ namespace Ensumex.Views
 
         private void tbl_Productos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == tbl_Productos.Columns["Agregar"].Index && e.RowIndex >= 0)
+            try
             {
-                // Obtén los datos de la fila seleccionada
-                var fila = tbl_Productos.Rows[e.RowIndex];
-                string clave = fila.Cells["Clave"].Value.ToString();
-                string descripcion = fila.Cells["Descripcion"].Value.ToString();
-                string unidad = fila.Cells["UnidadEntrada"].Value.ToString();
-                decimal precio = Convert.ToDecimal(fila.Cells["PrecioUnitario"].Value);
-                // Agrega una nueva fila a tbl_Cotizacion con los datos
-                tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precio, 1, 1, precio); // 1 cantidad por default
-                ActualizarTotales();
+                if (e.ColumnIndex == tbl_Productos.Columns["Agregar"].Index && e.RowIndex >= 0)
+                {
+                    var fila = tbl_Productos.Rows[e.RowIndex];
 
+                    // Validación previa por seguridad
+                    if (fila.Cells["Clave"].Value == null ||
+                        fila.Cells["Descripcion"].Value == null ||
+                        fila.Cells["UnidadEntrada"].Value == null ||
+                        fila.Cells["PrecioUnitario"].Value == null)
+                    {
+                        MessageBox.Show("Uno o más datos del producto están vacíos o no disponibles.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    string clave = fila.Cells["Clave"].Value.ToString();
+                    string descripcion = fila.Cells["Descripcion"].Value.ToString();
+                    string unidad = fila.Cells["UnidadEntrada"].Value.ToString();
+
+                    if (!decimal.TryParse(fila.Cells["PrecioUnitario"].Value.ToString(), out decimal precio))
+                    {
+                        MessageBox.Show("El precio no es válido.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Agrega la fila
+                    tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precio, 1, 1, precio);
+                    ActualizarTotales();
+                }
+
+                // Asegura que la columna de "Eliminar" solo se agregue una vez
+                if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
+                {
+                    DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn();
+                    btnEliminar.Name = "Eliminar";
+                    btnEliminar.HeaderText = "Acción";
+                    btnEliminar.Text = "Eliminar";
+                    btnEliminar.UseColumnTextForButtonValue = true;
+                    tbl_Cotizacion.Columns.Add(btnEliminar);
+                }
             }
-            if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
+            catch (Exception ex)
             {
-                DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn();
-                btnEliminar.Name = "Eliminar";
-                btnEliminar.HeaderText = "Acción";
-                btnEliminar.Text = "Eliminar";
-                btnEliminar.UseColumnTextForButtonValue = true;
-                tbl_Cotizacion.Columns.Add(btnEliminar);
+                MessageBox.Show("Ocurrió un error al agregar el producto: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

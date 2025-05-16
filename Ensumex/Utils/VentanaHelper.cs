@@ -18,5 +18,6 @@ namespace Ensumex.Utils
 
             return result == DialogResult.Yes;
         }
+       
     }
 }
