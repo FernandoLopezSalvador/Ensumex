@@ -16,14 +16,21 @@ namespace Ensumex.Views
         public Product()
         {
             InitializeComponent();
-            tabla_productos.DefaultCellStyle.ForeColor = Color.Black; // Color de texto blanco
-            tabla_productos.BackgroundColor = Color.FromArgb(45, 45, 48); // Fondo oscuro
-            cmb_productos.Items.AddRange(new object[] { "Todos", 5, 10, 20, 50, 100 });
-            cmb_productos.SelectedIndex = 0; // Selecciona "Todos" por defecto
-            // Carga todos los productos al inicio  
+            ConfigurarTablaProductos();
+            InicializarComboProductos();
             CargarProductoss();
         }
-
+        private void ConfigurarTablaProductos()
+        {
+            tabla_productos.DefaultCellStyle.ForeColor = Color.Black;
+            tabla_productos.BackgroundColor = Color.FromArgb(45, 45, 48);
+        }
+        private void InicializarComboProductos()
+        {
+            object[] opciones = { "Todos", 5, 10, 20, 50, 100 };
+            cmb_productos.Items.AddRange(opciones);
+            cmb_productos.SelectedIndex = 0;
+        }
         private void CargarProductoss(int? limite = 100)
         {
             try

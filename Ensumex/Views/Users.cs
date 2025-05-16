@@ -20,11 +20,14 @@ namespace Ensumex.Views
         {
             InitializeComponent();
             Panel_Nuevousuario.Visible = false;
-            Tabla_usuarios.DefaultCellStyle.ForeColor = Color.Black; // Color de texto blanco
-            Tabla_usuarios.BackgroundColor = Color.FromArgb(45, 45, 48); // Fondo oscuro
+            ConfigurarTablaUsuarios();
             CargarUsuariosEnTabla();
         }
-
+        private void ConfigurarTablaUsuarios()
+        {
+            Tabla_usuarios.DefaultCellStyle.ForeColor = Color.Black; // Color de texto blanco
+            Tabla_usuarios.BackgroundColor = Color.FromArgb(45, 45, 48); // Fondo oscuro
+        }
         private void btn_nuevoUsuario_Click(object sender, EventArgs e)
         {
             Panel_Nuevousuario.Visible = true;

@@ -13,18 +13,34 @@ namespace Ensumex
         public Login()
         {
             InitializeComponent();
-            var materialSkinManager = MaterialSkinManager.Instance;
-            materialSkinManager.AddFormToManage(this);
-            materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
-            materialSkinManager.ColorScheme = new ColorScheme(
-            Primary.Green600,  // color base (verde Ensumex)
-            Primary.Green700,  // tono oscuro
-            Primary.Green400,  // tono claro
-            Accent.LightGreen200, // acento
-            TextShade.BLACK);
+            ConfigurarMaterialSkin();
+            ConfigurarTextosPorDefecto();
+            ConfigurarVentana();
+        }
+
+        private void ConfigurarMaterialSkin()
+        {
+            var skinManager = MaterialSkinManager.Instance;
+            skinManager.AddFormToManage(this);
+            skinManager.Theme = MaterialSkinManager.Themes.DARK;
+            skinManager.ColorScheme = new ColorScheme(
+                Primary.Green600,       // Color principal Ensumex
+                Primary.Green700,       // Color oscuro
+                Primary.Green400,       // Color claro
+                Accent.LightGreen200,   // Color de acento
+                TextShade.BLACK         // Sombra del texto
+            );
+        }
+
+        private void ConfigurarTextosPorDefecto()
+        {
             txt_Usuariologin.Text = "Usuario";
             txt_contraseñalogin.Text = "Contraseña";
-            txt_contraseñalogin.PasswordChar = '\0';
+            txt_contraseñalogin.PasswordChar = '\0'; // Mostrar texto como normal
+        }
+
+        private void ConfigurarVentana()
+        {
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
         }

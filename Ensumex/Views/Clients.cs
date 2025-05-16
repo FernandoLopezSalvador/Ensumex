@@ -16,12 +16,22 @@ namespace Ensumex.Views
         public Clients()
         {
             InitializeComponent();
-            tabla_clientes.DefaultCellStyle.ForeColor = Color.Black; // Color de texto blanco
-            tabla_clientes.BackgroundColor = Color.FromArgb(45, 45, 48); // Fondo oscuro
-            cmb_clientes.Items.AddRange(new object[] { "Todos", 5, 10, 20, 50, 100 });
-            cmb_clientes.SelectedIndex = 0; // Selecciona "Todos" por defecto
-            // Carga todos los clientes al inicio
+            ConfigurarTablaClientes();
+            InicializarComboClientes();
             CargarClientes();
+        }
+
+        private void ConfigurarTablaClientes()
+        {
+            tabla_clientes.DefaultCellStyle.ForeColor = Color.Black;
+            tabla_clientes.BackgroundColor = Color.FromArgb(45, 45, 48);
+        }
+
+        private void InicializarComboClientes()
+        {
+            var opciones = new object[] { "Todos", 5, 10, 20, 50, 100 };
+            cmb_clientes.Items.AddRange(opciones);
+            cmb_clientes.SelectedIndex = 0;
         }
 
         private void CargarClientes(int? limite = 100)
