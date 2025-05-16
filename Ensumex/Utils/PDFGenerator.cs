@@ -119,9 +119,10 @@ namespace Ensumex.Utils
                     "Sin otro particular, quedo a sus órdenes.\n\n\n\n\n\n\n\n", fontNormal));
 
                 // Crear una tabla de una columna centrada
-                PdfPTable tablaFirma = new PdfPTable(1);
+                PdfPTable tablaFirma = new PdfPTable(1);  
                 tablaFirma.WidthPercentage = 100;
 
+                 
                 // Celda con texto
                 PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\nMario Valdez\nRepresentante de Ventas", fontNormal));
                 celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;

@@ -45,17 +45,6 @@ namespace Ensumex.Models
             }
         }
 
-        // Método para generar el hash de la contraseña
-        /* private string HashPassword(string password)
-         {
-             using (var sha256 = System.Security.Cryptography.SHA256.Create())
-             {
-                 var bytes = Encoding.UTF8.GetBytes(password);
-                 var hash = sha256.ComputeHash(bytes);
-                 return Convert.ToBase64String(hash);
-             }
-         }*/
-
         [Obsolete]
         public bool LoginUser(string usuario, string contraseña)
         {
