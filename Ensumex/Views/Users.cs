@@ -131,18 +131,26 @@ namespace Ensumex.Views
         }
         private void CargarUsuariosEnTabla()
         {
-            UsuarioDao modelo = new UsuarioDao();
-            DataTable dt = modelo.ObtenerUsuarios();
-            Tabla_usuarios.DataSource = dt;
-
-            if (Tabla_usuarios.Columns["Editar"] == null)
+            try
             {
-                DataGridViewButtonColumn btnEditar = new DataGridViewButtonColumn();
-                btnEditar.Name = "Editar";
-                btnEditar.HeaderText = "Editar";
-                btnEditar.Text = "Editar";
-                btnEditar.UseColumnTextForButtonValue = true;
-                Tabla_usuarios.Columns.Add(btnEditar);
+                UsuarioDao modelo = new UsuarioDao();
+                DataTable dt = modelo.ObtenerUsuarios();
+                Tabla_usuarios.DataSource = dt;
+
+                if (Tabla_usuarios.Columns["Editar"] == null)
+                {
+                    DataGridViewButtonColumn btnEditar = new DataGridViewButtonColumn();
+                    btnEditar.Name = "Editar";
+                    btnEditar.HeaderText = "Editar";
+                    btnEditar.Text = "Editar";
+                    btnEditar.UseColumnTextForButtonValue = true;
+                    Tabla_usuarios.Columns.Add(btnEditar);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al cargar los usuarios:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

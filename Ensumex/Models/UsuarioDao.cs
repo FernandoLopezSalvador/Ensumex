@@ -64,20 +64,33 @@ namespace Ensumex.Models
         {
             DataTable dt = new DataTable();
 
-            using (var connection = GetConnection())
+            try
             {
-                connection.Open();
-                using (var command = new SqlCommand())
+                using (var connection = GetConnection())
                 {
-                    command.Connection = connection;
-                    command.CommandText = "SELECT Usuario, Nombre, Posision, Correo FROM Usuarios";
-                    command.CommandType = CommandType.Text;
-
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    using (var command = new SqlCommand())
                     {
-                        dt.Load(reader);
+                        command.Connection = connection;
+                        command.CommandText = "SELECT Usuario, Nombre, Posision, Correo FROM Usuarios";
+                        command.CommandType = CommandType.Text;
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            dt.Load(reader);
+                        }
                     }
                 }
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show("Error al obtener los usuarios desde la base de datos:\n" + ex.Message,
+                                "Error de SQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error inesperado:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return dt;

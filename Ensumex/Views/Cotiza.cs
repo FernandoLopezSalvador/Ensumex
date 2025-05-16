@@ -301,21 +301,35 @@ namespace Ensumex.Views
                 tbl_Cotizacion.Columns.Add(btnEliminar);
             }
         }
+
         private void tbl_Cotizacion_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == tbl_Cotizacion.Columns["Cantidad"].Index ||
-        e.ColumnIndex == tbl_Cotizacion.Columns["TasaCambio"].Index)
+            try
             {
-                var row = tbl_Cotizacion.Rows[e.RowIndex];
-
-                if (decimal.TryParse(row.Cells["PrecioUnitario"].Value?.ToString(), out decimal precio) &&
-                    decimal.TryParse(row.Cells["Cantidad"].Value?.ToString(), out decimal cantidad) &&
-                    decimal.TryParse(row.Cells["TasaCambio"].Value?.ToString(), out decimal tasa))
+                if (e.ColumnIndex == tbl_Cotizacion.Columns["Cantidad"].Index ||
+                    e.ColumnIndex == tbl_Cotizacion.Columns["TasaCambio"].Index)
                 {
-                    decimal subtotal = precio * cantidad * tasa;
-                    row.Cells["Subtotal"].Value = subtotal;
-                    ActualizarTotales();
+                    var row = tbl_Cotizacion.Rows[e.RowIndex];
+
+                    if (decimal.TryParse(row.Cells["PrecioUnitario"].Value?.ToString(), out decimal precio) &&
+                        decimal.TryParse(row.Cells["Cantidad"].Value?.ToString(), out decimal cantidad) &&
+                        decimal.TryParse(row.Cells["TasaCambio"].Value?.ToString(), out decimal tasa))
+                    {
+                        decimal subtotal = precio * cantidad * tasa;
+                        row.Cells["Subtotal"].Value = subtotal;
+                        ActualizarTotales();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Por favor, asegúrate de que los campos Precio Unitario, Cantidad y Tasa de Cambio contengan valores numéricos válidos.",
+                                        "Valores inválidos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al calcular el subtotal:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -352,24 +366,32 @@ namespace Ensumex.Views
 
         private void tbl_Cotizacion_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Asegúrate de no estar en encabezado ni fuera de rango
-            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            try
             {
-                if (tbl_Cotizacion.Columns[e.ColumnIndex].Name == "Eliminar")
+                // Asegúrate de no estar en encabezado ni fuera de rango
+                if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
                 {
-                    // Confirmar eliminación
-                    DialogResult resultado = MessageBox.Show(
-                        "¿Deseas eliminar este producto de la cotización?",
-                        "Confirmar eliminación",
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question);
-
-                    if (resultado == DialogResult.Yes)
+                    if (tbl_Cotizacion.Columns[e.ColumnIndex].Name == "Eliminar")
                     {
-                        tbl_Cotizacion.Rows.RemoveAt(e.RowIndex);
-                        ActualizarTotales();
+                        // Confirmar eliminación
+                        DialogResult resultado = MessageBox.Show(
+                            "¿Deseas eliminar este producto de la cotización?",
+                            "Confirmar eliminación",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question);
+
+                        if (resultado == DialogResult.Yes)
+                        {
+                            tbl_Cotizacion.Rows.RemoveAt(e.RowIndex);
+                            ActualizarTotales();
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al intentar eliminar el producto:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
