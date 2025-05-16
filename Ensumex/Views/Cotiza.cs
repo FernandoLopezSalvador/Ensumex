@@ -47,31 +47,58 @@ namespace Ensumex.Views
 
         private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
         {
-            using (SaveFileDialog sfd = new SaveFileDialog())
+            try
             {
-                sfd.Filter = "Archivo PDF|*.pdf";
-                sfd.FileName = $"Cotizacion_{DateTime.Now:yyyyMMdd}.pdf";
-
-                if (sfd.ShowDialog() == DialogResult.OK)
+                using (SaveFileDialog sfd = new SaveFileDialog())
                 {
-                    PDFGenerator.GenerarPDFCotizacion(
-                        rutaArchivo: sfd.FileName,
-                        nombreCliente: txt_Nombrecliente.Text,
-                        costoInstalacion: txt_Costoinstalacion.Text,
-                        costoFlete: txt_Costoflete.Text,
-                        subtotal: lbl_Subtotal.Text,
-                        total: lbl_TotalNeto.Text,
-                        descuento: lbl_costoDescuento.Text,
-                        tablaCotizacion: tbl_Cotizacion
-                    );
+                    sfd.Filter = "Archivo PDF|*.pdf";
+                    sfd.FileName = $"Cotizacion_{DateTime.Now:yyyyMMdd}.pdf";
 
-                    // Limpiar campos
-                    txt_Costoflete.Text = "";
-                    txt_Costoinstalacion.Text = "";
-                    txt_Direccioncliente.Text = "";
-                    txt_Nocotizacion.Text = "";
-                    txt_Nombrecliente.Text = "";
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        // Validaciones mínimas
+                        if (string.IsNullOrWhiteSpace(txt_Nombrecliente.Text))
+                        {
+                            MessageBox.Show("El nombre del cliente es obligatorio.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        if (tbl_Cotizacion.Rows.Count == 0)
+                        {
+                            MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        // Generar el PDF
+                        PDFGenerator.GenerarPDFCotizacion(
+                            rutaArchivo: sfd.FileName,
+                            nombreCliente: txt_Nombrecliente.Text,
+                            costoInstalacion: txt_Costoinstalacion.Text,
+                            costoFlete: txt_Costoflete.Text,
+                            subtotal: lbl_Subtotal.Text,
+                            total: lbl_TotalNeto.Text,
+                            descuento: lbl_costoDescuento.Text,
+                            tablaCotizacion: tbl_Cotizacion
+                        );
+
+                        MessageBox.Show("Cotización guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Limpiar campos
+                        txt_Costoflete.Text = "";
+                        txt_Costoinstalacion.Text = "";
+                        txt_Direccioncliente.Text = "";
+                        txt_Nocotizacion.Text = "";
+                        txt_Nombrecliente.Text = "";
+                    }
                 }
+            }
+            catch (IOException ioEx)
+            {
+                MessageBox.Show($"Error al guardar el archivo. Verifica que no esté en uso.\n\n{ioEx.Message}", "Error de archivo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocurrió un error al guardar la cotización.\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -460,7 +487,7 @@ namespace Ensumex.Views
                         subtotal += valor;
                     }
                 }
-                lbl_Subtotal.Text = $"Subtotal: ${subtotal:F2}";
+                lbl_Subtotal.Text = $"${subtotal:F2}";
 
                 // 2. Calcular Descuento
                 descuento = 0; // Reiniciar descuento
@@ -480,7 +507,7 @@ namespace Ensumex.Views
 
                 // 4. Calcular Total Neto
                 decimal totalNeto = (subtotal - descuento) + instalacion + flete;
-                lbl_TotalNeto.Text = totalNeto.ToString("C"); // Ej: $1,200.00
+                lbl_TotalNeto.Text = totalNeto.ToString("C");
             }
             catch (Exception ex)
             {

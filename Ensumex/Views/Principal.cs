@@ -134,13 +134,6 @@ namespace Ensumex.Forms
 
         }
 
-        [Obsolete]
-        private void CargarDatosUsuario()
-        {
-            CargaUsuario.CargarDatosUsuario(lbl_usuario, lbl_posicion);
-
-        }
-
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
