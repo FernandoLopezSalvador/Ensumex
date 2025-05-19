@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
 
 namespace Ensumex.Views
 {
@@ -69,7 +70,7 @@ namespace Ensumex.Views
             foreach (var columna in columnas.Cast<string>().Chunk(2))
                 tbl_Cotizacion.Columns.Add(columna[0], columna[1]);
 
-            tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = false;
+            tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = true;
         }
 
         private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
@@ -110,12 +111,16 @@ namespace Ensumex.Views
 
                         MessageBox.Show("Cotización guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                        // Limpiar campos
                         txt_Costoflete.Text = "";
                         txt_Costoinstalacion.Text = "";
                         txt_Direccioncliente.Text = "";
                         txt_Nocotizacion.Text = "";
                         txt_Nombrecliente.Text = "";
+                        lbl_Subtotal.Text = "$0.00";
+                        lbl_costoDescuento.Text = "$0.00";
+                        lbl_TotalNeto.Text = "$0.00";
+                        tbl_Cotizacion.Rows.Clear();
+                        cmb_Descuento.SelectedIndex = -1; // Limpiar selección de descuento
                     }
                 }
             }
@@ -160,11 +165,7 @@ namespace Ensumex.Views
         }
         private void btn_Cancelarcotizacion_Click(object sender, EventArgs e)
         {
-            txt_Costoflete.Text = "";
-            txt_Costoinstalacion.Text = "";
-            txt_Direccioncliente.Text = "";
-            txt_Nocotizacion.Text = "";
-            txt_Nombrecliente.Text = "";
+            
         }
 
         private void tbl_Productos_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -195,8 +196,23 @@ namespace Ensumex.Views
                         return;
                     }
 
-                    // Agrega la fila
-                    tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precio, 1, 1, precio);
+                    // Solicita la tasa de cambio
+                    string input = Interaction.InputBox("Ingrese la tasa de cambio para este producto (si aplica):", "Tasa de Cambio", "1");
+
+                    // Intenta convertir la entrada y valida que sea mayor a 0
+                    decimal tasaCambio;
+                    bool esValido = decimal.TryParse(input, out tasaCambio);
+
+                    if (!esValido || tasaCambio <= 0)
+                    {
+                        //MessageBox.Show("La tasa ingresada no es válida o es 0. Se usará el valor por defecto (1).", "Tasa inválida", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tasaCambio = 1;
+                    }
+
+                    decimal precioConvertido = precio * tasaCambio;
+
+                    // Agrega la fila con la tasa de cambio (campo 6)
+                    tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precio, 1, tasaCambio, precioConvertido);
                     ActualizarTotales();
                 }
 
@@ -371,7 +387,21 @@ namespace Ensumex.Views
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            
+
+        }
+
+        private void btn_Cancelarcotizacion_Click_1(object sender, EventArgs e)
+        {
+            txt_Costoflete.Text = "";
+            txt_Costoinstalacion.Text = "";
+            txt_Direccioncliente.Text = "";
+            txt_Nocotizacion.Text = "";
+            txt_Nombrecliente.Text = "";
+            lbl_Subtotal.Text = "$0.00";
+            lbl_costoDescuento.Text = "$0.00";
+            lbl_TotalNeto.Text = "$0.00";
+            tbl_Cotizacion.Rows.Clear();
+            cmb_Descuento.SelectedIndex = -1; // Limpiar selección de descuento
         }
     }
 }

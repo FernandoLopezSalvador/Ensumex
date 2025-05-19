@@ -62,11 +62,11 @@ namespace Ensumex.Utils
                     doc.Add(new Paragraph("\n", fontNormal));
 
                     // Tabla
-                    PdfPTable tabla = new PdfPTable(4);
+                    PdfPTable tabla = new PdfPTable(5);
                     tabla.WidthPercentage = 100;
-                    tabla.SetWidths(new float[] { 1f, 3f, 1.5f, 1f });
+                    tabla.SetWidths(new float[] { 1f, 3f, 1.5f, 1f, 1f });
 
-                    string[] headers = { "Clave", "Descripción", "Precio Unitario", "Cantidad" };
+                    string[] headers = { "Clave", "Descripción", "Precio Unitario", "Cantidad", "tasa de cambio" };
                     foreach (string header in headers)
                     {
                         PdfPCell celda = new PdfPCell(new Phrase(header, fontNormal));
@@ -83,30 +83,30 @@ namespace Ensumex.Utils
                             tabla.AddCell(new Phrase(row.Cells["Descripcion"].Value?.ToString() ?? "", fontNormal));
                             tabla.AddCell(new Phrase(row.Cells["PrecioUnitario"].Value?.ToString() ?? "", fontNormal));
                             tabla.AddCell(new Phrase(row.Cells["Cantidad"].Value?.ToString() ?? "", fontNormal));
-                        }
+                            tabla.AddCell(new Phrase(row.Cells["TasaCambio"].Value?.ToString() ?? "", fontNormal));
+                    }
                     }
 
                     // Totales alineados a la izquierda
-                    tabla.AddCell(new PdfPCell(new Phrase("Descuento", fontNormal)) { Colspan = 3, HorizontalAlignment = Element.ALIGN_LEFT });
+                    tabla.AddCell(new PdfPCell(new Phrase("Descuento", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                     tabla.AddCell(new Phrase(descuento, fontNormal));
 
-                    tabla.AddCell(new PdfPCell(new Phrase("Subtotal", fontNegrita)) { Colspan = 3, HorizontalAlignment = Element.ALIGN_LEFT });
+                    tabla.AddCell(new PdfPCell(new Phrase("Subtotal", fontNegrita)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                     tabla.AddCell(new Phrase(subtotal, fontNormal));
 
-                    tabla.AddCell(new PdfPCell(new Phrase("MANO DE OBRA POR INSTALACIÓN", fontNormal)) { Colspan = 3, HorizontalAlignment = Element.ALIGN_LEFT });
+                    tabla.AddCell(new PdfPCell(new Phrase("MANO DE OBRA POR INSTALACIÓN", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                     tabla.AddCell(new Phrase(costoInstalacion, fontNormal));
 
-                    tabla.AddCell(new PdfPCell(new Phrase("Costo por Envio/Flete", fontNormal)) { Colspan = 3, HorizontalAlignment = Element.ALIGN_LEFT });
+                    tabla.AddCell(new PdfPCell(new Phrase("Costo por Envio/Flete", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                     tabla.AddCell(new Phrase(costoFlete, fontNormal));
 
-                    tabla.AddCell(new PdfPCell(new Phrase("Total", fontNegrita)) { Colspan = 3, HorizontalAlignment = Element.ALIGN_LEFT });
+                    tabla.AddCell(new PdfPCell(new Phrase("Total", fontNegrita)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                     tabla.AddCell(new Phrase(total, fontNormal));
                     doc.Add(tabla);
                     doc.Add(new Paragraph("\n"));
 
                     doc.Add(new Paragraph("Nota: Se requiere depósito del 50% para confirmar pedido. Instalación el mismo día o siguiente día hábil. Garantía: 3 años contra defectos de fabricación.", fontNormal));
                     doc.Add(new Paragraph("\n"));
-
 
                     doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
                     doc.Add(new Paragraph(
@@ -121,7 +121,6 @@ namespace Ensumex.Utils
                 // Crear una tabla de una columna centrada
                 PdfPTable tablaFirma = new PdfPTable(1);  
                 tablaFirma.WidthPercentage = 100;
-
                  
                 // Celda con texto
                 PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\nMario Valdez\nRepresentante de Ventas", fontNormal));

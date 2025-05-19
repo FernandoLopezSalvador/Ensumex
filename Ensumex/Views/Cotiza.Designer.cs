@@ -331,6 +331,7 @@
             btn_Cancelarcotizacion.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btn_Cancelarcotizacion.UseAccentColor = false;
             btn_Cancelarcotizacion.UseVisualStyleBackColor = false;
+            btn_Cancelarcotizacion.Click += btn_Cancelarcotizacion_Click_1;
             // 
             // btn_AgregarProducto
             // 
