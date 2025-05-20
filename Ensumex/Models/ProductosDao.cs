@@ -25,13 +25,13 @@ namespace Ensumex.Models
                         while (reader.Read())
                         {
                             productos.Add((
-                                reader.GetString(0),  // CLAVE
-                                reader.GetString(1),  // Descripcion
-                                reader.IsDBNull(2) ? string.Empty : reader.GetString(2),  // UnidadEntrada
-                                reader.GetDecimal(3), // PU
-                                reader.GetDecimal(4), // PrecioPublico
-                                reader.GetDecimal(5), // PUMinimo
-                                reader.GetString(6)   // TipoProducto
+                                reader.IsDBNull(0) ? string.Empty : reader.GetString(0), // CLAVE
+                                reader.IsDBNull(1) ? string.Empty : reader.GetString(1), // Descripcion
+                                reader.IsDBNull(2) ? string.Empty : reader.GetString(2), // UnidadEntrada
+                                reader.IsDBNull(3) ? 0 : reader.GetDecimal(3),           // PU
+                                reader.IsDBNull(4) ? 0 : reader.GetDecimal(4),           // PrecioPublico
+                                reader.IsDBNull(5) ? 0 : reader.GetDecimal(5),           // PUMinimo
+                                reader.IsDBNull(6) ? string.Empty : reader.GetString(6)  // TipoProducto
                             ));
                         }
                     }

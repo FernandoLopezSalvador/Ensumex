@@ -67,7 +67,7 @@
             // pictureBox3
             // 
             pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
-            pictureBox3.Location = new Point(28, 64);
+            pictureBox3.Location = new Point(28, 83);
             pictureBox3.Margin = new Padding(3, 2, 3, 2);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(175, 150);
@@ -82,7 +82,7 @@
             materialButton1.Depth = 0;
             materialButton1.HighEmphasis = true;
             materialButton1.Icon = null;
-            materialButton1.Location = new Point(368, 188);
+            materialButton1.Location = new Point(368, 197);
             materialButton1.Margin = new Padding(4);
             materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
             materialButton1.Name = "materialButton1";
@@ -104,7 +104,7 @@
             txt_Usuariologin.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             txt_Usuariologin.HideSelection = true;
             txt_Usuariologin.LeadingIcon = null;
-            txt_Usuariologin.Location = new Point(229, 64);
+            txt_Usuariologin.Location = new Point(229, 83);
             txt_Usuariologin.Margin = new Padding(3, 2, 3, 2);
             txt_Usuariologin.MaxLength = 32767;
             txt_Usuariologin.MouseState = MaterialSkin.MouseState.OUT;
@@ -137,7 +137,7 @@
             txt_contraseñalogin.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             txt_contraseñalogin.HideSelection = true;
             txt_contraseñalogin.LeadingIcon = null;
-            txt_contraseñalogin.Location = new Point(229, 134);
+            txt_contraseñalogin.Location = new Point(229, 143);
             txt_contraseñalogin.Margin = new Padding(3, 2, 3, 2);
             txt_contraseñalogin.MaxLength = 32767;
             txt_contraseñalogin.MouseState = MaterialSkin.MouseState.OUT;

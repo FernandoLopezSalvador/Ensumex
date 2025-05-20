@@ -1,4 +1,11 @@
-﻿using System;
+﻿using Ensumex.Clases;
+using Ensumex.Models;
+using Ensumex.Utils;
+using Ensumex.Views;
+using MaterialSkin;
+using MaterialSkin.Controls;
+using Microsoft.VisualBasic.ApplicationServices;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,12 +14,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Ensumex.Models;
-using Ensumex.Utils;
-using Ensumex.Views;
-using MaterialSkin;
-using MaterialSkin.Controls;
-using Microsoft.VisualBasic.ApplicationServices;
 
 namespace Ensumex.Forms
 {
@@ -213,7 +214,14 @@ namespace Ensumex.Forms
 
         private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-           
+
+        }
+
+        private void productosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //string connectionString = "Server=localhost; Database=Ensumex; Integrated Security=True";
+            //Cargarproductos.ImportarExcelAProductos1(connectionString);
+            
         }
     }
 } 

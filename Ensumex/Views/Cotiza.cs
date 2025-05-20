@@ -61,7 +61,8 @@ namespace Ensumex.Views
             { "Clave", "Clave" },
             { "Descripcion", "Descripción" },
             { "UnidadEntrada", "Unidad de Entrada" },
-            { "PrecioUnitario", "Precio Unitario" },
+            { "PrecioPublico", "PrecioPublico" },
+            { "PrecioUnitario", "PrecioUnitario" },
             { "Cantidad", "Cantidad" },
             { "TasaCambio", "Tasa de Cambio" },
             { "Subtotal", "Subtotal" }
@@ -140,14 +141,16 @@ namespace Ensumex.Views
             {
                 var productoService = new ProductoServices1();
                 var productos = productoService.ObtenerProductos(limite);
-                // Configura el DataGridView
+
                 tbl_Productos.DataSource = productos.Select(p => new
                 {
-                    Clave = p.CLAVE,
-                    Descripcion = p.Descripcion,
-                    UnidadEntrada = p.UnidadEntrada,
-                    PrecioUnitario = p.PU,
+                    Clave = string.IsNullOrWhiteSpace(p.CLAVE) ? "N/A" : p.CLAVE,
+                    Descripcion = string.IsNullOrWhiteSpace(p.Descripcion) ? "N/A" : p.Descripcion,
+                    UnidadEntrada = string.IsNullOrWhiteSpace(p.UnidadEntrada) ? "N/A" : p.UnidadEntrada,
+                    PrecioPublico = p.PrecioPublico.ToString("0.00"),
+                    PrecioUnitario = p.PU.ToString("0.00")
                 }).ToList();
+
                 if (!tbl_Productos.Columns.Contains("Agregar"))
                 {
                     DataGridViewButtonColumn btnAgregar = new DataGridViewButtonColumn();
@@ -180,7 +183,9 @@ namespace Ensumex.Views
                     if (fila.Cells["Clave"].Value == null ||
                         fila.Cells["Descripcion"].Value == null ||
                         fila.Cells["UnidadEntrada"].Value == null ||
+                        fila.Cells["PrecioPublico"].Value == null ||
                         fila.Cells["PrecioUnitario"].Value == null)
+
                     {
                         MessageBox.Show("Uno o más datos del producto están vacíos o no disponibles.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
@@ -209,10 +214,17 @@ namespace Ensumex.Views
                         tasaCambio = 1;
                     }
 
-                    decimal precioConvertido = precio * tasaCambio;
+
+                    if (!decimal.TryParse(fila.Cells["PrecioPublico"].Value.ToString(), out decimal precioPublico))
+                    {
+                        MessageBox.Show("El precio público no es válido.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    decimal precioConvertido = precioPublico * tasaCambio;
 
                     // Agrega la fila con la tasa de cambio (campo 6)
-                    tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precio, 1, tasaCambio, precioConvertido);
+                    tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precioPublico, precio, 1, tasaCambio, precioConvertido);
                     ActualizarTotales();
                 }
 
@@ -242,11 +254,11 @@ namespace Ensumex.Views
                 {
                     var row = tbl_Cotizacion.Rows[e.RowIndex];
 
-                    if (decimal.TryParse(row.Cells["PrecioUnitario"].Value?.ToString(), out decimal precio) &&
+                    if (decimal.TryParse(row.Cells["PrecioPublico"].Value?.ToString(), out decimal precioPublico) &&
                         decimal.TryParse(row.Cells["Cantidad"].Value?.ToString(), out decimal cantidad) &&
                         decimal.TryParse(row.Cells["TasaCambio"].Value?.ToString(), out decimal tasa))
                     {
-                        decimal subtotal = precio * cantidad * tasa;
+                        decimal subtotal = precioPublico * cantidad * tasa;
                         row.Cells["Subtotal"].Value = subtotal;
                         ActualizarTotales();
                     }

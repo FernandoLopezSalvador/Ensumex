@@ -44,6 +44,7 @@ namespace Ensumex.Utils
                     var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
 
                     Paragraph encabezado = new Paragraph("\nOaxaca de Juárez, Oaxaca a " + DateTime.Now.ToString("d 'de' MMMM 'de' yyyy") + "\n\n", fontNormal);
+                    
                     encabezado.Alignment = Element.ALIGN_RIGHT;
                     doc.Add(encabezado);
 
@@ -57,16 +58,25 @@ namespace Ensumex.Utils
                         doc.Add(new Paragraph("\nEstimado Cliente:", fontNegrita));
                     }
 
-                    doc.Add(new Paragraph("\nPresente"));
-                    doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para la venta e instalación del siguiente producto:", fontNormal));
-                    doc.Add(new Paragraph("\n", fontNormal));
+                doc.Add(new Paragraph("\nPresente"));
+                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para la venta e instalación del siguiente producto:", fontNormal));
+                doc.Add(new Paragraph("\n", fontNormal));
 
-                    // Tabla
-                    PdfPTable tabla = new PdfPTable(5);
+                // Agregar descripciones de los productos
+                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
+                {
+                    if (fila.IsNewRow) continue; // Ignora la fila nueva vacía
+                    string descripcion = fila.Cells["Descripcion"].Value?.ToString() ?? "Sin descripción";
+                    doc.Add(new Paragraph(descripcion, fontNegrita));
+                }
+                doc.Add(new Paragraph("\n", fontNormal));
+
+                // Tabla
+                PdfPTable tabla = new PdfPTable(5);
                     tabla.WidthPercentage = 100;
                     tabla.SetWidths(new float[] { 1f, 3f, 1.5f, 1f, 1f });
 
-                    string[] headers = { "Clave", "Descripción", "Precio Unitario", "Cantidad", "tasa de cambio" };
+                    string[] headers = { "Clave", "Descripción", "PrecioPublico", "Cantidad", "tasa de cambio" };
                     foreach (string header in headers)
                     {
                         PdfPCell celda = new PdfPCell(new Phrase(header, fontNormal));
@@ -81,10 +91,10 @@ namespace Ensumex.Utils
                         {
                             tabla.AddCell(new Phrase(row.Cells["Clave"].Value?.ToString() ?? "", fontNormal));
                             tabla.AddCell(new Phrase(row.Cells["Descripcion"].Value?.ToString() ?? "", fontNormal));
-                            tabla.AddCell(new Phrase(row.Cells["PrecioUnitario"].Value?.ToString() ?? "", fontNormal));
+                            tabla.AddCell(new Phrase(row.Cells["PrecioPublico"].Value?.ToString() ?? "", fontNormal));
                             tabla.AddCell(new Phrase(row.Cells["Cantidad"].Value?.ToString() ?? "", fontNormal));
                             tabla.AddCell(new Phrase(row.Cells["TasaCambio"].Value?.ToString() ?? "", fontNormal));
-                    }
+                        }
                     }
 
                     // Totales alineados a la izquierda
@@ -116,7 +126,7 @@ namespace Ensumex.Utils
                     "- No incluye material de plomería.\n\n" +
                     "- Si necesita factura, la mano de obra se agrega más I.V.A.\n\n" +
                     "- Precios sujetos a cambios sin previo aviso.\n\n" +
-                    "Sin otro particular, quedo a sus órdenes.\n\n\n\n\n\n\n\n", fontNormal));
+                    "Sin otro particular, quedo a sus órdenes.\n\n\n\n\n\n", fontNormal));
 
                 // Crear una tabla de una columna centrada
                 PdfPTable tablaFirma = new PdfPTable(1);  
