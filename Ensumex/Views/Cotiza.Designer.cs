@@ -551,9 +551,9 @@
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.ColumnCount = 3;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 55F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 38.56209F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6.753813F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 54.6840973F));
             tableLayoutPanel3.Controls.Add(tbl_Productos, 0, 0);
             tableLayoutPanel3.Controls.Add(tbl_Cotizacion, 2, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
@@ -575,7 +575,7 @@
             tbl_Productos.Margin = new Padding(3, 2, 3, 2);
             tbl_Productos.Name = "tbl_Productos";
             tbl_Productos.RowHeadersWidth = 51;
-            tbl_Productos.Size = new Size(361, 175);
+            tbl_Productos.Size = new Size(348, 175);
             tbl_Productos.TabIndex = 7;
             tbl_Productos.CellClick += tbl_Productos_CellClick;
             // 
@@ -583,11 +583,11 @@
             // 
             tbl_Cotizacion.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tbl_Cotizacion.Dock = DockStyle.Fill;
-            tbl_Cotizacion.Location = new Point(415, 2);
+            tbl_Cotizacion.Location = new Point(419, 2);
             tbl_Cotizacion.Margin = new Padding(3, 2, 3, 2);
             tbl_Cotizacion.Name = "tbl_Cotizacion";
             tbl_Cotizacion.RowHeadersWidth = 51;
-            tbl_Cotizacion.Size = new Size(500, 175);
+            tbl_Cotizacion.Size = new Size(496, 175);
             tbl_Cotizacion.TabIndex = 8;
             tbl_Cotizacion.CellClick += tbl_Cotizacion_CellClick;
             tbl_Cotizacion.CellEndEdit += tbl_Cotizacion_CellEndEdit;

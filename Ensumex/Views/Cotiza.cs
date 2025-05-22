@@ -300,8 +300,6 @@ namespace Ensumex.Views
 
         private void btn_AgregarProducto_Click(object sender, EventArgs e)
         {
-            ProdTemp prodTemp = new ProdTemp();
-            prodTemp.Show();
             using (var formProducto = new ProdTemp())
             {
                 if (formProducto.ShowDialog() == DialogResult.OK)
@@ -318,6 +316,16 @@ namespace Ensumex.Views
 
                     tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, preciopiblico,preciouni, 1, tasaCambio, subtotal);
                     ActualizarTotales();
+                }
+                // Asegura que la columna de "Eliminar" solo se agregue una vez
+                if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
+                {
+                    DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn();
+                    btnEliminar.Name = "Eliminar";
+                    btnEliminar.HeaderText = "Acción";
+                    btnEliminar.Text = "Eliminar";
+                    btnEliminar.UseColumnTextForButtonValue = true;
+                    tbl_Cotizacion.Columns.Add(btnEliminar);
                 }
             }
         }
@@ -434,12 +442,6 @@ namespace Ensumex.Views
             lbl_TotalNeto.Text = "$0.00";
             tbl_Cotizacion.Rows.Clear();
             cmb_Descuento.SelectedIndex = -1; // Limpiar selección de descuento
-        }
-        private void CargarUserControl(UserControl control)
-        {
-            tableLayoutPanel3.Controls.Clear();
-            control.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Controls.Add(control);
         }
     }
 }

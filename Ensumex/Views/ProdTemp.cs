@@ -63,25 +63,7 @@ namespace Ensumex.Views
 
         private void txb_PrecioPublicoTemp_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (sender is TextBox txt)
-            {
-                // Permitir teclas de control (Backspace, Delete, etc.)
-                if (char.IsControl(e.KeyChar))
-                    return;
-
-                // Permitir solo dígitos y un punto
-                if (!char.IsDigit(e.KeyChar) && e.KeyChar != '.')
-                {
-                    e.Handled = true;
-                    return;
-                }
-
-                // No permitir más de un punto decimal
-                if (e.KeyChar == '.' && txt.Text.Contains('.'))
-                {
-                    e.Handled = true;
-                }
-            }
+            
         }
 
         private void materialButton1_Click(object sender, EventArgs e)
@@ -91,16 +73,18 @@ namespace Ensumex.Views
 
         private void materialButton2_Click(object sender, EventArgs e)
         {
-            
-            if (string.IsNullOrWhiteSpace(txb_ClaveTemp.Text) || string.IsNullOrWhiteSpace(txb_PrecioPublicoTemp.Text) || string.IsNullOrWhiteSpace(txb_PrecioUnitarioTemp.Text))
+
+            if (string.IsNullOrWhiteSpace(txb_ClaveTemp.Text) ||
+                 string.IsNullOrWhiteSpace(txb_PrecioPublicoTemp.Text) ||
+                 string.IsNullOrWhiteSpace(txb_PrecioUnitarioTemp.Text))
             {
                 MessageBox.Show("Por favor, completa todos los campos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            else { 
-                MessageBox.Show("Producto Agregado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
-            }
+            MessageBox.Show("Producto Agregado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Aquí está la clave:
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
 
         public string Clave => txb_ClaveTemp.Text.Trim();
@@ -109,6 +93,9 @@ namespace Ensumex.Views
         public decimal PrecioPublicoTemp => decimal.TryParse(txb_PrecioPublicoTemp.Text, out decimal p) ? p : 0;
         //public string unidad => txb_UnidadEntradaTemp.Text.Trim();
         public string Unidentrada => cmb_Unidentrada.Text.Trim();
+
+
+
 
     }
     
