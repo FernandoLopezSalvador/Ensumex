@@ -23,35 +23,51 @@ namespace Ensumex.Forms
         public ENSUMEX()
         {
             InitializeComponent();
+            InicializarFormulario();
+            ConfigurarTema();
+            ConfigurarMenu();
+            CargarDatosUsuario();
+        }
+
+        private void InicializarFormulario()
+        {
             this.WindowState = FormWindowState.Maximized;
-            var materialSkinManager = MaterialSkinManager.Instance;
-            materialSkinManager.AddFormToManage(this);
-            materialSkinManager.Theme = MaterialSkinManager.Themes.DARK;
-            materialSkinManager.ColorScheme = new ColorScheme(
-            Primary.Green600,  // color base (verde Ensumex)
-            Primary.Green700,  // tono oscuro
-            Primary.Green400,  // tono claro
-            Accent.LightGreen200, // acento
-            TextShade.WHITE);
-            menu_usuario.Renderer = new CustomMenuRenderer();
             panel1.Cursor = Cursors.Hand;
+        }
+
+        private void ConfigurarTema()
+        {
+            var skinManager = MaterialSkinManager.Instance;
+            skinManager.AddFormToManage(this);
+            skinManager.Theme = MaterialSkinManager.Themes.DARK;
+            skinManager.ColorScheme = new ColorScheme(
+                Primary.Green600,   // Color base
+                Primary.Green700,   // Tono oscuro
+                Primary.Green400,   // Tono claro
+                Accent.LightGreen200, // Acento
+                TextShade.WHITE);   // Tono del texto
+        }
+
+        private void ConfigurarMenu()
+        {
+            menu_usuario.Renderer = new CustomMenuRenderer();
+        }
+
+        private void CargarDatosUsuario()
+        {
             CargaUsuario.CargarDatosUsuario(lbl_usuario, lbl_posicion);
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-
-
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
-
         }
 
         private void txt_usuario_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void txt_usuario_Enter(object sender, EventArgs e)

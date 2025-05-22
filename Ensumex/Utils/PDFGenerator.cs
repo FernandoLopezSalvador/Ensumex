@@ -42,8 +42,9 @@ namespace Ensumex.Utils
                     var fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
                     var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
                     var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+                    var fontCursiva = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 10);
 
-                    Paragraph encabezado = new Paragraph("\nOaxaca de Juárez, Oaxaca a " + DateTime.Now.ToString("d 'de' MMMM 'de' yyyy") + "\n\n", fontNormal);
+                Paragraph encabezado = new Paragraph("\nOaxaca de Juárez, Oaxaca a " + DateTime.Now.ToString("d 'de' MMMM 'de' yyyy") + "\n\n", fontNormal);
                     
                     encabezado.Alignment = Element.ALIGN_RIGHT;
                     doc.Add(encabezado);
@@ -133,7 +134,7 @@ namespace Ensumex.Utils
                 tablaFirma.WidthPercentage = 100;
                  
                 // Celda con texto
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\nMario Valdez\nRepresentante de Ventas", fontNormal));
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\nMario Valdez\nRepresentante de Ventas", fontCursiva));
                 celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;
                 celdaTexto.Border = Rectangle.NO_BORDER;
                 celdaTexto.PaddingBottom = 10f; // Espacio entre texto e imagen

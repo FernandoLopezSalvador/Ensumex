@@ -1,8 +1,10 @@
-﻿using Ensumex.Models;
+﻿using Ensumex.Forms;
+using Ensumex.Models;
 using Ensumex.Services;
 using Ensumex.Utils;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +15,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
 
 namespace Ensumex.Views
 {
@@ -74,6 +75,7 @@ namespace Ensumex.Views
             tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = true;
         }
 
+        
         private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
         {
             try
@@ -111,7 +113,6 @@ namespace Ensumex.Views
                         );
 
                         MessageBox.Show("Cotización guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                         txt_Costoflete.Text = "";
                         txt_Costoinstalacion.Text = "";
                         txt_Direccioncliente.Text = "";
@@ -299,7 +300,26 @@ namespace Ensumex.Views
 
         private void btn_AgregarProducto_Click(object sender, EventArgs e)
         {
+            ProdTemp prodTemp = new ProdTemp();
+            prodTemp.Show();
+            using (var formProducto = new ProdTemp())
+            {
+                if (formProducto.ShowDialog() == DialogResult.OK)
+                {
+                    // Recibe los datos del formulario temporal
+                    string clave = formProducto.Clave;
+                    string descripcion = formProducto.Descripcion; 
+                    decimal preciouni = formProducto.PrecioPublicoTemp; // Cambiado a PrecioPublicoTemp
+                    decimal preciopiblico = formProducto.PrecioUnitarioTemp; // Cambiado a PrecioUnitarioTemp
+                    string unidad = formProducto.Unidentrada; // Cambiado a UnidadEntrada
+                    // Tasa de cambio opcional (puedes usar frmTasaCambio si quieres)
+                    decimal tasaCambio = 1;
+                    decimal subtotal = preciouni * tasaCambio;
 
+                    tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, preciopiblico,preciouni, 1, tasaCambio, subtotal);
+                    ActualizarTotales();
+                }
+            }
         }
 
         private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
@@ -414,6 +434,12 @@ namespace Ensumex.Views
             lbl_TotalNeto.Text = "$0.00";
             tbl_Cotizacion.Rows.Clear();
             cmb_Descuento.SelectedIndex = -1; // Limpiar selección de descuento
+        }
+        private void CargarUserControl(UserControl control)
+        {
+            tableLayoutPanel3.Controls.Clear();
+            control.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Controls.Add(control);
         }
     }
 }

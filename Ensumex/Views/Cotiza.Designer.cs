@@ -346,9 +346,9 @@
             btn_AgregarProducto.MouseState = MaterialSkin.MouseState.HOVER;
             btn_AgregarProducto.Name = "btn_AgregarProducto";
             btn_AgregarProducto.NoAccentTextColor = Color.Empty;
-            btn_AgregarProducto.Size = new Size(95, 36);
+            btn_AgregarProducto.Size = new Size(88, 36);
             btn_AgregarProducto.TabIndex = 9;
-            btn_AgregarProducto.Text = "Calcular";
+            btn_AgregarProducto.Text = "Agregar";
             btn_AgregarProducto.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btn_AgregarProducto.UseAccentColor = false;
             btn_AgregarProducto.UseVisualStyleBackColor = false;
