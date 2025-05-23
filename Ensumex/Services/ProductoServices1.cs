@@ -11,6 +11,7 @@ namespace Ensumex.Services
     {
         private readonly ProductosDao _productoDao = new();
         
+        [Obsolete]
         public List <(string CLAVE, string Descripcion, string UnidadEntrada, decimal PU, decimal PrecioPublico, decimal PUMinimo, string TipoProducto)> ObtenerProductos(int? limite = null)
         {
             var productos = _productoDao.ObtenerProductoss();

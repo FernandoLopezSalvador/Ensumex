@@ -13,7 +13,7 @@ namespace Ensumex.Utils
 {
     internal class Cargarproductos
     {
-
+        [Obsolete]
         public static void ImportarExcelAProductos1(string connectionString)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();

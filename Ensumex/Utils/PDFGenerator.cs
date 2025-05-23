@@ -116,18 +116,40 @@ namespace Ensumex.Utils
                     doc.Add(tabla);
                     doc.Add(new Paragraph("\n"));
 
-                    doc.Add(new Paragraph("Nota: Se requiere depósito del 50% para confirmar pedido. Instalación el mismo día o siguiente día hábil. Garantía: 3 años contra defectos de fabricación.", fontNormal));
-                    doc.Add(new Paragraph("\n"));
 
-                    doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
+                // Verifica si alguna descripción contiene la palabra "CALENTADOR"
+                bool contieneCalentador = false;
+
+                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
+                {
+                    if (fila.IsNewRow) continue;
+                    string descripcion = fila.Cells["Descripcion"].Value?.ToString()?.ToUpper() ?? "";
+
+                    if (descripcion.Contains("CALENTADOR"))
+                    {
+                        contieneCalentador = true;
+                        break;
+                    }
+                }
+
+                doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
+
+                if (contieneCalentador)
+                {
                     doc.Add(new Paragraph(
-                    "- Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
-                    "- Garantía de la mano de obra: 6 meses contra fugas de agua.\n\n" +
-                    "- Equipos en existencia para entrega inmediata.\n\n" +
-                    "- No incluye material de plomería.\n\n" +
-                    "- Si necesita factura, la mano de obra se agrega más I.V.A.\n\n" +
-                    "- Precios sujetos a cambios sin previo aviso.\n\n" +
-                    "Sin otro particular, quedo a sus órdenes.\n\n\n\n\n\n", fontNormal));
+                        "- Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
+                        "- Garantía de la mano de obra: 6 meses contra fugas de agua.\n\n" +
+                        "- Equipos en existencia para entrega inmediata.\n\n" +
+                        "- No incluye material de plomería.\n\n" +
+                        "- Si necesita factura, la mano de obra se agrega más I.V.A.\n\n" +
+                        "- Precios sujetos a cambios sin previo aviso.\n\n" +
+                        "Sin otro particular, quedo a sus órdenes.\n\n\n\n\n\n", fontNormal));
+                }
+                else
+                {
+                    doc.Add(new Paragraph("- Precios sujetos a cambios sin previo aviso.\n\n\n\n\n\n", fontNormal));
+                }
+
 
                 // Crear una tabla de una columna centrada
                 PdfPTable tablaFirma = new PdfPTable(1);  

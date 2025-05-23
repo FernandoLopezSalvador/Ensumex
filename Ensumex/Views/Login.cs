@@ -117,6 +117,8 @@ namespace Ensumex
                         txt_contraseñalogin.PasswordChar = '*'; // Asegúrate de seguir ocultando
                         txt_Usuariologin.Focus();
                     }
+
+                    
                 }
                 else msgError("Ingrese su contraseña");
             }

@@ -11,7 +11,9 @@ namespace Ensumex.Clases
        public class UserModel
         {
             private UsuarioDao usuarioDao = new UsuarioDao();
-            public bool LoginUser(string usuario, string contraseña)
+
+        [Obsolete]
+        public bool LoginUser(string usuario, string contraseña)
             {
                 return usuarioDao.Login(usuario, contraseña);
             }

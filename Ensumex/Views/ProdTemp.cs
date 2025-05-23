@@ -81,6 +81,7 @@ namespace Ensumex.Views
                 MessageBox.Show("Por favor, completa todos los campos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            
             MessageBox.Show("Producto Agregado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             // Aquí está la clave:
             this.DialogResult = DialogResult.OK;
@@ -91,12 +92,7 @@ namespace Ensumex.Views
         public string Descripcion => txb_Descripcion.Text.Trim();
         public decimal PrecioUnitarioTemp => decimal.TryParse(txb_PrecioUnitarioTemp.Text, out decimal p) ? p : 0;
         public decimal PrecioPublicoTemp => decimal.TryParse(txb_PrecioPublicoTemp.Text, out decimal p) ? p : 0;
-        //public string unidad => txb_UnidadEntradaTemp.Text.Trim();
         public string Unidentrada => cmb_Unidentrada.Text.Trim();
-
-
-
-
     }
     
 }

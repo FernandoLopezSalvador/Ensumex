@@ -11,6 +11,7 @@ namespace Ensumex.Services
     {
         private readonly ClientesDao _clienteDao = new();
 
+        [Obsolete]
         public List<(int CLAVE, string Estatus,string Nombre,string Calle, string Telefono,decimal Saldo,string EstadoDatosTimbrado,string NombreComercial)> ObtenerClientes(int? limite = null)
         {
             var clientes = _clienteDao.ObtenerClientes();

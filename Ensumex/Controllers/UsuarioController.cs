@@ -58,6 +58,7 @@ namespace Ensumex.Controllers
                 }
             }
         }
+
         // Método para iniciar sesión Y Obtener el Hash de la contraseña
         private string ObtenerHashSHA256(string texto)
         {

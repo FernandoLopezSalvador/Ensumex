@@ -307,8 +307,8 @@ namespace Ensumex.Views
                     // Recibe los datos del formulario temporal
                     string clave = formProducto.Clave;
                     string descripcion = formProducto.Descripcion; 
-                    decimal preciouni = formProducto.PrecioPublicoTemp; // Cambiado a PrecioPublicoTemp
-                    decimal preciopiblico = formProducto.PrecioUnitarioTemp; // Cambiado a PrecioUnitarioTemp
+                    decimal preciouni = formProducto.PrecioUnitarioTemp; // Cambiado a PrecioUnitarioTemp
+                    decimal preciopiblico = formProducto.PrecioPublicoTemp; // Cambiado a PrecioPublicoTemp
                     string unidad = formProducto.Unidentrada; // Cambiado a UnidadEntrada
                     // Tasa de cambio opcional (puedes usar frmTasaCambio si quieres)
                     decimal tasaCambio = 1;
@@ -327,6 +327,7 @@ namespace Ensumex.Views
                     btnEliminar.UseColumnTextForButtonValue = true;
                     tbl_Cotizacion.Columns.Add(btnEliminar);
                 }
+                
             }
         }
 
@@ -350,7 +351,6 @@ namespace Ensumex.Views
                             "Confirmar eliminación",
                             MessageBoxButtons.YesNo,
                             MessageBoxIcon.Question);
-
                         if (resultado == DialogResult.Yes)
                         {
                             tbl_Cotizacion.Rows.RemoveAt(e.RowIndex);
@@ -382,7 +382,6 @@ namespace Ensumex.Views
             decimal flete = 0;
             decimal subtotal = 0;
             decimal descuento = 0;
-
             try
             {
                 // 1. Calcular Subtotal
