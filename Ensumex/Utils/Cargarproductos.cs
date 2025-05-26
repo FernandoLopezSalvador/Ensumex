@@ -24,11 +24,8 @@ namespace Ensumex.Utils
             {
                 return;
             }
-
             string filePath = openFileDialog.FileName;
-
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
@@ -40,24 +37,18 @@ namespace Ensumex.Utils
                             UseHeaderRow = true
                         }
                     });
-
                     DataTable dt = result.Tables[0];
-
                     List<string> errores = new List<string>();
                     int filasImportadas = 0;
-
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         conn.Open();
-
                         int filaNumero = 1; // Para reportar número de fila en Excel
-
                         foreach (DataRow row in dt.Rows)
                         {
                             try
                             {
                                 filaNumero++;
-
                                 var ADQ = row.Table.Columns.Contains("ADQ") ? row["ADQ"]?.ToString() : null;
                                 var CLAVE = row.Table.Columns.Contains("CLAVE") ? row["CLAVE"]?.ToString() : null;
                                 var Descripcion = row.Table.Columns.Contains("Descripcion") ? row["Descripcion"]?.ToString() : null;
@@ -80,7 +71,6 @@ namespace Ensumex.Utils
                                     errores.Add($"Fila {filaNumero}: No tiene CLAVE, fila ignorada.");
                                     continue;
                                 }
-
                                 string queryExiste = "SELECT COUNT(*) FROM Productos1 WHERE CLAVE = @CLAVE";
                                 using (SqlCommand cmdExiste = new SqlCommand(queryExiste, conn))
                                 {
@@ -124,7 +114,6 @@ namespace Ensumex.Utils
                                             cmdUpdate.Parameters.AddWithValue("@PesoCartaporte", PesoCartaporte);
                                             cmdUpdate.Parameters.AddWithValue("@TipoProducto", (object)TipoProducto ?? DBNull.Value);
                                             cmdUpdate.Parameters.AddWithValue("@CLAVE", CLAVE);
-
                                             cmdUpdate.ExecuteNonQuery();
                                         }
                                     }
@@ -132,9 +121,9 @@ namespace Ensumex.Utils
                                     {
                                         // Insertar
                                         string queryInsert = @"INSERT INTO Productos1 
-                                (ADQ, CARAC_C, CLAVE, CARAC_E, Descripcion, UnidadEntrada, UnidadSalida, PU, PrecioPublico, PUMinimo, PrecioMinimo, ClaveSAT, UnidadSAT, PesoCartaporte, TipoProducto)
-                                VALUES
-                                (@ADQ, @CARAC_C, @CLAVE, @CARAC_E, @Descripcion, @UnidadEntrada, @UnidadSalida, @PU, @PrecioPublico, @PUMinimo, @PrecioMinimo, @ClaveSAT, @UnidadSAT, @PesoCartaporte, @TipoProducto)";
+                                        (ADQ, CARAC_C, CLAVE, CARAC_E, Descripcion, UnidadEntrada, UnidadSalida, PU, PrecioPublico, PUMinimo, PrecioMinimo, ClaveSAT, UnidadSAT, PesoCartaporte, TipoProducto)
+                                        VALUES
+                                        (@ADQ, @CARAC_C, @CLAVE, @CARAC_E, @Descripcion, @UnidadEntrada, @UnidadSalida, @PU, @PrecioPublico, @PUMinimo, @PrecioMinimo, @ClaveSAT, @UnidadSAT, @PesoCartaporte, @TipoProducto)";
 
                                         using (SqlCommand cmdInsert = new SqlCommand(queryInsert, conn))
                                         {
@@ -153,12 +142,10 @@ namespace Ensumex.Utils
                                             cmdInsert.Parameters.AddWithValue("@UnidadSAT", (object)UnidadSAT ?? DBNull.Value);
                                             cmdInsert.Parameters.AddWithValue("@PesoCartaporte", PesoCartaporte);
                                             cmdInsert.Parameters.AddWithValue("@TipoProducto", (object)TipoProducto ?? DBNull.Value);
-
                                             cmdInsert.ExecuteNonQuery();
                                         }
                                     }
                                 }
-
                                 filasImportadas++;
                             }
                             catch (Exception ex)
@@ -167,7 +154,6 @@ namespace Ensumex.Utils
                             }
                         }
                     }
-
                     // Mostrar resumen
                     string mensaje = $"Filas importadas o actualizadas: {filasImportadas}\n";
                     if (errores.Count > 0)
@@ -178,7 +164,6 @@ namespace Ensumex.Utils
                     {
                         mensaje += "No se encontraron errores.";
                     }
-
                     MessageBox.Show(mensaje);
                 }
             }

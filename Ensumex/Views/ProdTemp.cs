@@ -18,7 +18,7 @@ namespace Ensumex.Views
         {
             InitializeComponent();
             ConfigurarTema();
-            cmb_Unidentrada.Items.AddRange(new object[] { "PZA", "PROD"});
+            cmb_Unidentrada.Items.AddRange(new object[] { "PZA", "PRODUCTO"});
         }
 
         private void ConfigurarTema()
@@ -70,7 +70,7 @@ namespace Ensumex.Views
         {
             this.Close(); // Cierra el formulario actual
         }
-
+       
         private void materialButton2_Click(object sender, EventArgs e)
         {
 
