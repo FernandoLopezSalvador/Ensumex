@@ -44,7 +44,7 @@
             linkLabel1.AutoSize = true;
             linkLabel1.Font = new Font("Century Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             linkLabel1.LinkColor = Color.DimGray;
-            linkLabel1.Location = new Point(325, 245);
+            linkLabel1.Location = new Point(318, 275);
             linkLabel1.Name = "linkLabel1";
             linkLabel1.Size = new Size(180, 17);
             linkLabel1.TabIndex = 4;
@@ -57,7 +57,7 @@
             lbl_error.BackColor = Color.Transparent;
             lbl_error.FlatStyle = FlatStyle.Flat;
             lbl_error.ForeColor = Color.Red;
-            lbl_error.Location = new Point(229, 227);
+            lbl_error.Location = new Point(229, 254);
             lbl_error.Name = "lbl_error";
             lbl_error.Size = new Size(77, 15);
             lbl_error.TabIndex = 9;
@@ -67,10 +67,10 @@
             // pictureBox3
             // 
             pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
-            pictureBox3.Location = new Point(28, 83);
+            pictureBox3.Location = new Point(6, 83);
             pictureBox3.Margin = new Padding(3, 2, 3, 2);
             pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(175, 150);
+            pictureBox3.Size = new Size(175, 161);
             pictureBox3.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox3.TabIndex = 0;
             pictureBox3.TabStop = false;
@@ -82,7 +82,7 @@
             materialButton1.Depth = 0;
             materialButton1.HighEmphasis = true;
             materialButton1.Icon = null;
-            materialButton1.Location = new Point(368, 197);
+            materialButton1.Location = new Point(364, 208);
             materialButton1.Margin = new Padding(4);
             materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
             materialButton1.Name = "materialButton1";
@@ -137,7 +137,7 @@
             txt_contraseñalogin.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             txt_contraseñalogin.HideSelection = true;
             txt_contraseñalogin.LeadingIcon = null;
-            txt_contraseñalogin.Location = new Point(229, 143);
+            txt_contraseñalogin.Location = new Point(229, 154);
             txt_contraseñalogin.Margin = new Padding(3, 2, 3, 2);
             txt_contraseñalogin.MaxLength = 32767;
             txt_contraseñalogin.MouseState = MaterialSkin.MouseState.OUT;
@@ -166,7 +166,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(15, 15, 15);
-            ClientSize = new Size(626, 274);
+            ClientSize = new Size(636, 294);
             Controls.Add(txt_contraseñalogin);
             Controls.Add(txt_Usuariologin);
             Controls.Add(materialButton1);

@@ -119,7 +119,6 @@ namespace Ensumex.Forms
         {
             btn_cerrarsesion.BackColor = Color.FromArgb(0, 104, 56);
         }
-
         [Obsolete]
         private void btn_cotizacion_Click(object sender, EventArgs e)
         {
@@ -154,17 +153,14 @@ namespace Ensumex.Forms
         {
             btn_inventarioP.BackColor = Color.FromArgb(0, 104, 56);
         }
-
         private void btn_inventarioP_Click(object sender, EventArgs e)
         {
             CargarUserControl(new Product());
         }
-
         private void materialButton2_Click(object sender, EventArgs e)
         {
             CargarUserControl(new Cotiza());
         }
-
         private void btn_clientes_Click(object sender, EventArgs e)
         {
         }

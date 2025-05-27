@@ -37,7 +37,6 @@ namespace Ensumex.Views
             {
                 var productoService = new ProductoServices1();
                 var productos = productoService.ObtenerProductos(limite);
-
                 // Si algunos de los valores son nulos, asigna valores predeterminados
                 var productosConValoresSeguros = productos.Select(p => new
                 {
@@ -83,7 +82,6 @@ namespace Ensumex.Views
                             break;
                         }
                     }
-
                     row.Visible = visible;
                 }
             }
@@ -97,11 +95,11 @@ namespace Ensumex.Views
         {
             if (cmb_productos.SelectedItem != null && cmb_productos.SelectedItem.ToString() == "Todos")
             {
-                CargarProductoss(); // Carga todos los productos
+                CargarProductoss(); //Carga todos los productos
             }
             else if (cmb_productos.SelectedItem != null && int.TryParse(cmb_productos.SelectedItem.ToString(), out int limite))
             {
-                CargarProductoss(limite); // Carga los productos según el límite seleccionado
+                CargarProductoss(limite); //Carga los productos según el límite seleccionado
             }
         }
     }

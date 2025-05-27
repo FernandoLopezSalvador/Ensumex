@@ -32,10 +32,8 @@ namespace Ensumex.Views
                 Accent.LightGreen200, // Acento
                 TextShade.WHITE);   // Tono del texto
         }
-
         private void txb_PrecioUnitarioTemp_TabIndexChanged(object sender, EventArgs e)
         {
-
         }
         private void txb_PrecioUnitarioTemp_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -44,24 +42,20 @@ namespace Ensumex.Views
             // Permitir teclas de control (Backspace, etc.)
             if (char.IsControl(e.KeyChar))
                 return;
-
             // Permitir solo dígitos y un punto
             if (!char.IsDigit(e.KeyChar) && e.KeyChar != '.')
             {
                 e.Handled = true; // Bloquear tecla
                 return;
             }
-
             // No permitir más de un punto decimal
             if (e.KeyChar == '.' && txt.Text.Contains('.'))
             {
                 e.Handled = true;
             }
         }
-
         private void txb_PrecioPublicoTemp_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            
+        { 
         }
         private void materialButton1_Click(object sender, EventArgs e)
         {
@@ -69,7 +63,6 @@ namespace Ensumex.Views
         }
         private void materialButton2_Click(object sender, EventArgs e)
         {
-
             if (string.IsNullOrWhiteSpace(txb_ClaveTemp.Text) ||
                  string.IsNullOrWhiteSpace(txb_PrecioPublicoTemp.Text) ||
                  string.IsNullOrWhiteSpace(txb_PrecioUnitarioTemp.Text))
@@ -77,7 +70,6 @@ namespace Ensumex.Views
                 MessageBox.Show("Por favor, completa todos los campos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
             MessageBox.Show("Producto Agregado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             // Aquí está la clave:
             this.DialogResult = DialogResult.OK;
@@ -89,5 +81,4 @@ namespace Ensumex.Views
         public decimal PrecioPublicoTemp => decimal.TryParse(txb_PrecioPublicoTemp.Text, out decimal p) ? p : 0;
         public string Unidentrada => cmb_Unidentrada.Text.Trim();
     }
-    
 }

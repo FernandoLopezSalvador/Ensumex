@@ -32,14 +32,12 @@ namespace Ensumex.Views
         {
             Panel_Nuevousuario.Visible = true;
         }
-
         [Obsolete]
         private void btn_GuardarUsuario_Click(object sender, EventArgs e)
         {
             try
             {
                 string correo = textNewCorreo.Text;
-
                 if (ValidarCorreo(correo))
                 {
                     if (string.IsNullOrEmpty(textnewUsuario.Text) || string.IsNullOrEmpty(textNewContraseña.Text) || string.IsNullOrEmpty(textNewNombre.Text) || string.IsNullOrEmpty(cmb_NewPosicion.Text) || string.IsNullOrEmpty(textNewCorreo.Text))
@@ -58,7 +56,6 @@ namespace Ensumex.Views
                             Posision = cmb_NewPosicion.SelectedItem.ToString(),
                             Correo = textNewCorreo.Text.Trim()
                         };
-
                         // Crear una instancia del controlador de usuarios y guardar el nuevo usuario
                         UsuarioController controller = new UsuarioController();
                         bool guardado = controller.GuardarUsuario(usuarios);
@@ -100,21 +97,17 @@ namespace Ensumex.Views
                 MessageBox.Show($"Ocurrió un error inesperado: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private bool ValidarCorreo(string correo)
         {
             // Expresión regular para validar un correo electrónico
             string patronCorreo = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-
             // Verifica si el correo coincide con el patrón
             return Regex.IsMatch(correo, patronCorreo);
         }
-
         private void btn_Cancelar_Click(object sender, EventArgs e)
         {
             Panel_Nuevousuario.Visible = false;
         }
-
         private void Tabla_usuarios_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Evitar errores al hacer clic en encabezados
@@ -128,10 +121,8 @@ namespace Ensumex.Views
                 // Aquí puedes abrir un nuevo formulario para editar los datos
             }
         }
-
         private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
         {
-
         }
         private void CargarUsuariosEnTabla()
         {
@@ -151,17 +142,14 @@ namespace Ensumex.Views
                     Tabla_usuarios.Columns.Add(btnEditar);
                 }
             }
-            
             catch (Exception ex)
             {
                 MessageBox.Show("Ocurrió un error al cargar los usuarios:\n" + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void btn_GuardarUsuario_Click_1(object sender, EventArgs e)
         {
-
         }
     }
 }
