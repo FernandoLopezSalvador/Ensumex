@@ -49,7 +49,6 @@ namespace Ensumex.Forms
         {
             menu_usuario.Renderer = new CustomMenuRenderer();
         }
-
         private void CargarDatosUsuario()
         {
             CargaUsuario.CargarDatosUsuario(lbl_usuario, lbl_posicion);
@@ -96,10 +95,8 @@ namespace Ensumex.Forms
         public class CustomMenuRenderer : ToolStripProfessionalRenderer
         {
             public CustomMenuRenderer() : base(new CustomColorTable()) { }
-
             protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
             {
-
             }
         }
         public class CustomColorTable : ProfessionalColorTable
@@ -191,22 +188,18 @@ namespace Ensumex.Forms
             control.Dock = DockStyle.Fill;
             panelContenedor.Controls.Add(control);
         }
-
         private void administrarUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
-
         private void materialButton3_Click(object sender, EventArgs e)
         {
             CargarUserControl(new Clients());
         }
-
         private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
-
         private void productosToolStripMenuItem_Click(object sender, EventArgs e)
         {
         }

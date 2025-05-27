@@ -68,14 +68,11 @@ namespace Ensumex.Views
             { "TasaCambio", "Tasa de Cambio" },
             { "Subtotal", "Subtotal" }
             };
-
             foreach (var columna in columnas.Cast<string>().Chunk(2))
                 tbl_Cotizacion.Columns.Add(columna[0], columna[1]);
 
             tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = true;
         }
-
-        
         private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
         {
             try
@@ -121,8 +118,8 @@ namespace Ensumex.Views
                         lbl_Subtotal.Text = "$0.00";
                         lbl_costoDescuento.Text = "$0.00";
                         lbl_TotalNeto.Text = "$0.00";
-                        tbl_Cotizacion.Rows.Clear();
-                        cmb_Descuento.SelectedIndex = -1; // Limpiar selección de descuento
+                        tbl_Cotizacion.Rows.Clear();    
+                        cmb_Descuento.SelectedIndex = -1; 
                     }
                 }
             }
@@ -135,7 +132,6 @@ namespace Ensumex.Views
                 MessageBox.Show($"Ocurrió un error al guardar la cotización.\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void CargarProductoss(int? limite = 100)
         {
             try
@@ -171,7 +167,6 @@ namespace Ensumex.Views
         {
             
         }
-
         private void tbl_Productos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -221,9 +216,7 @@ namespace Ensumex.Views
                         MessageBox.Show("El precio público no es válido.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-
                     decimal precioConvertido = precioPublico * tasaCambio;
-
                     // Agrega la fila con la tasa de cambio (campo 6)
                     tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precioPublico, precio, 1, tasaCambio, precioConvertido);
                     ActualizarTotales();
@@ -245,7 +238,6 @@ namespace Ensumex.Views
                 MessageBox.Show("Ocurrió un error al agregar el producto: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void tbl_Cotizacion_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -276,7 +268,6 @@ namespace Ensumex.Views
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void cmb_Descuento_SelectedIndexChanged(object sender, EventArgs e)
         {
             ActualizarTotales();
@@ -289,7 +280,6 @@ namespace Ensumex.Views
             }
 
         }
-
         private void txt_Costoflete_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)8) // 8 es el código ASCII para la tecla 'Backspace'
@@ -297,7 +287,6 @@ namespace Ensumex.Views
                 e.Handled = true;  // Bloquea la entrada de caracteres no numéricos
             }
         }
-
         private void btn_AgregarProducto_Click(object sender, EventArgs e)
         {
             using (var formProducto = new ProdTemp())
@@ -330,12 +319,10 @@ namespace Ensumex.Views
                 
             }
         }
-
         private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
         {
 
         }
-
         private void tbl_Cotizacion_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -365,17 +352,14 @@ namespace Ensumex.Views
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void txt_Costoinstalacion_TextChanged(object sender, EventArgs e)
         {
             ActualizarTotales();
         }
-
         private void txt_Costoflete_TextChanged(object sender, EventArgs e)
         {
             ActualizarTotales();
         }
-
         private void ActualizarTotales()
         {
             decimal instalacion = 0;
@@ -395,7 +379,6 @@ namespace Ensumex.Views
                     }
                 }
                 lbl_Subtotal.Text = $"${subtotal:F2}";
-
                 // 2. Calcular Descuento
                 descuento = 0; // Reiniciar descuento
                 if (cmb_Descuento.SelectedItem != null)
@@ -407,11 +390,9 @@ namespace Ensumex.Views
                     }
                 }
                 lbl_costoDescuento.Text = $"-${descuento:F2}";
-
                 // 3. Leer costos adicionales
                 instalacion = decimal.TryParse(txt_Costoinstalacion.Text, out var inst) ? inst : 0;
                 flete = decimal.TryParse(txt_Costoflete.Text, out var flt) ? flt : 0;
-
                 // 4. Calcular Total Neto
                 decimal totalNeto = (subtotal - descuento) + instalacion + flete;
                 lbl_TotalNeto.Text = totalNeto.ToString("C");
@@ -423,12 +404,10 @@ namespace Ensumex.Views
                 MessageBox.Show($"Se produjo un error al calcular el total: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
         }
-
         private void btn_Cancelarcotizacion_Click_1(object sender, EventArgs e)
         {
             txt_Costoflete.Text = "";
