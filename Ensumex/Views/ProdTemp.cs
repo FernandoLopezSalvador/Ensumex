@@ -20,7 +20,6 @@ namespace Ensumex.Views
             ConfigurarTema();
             cmb_Unidentrada.Items.AddRange(new object[] { "PZA", "PRODUCTO"});
         }
-
         private void ConfigurarTema()
         {
             var skinManager = MaterialSkinManager.Instance;
@@ -38,7 +37,6 @@ namespace Ensumex.Views
         {
 
         }
-
         private void txb_PrecioUnitarioTemp_KeyPress(object sender, KeyPressEventArgs e)
         {
             TextBox txt = sender as TextBox;
@@ -65,12 +63,10 @@ namespace Ensumex.Views
         {
             
         }
-
         private void materialButton1_Click(object sender, EventArgs e)
         {
             this.Close(); // Cierra el formulario actual
         }
-       
         private void materialButton2_Click(object sender, EventArgs e)
         {
 
@@ -87,7 +83,6 @@ namespace Ensumex.Views
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
-
         public string Clave => txb_ClaveTemp.Text.Trim();
         public string Descripcion => txb_Descripcion.Text.Trim();
         public decimal PrecioUnitarioTemp => decimal.TryParse(txb_PrecioUnitarioTemp.Text, out decimal p) ? p : 0;

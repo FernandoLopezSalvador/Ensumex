@@ -28,13 +28,11 @@ namespace Ensumex.Forms
             ConfigurarMenu();
             CargarDatosUsuario();
         }
-
         private void InicializarFormulario()
         {
             this.WindowState = FormWindowState.Maximized;
             panel1.Cursor = Cursors.Hand;
         }
-
         private void ConfigurarTema()
         {
             var skinManager = MaterialSkinManager.Instance;
@@ -47,7 +45,6 @@ namespace Ensumex.Forms
                 Accent.LightGreen200, // Acento
                 TextShade.WHITE);   // Tono del texto
         }
-
         private void ConfigurarMenu()
         {
             menu_usuario.Renderer = new CustomMenuRenderer();
@@ -57,19 +54,15 @@ namespace Ensumex.Forms
         {
             CargaUsuario.CargarDatosUsuario(lbl_usuario, lbl_posicion);
         }
-
         private void pictureBox1_Click(object sender, EventArgs e)
         {
         }
-
         private void pictureBox2_Click(object sender, EventArgs e)
         {
         }
-
         private void txt_usuario_TextChanged(object sender, EventArgs e)
         {
         }
-
         private void txt_usuario_Enter(object sender, EventArgs e)
         {
             if (txt_usuario.Text == "Usuario")
@@ -78,7 +71,6 @@ namespace Ensumex.Forms
                 txt_usuario.ForeColor = Color.Black;
             }
         }
-
         private void txt_usuario_Leave(object sender, EventArgs e)
         {
             if (txt_usuario.Text == "")
@@ -87,26 +79,19 @@ namespace Ensumex.Forms
                 txt_usuario.ForeColor = Color.White;
             }
         }
-
         private void pictureBox5_Click(object sender, EventArgs e)
         {
 
         }
-
         private void btn_inventario_Click(object sender, EventArgs e)
         {
-
-
         }
-
         private void pictureBox7_Click(object sender, EventArgs e)
         {
 
         }
-
         private void lbl_cuenta_Click(object sender, EventArgs e)
         {
-
         }
         public class CustomMenuRenderer : ToolStripProfessionalRenderer
         {
@@ -122,7 +107,6 @@ namespace Ensumex.Forms
             public override Color MenuStripGradientBegin => Color.FromArgb(30, 30, 30);
             public override Color MenuStripGradientEnd => Color.FromArgb(30, 30, 30);
         }
-
         private void btn_cerrarsesion_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("¿Cerrar sesion?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
@@ -134,7 +118,6 @@ namespace Ensumex.Forms
         {
             btn_cerrarsesion.BackColor = Color.FromArgb(25, 239, 22);
         }
-
         private void btn_cerrarsesion_MouseLeave(object sender, EventArgs e)
         {
             btn_cerrarsesion.BackColor = Color.FromArgb(0, 104, 56);
@@ -145,32 +128,26 @@ namespace Ensumex.Forms
         {
 
         }
-        
         private void pictureBox6_Click(object sender, EventArgs e)
         {
 
         }
-        
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
         }
-
         private void pictureBox1_Click_1(object sender, EventArgs e)
         {
 
         }
-
         private void nuevoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CargarUserControl(new Users());
         }
-
         private void button1_Click(object sender, EventArgs e)
         {
 
         }
-
         private void materialButton1_MouseEnter(object sender, EventArgs e)
         {
             btn_inventarioP.BackColor = Color.FromArgb(25, 239, 22);
@@ -193,9 +170,7 @@ namespace Ensumex.Forms
 
         private void btn_clientes_Click(object sender, EventArgs e)
         {
-
         }
-
         private void ENSUMEX_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!VentanaHelper.ConfirmarCerrarFormulario())
@@ -203,7 +178,6 @@ namespace Ensumex.Forms
                 e.Cancel = true;
             }
         }
-
         private void materialSwitch1_CheckedChanged(object sender, EventArgs e)
         {
             var manager = MaterialSkin.MaterialSkinManager.Instance;
@@ -235,9 +209,6 @@ namespace Ensumex.Forms
 
         private void productosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //string connectionString = "Server=localhost; Database=Ensumex; Integrated Security=True";
-            //Cargarproductos.ImportarExcelAProductos1(connectionString);
-            
         }
     }
 } 
