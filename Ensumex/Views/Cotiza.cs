@@ -23,38 +23,30 @@ namespace Ensumex.Views
         public Cotiza()
         {
             InitializeComponent();
-
             // Estilo de tablas
             AplicarEstilosTabla(tbl_Productos);
             AplicarEstilosTabla(tbl_Cotizacion);
-
             // Fecha actual
             lblFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
-
             // Cargar productos
             CargarProductoss();
-
             // Cargar descuentos
             AgregarDescuentos(new[] { "0%", "5%", "10%", "15%", "20%", "25%" });
-
             // Agregar columnas a tabla cotización
             AgregarColumnasCotizacion();
 
         }
-
         // Método para aplicar estilos
         private void AplicarEstilosTabla(DataGridView tabla)
         {
             tabla.DefaultCellStyle.ForeColor = Color.Black;
             tabla.BackgroundColor = Color.FromArgb(45, 45, 48);
         }
-
         // Método para agregar descuentos
         private void AgregarDescuentos(string[] descuentos)
         {
             cmb_Descuento.Items.AddRange(descuentos);
         }
-
         // Método para agregar columnas
         private void AgregarColumnasCotizacion()
         {
@@ -70,8 +62,7 @@ namespace Ensumex.Views
             };
             foreach (var columna in columnas.Cast<string>().Chunk(2))
                 tbl_Cotizacion.Columns.Add(columna[0], columna[1]);
-
-            tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = true;
+                tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = true;
         }
         private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
         {
@@ -81,7 +72,6 @@ namespace Ensumex.Views
                 {
                     sfd.Filter = "Archivo PDF|*.pdf";
                     sfd.FileName = $"Cotizacion_{DateTime.Now:yyyyMMdd}.pdf";
-
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         // Validaciones mínimas
@@ -96,7 +86,6 @@ namespace Ensumex.Views
                             MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
-
                         // Generar el PDF
                         PDFGenerator.GenerarPDFCotizacion(
                             rutaArchivo: sfd.FileName,
@@ -108,7 +97,6 @@ namespace Ensumex.Views
                             descuento: lbl_costoDescuento.Text,
                             tablaCotizacion: tbl_Cotizacion
                         );
-
                         MessageBox.Show("Cotización guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         txt_Costoflete.Text = "";
                         txt_Costoinstalacion.Text = "";
@@ -138,7 +126,6 @@ namespace Ensumex.Views
             {
                 var productoService = new ProductoServices1();
                 var productos = productoService.ObtenerProductos(limite);
-
                 tbl_Productos.DataSource = productos.Select(p => new
                 {
                     Clave = string.IsNullOrWhiteSpace(p.CLAVE) ? "N/A" : p.CLAVE,
@@ -147,7 +134,6 @@ namespace Ensumex.Views
                     PrecioPublico = p.PrecioPublico.ToString("0.00"),
                     PrecioUnitario = p.PU.ToString("0.00")
                 }).ToList();
-
                 if (!tbl_Productos.Columns.Contains("Agregar"))
                 {
                     DataGridViewButtonColumn btnAgregar = new DataGridViewButtonColumn();
@@ -165,7 +151,6 @@ namespace Ensumex.Views
         }
         private void btn_Cancelarcotizacion_Click(object sender, EventArgs e)
         {
-            
         }
         private void tbl_Productos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -174,7 +159,6 @@ namespace Ensumex.Views
                 if (e.ColumnIndex == tbl_Productos.Columns["Agregar"].Index && e.RowIndex >= 0)
                 {
                     var fila = tbl_Productos.Rows[e.RowIndex];
-
                     // Validación previa por seguridad
                     if (fila.Cells["Clave"].Value == null ||
                         fila.Cells["Descripcion"].Value == null ||
@@ -186,7 +170,6 @@ namespace Ensumex.Views
                         MessageBox.Show("Uno o más datos del producto están vacíos o no disponibles.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-
                     string clave = fila.Cells["Clave"].Value.ToString();
                     string descripcion = fila.Cells["Descripcion"].Value.ToString();
                     string unidad = fila.Cells["UnidadEntrada"].Value.ToString();
@@ -196,21 +179,16 @@ namespace Ensumex.Views
                         MessageBox.Show("El precio no es válido.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-
                     // Solicita la tasa de cambio
                     string input = Interaction.InputBox("Ingrese la tasa de cambio para este producto (si aplica):", "Tasa de Cambio", "1");
-
                     // Intenta convertir la entrada y valida que sea mayor a 0
                     decimal tasaCambio;
                     bool esValido = decimal.TryParse(input, out tasaCambio);
-
                     if (!esValido || tasaCambio <= 0)
                     {
                         //MessageBox.Show("La tasa ingresada no es válida o es 0. Se usará el valor por defecto (1).", "Tasa inválida", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         tasaCambio = 1;
                     }
-
-
                     if (!decimal.TryParse(fila.Cells["PrecioPublico"].Value.ToString(), out decimal precioPublico))
                     {
                         MessageBox.Show("El precio público no es válido.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -221,7 +199,6 @@ namespace Ensumex.Views
                     tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precioPublico, precio, 1, tasaCambio, precioConvertido);
                     ActualizarTotales();
                 }
-
                 // Asegura que la columna de "Eliminar" solo se agregue una vez
                 if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
                 {
@@ -246,7 +223,6 @@ namespace Ensumex.Views
                     e.ColumnIndex == tbl_Cotizacion.Columns["TasaCambio"].Index)
                 {
                     var row = tbl_Cotizacion.Rows[e.RowIndex];
-
                     if (decimal.TryParse(row.Cells["PrecioPublico"].Value?.ToString(), out decimal precioPublico) &&
                         decimal.TryParse(row.Cells["Cantidad"].Value?.ToString(), out decimal cantidad) &&
                         decimal.TryParse(row.Cells["TasaCambio"].Value?.ToString(), out decimal tasa))
@@ -278,7 +254,6 @@ namespace Ensumex.Views
             {
                 e.Handled = true;  // Bloquea la entrada de caracteres no numéricos
             }
-
         }
         private void txt_Costoflete_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -316,7 +291,6 @@ namespace Ensumex.Views
                     btnEliminar.UseColumnTextForButtonValue = true;
                     tbl_Cotizacion.Columns.Add(btnEliminar);
                 }
-                
             }
         }
         private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)

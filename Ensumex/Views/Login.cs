@@ -17,7 +17,6 @@ namespace Ensumex
             ConfigurarTextosPorDefecto();
             ConfigurarVentana();
         }
-
         private void ConfigurarMaterialSkin()
         {
             var skinManager = MaterialSkinManager.Instance;
@@ -31,14 +30,12 @@ namespace Ensumex
                 TextShade.BLACK         // Sombra del texto
             );
         }
-
         private void ConfigurarTextosPorDefecto()
         {
             txt_Usuariologin.Text = "Usuario";
             txt_contraseñalogin.Text = "Contraseña";
             txt_contraseñalogin.PasswordChar = '\0'; // Mostrar texto como normal
         }
-
         private void ConfigurarVentana()
         {
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -46,13 +43,9 @@ namespace Ensumex
         }
         private void bn_minimizar_Click(object sender, EventArgs e)
         {
-           
         }
-
         private void btn_cerrar_Click(object sender, EventArgs e)
-        {
-           
-        }
+        {        }
         private void msgError(string mensaje)
         {
             lbl_error.Text = mensaje;
@@ -71,7 +64,6 @@ namespace Ensumex
             lbl_error.Visible = false;
             this.Show();
         }
-
         // Funcion para validar los campos de inicio de sesion
         private bool ValidarEntrada(string usuario, string contraseña)
         {
@@ -87,13 +79,10 @@ namespace Ensumex
             }
             return true;
         }
-
         [Obsolete]  
         private void materialButton1_Click(object sender, EventArgs e)
         {
-
             if (!ValidarEntrada(txt_Usuariologin.Text, txt_contraseñalogin.Text)) return;
-
             if (txt_Usuariologin.Text != "Usuario")
             {
                 if (txt_contraseñalogin.Text != "Contraseña")
@@ -116,40 +105,27 @@ namespace Ensumex
                         txt_contraseñalogin.Text = ""; // Limpia la contraseña sin usar propiedades inválidas
                         txt_contraseñalogin.PasswordChar = '*'; // Asegúrate de seguir ocultando
                         txt_Usuariologin.Focus();
-                    }
-
-                    
+                    } 
                 }
                 else msgError("Ingrese su contraseña");
             }
             else msgError("Ingrese su usuario");
         }
-
         private void txt_Usuariologin_MouseEnter(object sender, EventArgs e)
         {
-
         }
-
         private void txt_Usuariologin_MouseLeave(object sender, EventArgs e)
         {
-
         }
-
         private void txt_contraseñalogin_MouseEnter(object sender, EventArgs e)
         {
-
         }
-
         private void txt_contraseñalogin_MouseLeave(object sender, EventArgs e)
         {
-
         }
-
         private void Login_FormClosing(object sender, FormClosingEventArgs e)
         {
-
         }
-
         private void txt_contraseñalogin_Enter(object sender, EventArgs e)
         {
             if (txt_contraseñalogin.Text == "Contraseña")
@@ -158,7 +134,6 @@ namespace Ensumex
                 txt_contraseñalogin.PasswordChar = '*'; // Activa ocultar
             }
         }
-
         private void txt_contraseñalogin_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txt_contraseñalogin.Text))
@@ -167,13 +142,11 @@ namespace Ensumex
                 txt_contraseñalogin.PasswordChar = '\0'; // Muestra el texto plano
             }
         }
-
         private void txt_Usuariologin_Enter(object sender, EventArgs e)
         {
             if (txt_Usuariologin.Text == "Usuario")
                 txt_Usuariologin.Text = "";
         }
-
         private void txt_Usuariologin_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txt_Usuariologin.Text))
