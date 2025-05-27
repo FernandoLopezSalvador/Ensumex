@@ -9,10 +9,10 @@ namespace Ensumex.Models
     public static class UsuarioLoginCache
     {
         public static int UsuarioID { get; set; }
-        public static string Usuario { get; set; } = string.Empty; // Initialize to avoid null
-        public static string Contraseña { get; set; } = string.Empty; // Initialize to avoid null
-        public static string Nombre { get; set; } = string.Empty; // Initialize to avoid null
-        public static string Posicion { get; set; } = string.Empty; // Initialize to avoid null
-        public static string Correo { get; set; } = string.Empty; // Initialize to avoid null
+        public static string Usuario { get; set; } = string.Empty; 
+        public static string Contraseña { get; set; } = string.Empty; 
+        public static string Nombre { get; set; } = string.Empty; 
+        public static string Posicion { get; set; } = string.Empty; 
+        public static string Correo { get; set; } = string.Empty; 
     }
 }

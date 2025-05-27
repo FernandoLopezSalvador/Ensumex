@@ -3,6 +3,7 @@ using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Rectangle = iTextSharp.text.Rectangle;
@@ -95,15 +96,16 @@ namespace Ensumex.Utils
                             tabla.AddCell(new Phrase(row.Cells["PrecioPublico"].Value?.ToString() ?? "", fontNormal));
                             tabla.AddCell(new Phrase(row.Cells["Cantidad"].Value?.ToString() ?? "", fontNormal));
                             tabla.AddCell(new Phrase(row.Cells["TasaCambio"].Value?.ToString() ?? "", fontNormal));
-                        }
                     }
 
-                    // Totales alineados a la izquierda
-                    tabla.AddCell(new PdfPCell(new Phrase("Descuento", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
-                    tabla.AddCell(new Phrase(descuento, fontNormal));
+                }
 
+                // Ajustando lo que se muestra en la tabla 
                     tabla.AddCell(new PdfPCell(new Phrase("Subtotal", fontNegrita)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                     tabla.AddCell(new Phrase(subtotal, fontNormal));
+                    
+                    tabla.AddCell(new PdfPCell(new Phrase("Descuento", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
+                    tabla.AddCell(new Phrase(descuento, fontNormal));
 
                     tabla.AddCell(new PdfPCell(new Phrase("MANO DE OBRA POR INSTALACIÓN", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                     tabla.AddCell(new Phrase(costoInstalacion, fontNormal));
@@ -116,8 +118,7 @@ namespace Ensumex.Utils
                     doc.Add(tabla);
                     doc.Add(new Paragraph("\n"));
 
-
-                // Verifica si alguna descripción contiene la palabra "CALENTADOR"
+                // Verifica si alguna descripción contiene la palabra "CALENTADOR" para mostrar notas adicionales
                 bool contieneCalentador = false;
 
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
@@ -147,16 +148,17 @@ namespace Ensumex.Utils
                 }
                 else
                 {
-                    doc.Add(new Paragraph("- Precios sujetos a cambios sin previo aviso.\n\n\n\n\n", fontNormal));
+                    doc.Add(new Paragraph("- Precios sujetos a cambios sin previo aviso.\n", fontNormal));
+                    doc.Add(new Paragraph("Sin otro particular, quedo a sus órdenes.\n\n\n\n\n", fontNormal));
+                    doc.Add(new Paragraph("Si necesita factura, la mano de obra se agrega más I.V.A.", fontNormal));
                 }
 
 
                 // Crear una tabla de una columna centrada
                 PdfPTable tablaFirma = new PdfPTable(1);  
                 tablaFirma.WidthPercentage = 100;
-                 
                 // Celda con texto
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\nMario Valdez\nRepresentante de Ventas", fontCursiva));
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\nCarlos Valdez\nRepresentante de Ventas", fontCursiva));
                 celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;
                 celdaTexto.Border = Rectangle.NO_BORDER;
                 celdaTexto.PaddingBottom = 10f; // Espacio entre texto e imagen
