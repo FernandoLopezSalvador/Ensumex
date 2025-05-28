@@ -31,7 +31,7 @@ namespace Ensumex.Views
             // Cargar productos
             CargarProductoss();
             // Cargar descuentos
-            AgregarDescuentos(new[] { "0%", "5%", "10%", "15%", "20%", "25%" });
+            AgregarDescuentos(new[] { "0%", "5%", "10%", "15%", "20%", "25%", "30" });
             // Agregar columnas a tabla cotización
             AgregarColumnasCotizacion();
 
@@ -274,7 +274,6 @@ namespace Ensumex.Views
                     decimal preciouni = formProducto.PrecioUnitarioTemp; // Cambiado a PrecioUnitarioTemp
                     decimal preciopiblico = formProducto.PrecioPublicoTemp; // Cambiado a PrecioPublicoTemp
                     string unidad = formProducto.Unidentrada; // Cambiado a UnidadEntrada
-                    // Tasa de cambio opcional (puedes usar frmTasaCambio si quieres)
                     decimal tasaCambio = 1;
                     decimal subtotal = preciouni * tasaCambio;
 

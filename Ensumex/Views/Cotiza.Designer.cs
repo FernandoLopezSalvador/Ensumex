@@ -44,8 +44,6 @@
             btn_AgregarProducto = new MaterialSkin.Controls.MaterialButton();
             Btn_guardarCotizacion = new MaterialSkin.Controls.MaterialButton();
             lblFecha = new Label();
-            materialLabel9 = new MaterialSkin.Controls.MaterialLabel();
-            lbl_Subtotal = new MaterialSkin.Controls.MaterialLabel();
             materialLabel10 = new MaterialSkin.Controls.MaterialLabel();
             cmb_Descuento = new MaterialSkin.Controls.MaterialComboBox();
             materialLabel11 = new MaterialSkin.Controls.MaterialLabel();
@@ -54,6 +52,10 @@
             lbl_TotalNeto = new MaterialSkin.Controls.MaterialLabel();
             txt_Direccioncliente = new MaterialSkin.Controls.MaterialTextBox2();
             materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
+            lbl_Subtotal = new MaterialSkin.Controls.MaterialLabel();
+            materialLabel9 = new MaterialSkin.Controls.MaterialLabel();
+            lbl_Bases = new MaterialSkin.Controls.MaterialLabel();
+            txt_Bases = new MaterialSkin.Controls.MaterialMaskedTextBox();
             tableLayoutPanel3 = new TableLayoutPanel();
             tbl_Productos = new DataGridView();
             tbl_Cotizacion = new DataGridView();
@@ -87,8 +89,6 @@
             tableLayoutPanel1.Controls.Add(btn_AgregarProducto, 5, 4);
             tableLayoutPanel1.Controls.Add(Btn_guardarCotizacion, 4, 4);
             tableLayoutPanel1.Controls.Add(lblFecha, 3, 0);
-            tableLayoutPanel1.Controls.Add(materialLabel9, 0, 3);
-            tableLayoutPanel1.Controls.Add(lbl_Subtotal, 1, 3);
             tableLayoutPanel1.Controls.Add(materialLabel10, 2, 3);
             tableLayoutPanel1.Controls.Add(cmb_Descuento, 3, 3);
             tableLayoutPanel1.Controls.Add(materialLabel11, 4, 2);
@@ -97,6 +97,10 @@
             tableLayoutPanel1.Controls.Add(lbl_TotalNeto, 5, 3);
             tableLayoutPanel1.Controls.Add(txt_Direccioncliente, 5, 1);
             tableLayoutPanel1.Controls.Add(materialLabel5, 4, 1);
+            tableLayoutPanel1.Controls.Add(lbl_Subtotal, 1, 4);
+            tableLayoutPanel1.Controls.Add(materialLabel9, 0, 4);
+            tableLayoutPanel1.Controls.Add(lbl_Bases, 0, 3);
+            tableLayoutPanel1.Controls.Add(txt_Bases, 1, 3);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
@@ -385,32 +389,6 @@
             lblFecha.TabIndex = 25;
             lblFecha.Text = "label1";
             // 
-            // materialLabel9
-            // 
-            materialLabel9.Anchor = AnchorStyles.Right;
-            materialLabel9.AutoSize = true;
-            materialLabel9.Depth = 0;
-            materialLabel9.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel9.Location = new Point(33, 148);
-            materialLabel9.MouseState = MaterialSkin.MouseState.HOVER;
-            materialLabel9.Name = "materialLabel9";
-            materialLabel9.Size = new Size(74, 19);
-            materialLabel9.TabIndex = 16;
-            materialLabel9.Text = "Sub Total:";
-            // 
-            // lbl_Subtotal
-            // 
-            lbl_Subtotal.Anchor = AnchorStyles.None;
-            lbl_Subtotal.AutoSize = true;
-            lbl_Subtotal.Depth = 0;
-            lbl_Subtotal.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lbl_Subtotal.Location = new Point(216, 148);
-            lbl_Subtotal.MouseState = MaterialSkin.MouseState.HOVER;
-            lbl_Subtotal.Name = "lbl_Subtotal";
-            lbl_Subtotal.Size = new Size(41, 19);
-            lbl_Subtotal.TabIndex = 24;
-            lbl_Subtotal.Text = "$0.00";
-            // 
             // materialLabel10
             // 
             materialLabel10.Anchor = AnchorStyles.Right;
@@ -548,6 +526,87 @@
             materialLabel5.TabIndex = 7;
             materialLabel5.Text = "Dirección:";
             // 
+            // lbl_Subtotal
+            // 
+            lbl_Subtotal.Anchor = AnchorStyles.None;
+            lbl_Subtotal.AutoSize = true;
+            lbl_Subtotal.Depth = 0;
+            lbl_Subtotal.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            lbl_Subtotal.Location = new Point(216, 194);
+            lbl_Subtotal.MouseState = MaterialSkin.MouseState.HOVER;
+            lbl_Subtotal.Name = "lbl_Subtotal";
+            lbl_Subtotal.Size = new Size(41, 19);
+            lbl_Subtotal.TabIndex = 24;
+            lbl_Subtotal.Text = "$0.00";
+            // 
+            // materialLabel9
+            // 
+            materialLabel9.Anchor = AnchorStyles.Right;
+            materialLabel9.AutoSize = true;
+            materialLabel9.Depth = 0;
+            materialLabel9.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            materialLabel9.Location = new Point(33, 194);
+            materialLabel9.MouseState = MaterialSkin.MouseState.HOVER;
+            materialLabel9.Name = "materialLabel9";
+            materialLabel9.Size = new Size(74, 19);
+            materialLabel9.TabIndex = 16;
+            materialLabel9.Text = "Sub Total:";
+            // 
+            // lbl_Bases
+            // 
+            lbl_Bases.Anchor = AnchorStyles.Right;
+            lbl_Bases.AutoSize = true;
+            lbl_Bases.Depth = 0;
+            lbl_Bases.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            lbl_Bases.Location = new Point(59, 148);
+            lbl_Bases.MouseState = MaterialSkin.MouseState.HOVER;
+            lbl_Bases.Name = "lbl_Bases";
+            lbl_Bases.Size = new Size(48, 19);
+            lbl_Bases.TabIndex = 28;
+            lbl_Bases.Text = "Bases:";
+            // 
+            // txt_Bases
+            // 
+            txt_Bases.AllowPromptAsInput = true;
+            txt_Bases.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txt_Bases.AnimateReadOnly = false;
+            txt_Bases.AsciiOnly = false;
+            txt_Bases.BackgroundImageLayout = ImageLayout.None;
+            txt_Bases.BeepOnError = false;
+            txt_Bases.CutCopyMaskFormat = MaskFormat.IncludeLiterals;
+            txt_Bases.Depth = 0;
+            txt_Bases.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            txt_Bases.HidePromptOnLeave = false;
+            txt_Bases.HideSelection = true;
+            txt_Bases.InsertKeyMode = InsertKeyMode.Default;
+            txt_Bases.LeadingIcon = null;
+            txt_Bases.Location = new Point(113, 138);
+            txt_Bases.Mask = "";
+            txt_Bases.MaxLength = 32767;
+            txt_Bases.MouseState = MaterialSkin.MouseState.OUT;
+            txt_Bases.Name = "txt_Bases";
+            txt_Bases.PasswordChar = '\0';
+            txt_Bases.PrefixSuffixText = null;
+            txt_Bases.PromptChar = '_';
+            txt_Bases.ReadOnly = false;
+            txt_Bases.RejectInputOnFirstFailure = false;
+            txt_Bases.ResetOnPrompt = true;
+            txt_Bases.ResetOnSpace = true;
+            txt_Bases.RightToLeft = RightToLeft.No;
+            txt_Bases.SelectedText = "";
+            txt_Bases.SelectionLength = 0;
+            txt_Bases.SelectionStart = 0;
+            txt_Bases.ShortcutsEnabled = true;
+            txt_Bases.Size = new Size(247, 48);
+            txt_Bases.SkipLiterals = true;
+            txt_Bases.TabIndex = 29;
+            txt_Bases.TabStop = false;
+            txt_Bases.TextAlign = HorizontalAlignment.Left;
+            txt_Bases.TextMaskFormat = MaskFormat.IncludeLiterals;
+            txt_Bases.TrailingIcon = null;
+            txt_Bases.UseSystemPasswordChar = false;
+            txt_Bases.ValidatingType = null;
+            // 
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.ColumnCount = 3;
@@ -640,5 +699,7 @@
         private Label lblFecha;
         private MaterialSkin.Controls.MaterialLabel materialLabel1;
         private MaterialSkin.Controls.MaterialLabel lbl_TotalNeto;
+        private MaterialSkin.Controls.MaterialLabel lbl_Bases;
+        private MaterialSkin.Controls.MaterialMaskedTextBox txt_Bases;
     }
 }

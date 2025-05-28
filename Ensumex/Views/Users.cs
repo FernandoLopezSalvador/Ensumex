@@ -118,7 +118,6 @@ namespace Ensumex.Views
             if (Tabla_usuarios.Columns[e.ColumnIndex].Name == "Editar")
             {
                 MessageBox.Show("Editar usuario: " + usuario);
-                // Aquí puedes abrir un nuevo formulario para editar los datos
             }
         }
         private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
