@@ -148,7 +148,6 @@ namespace Ensumex.Forms
         {
             btn_inventarioP.BackColor = Color.FromArgb(25, 239, 22);
         }
-
         private void btn_inventarioP_MouseLeave(object sender, EventArgs e)
         {
             btn_inventarioP.BackColor = Color.FromArgb(0, 104, 56);

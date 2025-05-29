@@ -18,7 +18,7 @@ namespace Ensumex.Views
         {
             InitializeComponent();
             ConfigurarTema();
-            cmb_Unidentrada.Items.AddRange(new object[] { "PZA", "PRODUCTO"});
+            cmb_Unidentrada.Items.AddRange(new object[] { "PZA", "PRODUCTO", "SERVICIO"});
         }
         private void ConfigurarTema()
         {
@@ -38,7 +38,6 @@ namespace Ensumex.Views
         private void txb_PrecioUnitarioTemp_KeyPress(object sender, KeyPressEventArgs e)
         {
             TextBox txt = sender as TextBox;
-
             // Permitir teclas de control (Backspace, etc.)
             if (char.IsControl(e.KeyChar))
                 return;

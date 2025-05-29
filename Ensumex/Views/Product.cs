@@ -56,7 +56,6 @@ namespace Ensumex.Views
                 MessageBox.Show($"Error al cargar productos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void txt_buscar_TextChanged(object sender, EventArgs e)
         {
             BuscarEnGrid(txt_buscar.Text.Trim());
@@ -67,13 +66,10 @@ namespace Ensumex.Views
             {
                 tabla_productos.CurrentCell = null; // <- desactiva la celda seleccionada
                 tabla_productos.ClearSelection();
-
                 foreach (DataGridViewRow row in tabla_productos.Rows)
                 {
                     if (row.IsNewRow) continue;
-
                     bool visible = false;
-
                     foreach (DataGridViewCell cell in row.Cells)
                     {
                         if (cell.Value != null && Convert.ToString(cell.Value).IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
@@ -90,7 +86,6 @@ namespace Ensumex.Views
                 MessageBox.Show("Error al buscar: " + ex.Message);
             }
         }
-
         private void cmb_productos_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmb_productos.SelectedItem != null && cmb_productos.SelectedItem.ToString() == "Todos")

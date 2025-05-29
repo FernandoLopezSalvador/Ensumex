@@ -36,7 +36,7 @@ namespace Ensumex.Utils
                     {
                         iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(rutaLogo);
                         logo.ScaleAbsolute(100f, 100f);
-                        logo.SetAbsolutePosition(doc.LeftMargin, doc.PageSize.Height - doc.TopMargin - 50f);
+                        logo.SetAbsolutePosition(doc.LeftMargin, doc.PageSize.Height - doc.TopMargin -70f);
                         doc.Add(logo);
                     }
 
@@ -45,14 +45,13 @@ namespace Ensumex.Utils
                     var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
                     var fontCursiva = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 10);
 
-                Paragraph encabezado = new Paragraph("\nOaxaca de Juárez, Oaxaca a " + DateTime.Now.ToString("d 'de' MMMM 'de' yyyy") + "\n\n", fontNormal);
-                    
+                    Paragraph encabezado = new Paragraph("\nOaxaca de Juárez, Oaxaca a " + DateTime.Now.ToString("d 'de' MMMM 'de' yyyy") + "\n\n", fontNormal);
                     encabezado.Alignment = Element.ALIGN_RIGHT;
                     doc.Add(encabezado);
 
                     if (!string.IsNullOrWhiteSpace(nombreCliente))
                     {
-                        doc.Add(new Paragraph("\nEstimado Cliente: ", fontNormal));
+                        doc.Add(new Paragraph("\n\nEstimado Cliente: ", fontNormal));
                         doc.Add(new Paragraph(nombreCliente, fontNegrita));
                     }
                     else
@@ -60,54 +59,52 @@ namespace Ensumex.Utils
                         doc.Add(new Paragraph("\nEstimado Cliente:", fontNegrita));
                     }
 
-                doc.Add(new Paragraph("\nPresente"));
-                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para la venta e instalación del siguiente producto:", fontNormal));
-                doc.Add(new Paragraph("\n", fontNormal));
+                    doc.Add(new Paragraph("\nPresente"));
+                    doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para la venta e instalación del siguiente producto:", fontNormal));
+                    doc.Add(new Paragraph("\n", fontNormal));
 
-                // Agregar descripciones de los productos
-                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
-                {
-                    if (fila.IsNewRow) continue; // Ignora la fila nueva vacía
-                    string descripcion = fila.Cells["Descripcion"].Value?.ToString() ?? "Sin descripción";
-                    doc.Add(new Paragraph(descripcion, fontNegrita));
-                }
-                doc.Add(new Paragraph("\n", fontNormal));
-
-                // Tabla
-                PdfPTable tabla = new PdfPTable(5);
-                    tabla.WidthPercentage = 100;
-                    tabla.SetWidths(new float[] { 1f, 3f, 1.5f, 1f, 1f });
-
-                    string[] headers = { "Clave", "Descripción", "PrecioPublico", "Cantidad", "tasa de cambio" };
-                    foreach (string header in headers)
+                    // Agregar descripciones de los productos
+                    foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                     {
-                        PdfPCell celda = new PdfPCell(new Phrase(header, fontNormal));
-                        celda.BackgroundColor = BaseColor.LIGHT_GRAY;
-                        celda.HorizontalAlignment = Element.ALIGN_CENTER;
-                        tabla.AddCell(celda);
+                        if (fila.IsNewRow) continue; // Ignora la fila nueva vacía
+                        string descripcion = fila.Cells["Descripcion"].Value?.ToString() ?? "Sin descripción";
+                        doc.Add(new Paragraph(descripcion, fontNegrita));
                     }
+                    doc.Add(new Paragraph("\n", fontNormal));
 
-                    foreach (DataGridViewRow row in tablaCotizacion.Rows)
-                    {
-                        if (!row.IsNewRow)
+                    // Tabla
+                    PdfPTable tabla = new PdfPTable(5);
+                        tabla.WidthPercentage = 100;
+                        tabla.SetWidths(new float[] { 1f, 3f, 1.5f, 1f, 1f });
+                        string[] headers = { "Clave", "Descripción", "PrecioPublico", "Cantidad", "tasa de cambio" };
+                        foreach (string header in headers)
                         {
-                            tabla.AddCell(new Phrase(row.Cells["Clave"].Value?.ToString() ?? "", fontNormal));
-                            tabla.AddCell(new Phrase(row.Cells["Descripcion"].Value?.ToString() ?? "", fontNormal));
-                            tabla.AddCell(new Phrase(row.Cells["PrecioPublico"].Value?.ToString() ?? "", fontNormal));
-                            tabla.AddCell(new Phrase(row.Cells["Cantidad"].Value?.ToString() ?? "", fontNormal));
-                            tabla.AddCell(new Phrase(row.Cells["TasaCambio"].Value?.ToString() ?? "", fontNormal));
-                    }
+                            PdfPCell celda = new PdfPCell(new Phrase(header, fontNormal));
+                            celda.BackgroundColor = BaseColor.LIGHT_GRAY;
+                            celda.HorizontalAlignment = Element.ALIGN_CENTER;
+                            tabla.AddCell(celda);
+                        }
 
-                }
+                        foreach (DataGridViewRow row in tablaCotizacion.Rows)
+                        {
+                            if (!row.IsNewRow)
+                            {
+                                tabla.AddCell(new Phrase(row.Cells["Clave"].Value?.ToString() ?? "", fontNormal));
+                                tabla.AddCell(new Phrase(row.Cells["Descripcion"].Value?.ToString() ?? "", fontNormal));
+                                tabla.AddCell(new Phrase(row.Cells["PrecioPublico"].Value?.ToString() ?? "", fontNormal));
+                                tabla.AddCell(new Phrase(row.Cells["Cantidad"].Value?.ToString() ?? "", fontNormal));
+                                tabla.AddCell(new Phrase(row.Cells["TasaCambio"].Value?.ToString() ?? "", fontNormal));
+                            }
+                        }
 
-                // Ajustando lo que se muestra en la tabla 
+                    // Ajustando lo que se muestra en la tabla 
                     tabla.AddCell(new PdfPCell(new Phrase("Subtotal", fontNegrita)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                     tabla.AddCell(new Phrase(subtotal, fontNormal));
                     
                     tabla.AddCell(new PdfPCell(new Phrase("Descuento", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                     tabla.AddCell(new Phrase(descuento, fontNormal));
 
-                    tabla.AddCell(new PdfPCell(new Phrase("MANO DE OBRA POR INSTALACIÓN", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
+                    tabla.AddCell(new PdfPCell(new Phrase("Mano de obra por instalción", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                     tabla.AddCell(new Phrase(costoInstalacion, fontNormal));
 
                     tabla.AddCell(new PdfPCell(new Phrase("Costo por Envio/Flete", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
@@ -118,73 +115,68 @@ namespace Ensumex.Utils
                     doc.Add(tabla);
                     doc.Add(new Paragraph("\n"));
 
-                // Verifica si alguna descripción contiene la palabra "CALENTADOR" para mostrar notas adicionales
-                bool contieneCalentador = false;
-
-                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
-                {
-                    if (fila.IsNewRow) continue;
-                    string descripcion = fila.Cells["Descripcion"].Value?.ToString()?.ToUpper() ?? "";
-
-                    if (descripcion.Contains("CALENTADOR"))
+                    // Verifica si alguna descripción contiene la palabra "CALENTADOR" para mostrar notas adicionales
+                    bool contieneCalentador = false;
+                    foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                     {
-                        contieneCalentador = true;
-                        break;
+                        if (fila.IsNewRow) continue;
+                        string descripcion = fila.Cells["Descripcion"].Value?.ToString()?.ToUpper() ?? "";
+                        if (descripcion.Contains("CALENTADOR"))
+                        {
+                            contieneCalentador = true;
+                            break;
+                        }
                     }
-                }
 
-                doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
+                    doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
 
-                if (contieneCalentador)
-                {
-                    doc.Add(new Paragraph(
-                        "- Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
-                        "- Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
-                        "- Equipos en existencia para entrega inmediata.\n" +
-                        "- No incluye material de plomería.\n" +
-                        "- Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                        "- Precios sujetos a cambios sin previo aviso.\n" +
-                        "Sin otro particular, quedo a sus órdenes.\n\n\n\n\n", fontNormal));
-                }
-                else
-                {
-                    doc.Add(new Paragraph("- Precios sujetos a cambios sin previo aviso.\n", fontNormal));
-                    doc.Add(new Paragraph("Sin otro particular, quedo a sus órdenes.\n\n\n\n\n", fontNormal));
-                    doc.Add(new Paragraph("Si necesita factura, la mano de obra se agrega más I.V.A.", fontNormal));
-                }
+                    if (contieneCalentador)
+                    {
+                        doc.Add(new Paragraph(
+                            "- Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
+                            "- Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
+                            "- Equipos en existencia para entrega inmediata.\n" +
+                            "- No incluye material de plomería.\n" +
+                            "- Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
+                            "- Precios sujetos a cambios sin previo aviso.\n" +
+                            "Sin otro particular, quedo a sus órdenes.\n\n\n\n\n", fontNormal));
+                    }
+                    else
+                    {
+                        doc.Add(new Paragraph("- Precios sujetos a cambios sin previo aviso.\n", fontNormal));
+                        doc.Add(new Paragraph("Si necesita factura, la mano de obra se agrega más I.V.A.", fontNormal));
+                        doc.Add(new Paragraph("Sin otro particular, quedo a sus órdenes.\n\n\n", fontNormal));
+                    }
 
+                    // Crear una tabla de una columna centrada
+                    PdfPTable tablaFirma = new PdfPTable(1);  
+                    tablaFirma.WidthPercentage = 100;
+                    // Celda con texto
+                    PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\nCarlos Valdez\nRepresentante de Ventas", fontCursiva));
+                    celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;
+                    celdaTexto.Border = Rectangle.NO_BORDER;
+                    celdaTexto.PaddingBottom = 10f; // Espacio entre texto e imagen
+                    tablaFirma.AddCell(celdaTexto);
 
-                // Crear una tabla de una columna centrada
-                PdfPTable tablaFirma = new PdfPTable(1);  
-                tablaFirma.WidthPercentage = 100;
-                // Celda con texto
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\nCarlos Valdez\nRepresentante de Ventas", fontCursiva));
-                celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;
-                celdaTexto.Border = Rectangle.NO_BORDER;
-                celdaTexto.PaddingBottom = 10f; // Espacio entre texto e imagen
-                tablaFirma.AddCell(celdaTexto);
+                    // Celda con imagen (si existe)
+                    if (File.Exists(rutaFirma))
+                    {
+                        iTextSharp.text.Image firma = iTextSharp.text.Image.GetInstance(rutaFirma);
+                        firma.ScaleAbsolute(120f, 60f);
+                        firma.Alignment = Element.ALIGN_CENTER;
+                        PdfPCell celdaImagen = new PdfPCell(firma);
+                        celdaImagen.HorizontalAlignment = Element.ALIGN_CENTER;
+                        celdaImagen.Border = Rectangle.NO_BORDER;
+                        tablaFirma.AddCell(celdaImagen);
+                    }
 
-                // Celda con imagen (si existe)
-                if (File.Exists(rutaFirma))
-                {
-                    iTextSharp.text.Image firma = iTextSharp.text.Image.GetInstance(rutaFirma);
-                    firma.ScaleAbsolute(120f, 60f);
-                    firma.Alignment = Element.ALIGN_CENTER;
+                    // Agregar la tabla al documento
+                    doc.Add(tablaFirma);
 
-                    PdfPCell celdaImagen = new PdfPCell(firma);
-                    celdaImagen.HorizontalAlignment = Element.ALIGN_CENTER;
-                    celdaImagen.Border = Rectangle.NO_BORDER;
-                    tablaFirma.AddCell(celdaImagen);
-                }
-
-                // Agregar la tabla al documento
-                doc.Add(tablaFirma);
-                doc.Add(new Paragraph("Av. Lázaro Cárdenas 104-B. ", fontNormal) { Alignment = Element.ALIGN_CENTER });
-                    doc.Add(new Paragraph("Sta. Lucía del Camino, Oaxaca. Tels: 951-206-6895 y 951-206-0293", fontNormal) { Alignment = Element.ALIGN_CENTER });
-
-                    doc.Close();
-
-                    MessageBox.Show("📄 PDF generado correctamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    doc.Add(new Paragraph("Av. Lázaro Cárdenas 104-B. ", fontNormal) { Alignment = Element.ALIGN_CENTER });
+                        doc.Add(new Paragraph("Sta. Lucía del Camino, Oaxaca. Tels: 951-206-6895 y 951-206-0293", fontNormal) { Alignment = Element.ALIGN_CENTER });
+                        doc.Close();
+                        MessageBox.Show("📄 PDF generado correctamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (IOException)
                 {

@@ -23,18 +23,12 @@ namespace Ensumex.Views
         public Cotiza()
         {
             InitializeComponent();
-            // Estilo de tablas
             AplicarEstilosTabla(tbl_Productos);
             AplicarEstilosTabla(tbl_Cotizacion);
-            // Fecha actual
             lblFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
-            // Cargar productos
             CargarProductoss();
-            // Cargar descuentos
             AgregarDescuentos(new[] { "0%", "5%", "10%", "15%", "20%", "25%", "30" });
-            // Agregar columnas a tabla cotización
             AgregarColumnasCotizacion();
-
         }
         // Método para aplicar estilos
         private void AplicarEstilosTabla(DataGridView tabla)
@@ -62,7 +56,7 @@ namespace Ensumex.Views
             };
             foreach (var columna in columnas.Cast<string>().Chunk(2))
                 tbl_Cotizacion.Columns.Add(columna[0], columna[1]);
-                tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = true;
+            tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = true;
         }
         private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
         {
@@ -80,7 +74,6 @@ namespace Ensumex.Views
                             MessageBox.Show("El nombre del cliente es obligatorio.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
-
                         if (tbl_Cotizacion.Rows.Count == 1)
                         {
                             MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -98,16 +91,7 @@ namespace Ensumex.Views
                             tablaCotizacion: tbl_Cotizacion
                         );
                         MessageBox.Show("Cotización guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        txt_Costoflete.Text = "";
-                        txt_Costoinstalacion.Text = "";
-                        txt_Direccioncliente.Text = "";
-                        txt_Nocotizacion.Text = "";
-                        txt_Nombrecliente.Text = "";
-                        lbl_Subtotal.Text = "$0.00";
-                        lbl_costoDescuento.Text = "$0.00";
-                        lbl_TotalNeto.Text = "$0.00";
-                        tbl_Cotizacion.Rows.Clear();    
-                        cmb_Descuento.SelectedIndex = -1; 
+                        limpiaCampos();
                     }
                 }
             }
@@ -165,7 +149,6 @@ namespace Ensumex.Views
                         fila.Cells["UnidadEntrada"].Value == null ||
                         fila.Cells["PrecioPublico"].Value == null ||
                         fila.Cells["PrecioUnitario"].Value == null)
-
                     {
                         MessageBox.Show("Uno o más datos del producto están vacíos o no disponibles.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
@@ -173,7 +156,6 @@ namespace Ensumex.Views
                     string clave = fila.Cells["Clave"].Value.ToString();
                     string descripcion = fila.Cells["Descripcion"].Value.ToString();
                     string unidad = fila.Cells["UnidadEntrada"].Value.ToString();
-
                     if (!decimal.TryParse(fila.Cells["PrecioUnitario"].Value.ToString(), out decimal precio))
                     {
                         MessageBox.Show("El precio no es válido.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -181,7 +163,6 @@ namespace Ensumex.Views
                     }
                     // Solicita la tasa de cambio
                     string input = Interaction.InputBox("Ingrese la tasa de cambio para este producto (si aplica):", "Tasa de Cambio", "1");
-                    // Intenta convertir la entrada y valida que sea mayor a 0
                     decimal tasaCambio;
                     bool esValido = decimal.TryParse(input, out tasaCambio);
                     if (!esValido || tasaCambio <= 0)
@@ -270,14 +251,14 @@ namespace Ensumex.Views
                 {
                     // Recibe los datos del formulario temporal
                     string clave = formProducto.Clave;
-                    string descripcion = formProducto.Descripcion; 
+                    string descripcion = formProducto.Descripcion;
                     decimal preciouni = formProducto.PrecioUnitarioTemp; // Cambiado a PrecioUnitarioTemp
                     decimal preciopiblico = formProducto.PrecioPublicoTemp; // Cambiado a PrecioPublicoTemp
                     string unidad = formProducto.Unidentrada; // Cambiado a UnidadEntrada
                     decimal tasaCambio = 1;
-                    decimal subtotal = preciouni * tasaCambio;
+                    decimal subtotal = preciopiblico * tasaCambio;
 
-                    tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, preciopiblico,preciouni, 1, tasaCambio, subtotal);
+                    tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, preciopiblico, preciouni, 1, tasaCambio, subtotal);
                     ActualizarTotales();
                 }
                 // Asegura que la columna de "Eliminar" solo se agregue una vez
@@ -300,7 +281,6 @@ namespace Ensumex.Views
         {
             try
             {
-                // Asegúrate de no estar en encabezado ni fuera de rango
                 if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
                 {
                     if (tbl_Cotizacion.Columns[e.ColumnIndex].Name == "Eliminar")
@@ -383,16 +363,20 @@ namespace Ensumex.Views
         }
         private void btn_Cancelarcotizacion_Click_1(object sender, EventArgs e)
         {
-            txt_Costoflete.Text = "";
-            txt_Costoinstalacion.Text = "";
-            txt_Direccioncliente.Text = "";
-            txt_Nocotizacion.Text = "";
-            txt_Nombrecliente.Text = "";
+            limpiaCampos();
+        }
+        private void limpiaCampos()
+        {
+            txt_Costoflete.Text = string.Empty;
+            txt_Costoinstalacion.Text = string.Empty;
+            txt_Direccioncliente.Text = string.Empty;
+            txt_Nocotizacion.Text = string.Empty;
+            txt_Nombrecliente.Text = string.Empty;
             lbl_Subtotal.Text = "$0.00";
             lbl_costoDescuento.Text = "$0.00";
             lbl_TotalNeto.Text = "$0.00";
             tbl_Cotizacion.Rows.Clear();
-            cmb_Descuento.SelectedIndex = -1; // Limpiar selección de descuento
+            cmb_Descuento.SelectedIndex = 0; // Limpiar selección de descuento
         }
     }
 }
