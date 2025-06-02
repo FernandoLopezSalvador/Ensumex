@@ -12,10 +12,19 @@ namespace Ensumex.Services
         private readonly ProductosDao _productoDao = new();
         
         [Obsolete]
-        public List <(string CLAVE, string Descripcion, string UnidadEntrada, decimal PU, decimal PrecioPublico, decimal PUMinimo, string TipoProducto)> ObtenerProductos(int? limite = null)
+        public List <(string CVE_ART, string DESCR, string UNI_MED, decimal COSTO_PROM, decimal ULT_COSTO, string EXIST)> ObtenerProductos(int? limite = null)
         {
             var productos = _productoDao.ObtenerProductoss();
-            return limite.HasValue ? productos.Take(limite.Value).ToList() : productos;
+
+            // Filtrar productos donde EXIST es nulo o igual a "0"
+            var filtrados = productos
+                .Where(p =>
+                    !string.IsNullOrWhiteSpace(p.EXIST) &&
+                    decimal.TryParse(p.EXIST, out decimal existValue) &&
+                    existValue > 0)
+                .ToList();
+
+            return filtrados;
         }
     }
 }

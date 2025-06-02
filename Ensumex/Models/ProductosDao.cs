@@ -12,29 +12,24 @@ namespace Ensumex.Models
     internal class ProductosDao: ConnectionToSql
     {
         [Obsolete]
-        public List<(string CLAVE, string Descripcion, string UnidadEntrada,decimal PU, decimal PrecioPublico, decimal PUMinimo,string TipoProducto)>ObtenerProductoss()
+        public List<(string CVE_ART, string DESCR, string UNI_MED, decimal COSTO_PROM, decimal ULT_COSTO, string EXIST)>ObtenerProductoss()
         {
-            var productos = new List<(string CLAVE, string Descripcion, string UnidadEntrada, decimal PU, decimal PrecioPublico, decimal PUMinimo, string TipoProducto)>();
-            using (var connection = GetConnection())
+            List<(string CVE_ART, string DESCR, string UNI_MED, decimal COSTO_PROM, decimal ULT_COSTO, string EXIST)> productos = new List<(string CLAVECVE_ART, string DESCR, string UNI_MED, decimal COSTO_PROM, decimal ULT_COSTO, string EXIST)>();
+            using (SqlConnection connection = GetConnection())
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT CLAVE, Descripcion, UnidadEntrada, PU, PrecioPublico, PUMinimo, TipoProducto FROM Productos1", connection))
+                SqlCommand command = new SqlCommand("SELECT CVE_ART, DESCR, UNI_MED, COSTO_PROM, ULT_COSTO, EXIST FROM INVE01", connection);
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            productos.Add((
-                                reader.IsDBNull(0) ? string.Empty : reader.GetString(0), // CLAVE
-                                reader.IsDBNull(1) ? string.Empty : reader.GetString(1), // Descripcion
-                                reader.IsDBNull(2) ? string.Empty : reader.GetString(2), // UnidadEntrada
-                                reader.IsDBNull(3) ? 0 : reader.GetDecimal(3),           // PU
-                                reader.IsDBNull(4) ? 0 : reader.GetDecimal(4),           // PrecioPublico
-                                reader.IsDBNull(5) ? 0 : reader.GetDecimal(5),           // PUMinimo
-                                reader.IsDBNull(6) ? string.Empty : reader.GetString(6)  // TipoProducto
-                            ));
-                        }
-                    }
+                    productos.Add((
+                        reader["CVE_ART"].ToString(),
+                        reader["DESCR"].ToString(),
+                        reader["UNI_MED"].ToString(),
+                        Convert.ToDecimal(reader["COSTO_PROM"]),
+                        Convert.ToDecimal(reader["ULT_COSTO"]),
+                        reader["EXIST"].ToString()
+                    ));
                 }
             }
             return productos;

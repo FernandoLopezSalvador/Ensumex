@@ -5,10 +5,12 @@ using Ensumex.Utils;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.VisualBasic;
+using OfficeOpenXml.Drawing.Chart;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -35,7 +37,11 @@ namespace Ensumex.Views
         {
             tabla.DefaultCellStyle.ForeColor = Color.Black;
             tabla.BackgroundColor = Color.FromArgb(45, 45, 48);
+            tabla.DefaultCellStyle.ForeColor = Color.Black;
+            tabla.BackgroundColor = Color.FromArgb(45, 45, 48);
+            tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
+
         // Método para agregar descuentos
         private void AgregarDescuentos(string[] descuentos)
         {
@@ -45,12 +51,11 @@ namespace Ensumex.Views
         private void AgregarColumnasCotizacion()
         {
             string[,] columnas = {
-            { "Clave", "Clave" },
-            { "Descripcion", "Descripción" },
-            { "UnidadEntrada", "Unidad de Entrada" },
-            { "PrecioPublico", "PrecioPublico" },
-            { "PrecioUnitario", "PrecioUnitario" },
-            { "Cantidad", "Cantidad" },
+            { "CLAVE", "Clave" },
+            { "DESCRIPCIÓN", "Descripción" },
+            { "UNIDAD", "Unidad" },
+            { "PRECIO", "precio" },
+            { "CANTIDAD", "Cantidad" },
             { "TasaCambio", "Tasa de Cambio" },
             { "Subtotal", "Subtotal" }
             };
@@ -82,6 +87,7 @@ namespace Ensumex.Views
                         // Generar el PDF
                         PDFGenerator.GenerarPDFCotizacion(
                             rutaArchivo: sfd.FileName,
+                            numeroCotizacion: txt_Nocotizacion.Text,
                             nombreCliente: txt_Nombrecliente.Text,
                             costoInstalacion: txt_Costoinstalacion.Text,
                             costoFlete: txt_Costoflete.Text,
@@ -112,11 +118,12 @@ namespace Ensumex.Views
                 var productos = productoService.ObtenerProductos(limite);
                 tbl_Productos.DataSource = productos.Select(p => new
                 {
-                    Clave = string.IsNullOrWhiteSpace(p.CLAVE) ? "N/A" : p.CLAVE,
-                    Descripcion = string.IsNullOrWhiteSpace(p.Descripcion) ? "N/A" : p.Descripcion,
-                    UnidadEntrada = string.IsNullOrWhiteSpace(p.UnidadEntrada) ? "N/A" : p.UnidadEntrada,
-                    PrecioPublico = p.PrecioPublico.ToString("0.00"),
-                    PrecioUnitario = p.PU.ToString("0.00")
+                    CLAVE = p.CVE_ART,
+                    DESCRIPCIÓN = p.DESCR,
+                    UNIDAD = p.UNI_MED,
+                    PRECIO = p.COSTO_PROM,
+                    EXISTENCIAS = p.EXIST
+                    
                 }).ToList();
                 if (!tbl_Productos.Columns.Contains("Agregar"))
                 {
@@ -144,19 +151,17 @@ namespace Ensumex.Views
                 {
                     var fila = tbl_Productos.Rows[e.RowIndex];
                     // Validación previa por seguridad
-                    if (fila.Cells["Clave"].Value == null ||
-                        fila.Cells["Descripcion"].Value == null ||
-                        fila.Cells["UnidadEntrada"].Value == null ||
-                        fila.Cells["PrecioPublico"].Value == null ||
-                        fila.Cells["PrecioUnitario"].Value == null)
+                    if (fila.Cells["CLAVE"].Value == null ||
+                        fila.Cells["DESCRIPCIÓN"].Value == null ||
+                        fila.Cells["PRECIO"].Value == null)
                     {
                         MessageBox.Show("Uno o más datos del producto están vacíos o no disponibles.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-                    string clave = fila.Cells["Clave"].Value.ToString();
-                    string descripcion = fila.Cells["Descripcion"].Value.ToString();
-                    string unidad = fila.Cells["UnidadEntrada"].Value.ToString();
-                    if (!decimal.TryParse(fila.Cells["PrecioUnitario"].Value.ToString(), out decimal precio))
+                    string clave = fila.Cells["CLAVE"].Value.ToString();
+                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value.ToString();
+                    string unidad = fila.Cells["UNIDAD"].Value.ToString();
+                    if (!decimal.TryParse(fila.Cells["PRECIO"].Value.ToString(), out decimal precio))
                     {
                         MessageBox.Show("El precio no es válido.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
@@ -170,14 +175,9 @@ namespace Ensumex.Views
                         //MessageBox.Show("La tasa ingresada no es válida o es 0. Se usará el valor por defecto (1).", "Tasa inválida", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         tasaCambio = 1;
                     }
-                    if (!decimal.TryParse(fila.Cells["PrecioPublico"].Value.ToString(), out decimal precioPublico))
-                    {
-                        MessageBox.Show("El precio público no es válido.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                    decimal precioConvertido = precioPublico * tasaCambio;
+                    decimal precioConvertido = precio * tasaCambio;
                     // Agrega la fila con la tasa de cambio (campo 6)
-                    tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precioPublico, precio, 1, tasaCambio, precioConvertido);
+                    tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precio, 1, tasaCambio, precioConvertido);
                     ActualizarTotales();
                 }
                 // Asegura que la columna de "Eliminar" solo se agregue una vez
@@ -200,28 +200,57 @@ namespace Ensumex.Views
         {
             try
             {
-                if (e.ColumnIndex == tbl_Cotizacion.Columns["Cantidad"].Index ||
+                // Solo validar si se edita la columna de cantidad
+                if (e.ColumnIndex == tbl_Cotizacion.Columns["CANTIDAD"].Index)
+                {
+                    var row = tbl_Cotizacion.Rows[e.RowIndex];
+                    string clave = row.Cells["CLAVE"].Value?.ToString();
+
+                    // Buscar existencias en tbl_Productos
+                    int existencias = 0;
+                    foreach (DataGridViewRow prodRow in tbl_Productos.Rows)
+                    {
+                        if (prodRow.IsNewRow) continue;
+                        if (prodRow.Cells["CLAVE"].Value?.ToString() == clave)
+                        {
+                            int.TryParse(prodRow.Cells["EXISTENCIAS"].Value?.ToString(), out existencias);
+                            break;
+                        }
+                    }
+
+                    if (decimal.TryParse(row.Cells["CANTIDAD"].Value?.ToString(), out decimal cantidad))
+                    {
+                        if (cantidad > existencias)
+                        {
+                            MessageBox.Show($"No hay suficientes existencias. Solo hay {existencias} disponibles.", "Stock insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            row.Cells["CANTIDAD"].Value = existencias > 0 ? existencias : 1;
+                        }
+                    }
+                }
+
+                // Recalcular subtotal y totales si corresponde
+                if (e.ColumnIndex == tbl_Cotizacion.Columns["CANTIDAD"].Index ||
                     e.ColumnIndex == tbl_Cotizacion.Columns["TasaCambio"].Index)
                 {
                     var row = tbl_Cotizacion.Rows[e.RowIndex];
-                    if (decimal.TryParse(row.Cells["PrecioPublico"].Value?.ToString(), out decimal precioPublico) &&
-                        decimal.TryParse(row.Cells["Cantidad"].Value?.ToString(), out decimal cantidad) &&
+                    if (decimal.TryParse(row.Cells["PRECIO"].Value?.ToString(), out decimal precio) &&
+                        decimal.TryParse(row.Cells["CANTIDAD"].Value?.ToString(), out decimal cantidad) &&
                         decimal.TryParse(row.Cells["TasaCambio"].Value?.ToString(), out decimal tasa))
                     {
-                        decimal subtotal = precioPublico * cantidad * tasa;
+                        decimal subtotal = precio * cantidad * tasa;
                         row.Cells["Subtotal"].Value = subtotal;
                         ActualizarTotales();
                     }
                     else
                     {
-                        MessageBox.Show("Por favor, asegúrate de que los campos Precio Unitario, Cantidad y Tasa de Cambio contengan valores numéricos válidos.",
+                        MessageBox.Show("Por favor, asegúrate de que los campos Precio, Cantidad y Tasa de Cambio contengan valores numéricos válidos.",
                                         "Valores inválidos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ocurrió un error al calcular el subtotal:\n" + ex.Message,
+                MessageBox.Show("Ocurrió un error al calcular el subtotal o validar existencias:\n" + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -257,7 +286,6 @@ namespace Ensumex.Views
                     string unidad = formProducto.Unidentrada; // Cambiado a UnidadEntrada
                     decimal tasaCambio = 1;
                     decimal subtotal = preciopiblico * tasaCambio;
-
                     tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, preciopiblico, preciouni, 1, tasaCambio, subtotal);
                     ActualizarTotales();
                 }
@@ -353,7 +381,7 @@ namespace Ensumex.Views
             catch (Exception ex)
             {
                 lbl_TotalNeto.Text = "Error";
-                // Opcional: mostrar mensaje de error detallado
+                // Opcional: mostrar mensaje de error
                 MessageBox.Show($"Se produjo un error al calcular el total: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -377,6 +405,44 @@ namespace Ensumex.Views
             lbl_TotalNeto.Text = "$0.00";
             tbl_Cotizacion.Rows.Clear();
             cmb_Descuento.SelectedIndex = 0; // Limpiar selección de descuento
+        }
+        private void txt_Buscarentabla_TextChanged(object sender, EventArgs e)
+        {
+            BuscarEnGrid(txt_Buscarentabla.Text.Trim());
+        }
+        private void BuscarEnGrid(string texto)
+        {
+            try
+            {
+                tbl_Productos.CurrentCell = null; // <- desactiva la celda seleccionada
+                tbl_Productos.ClearSelection();
+                foreach (DataGridViewRow row in tbl_Productos.Rows)
+                {
+                    if (row.IsNewRow) continue;
+                    bool visible = false;
+                    foreach (DataGridViewCell cell in row.Cells)
+                    {
+                        if (cell.Value != null && Convert.ToString(cell.Value).IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            visible = true;
+                            break;
+                        }
+                    }
+                    row.Visible = visible;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar: " + ex.Message);
+            }
+        }
+
+        private void txt_Buscarentabla_MouseEnter(object sender, EventArgs e)
+        {
+            if (txt_Buscarentabla.Text == "Buscar:")
+            {
+                txt_Buscarentabla.Text = "";
+            }
         }
     }
 }

@@ -40,12 +40,12 @@ namespace Ensumex.Views
                 // Si algunos de los valores son nulos, asigna valores predeterminados
                 var productosConValoresSeguros = productos.Select(p => new
                 {
-                    Clave = p.CLAVE ?? "No disponible", // Si CLAVE es null, asigna un valor predeterminado
-                    Descripcion = p.Descripcion ?? "Sin descripción",
-                    UnidadEntrada = p.UnidadEntrada ?? "No disponible",
-                    PrecioCosto = p.PU,  // Si Precio Costo es null, asigna 0
-                    PrecioPublico = p.PrecioPublico,  // Si Precio Público es null, asigna 0
-                    TipoProducto = p.TipoProducto ?? "No disponible"
+                    CLAVECVE_ART = p.CVE_ART ?? "N/A",
+                    DESCR = p.DESCR ?? "N/A",
+                    UNI_MED = p.UNI_MED ?? "N/A",
+                    COSTO_PROM = p.COSTO_PROM != 0 ? p.COSTO_PROM.ToString("C2") : "$0.00",
+                    ULT_COSTO = p.ULT_COSTO != 0 ? p.ULT_COSTO.ToString("C2") : "$0.00",
+                    EXIST = p.EXIST ?? "N/A"
                 }).ToList();
 
                 // Configura el DataGridView

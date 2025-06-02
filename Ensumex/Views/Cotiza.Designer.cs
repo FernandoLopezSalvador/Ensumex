@@ -37,7 +37,6 @@
             txt_Nombrecliente = new MaterialSkin.Controls.MaterialTextBox2();
             materialLabel7 = new MaterialSkin.Controls.MaterialLabel();
             txt_Costoinstalacion = new MaterialSkin.Controls.MaterialTextBox2();
-            pictureBox1 = new PictureBox();
             materialLabel6 = new MaterialSkin.Controls.MaterialLabel();
             materialLabel3 = new MaterialSkin.Controls.MaterialLabel();
             btn_Cancelarcotizacion = new MaterialSkin.Controls.MaterialButton();
@@ -56,6 +55,8 @@
             materialLabel9 = new MaterialSkin.Controls.MaterialLabel();
             lbl_Bases = new MaterialSkin.Controls.MaterialLabel();
             txt_Bases = new MaterialSkin.Controls.MaterialMaskedTextBox();
+            pictureBox1 = new PictureBox();
+            txt_Buscarentabla = new MaterialSkin.Controls.MaterialMaskedTextBox();
             tableLayoutPanel3 = new TableLayoutPanel();
             tbl_Productos = new DataGridView();
             tbl_Cotizacion = new DataGridView();
@@ -82,7 +83,6 @@
             tableLayoutPanel1.Controls.Add(txt_Nombrecliente, 1, 1);
             tableLayoutPanel1.Controls.Add(materialLabel7, 2, 2);
             tableLayoutPanel1.Controls.Add(txt_Costoinstalacion, 1, 2);
-            tableLayoutPanel1.Controls.Add(pictureBox1, 2, 1);
             tableLayoutPanel1.Controls.Add(materialLabel6, 0, 2);
             tableLayoutPanel1.Controls.Add(materialLabel3, 2, 0);
             tableLayoutPanel1.Controls.Add(btn_Cancelarcotizacion, 3, 4);
@@ -101,6 +101,8 @@
             tableLayoutPanel1.Controls.Add(materialLabel9, 0, 4);
             tableLayoutPanel1.Controls.Add(lbl_Bases, 0, 3);
             tableLayoutPanel1.Controls.Add(txt_Bases, 1, 3);
+            tableLayoutPanel1.Controls.Add(pictureBox1, 2, 1);
+            tableLayoutPanel1.Controls.Add(txt_Buscarentabla, 2, 4);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
@@ -276,19 +278,6 @@
             txt_Costoinstalacion.UseSystemPasswordChar = false;
             txt_Costoinstalacion.KeyPress += txt_Costoinstalacion_KeyPress;
             txt_Costoinstalacion.TextChanged += txt_Costoinstalacion_TextChanged;
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Anchor = AnchorStyles.Left;
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(366, 53);
-            pictureBox1.Margin = new Padding(3, 2, 3, 2);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(37, 30);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 11;
-            pictureBox1.TabStop = false;
-            pictureBox1.Click += pictureBox1_Click;
             // 
             // materialLabel6
             // 
@@ -607,12 +596,69 @@
             txt_Bases.UseSystemPasswordChar = false;
             txt_Bases.ValidatingType = null;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Anchor = AnchorStyles.Left;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(366, 53);
+            pictureBox1.Margin = new Padding(3, 2, 3, 2);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(37, 30);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 11;
+            pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
+            // 
+            // txt_Buscarentabla
+            // 
+            txt_Buscarentabla.AllowPromptAsInput = true;
+            txt_Buscarentabla.AnimateReadOnly = false;
+            txt_Buscarentabla.AsciiOnly = false;
+            txt_Buscarentabla.BackgroundImageLayout = ImageLayout.None;
+            txt_Buscarentabla.BeepOnError = false;
+            txt_Buscarentabla.CutCopyMaskFormat = MaskFormat.IncludeLiterals;
+            txt_Buscarentabla.Depth = 0;
+            txt_Buscarentabla.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            txt_Buscarentabla.HidePromptOnLeave = false;
+            txt_Buscarentabla.HideSelection = true;
+            txt_Buscarentabla.InsertKeyMode = InsertKeyMode.Default;
+            txt_Buscarentabla.LeadingIcon = null;
+            txt_Buscarentabla.Location = new Point(366, 183);
+            txt_Buscarentabla.Mask = "";
+            txt_Buscarentabla.MaxLength = 32767;
+            txt_Buscarentabla.MouseState = MaterialSkin.MouseState.OUT;
+            txt_Buscarentabla.Name = "txt_Buscarentabla";
+            txt_Buscarentabla.PasswordChar = '\0';
+            txt_Buscarentabla.PrefixSuffixText = null;
+            txt_Buscarentabla.PromptChar = '_';
+            txt_Buscarentabla.ReadOnly = false;
+            txt_Buscarentabla.RejectInputOnFirstFailure = false;
+            txt_Buscarentabla.ResetOnPrompt = true;
+            txt_Buscarentabla.ResetOnSpace = true;
+            txt_Buscarentabla.RightToLeft = RightToLeft.No;
+            txt_Buscarentabla.SelectedText = "";
+            txt_Buscarentabla.SelectionLength = 0;
+            txt_Buscarentabla.SelectionStart = 0;
+            txt_Buscarentabla.ShortcutsEnabled = true;
+            txt_Buscarentabla.Size = new Size(88, 48);
+            txt_Buscarentabla.SkipLiterals = true;
+            txt_Buscarentabla.TabIndex = 30;
+            txt_Buscarentabla.TabStop = false;
+            txt_Buscarentabla.Text = "Buscar:";
+            txt_Buscarentabla.TextAlign = HorizontalAlignment.Left;
+            txt_Buscarentabla.TextMaskFormat = MaskFormat.IncludeLiterals;
+            txt_Buscarentabla.TrailingIcon = null;
+            txt_Buscarentabla.UseSystemPasswordChar = false;
+            txt_Buscarentabla.ValidatingType = null;
+            txt_Buscarentabla.MouseEnter += txt_Buscarentabla_MouseEnter;
+            txt_Buscarentabla.TextChanged += txt_Buscarentabla_TextChanged;
+            // 
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.ColumnCount = 3;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 38.56209F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6.753813F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 54.6840973F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48.96854F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.06292987F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48.9685326F));
             tableLayoutPanel3.Controls.Add(tbl_Productos, 0, 0);
             tableLayoutPanel3.Controls.Add(tbl_Cotizacion, 2, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
@@ -634,7 +680,7 @@
             tbl_Productos.Margin = new Padding(3, 2, 3, 2);
             tbl_Productos.Name = "tbl_Productos";
             tbl_Productos.RowHeadersWidth = 51;
-            tbl_Productos.Size = new Size(348, 175);
+            tbl_Productos.Size = new Size(443, 175);
             tbl_Productos.TabIndex = 7;
             tbl_Productos.CellClick += tbl_Productos_CellClick;
             // 
@@ -642,11 +688,11 @@
             // 
             tbl_Cotizacion.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tbl_Cotizacion.Dock = DockStyle.Fill;
-            tbl_Cotizacion.Location = new Point(419, 2);
+            tbl_Cotizacion.Location = new Point(470, 2);
             tbl_Cotizacion.Margin = new Padding(3, 2, 3, 2);
             tbl_Cotizacion.Name = "tbl_Cotizacion";
             tbl_Cotizacion.RowHeadersWidth = 51;
-            tbl_Cotizacion.Size = new Size(496, 175);
+            tbl_Cotizacion.Size = new Size(445, 175);
             tbl_Cotizacion.TabIndex = 8;
             tbl_Cotizacion.CellClick += tbl_Cotizacion_CellClick;
             tbl_Cotizacion.CellEndEdit += tbl_Cotizacion_CellEndEdit;
@@ -701,5 +747,6 @@
         private MaterialSkin.Controls.MaterialLabel lbl_TotalNeto;
         private MaterialSkin.Controls.MaterialLabel lbl_Bases;
         private MaterialSkin.Controls.MaterialMaskedTextBox txt_Bases;
+        private MaterialSkin.Controls.MaterialMaskedTextBox txt_Buscarentabla;
     }
 }
