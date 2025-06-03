@@ -53,12 +53,6 @@ namespace Ensumex.Forms
         {
             CargaUsuario.CargarDatosUsuario(lbl_usuario, lbl_posicion);
         }
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-        }
-        private void pictureBox2_Click(object sender, EventArgs e)
-        {
-        }
         private void txt_usuario_TextChanged(object sender, EventArgs e)
         {
         }
@@ -77,17 +71,6 @@ namespace Ensumex.Forms
                 txt_usuario.Text = "Usuario";
                 txt_usuario.ForeColor = Color.White;
             }
-        }
-        private void pictureBox5_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void btn_inventario_Click(object sender, EventArgs e)
-        {
-        }
-        private void pictureBox7_Click(object sender, EventArgs e)
-        {
-
         }
         private void lbl_cuenta_Click(object sender, EventArgs e)
         {
@@ -120,29 +103,13 @@ namespace Ensumex.Forms
             btn_cerrarsesion.BackColor = Color.FromArgb(0, 104, 56);
         }
         [Obsolete]
-        private void btn_cotizacion_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void pictureBox6_Click(object sender, EventArgs e)
-        {
-
-        }
         private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-        private void pictureBox1_Click_1(object sender, EventArgs e)
         {
 
         }
         private void nuevoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CargarUserControl(new Users());
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-
         }
         private void materialButton1_MouseEnter(object sender, EventArgs e)
         {

@@ -385,10 +385,6 @@ namespace Ensumex.Views
                 MessageBox.Show($"Se produjo un error al calcular el total: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
         private void btn_Cancelarcotizacion_Click_1(object sender, EventArgs e)
         {
             limpiaCampos();
@@ -436,6 +432,7 @@ namespace Ensumex.Views
                 MessageBox.Show("Error al buscar: " + ex.Message);
             }
         }
+
         private void txt_Buscarentabla_MouseEnter(object sender, EventArgs e)
         {
             if (txt_Buscarentabla.Text == "Buscar:")

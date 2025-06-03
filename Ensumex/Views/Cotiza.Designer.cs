@@ -607,7 +607,6 @@
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 11;
             pictureBox1.TabStop = false;
-            pictureBox1.Click += pictureBox1_Click;
             // 
             // txt_Buscarentabla
             // 
@@ -672,7 +671,6 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 45.4545479F));
             tableLayoutPanel3.Size = new Size(918, 179);
             tableLayoutPanel3.TabIndex = 10;
-            tableLayoutPanel3.Paint += tableLayoutPanel3_Paint;
             // 
             // tbl_Productos
             // 

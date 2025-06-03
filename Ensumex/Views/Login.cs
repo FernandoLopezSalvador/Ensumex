@@ -41,19 +41,10 @@ namespace Ensumex
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
         }
-        private void bn_minimizar_Click(object sender, EventArgs e)
-        {
-        }
-        private void btn_cerrar_Click(object sender, EventArgs e)
-        {        }
         private void msgError(string mensaje)
         {
             lbl_error.Text = mensaje;
             lbl_error.Visible = true;
-        }
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
         // Funcion para cerrar la sesion
         private void logout(object? sender, FormClosedEventArgs e)
