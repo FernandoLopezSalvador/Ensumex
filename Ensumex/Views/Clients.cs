@@ -1,4 +1,5 @@
 ﻿using Ensumex.Services;
+using Ensumex.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,6 +25,14 @@ namespace Ensumex.Views
         {
             tabla_clientes.DefaultCellStyle.ForeColor = Color.Black;
             tabla_clientes.BackgroundColor = Color.FromArgb(45, 45, 48);
+            // Add column definitions
+            tabla_clientes.Columns.Add("CLAVE", "Clave");
+            tabla_clientes.Columns.Add("STATUS", "Status");
+            tabla_clientes.Columns.Add("NOMBRE", "Nombre");
+            tabla_clientes.Columns.Add("CALLE", "Calle");
+            tabla_clientes.Columns.Add("COLONIA", "Colonia");
+            tabla_clientes.Columns.Add("MUNICIPIO", "Municipio");
+            tabla_clientes.Columns.Add("EMAILPRED", "Email Predeterminado");
         }
         private void InicializarComboClientes()
         {
@@ -31,31 +40,60 @@ namespace Ensumex.Views
             cmb_clientes.Items.AddRange(opciones);
             cmb_clientes.SelectedIndex = 0;
         }
-        private void CargarClientes(int? limite = 100)
+        private void CargarClientes()
         {
-            try
+            var clienteService = new ClienteServices1();
+            var clientes = clienteService.ObtenerClientes();
+            tabla_clientes.Rows.Clear();
+            foreach (var cliente in clientes)
             {
+                tabla_clientes.Rows.Add(cliente.CLAVE, cliente.STATUS, cliente.NOMBRE, cliente.CALLE, cliente.COLONIA, cliente.MUNICIPIO, cliente.EMAILPRED);
+            }
+            tabla_clientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+        }
+
+        private void cmb_clientes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Aquí puedes manejar el evento de cambio de selección del combo box si es necesario
+            // Por ejemplo, podrías filtrar los clientes según la selección
+            var selectedValue = cmb_clientes.SelectedItem.ToString();
+            if (selectedValue == "Todos")
+            {
+                CargarClientes(); // Cargar todos los clientes
+            }
+            else
+            {
+                int count = int.Parse(selectedValue);
                 var clienteService = new ClienteServices1();
-                var clientes = clienteService.ObtenerClientes(limite);
-                // Si algunos de los valores son nulos, asigna valores predeterminados
-                var clientesConValoresSeguros = clientes.Select(c => new
+                var clientes = clienteService.ObtenerClientes().Take(count).ToList();
+                tabla_clientes.Rows.Clear();
+                foreach (var cliente in clientes)
                 {
-                    Clave = c.CLAVE,// Si CLAVE es null, asigna un valor predeterminado
-                    Estatus = c.Estatus ?? "No disponible",
-                    Nombre = c.Nombre ?? "Sin descripción",
-                    Calle = c.Calle ?? "No disponible",
-                    Telefono = c.Telefono ?? "No disponible",
-                    Saldo = c.Saldo,  // Si Saldo es null, asigna 0
-                    EstadoDatosTimbrado = c.EstadoDatosTimbrado ?? "No disponible",
-                    NombreComercial = c.NombreComercial ?? "No disponible"
-                }).ToList();
-                // Configura el DataGridView
-                tabla_clientes.DataSource = clientesConValoresSeguros;
+                    tabla_clientes.Rows.Add(cliente.CLAVE, cliente.STATUS, cliente.NOMBRE, cliente.CALLE, cliente.COLONIA, cliente.MUNICIPIO, cliente.EMAILPRED);
+                }
             }
-            catch (Exception ex)
+        }
+
+        private void txt_buscar_TextChanged(object sender, EventArgs e)
+        {
+            var searchText = txt_buscar.Text.ToLower();
+            foreach (DataGridViewRow row in tabla_clientes.Rows)
             {
-                MessageBox.Show($"Error al cargar clientes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!row.IsNewRow) // Skip uncommitted rows
+                {
+                    var nombreCell = row.Cells["NOMBRE"].Value?.ToString().ToLower();
+                    var claveCell = row.Cells["CLAVE"].Value?.ToString().ToLower();
+                    row.Visible = (nombreCell?.Contains(searchText) ?? false) ||
+                                  (claveCell?.Contains(searchText) ?? false);
+                }
             }
+        }
+
+        private void materialButton1_Click(object sender, EventArgs e)
+        {
+            // Aquí puedes manejar el evento del botón si es necesario
+            // esta es una funcion que de la tabla clientes obtiene los datos de la tabla y los convierte a un formato que se puede exportar a excel
+            PDFClients.ExportarClientes(tabla_clientes);
         }
     }
 }

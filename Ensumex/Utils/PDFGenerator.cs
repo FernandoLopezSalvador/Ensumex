@@ -31,10 +31,8 @@ namespace Ensumex.Utils
                 var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
                 var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
                 var fontCursiva = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 10);
-
                 string rutaLogo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
                 string rutaFirma = Path.Combine(Application.StartupPath, "IMG", "nombre.jpg");
-
                 // Agregar logo
                 if (File.Exists(rutaLogo))
                 {
@@ -43,11 +41,9 @@ namespace Ensumex.Utils
                     logo.SetAbsolutePosition(doc.LeftMargin, doc.PageSize.Height - doc.TopMargin -70f);
                     doc.Add(logo);
                 }
-
                 Paragraph titulo = new Paragraph("Cotización: " + numeroCotizacion, fontNegrita);
                 titulo.Alignment = Element.ALIGN_RIGHT;
                 doc.Add(titulo);
-
                 Paragraph encabezado = new Paragraph("\nOaxaca de Juárez, Oaxaca a " + DateTime.Now.ToString("d 'de' MMMM 'de' yyyy") + "\n\n", fontNormal);
                 encabezado.Alignment = Element.ALIGN_RIGHT;
                 doc.Add(encabezado);
@@ -61,11 +57,9 @@ namespace Ensumex.Utils
                 {
                     doc.Add(new Paragraph("\nEstimado Cliente:", fontNegrita));
                 }
-
                 doc.Add(new Paragraph("\nPresente"));
                 doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para la venta e instalación del siguiente producto:", fontNormal));
                 doc.Add(new Paragraph("\n", fontNormal));
-
                     // Agregar descripciones de los productos
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
@@ -74,7 +68,6 @@ namespace Ensumex.Utils
                     doc.Add(new Paragraph(descripcion, fontNegrita));
                 }
                 doc.Add(new Paragraph("\n", fontNormal));
-
                 // Tabla
                 PdfPTable tabla = new PdfPTable(5);
                 tabla.WidthPercentage = 100;
@@ -140,12 +133,10 @@ namespace Ensumex.Utils
                 else
                 {
                     doc.Add(new Paragraph(
-                    "- Equipos en existencia para entrega inmediata.\n" +
                     "- Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
                     "- Precios sujetos a cambios sin previo aviso.\n" +
                     "Sin otro particular, quedo a sus órdenes.\n\n\n\n\n", fontNormal));
                 }
-
                     // Crear una tabla de una columna centrada
                 PdfPTable tablaFirma = new PdfPTable(1);  
                 tablaFirma.WidthPercentage = 100;
@@ -153,9 +144,8 @@ namespace Ensumex.Utils
                 PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\nCarlos Valdez\nRepresentante de Ventas", fontCursiva));
                 celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;
                 celdaTexto.Border = Rectangle.NO_BORDER;
-                celdaTexto.PaddingBottom = 10f; // Espacio entre texto e imagen
+                celdaTexto.PaddingBottom = 10f; 
                 tablaFirma.AddCell(celdaTexto);
-
                 // Celda con imagen (si existe)
                 if (File.Exists(rutaFirma))
                 {

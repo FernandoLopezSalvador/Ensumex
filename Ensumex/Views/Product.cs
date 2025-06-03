@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Ensumex.Services;
+using Ensumex.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Ensumex.Services;
 
 namespace Ensumex.Views
 {
@@ -40,9 +41,9 @@ namespace Ensumex.Views
                 // Si algunos de los valores son nulos, asigna valores predeterminados
                 var productosConValoresSeguros = productos.Select(p => new
                 {
-                    CLAVECVE_ART = p.CVE_ART ?? "N/A",
-                    DESCR = p.DESCR ?? "N/A",
-                    UNI_MED = p.UNI_MED ?? "N/A",
+                    CLAVE = p.CVE_ART ?? "N/A",
+                    DESCRIPCIÓN = p.DESCR ?? "N/A",
+                    UNDMED = p.UNI_MED ?? "N/A",
                     COSTO_PROM = p.COSTO_PROM != 0 ? p.COSTO_PROM.ToString("C2") : "$0.00",
                     ULT_COSTO = p.ULT_COSTO != 0 ? p.ULT_COSTO.ToString("C2") : "$0.00",
                     EXIST = p.EXIST ?? "N/A"
@@ -62,40 +63,31 @@ namespace Ensumex.Views
         }
         private void BuscarEnGrid(string texto)
         {
-            try
+            // Filtra las filas del DataGridView según el texto de búsqueda
+            foreach (DataGridViewRow row in tabla_productos.Rows)
             {
-                tabla_productos.CurrentCell = null; // <- desactiva la celda seleccionada
-                tabla_productos.ClearSelection();
-                foreach (DataGridViewRow row in tabla_productos.Rows)
-                {
-                    if (row.IsNewRow) continue;
-                    bool visible = false;
-                    foreach (DataGridViewCell cell in row.Cells)
-                    {
-                        if (cell.Value != null && Convert.ToString(cell.Value).IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            visible = true;
-                            break;
-                        }
-                    }
-                    row.Visible = visible;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al buscar: " + ex.Message);
+                bool visible = row.Cells.Cast<DataGridViewCell>().Any(cell => cell.Value != null && cell.Value.ToString().IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0);
+                row.Visible = visible;
             }
         }
         private void cmb_productos_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmb_productos.SelectedItem != null && cmb_productos.SelectedItem.ToString() == "Todos")
+            // Maneja el evento de cambio de selección del combo box
+            var selectedValue = cmb_productos.SelectedItem.ToString();
+            if (selectedValue == "Todos")
             {
-                CargarProductoss(); //Carga todos los productos
+                CargarProductoss(); // Carga todos los productos
             }
-            else if (cmb_productos.SelectedItem != null && int.TryParse(cmb_productos.SelectedItem.ToString(), out int limite))
+            else if (int.TryParse(selectedValue, out int limite))
             {
-                CargarProductoss(limite); //Carga los productos según el límite seleccionado
+                CargarProductoss(limite); // Carga productos con el límite seleccionado
             }
+        }
+
+        private void ImprimirProd_Click(object sender, EventArgs e)
+        {
+            PDFClients.ExportarClientes(tabla_productos);
+
         }
     }
 }
