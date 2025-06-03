@@ -123,7 +123,7 @@ namespace Ensumex.Views
                     UNIDAD = p.UNI_MED,
                     PRECIO = p.COSTO_PROM,
                     EXISTENCIAS = p.EXIST
-                    
+
                 }).ToList();
                 if (!tbl_Productos.Columns.Contains("Agregar"))
                 {
@@ -443,6 +443,14 @@ namespace Ensumex.Views
             {
                 txt_Buscarentabla.Text = "";
             }
+        }
+
+        private void txtBuscar_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void txtBuscar_MouseEnter(object sender, EventArgs e)
+        {
         }
     }
 }

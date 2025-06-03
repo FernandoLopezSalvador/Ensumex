@@ -83,10 +83,9 @@ namespace Ensumex.Views
                 CargarProductoss(limite); // Carga productos con el límite seleccionado
             }
         }
-
         private void ImprimirProd_Click(object sender, EventArgs e)
         {
-            PDFClients.ExportarClientes(tabla_productos);
+            PDFClients.ExportarClientes(tabla_productos, "Productos.xlsx");
 
         }
     }

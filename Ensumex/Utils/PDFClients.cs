@@ -9,7 +9,7 @@ namespace Ensumex.Utils
 {
     internal class PDFClients
     {
-        public static void ExportarClientes(DataGridView tabla)
+        public static void ExportarClientes(DataGridView tabla, string nombreArchivo = "Exportado.xlsx")
         {
             if (tabla.Rows.Count == 0)
             {
@@ -21,7 +21,7 @@ namespace Ensumex.Utils
             {
                 sfd.Filter = "Excel Workbook|*.xlsx";
                 sfd.Title = "Guardar archivo Excel";
-                sfd.FileName = "Clientes.xlsx";
+                sfd.FileName = "ejemplo.xlsx";
 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
@@ -46,11 +46,9 @@ namespace Ensumex.Utils
                                     worksheet.Cell(i + 2, j + 1).Value = valor?.ToString() ?? "";
                                 }
                             }
-
                             worksheet.Columns().AdjustToContents();
                             workbook.SaveAs(sfd.FileName);
                         }
-
                         MessageBox.Show("Exportación completada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)

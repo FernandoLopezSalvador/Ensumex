@@ -656,17 +656,19 @@
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.ColumnCount = 3;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48.96854F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 2.06292987F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48.9685326F));
-            tableLayoutPanel3.Controls.Add(tbl_Productos, 0, 0);
-            tableLayoutPanel3.Controls.Add(tbl_Cotizacion, 2, 0);
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 19.3899784F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 58.2788658F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.3311539F));
+            tableLayoutPanel3.Controls.Add(tbl_Productos, 1, 0);
+            tableLayoutPanel3.Controls.Add(tbl_Cotizacion, 1, 2);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(0, 227);
             tableLayoutPanel3.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 1;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.RowCount = 3;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 45.45454F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 9.09091F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 45.4545479F));
             tableLayoutPanel3.Size = new Size(918, 179);
             tableLayoutPanel3.TabIndex = 10;
             tableLayoutPanel3.Paint += tableLayoutPanel3_Paint;
@@ -676,11 +678,11 @@
             tbl_Productos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tbl_Productos.Dock = DockStyle.Fill;
             tbl_Productos.GridColor = Color.LightGray;
-            tbl_Productos.Location = new Point(3, 2);
+            tbl_Productos.Location = new Point(181, 2);
             tbl_Productos.Margin = new Padding(3, 2, 3, 2);
             tbl_Productos.Name = "tbl_Productos";
             tbl_Productos.RowHeadersWidth = 51;
-            tbl_Productos.Size = new Size(443, 175);
+            tbl_Productos.Size = new Size(529, 77);
             tbl_Productos.TabIndex = 7;
             tbl_Productos.CellClick += tbl_Productos_CellClick;
             // 
@@ -688,11 +690,11 @@
             // 
             tbl_Cotizacion.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tbl_Cotizacion.Dock = DockStyle.Fill;
-            tbl_Cotizacion.Location = new Point(470, 2);
+            tbl_Cotizacion.Location = new Point(181, 99);
             tbl_Cotizacion.Margin = new Padding(3, 2, 3, 2);
             tbl_Cotizacion.Name = "tbl_Cotizacion";
             tbl_Cotizacion.RowHeadersWidth = 51;
-            tbl_Cotizacion.Size = new Size(445, 175);
+            tbl_Cotizacion.Size = new Size(529, 78);
             tbl_Cotizacion.TabIndex = 8;
             tbl_Cotizacion.CellClick += tbl_Cotizacion_CellClick;
             tbl_Cotizacion.CellEndEdit += tbl_Cotizacion_CellEndEdit;

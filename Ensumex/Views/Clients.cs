@@ -32,7 +32,7 @@ namespace Ensumex.Views
             tabla_clientes.Columns.Add("CALLE", "Calle");
             tabla_clientes.Columns.Add("COLONIA", "Colonia");
             tabla_clientes.Columns.Add("MUNICIPIO", "Municipio");
-            tabla_clientes.Columns.Add("EMAILPRED", "Email Predeterminado");
+            tabla_clientes.Columns.Add("EMAILPRED", "Email");
         }
         private void InicializarComboClientes()
         {
@@ -51,7 +51,6 @@ namespace Ensumex.Views
             }
             tabla_clientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
-
         private void cmb_clientes_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Aquí puedes manejar el evento de cambio de selección del combo box si es necesario
@@ -73,7 +72,6 @@ namespace Ensumex.Views
                 }
             }
         }
-
         private void txt_buscar_TextChanged(object sender, EventArgs e)
         {
             var searchText = txt_buscar.Text.ToLower();
@@ -88,12 +86,9 @@ namespace Ensumex.Views
                 }
             }
         }
-
         private void materialButton1_Click(object sender, EventArgs e)
         {
-            // Aquí puedes manejar el evento del botón si es necesario
-            // esta es una funcion que de la tabla clientes obtiene los datos de la tabla y los convierte a un formato que se puede exportar a excel
-            PDFClients.ExportarClientes(tabla_clientes);
+            PDFClients.ExportarClientes(tabla_clientes, "Clientes.xlsx");
         }
     }
 }
