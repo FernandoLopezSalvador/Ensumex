@@ -651,6 +651,7 @@
             txt_Buscarentabla.UseSystemPasswordChar = false;
             txt_Buscarentabla.ValidatingType = null;
             txt_Buscarentabla.MouseEnter += txt_Buscarentabla_MouseEnter;
+            txt_Buscarentabla.MouseLeave += txt_Buscarentabla_MouseLeave;
             txt_Buscarentabla.TextChanged += txt_Buscarentabla_TextChanged;
             // 
             // tableLayoutPanel3

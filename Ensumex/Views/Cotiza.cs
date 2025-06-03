@@ -436,7 +436,6 @@ namespace Ensumex.Views
                 MessageBox.Show("Error al buscar: " + ex.Message);
             }
         }
-
         private void txt_Buscarentabla_MouseEnter(object sender, EventArgs e)
         {
             if (txt_Buscarentabla.Text == "Buscar:")
@@ -444,13 +443,12 @@ namespace Ensumex.Views
                 txt_Buscarentabla.Text = "";
             }
         }
-
-        private void txtBuscar_TextChanged(object sender, EventArgs e)
+        private void txt_Buscarentabla_MouseLeave(object sender, EventArgs e)
         {
-        }
-
-        private void txtBuscar_MouseEnter(object sender, EventArgs e)
-        {
+            if (string.IsNullOrWhiteSpace(txt_Buscarentabla.Text))
+            {
+                txt_Buscarentabla.Text = "Buscar:";
+            }
         }
     }
 }
