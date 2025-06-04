@@ -35,6 +35,7 @@
             cmb_productos = new ComboBox();
             btn_nuevoProducto = new MaterialSkin.Controls.MaterialButton();
             ImprimirProd = new MaterialSkin.Controls.MaterialButton();
+            btn_Existencia = new MaterialSkin.Controls.MaterialCheckbox();
             tabla_productos = new DataGridView();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tabla_productos).BeginInit();
@@ -47,12 +48,13 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel1.Controls.Add(txt_buscar, 3, 1);
-            tableLayoutPanel1.Controls.Add(label2, 2, 1);
-            tableLayoutPanel1.Controls.Add(label1, 0, 1);
-            tableLayoutPanel1.Controls.Add(cmb_productos, 1, 1);
-            tableLayoutPanel1.Controls.Add(btn_nuevoProducto, 1, 0);
-            tableLayoutPanel1.Controls.Add(ImprimirProd, 2, 0);
+            tableLayoutPanel1.Controls.Add(btn_nuevoProducto, 0, 0);
+            tableLayoutPanel1.Controls.Add(label1, 1, 0);
+            tableLayoutPanel1.Controls.Add(ImprimirProd, 0, 1);
+            tableLayoutPanel1.Controls.Add(cmb_productos, 2, 0);
+            tableLayoutPanel1.Controls.Add(label2, 1, 1);
+            tableLayoutPanel1.Controls.Add(txt_buscar, 2, 1);
+            tableLayoutPanel1.Controls.Add(btn_Existencia, 3, 1);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
@@ -73,7 +75,7 @@
             txt_buscar.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             txt_buscar.HideSelection = true;
             txt_buscar.LeadingIcon = null;
-            txt_buscar.Location = new Point(660, 72);
+            txt_buscar.Location = new Point(444, 72);
             txt_buscar.Margin = new Padding(3, 2, 3, 2);
             txt_buscar.MaxLength = 32767;
             txt_buscar.MouseState = MaterialSkin.MouseState.OUT;
@@ -98,7 +100,7 @@
             // 
             label2.Anchor = AnchorStyles.Right;
             label2.AutoSize = true;
-            label2.Location = new Point(587, 88);
+            label2.Location = new Point(372, 88);
             label2.Name = "label2";
             label2.Size = new Size(55, 15);
             label2.TabIndex = 13;
@@ -108,7 +110,7 @@
             // 
             label1.Anchor = AnchorStyles.Right;
             label1.AutoSize = true;
-            label1.Location = new Point(161, 88);
+            label1.Location = new Point(376, 24);
             label1.Name = "label1";
             label1.Size = new Size(51, 15);
             label1.TabIndex = 11;
@@ -118,7 +120,7 @@
             // 
             cmb_productos.Anchor = AnchorStyles.None;
             cmb_productos.FormattingEnabled = true;
-            cmb_productos.Location = new Point(232, 84);
+            cmb_productos.Location = new Point(447, 20);
             cmb_productos.Margin = new Padding(3, 2, 3, 2);
             cmb_productos.Name = "cmb_productos";
             cmb_productos.Size = new Size(180, 23);
@@ -133,8 +135,8 @@
             btn_nuevoProducto.Depth = 0;
             btn_nuevoProducto.HighEmphasis = true;
             btn_nuevoProducto.Icon = null;
-            btn_nuevoProducto.Location = new Point(278, 14);
-            btn_nuevoProducto.Margin = new Padding(4, 4, 4, 4);
+            btn_nuevoProducto.Location = new Point(63, 14);
+            btn_nuevoProducto.Margin = new Padding(4);
             btn_nuevoProducto.MouseState = MaterialSkin.MouseState.HOVER;
             btn_nuevoProducto.Name = "btn_nuevoProducto";
             btn_nuevoProducto.NoAccentTextColor = Color.Empty;
@@ -153,8 +155,8 @@
             ImprimirProd.Depth = 0;
             ImprimirProd.HighEmphasis = true;
             ImprimirProd.Icon = null;
-            ImprimirProd.Location = new Point(494, 14);
-            ImprimirProd.Margin = new Padding(4, 4, 4, 4);
+            ImprimirProd.Location = new Point(64, 78);
+            ImprimirProd.Margin = new Padding(4);
             ImprimirProd.MouseState = MaterialSkin.MouseState.HOVER;
             ImprimirProd.Name = "ImprimirProd";
             ImprimirProd.NoAccentTextColor = Color.Empty;
@@ -165,6 +167,24 @@
             ImprimirProd.UseAccentColor = false;
             ImprimirProd.UseVisualStyleBackColor = true;
             ImprimirProd.Click += ImprimirProd_Click;
+            // 
+            // btn_Existencia
+            // 
+            btn_Existencia.Anchor = AnchorStyles.None;
+            btn_Existencia.AutoSize = true;
+            btn_Existencia.Depth = 0;
+            btn_Existencia.Location = new Point(645, 77);
+            btn_Existencia.Margin = new Padding(0);
+            btn_Existencia.MouseLocation = new Point(-1, -1);
+            btn_Existencia.MouseState = MaterialSkin.MouseState.HOVER;
+            btn_Existencia.Name = "btn_Existencia";
+            btn_Existencia.ReadOnly = false;
+            btn_Existencia.Ripple = true;
+            btn_Existencia.Size = new Size(218, 37);
+            btn_Existencia.TabIndex = 17;
+            btn_Existencia.Text = "Mostrar solo en existencia";
+            btn_Existencia.UseVisualStyleBackColor = true;
+            btn_Existencia.CheckedChanged += btn_Existencia_CheckedChanged;
             // 
             // tabla_productos
             // 
@@ -203,5 +223,6 @@
         private DataGridView tabla_productos;
         private MaterialSkin.Controls.MaterialButton btn_nuevoProducto;
         private MaterialSkin.Controls.MaterialButton ImprimirProd;
+        private MaterialSkin.Controls.MaterialCheckbox btn_Existencia;
     }
 }

@@ -176,6 +176,7 @@
             tabla_clientes.RowHeadersWidth = 51;
             tabla_clientes.Size = new Size(863, 241);
             tabla_clientes.TabIndex = 19;
+            tabla_clientes.CellDoubleClick += tabla_clientes_CellDoubleClick_1;
             // 
             // Clients
             // 

@@ -50,7 +50,9 @@ namespace Ensumex.Views
         // Método para agregar columnas
         private void AgregarColumnasCotizacion()
         {
-            string[,] columnas = {
+            try
+            {
+                string[,] columnas = {
             { "CLAVE", "Clave" },
             { "DESCRIPCIÓN", "Descripción" },
             { "UNIDAD", "Unidad" },
@@ -58,10 +60,35 @@ namespace Ensumex.Views
             { "CANTIDAD", "Cantidad" },
             { "TasaCambio", "Tasa de Cambio" },
             { "Subtotal", "Subtotal" }
-            };
-            foreach (var columna in columnas.Cast<string>().Chunk(2))
-                tbl_Cotizacion.Columns.Add(columna[0], columna[1]);
-            tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = true;
+        };
+
+                for (int i = 0; i < columnas.GetLength(0); i++)
+                {
+                    string nombreInterno = columnas[i, 0];
+                    string encabezado = columnas[i, 1];
+
+                    // Verifica si la columna ya existe antes de agregar
+                    if (!tbl_Cotizacion.Columns.Contains(nombreInterno))
+                    {
+                        tbl_Cotizacion.Columns.Add(nombreInterno, encabezado);
+                    }
+                }
+
+                // Verifica si la columna "TasaCambio" fue creada exitosamente
+                if (tbl_Cotizacion.Columns.Contains("TasaCambio"))
+                {
+                    tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = true;
+                }
+                else
+                {
+                    MessageBox.Show("La columna 'TasaCambio' no fue creada correctamente.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al agregar las columnas de la cotización:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
         {
@@ -115,16 +142,20 @@ namespace Ensumex.Views
             try
             {
                 var productoService = new ProductoServices1();
-                var productos = productoService.ObtenerProductos(limite);
-                tbl_Productos.DataSource = productos.Select(p => new
-                {
-                    CLAVE = p.CVE_ART,
-                    DESCRIPCIÓN = p.DESCR,
-                    UNIDAD = p.UNI_MED,
-                    PRECIO = p.COSTO_PROM,
-                    EXISTENCIAS = p.EXIST
+                var productos = productoService.ObtenerProductos(limite)
+                    .Where(p => int.TryParse(p.EXIST, out var existencias) && existencias > 0) // Convertir EXIST a entero antes de comparar
+                    .Select(p => new
+                    {
+                        CLAVE = p.CVE_ART,
+                        DESCRIPCIÓN = p.DESCR,
+                        UNIDAD = p.UNI_MED,
+                        PRECIO = p.COSTO_PROM,
+                        EXISTENCIAS = int.TryParse(p.EXIST, out var existencias) ? existencias : 0 // Convertir EXIST a entero para mostrar
+                    })
+                    .ToList();
 
-                }).ToList();
+                tbl_Productos.DataSource = productos;
+
                 if (!tbl_Productos.Columns.Contains("Agregar"))
                 {
                     DataGridViewButtonColumn btnAgregar = new DataGridViewButtonColumn();
@@ -274,31 +305,60 @@ namespace Ensumex.Views
         }
         private void btn_AgregarProducto_Click(object sender, EventArgs e)
         {
-            using (var formProducto = new ProdTemp())
+            try
             {
-                if (formProducto.ShowDialog() == DialogResult.OK)
+                using (var formProducto = new ProdTemp())
                 {
-                    // Recibe los datos del formulario temporal
-                    string clave = formProducto.Clave;
-                    string descripcion = formProducto.Descripcion;
-                    decimal preciouni = formProducto.PrecioUnitarioTemp; // Cambiado a PrecioUnitarioTemp
-                    decimal preciopiblico = formProducto.PrecioPublicoTemp; // Cambiado a PrecioPublicoTemp
-                    string unidad = formProducto.Unidentrada; // Cambiado a UnidadEntrada
-                    decimal tasaCambio = 1;
-                    decimal subtotal = preciopiblico * tasaCambio;
-                    tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, preciopiblico, preciouni, 1, tasaCambio, subtotal);
-                    ActualizarTotales();
+                    if (formProducto.ShowDialog() == DialogResult.OK)
+                    {
+                        // Validación de datos nulos o inconsistentes
+                        if (string.IsNullOrWhiteSpace(formProducto.Clave) || string.IsNullOrWhiteSpace(formProducto.Descripcion))
+                        {
+                            MessageBox.Show("El producto debe tener clave y descripción.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        string clave = formProducto.Clave;
+                        string descripcion = formProducto.Descripcion;
+                        decimal precioUnitario = formProducto.PrecioUnitarioTemp;
+                        decimal precioPublico = formProducto.PrecioPublicoTemp;
+                        string unidad = formProducto.Unidentrada;
+                        decimal tasaCambio = 1;
+                        decimal subtotal = precioPublico * tasaCambio;
+
+                        tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precioPublico, precioUnitario, 1, tasaCambio, subtotal);
+
+                        ActualizarTotales();
+                    }
+
+                    // Asegura que la columna de "Eliminar" solo se agregue una vez
+                    if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
+                    {
+                        DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn
+                        {
+                            Name = "Eliminar",
+                            HeaderText = "Acción",
+                            Text = "Eliminar",
+                            UseColumnTextForButtonValue = true
+                        };
+                        tbl_Cotizacion.Columns.Add(btnEliminar);
+                    }
                 }
-                // Asegura que la columna de "Eliminar" solo se agregue una vez
-                if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
-                {
-                    DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn();
-                    btnEliminar.Name = "Eliminar";
-                    btnEliminar.HeaderText = "Acción";
-                    btnEliminar.Text = "Eliminar";
-                    btnEliminar.UseColumnTextForButtonValue = true;
-                    tbl_Cotizacion.Columns.Add(btnEliminar);
-                }
+            }
+            catch (FormatException fe)
+            {
+                MessageBox.Show("Error en el formato de los valores numéricos: " + fe.Message,
+                                "Formato incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (NullReferenceException ne)
+            {
+                MessageBox.Show("Uno de los valores requeridos no fue proporcionado: " + ne.Message,
+                                "Dato faltante", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al agregar el producto:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
@@ -408,31 +468,43 @@ namespace Ensumex.Views
         }
         private void BuscarEnGrid(string texto)
         {
-            try
+            // Si el texto está vacío, muestra todas las filas rápidamente
+            if (string.IsNullOrWhiteSpace(texto))
             {
-                tbl_Productos.CurrentCell = null; // <- desactiva la celda seleccionada
-                tbl_Productos.ClearSelection();
                 foreach (DataGridViewRow row in tbl_Productos.Rows)
                 {
-                    if (row.IsNewRow) continue;
-                    bool visible = false;
-                    foreach (DataGridViewCell cell in row.Cells)
-                    {
-                        if (cell.Value != null && Convert.ToString(cell.Value).IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            visible = true;
-                            break;
-                        }
-                    }
-                    row.Visible = visible;
+                    if (!row.IsNewRow)
+                        row.Visible = true;
                 }
+                return;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al buscar: " + ex.Message);
-            }
-        }
 
+            // Suspende el layout y el enlace de datos para mejorar el rendimiento
+            tbl_Productos.SuspendLayout();
+            CurrencyManager cm = (CurrencyManager)BindingContext[tbl_Productos.DataSource];
+            cm.SuspendBinding();
+
+            string textoBusqueda = texto.ToLower();
+
+            foreach (DataGridViewRow row in tbl_Productos.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                bool visible = false;
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    if (cell.Value != null && cell.Value.ToString().IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        visible = true;
+                        break;
+                    }
+                }
+                row.Visible = visible;
+            }
+
+            cm.ResumeBinding();
+            tbl_Productos.ResumeLayout();
+        }
         private void txt_Buscarentabla_MouseEnter(object sender, EventArgs e)
         {
             if (txt_Buscarentabla.Text == "Buscar:")
@@ -442,9 +514,32 @@ namespace Ensumex.Views
         }
         private void txt_Buscarentabla_MouseLeave(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txt_Buscarentabla.Text))
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            try
             {
-                txt_Buscarentabla.Text = "Buscar:";
+                using (var clientesForm = new Form())
+                {
+                    var clientsControl = new Clients();
+                    clientsControl.Dock = DockStyle.Fill;
+                    clientesForm.Controls.Add(clientsControl);
+                    clientesForm.StartPosition = FormStartPosition.CenterParent;
+                    clientesForm.Size = new Size(800, 600);
+
+                    if (clientesForm.ShowDialog() == DialogResult.OK)
+                    {
+                        // Asegúrate de que no sean nulos antes de asignarlos
+                        txt_Nombrecliente.Text = clientsControl.ClienteSeleccionadoNombre ?? "N/A";
+                        txt_Direccioncliente.Text = clientsControl.ClienteSeleccionadoCalle ?? "N/A";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al abrir el formulario de clientes:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

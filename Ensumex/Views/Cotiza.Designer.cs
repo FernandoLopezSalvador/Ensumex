@@ -55,13 +55,13 @@
             materialLabel9 = new MaterialSkin.Controls.MaterialLabel();
             lbl_Bases = new MaterialSkin.Controls.MaterialLabel();
             txt_Bases = new MaterialSkin.Controls.MaterialMaskedTextBox();
-            pictureBox1 = new PictureBox();
+            Buscarcliente = new PictureBox();
             txt_Buscarentabla = new MaterialSkin.Controls.MaterialMaskedTextBox();
             tableLayoutPanel3 = new TableLayoutPanel();
             tbl_Productos = new DataGridView();
             tbl_Cotizacion = new DataGridView();
             tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)Buscarcliente).BeginInit();
             tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tbl_Productos).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbl_Cotizacion).BeginInit();
@@ -101,7 +101,7 @@
             tableLayoutPanel1.Controls.Add(materialLabel9, 0, 4);
             tableLayoutPanel1.Controls.Add(lbl_Bases, 0, 3);
             tableLayoutPanel1.Controls.Add(txt_Bases, 1, 3);
-            tableLayoutPanel1.Controls.Add(pictureBox1, 2, 1);
+            tableLayoutPanel1.Controls.Add(Buscarcliente, 2, 1);
             tableLayoutPanel1.Controls.Add(txt_Buscarentabla, 2, 4);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
@@ -596,17 +596,18 @@
             txt_Bases.UseSystemPasswordChar = false;
             txt_Bases.ValidatingType = null;
             // 
-            // pictureBox1
+            // Buscarcliente
             // 
-            pictureBox1.Anchor = AnchorStyles.Left;
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(366, 53);
-            pictureBox1.Margin = new Padding(3, 2, 3, 2);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(37, 30);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 11;
-            pictureBox1.TabStop = false;
+            Buscarcliente.Anchor = AnchorStyles.Left;
+            Buscarcliente.Image = (Image)resources.GetObject("Buscarcliente.Image");
+            Buscarcliente.Location = new Point(366, 53);
+            Buscarcliente.Margin = new Padding(3, 2, 3, 2);
+            Buscarcliente.Name = "Buscarcliente";
+            Buscarcliente.Size = new Size(37, 30);
+            Buscarcliente.SizeMode = PictureBoxSizeMode.Zoom;
+            Buscarcliente.TabIndex = 11;
+            Buscarcliente.TabStop = false;
+            Buscarcliente.Click += pictureBox1_Click;
             // 
             // txt_Buscarentabla
             // 
@@ -709,7 +710,7 @@
             Size = new Size(918, 406);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)Buscarcliente).EndInit();
             tableLayoutPanel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)tbl_Productos).EndInit();
             ((System.ComponentModel.ISupportInitialize)tbl_Cotizacion).EndInit();
@@ -727,7 +728,7 @@
         private MaterialSkin.Controls.MaterialTextBox2 txt_Nombrecliente;
         private MaterialSkin.Controls.MaterialLabel materialLabel7;
         private MaterialSkin.Controls.MaterialTextBox2 txt_Costoinstalacion;
-        private PictureBox pictureBox1;
+        private PictureBox Buscarcliente;
         private MaterialSkin.Controls.MaterialLabel materialLabel6;
         private MaterialSkin.Controls.MaterialTextBox2 txt_Direccioncliente;
         private MaterialSkin.Controls.MaterialLabel materialLabel5;

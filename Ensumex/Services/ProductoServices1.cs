@@ -15,16 +15,7 @@ namespace Ensumex.Services
         public List <(string CVE_ART, string DESCR, string UNI_MED, decimal COSTO_PROM, decimal ULT_COSTO, string EXIST)> ObtenerProductos(int? limite = null)
         {
             var productos = _productoDao.ObtenerProductoss();
-
-            // Filtrar productos donde EXIST es nulo o igual a "0"
-            var filtrados = productos
-                .Where(p =>
-                    !string.IsNullOrWhiteSpace(p.EXIST) &&
-                    decimal.TryParse(p.EXIST, out decimal existValue) &&
-                    existValue > 0)
-                .ToList();
-
-            return filtrados;
+            return productos;
         }
     }
 }

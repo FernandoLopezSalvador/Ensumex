@@ -51,6 +51,7 @@ namespace Ensumex.Views
 
                 // Configura el DataGridView
                 tabla_productos.DataSource = productosConValoresSeguros;
+                //tabla_productos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             }
             catch (Exception ex)
             {
@@ -63,30 +64,140 @@ namespace Ensumex.Views
         }
         private void BuscarEnGrid(string texto)
         {
-            // Filtra las filas del DataGridView según el texto de búsqueda
-            foreach (DataGridViewRow row in tabla_productos.Rows)
+            try
             {
-                bool visible = row.Cells.Cast<DataGridViewCell>().Any(cell => cell.Value != null && cell.Value.ToString().IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0);
-                row.Visible = visible;
+                foreach (DataGridViewRow row in tabla_productos.Rows)
+                {
+                    // Saltar filas nuevas (vacías)
+                    if (row.IsNewRow) continue;
+
+                    bool visible = false;
+
+                    foreach (DataGridViewCell cell in row.Cells)
+                    {
+                        if (cell.Value != null)
+                        {
+                            try
+                            {
+                                if (cell.Value.ToString().IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    visible = true;
+                                    break;
+                                }
+                            }
+                            catch (Exception cellEx)
+                            {
+                                // Log opcional por celda, si quisieras
+                                Console.WriteLine("Error al procesar celda: " + cellEx.Message);
+                            }
+                        }
+                    }
+
+                    row.Visible = visible;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al buscar en la tabla:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void cmb_productos_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Maneja el evento de cambio de selección del combo box
-            var selectedValue = cmb_productos.SelectedItem.ToString();
-            if (selectedValue == "Todos")
+            try
             {
-                CargarProductoss(); // Carga todos los productos
+                if (cmb_productos.SelectedItem == null)
+                {
+                    MessageBox.Show("No se ha seleccionado ningún valor.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var selectedValue = cmb_productos.SelectedItem.ToString();
+
+                if (selectedValue == "Todos")
+                {
+                    CargarProductoss(); // Carga todos los productos
+                }
+                else if (int.TryParse(selectedValue, out int limite))
+                {
+                    CargarProductoss(limite); // Carga productos con el límite seleccionado
+                }
+                else
+                {
+                    MessageBox.Show("El valor seleccionado no es válido.", "Error de selección", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
-            else if (int.TryParse(selectedValue, out int limite))
+            catch (Exception ex)
             {
-                CargarProductoss(limite); // Carga productos con el límite seleccionado
+                MessageBox.Show("Ocurrió un error al cambiar la selección de productos:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void ImprimirProd_Click(object sender, EventArgs e)
         {
             PDFClients.ExportarClientes(tabla_productos, "Productos.xlsx");
 
+        }
+
+        private void btn_Existencia_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (btn_Existencia.Checked)
+                {
+                    var productosFiltrados = tabla_productos.Rows.Cast<DataGridViewRow>()
+                        .Where(row =>
+                        {
+                            try
+                            {
+                                if (row.IsNewRow) return false;
+
+                                var cellValue = row.Cells["EXIST"].Value;
+                                return cellValue != null &&
+                                       decimal.TryParse(cellValue.ToString(), out decimal exist) &&
+                                       exist > 0;
+                            }
+                            catch
+                            {
+                                // Si una fila da error, se omite del filtro
+                                return false;
+                            }
+                        })
+                        .Select(row =>
+                        {
+                            try
+                            {
+                                return new
+                                {
+                                    CLAVE = row.Cells["CLAVE"].Value?.ToString() ?? "N/A",
+                                    DESCRIPCIÓN = row.Cells["DESCRIPCIÓN"].Value?.ToString() ?? "N/A",
+                                    UNDMED = row.Cells["UNDMED"].Value?.ToString() ?? "N/A",
+                                    COSTO_PROM = row.Cells["COSTO_PROM"].Value?.ToString() ?? "$0.00",
+                                    ULT_COSTO = row.Cells["ULT_COSTO"].Value?.ToString() ?? "$0.00",
+                                    EXIST = row.Cells["EXIST"].Value?.ToString() ?? "N/A"
+                                };
+                            }
+                            catch
+                            {
+                                // Si alguna fila causa error al proyectar, se omite
+                                return null;
+                            }
+                        })
+                        .Where(p => p != null)
+                        .ToList();
+
+                    tabla_productos.DataSource = productosFiltrados;
+                }
+                else
+                {
+                    CargarProductoss();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al filtrar los productos por existencia:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

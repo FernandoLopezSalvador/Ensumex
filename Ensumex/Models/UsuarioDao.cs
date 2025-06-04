@@ -14,7 +14,7 @@ namespace Ensumex.Models
 {
     public class UsuarioDao : ConnectionToSql
     {
-        [Obsolete]
+        /*[Obsolete]
         public bool Login(string usuario, string contraseña)
         {
             using (var connection = GetConnection())
@@ -31,7 +31,7 @@ namespace Ensumex.Models
                     return count > 0;
                 }
             }
-        }
+        }*/
 
         [Obsolete]
         public (string Nombre, string Posicion) ObtenerDatosUsuario(string usuario)

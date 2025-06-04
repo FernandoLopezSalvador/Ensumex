@@ -49,7 +49,7 @@ namespace Ensumex.Views
             {
                 tabla_clientes.Rows.Add(cliente.CLAVE, cliente.STATUS, cliente.NOMBRE, cliente.CALLE, cliente.COLONIA, cliente.MUNICIPIO, cliente.EMAILPRED);
             }
-            tabla_clientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            //tabla_clientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
         private void cmb_clientes_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -90,5 +90,41 @@ namespace Ensumex.Views
         {
             PDFClients.ExportarClientes(tabla_clientes, "Clientes.xlsx");
         }
+
+        private void tabla_clientes_CellDoubleClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                var row = tabla_clientes.Rows[e.RowIndex];
+                string nombre = row.Cells["NOMBRE"].Value?.ToString();
+                string calle = row.Cells["CALLE"].Value?.ToString();
+
+                var result = MessageBox.Show(
+                    $"¿Desea agregar el cliente '{nombre}'?",
+                    "Agregar cliente",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    // Guarda los datos seleccionados en propiedades públicas
+                    ClienteSeleccionadoNombre = nombre;
+                    ClienteSeleccionadoCalle = calle;
+
+                    // Cambiar la lógica para cerrar el formulario o manejar el evento de cierre
+                    var parentForm = this.FindForm();
+                    if (parentForm != null)
+                    {
+                        parentForm.DialogResult = DialogResult.OK;
+                        parentForm.Close();
+                    }
+                }
+            }
+
+        }
+
+        // Propiedades públicas para exponer los datos seleccionados
+        public string ClienteSeleccionadoNombre { get; private set; }
+        public string ClienteSeleccionadoCalle { get; private set; }
     }
 }
