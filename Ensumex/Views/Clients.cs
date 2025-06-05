@@ -25,7 +25,6 @@ namespace Ensumex.Views
         {
             tabla_clientes.DefaultCellStyle.ForeColor = Color.Black;
             tabla_clientes.BackgroundColor = Color.FromArgb(45, 45, 48);
-            // Add column definitions
             tabla_clientes.Columns.Add("CLAVE", "Clave");
             tabla_clientes.Columns.Add("STATUS", "Status");
             tabla_clientes.Columns.Add("NOMBRE", "Nombre");
@@ -53,12 +52,11 @@ namespace Ensumex.Views
         }
         private void cmb_clientes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Aquí puedes manejar el evento de cambio de selección del combo box si es necesario
             // Por ejemplo, podrías filtrar los clientes según la selección
             var selectedValue = cmb_clientes.SelectedItem.ToString();
             if (selectedValue == "Todos")
             {
-                CargarClientes(); // Cargar todos los clientes
+                CargarClientes(); 
             }
             else
             {
@@ -72,6 +70,7 @@ namespace Ensumex.Views
                 }
             }
         }
+
         private void txt_buscar_TextChanged(object sender, EventArgs e)
         {
             var searchText = txt_buscar.Text.ToLower();
@@ -119,7 +118,7 @@ namespace Ensumex.Views
             }
 
         }
-        // Propiedades públicas para exponer los datos seleccionados
+
         public string ClienteSeleccionadoNombre { get; private set; }
         public string ClienteSeleccionadoCalle { get; private set; }
     }

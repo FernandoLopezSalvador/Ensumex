@@ -9,8 +9,6 @@ using Ensumex.Clases;
 using Ensumex.Models;
 using Ensumex.Forms;
 
-
-
 namespace Ensumex.Controllers
 {
     internal class UsuarioController : ConnectionToSql

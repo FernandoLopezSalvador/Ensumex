@@ -245,7 +245,6 @@ namespace Ensumex.Forms
                 {
                     deleteClientes.ExecuteNonQuery();
                 }
-
                 try
                 {
                     int progreso = 0;
@@ -292,7 +291,6 @@ namespace Ensumex.Forms
                                     insertC.Parameters.AddWithValue("@COLONIA", row["COLONIA"] ?? DBNull.Value);
                                     insertC.Parameters.AddWithValue("@MUNICIPIO", row["MUNICIPIO"] ?? DBNull.Value);
                                     insertC.Parameters.AddWithValue("@MAIL", row["MAIL"] ?? DBNull.Value);
-
                                     insertC.ExecuteNonQuery();
                                 }
                                 progreso++;
