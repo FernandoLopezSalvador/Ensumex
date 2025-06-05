@@ -261,7 +261,7 @@ namespace Ensumex.Forms
                             {
                                 using (SqlCommand insertP = new SqlCommand(
                                     @"INSERT INTO INVE01 (CVE_ART, DESCR, UNI_MED, COSTO_PROM, ULT_COSTO, EXIST)
-                      VALUES (@CVE_ART, @DESCR, @UNI_MED, @COSTO_PROM, @ULT_COSTO, @EXIST)", connSql, transaction))
+                                    VALUES (@CVE_ART, @DESCR, @UNI_MED, @COSTO_PROM, @ULT_COSTO, @EXIST)", connSql, transaction))
                                 {
                                     insertP.Parameters.AddWithValue("@CVE_ART", row["CVE_ART"] ?? DBNull.Value);
                                     insertP.Parameters.AddWithValue("@DESCR", row["DESCR"] ?? DBNull.Value);
@@ -272,20 +272,18 @@ namespace Ensumex.Forms
 
                                     insertP.ExecuteNonQuery();
                                 }
-
                                 progreso++;
                                 this.Invoke((Action)(() =>
                                 {
                                     progressBar1.Value = progreso;
                                 }));
                             }
-
                             // Insertar clientes
                             foreach (DataRow row in clientesFB.Rows)
                             {
                                 using (SqlCommand insertC = new SqlCommand(
                                     @"INSERT INTO CLIE01 (CLAVE, STATUS, NOMBRE, CALLE, COLONIA, MUNICIPIO, MAIL)
-                      VALUES (@CLAVE, @STATUS, @NOMBRE, @CALLE, @COLONIA, @MUNICIPIO, @MAIL)", connSql, transaction))
+                                    VALUES (@CLAVE, @STATUS, @NOMBRE, @CALLE, @COLONIA, @MUNICIPIO, @MAIL)", connSql, transaction))
                                 {
                                     insertC.Parameters.AddWithValue("@CLAVE", row["CLAVE"] ?? DBNull.Value);
                                     insertC.Parameters.AddWithValue("@STATUS", row["STATUS"] ?? DBNull.Value);
@@ -297,7 +295,6 @@ namespace Ensumex.Forms
 
                                     insertC.ExecuteNonQuery();
                                 }
-
                                 progreso++;
                                 this.Invoke((Action)(() =>
                                 {
@@ -321,7 +318,6 @@ namespace Ensumex.Forms
                 {
                     MessageBox.Show("Error inesperado:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
                 connSql.Close();
             }
         }
