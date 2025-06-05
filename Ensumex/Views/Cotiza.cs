@@ -41,7 +41,6 @@ namespace Ensumex.Views
             tabla.BackgroundColor = Color.FromArgb(45, 45, 48);
             tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
-
         // Método para agregar descuentos
         private void AgregarDescuentos(string[] descuentos)
         {
@@ -150,7 +149,7 @@ namespace Ensumex.Views
                         DESCRIPCIÓN = p.DESCR,
                         UNIDAD = p.UNI_MED,
                         PRECIO = p.COSTO_PROM,
-                        EXISTENCIAS = int.TryParse(p.EXIST, out var existencias) ? existencias : 0 // Convertir EXIST a entero para mostrar
+                        EXISTENCIAS = int.TryParse(p.EXIST, out var existencias) ? existencias : 0
                     })
                     .ToList();
 
@@ -236,7 +235,6 @@ namespace Ensumex.Views
                 {
                     var row = tbl_Cotizacion.Rows[e.RowIndex];
                     string clave = row.Cells["CLAVE"].Value?.ToString();
-
                     // Buscar existencias en tbl_Productos
                     int existencias = 0;
                     foreach (DataGridViewRow prodRow in tbl_Productos.Rows)
@@ -248,7 +246,6 @@ namespace Ensumex.Views
                             break;
                         }
                     }
-
                     if (decimal.TryParse(row.Cells["CANTIDAD"].Value?.ToString(), out decimal cantidad))
                     {
                         if (cantidad > existencias)
@@ -258,7 +255,6 @@ namespace Ensumex.Views
                         }
                     }
                 }
-
                 // Recalcular subtotal y totales si corresponde
                 if (e.ColumnIndex == tbl_Cotizacion.Columns["CANTIDAD"].Index ||
                     e.ColumnIndex == tbl_Cotizacion.Columns["TasaCambio"].Index)
@@ -317,7 +313,6 @@ namespace Ensumex.Views
                             MessageBox.Show("El producto debe tener clave y descripción.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
-
                         string clave = formProducto.Clave;
                         string descripcion = formProducto.Descripcion;
                         decimal precioUnitario = formProducto.PrecioUnitarioTemp;
@@ -325,12 +320,9 @@ namespace Ensumex.Views
                         string unidad = formProducto.Unidentrada;
                         decimal tasaCambio = 1;
                         decimal subtotal = precioPublico * tasaCambio;
-
                         tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precioPublico, precioUnitario, 1, tasaCambio, subtotal);
-
                         ActualizarTotales();
                     }
-
                     // Asegura que la columna de "Eliminar" solo se agregue una vez
                     if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
                     {
@@ -360,10 +352,6 @@ namespace Ensumex.Views
                 MessageBox.Show("Ocurrió un error al agregar el producto:\n" + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-        private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
-        {
-
         }
         private void tbl_Cotizacion_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -483,9 +471,7 @@ namespace Ensumex.Views
             tbl_Productos.SuspendLayout();
             CurrencyManager cm = (CurrencyManager)BindingContext[tbl_Productos.DataSource];
             cm.SuspendBinding();
-
             string textoBusqueda = texto.ToLower();
-
             foreach (DataGridViewRow row in tbl_Productos.Rows)
             {
                 if (row.IsNewRow) continue;
@@ -501,7 +487,6 @@ namespace Ensumex.Views
                 }
                 row.Visible = visible;
             }
-
             cm.ResumeBinding();
             tbl_Productos.ResumeLayout();
         }
@@ -515,7 +500,6 @@ namespace Ensumex.Views
         private void txt_Buscarentabla_MouseLeave(object sender, EventArgs e)
         {
         }
-
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             try

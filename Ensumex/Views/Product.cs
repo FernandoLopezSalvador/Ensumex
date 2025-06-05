@@ -92,7 +92,6 @@ namespace Ensumex.Views
                             }
                         }
                     }
-
                     row.Visible = visible;
                 }
             }
@@ -138,7 +137,6 @@ namespace Ensumex.Views
             PDFClients.ExportarClientes(tabla_productos, "Productos.xlsx");
 
         }
-
         private void btn_Existencia_CheckedChanged(object sender, EventArgs e)
         {
             try

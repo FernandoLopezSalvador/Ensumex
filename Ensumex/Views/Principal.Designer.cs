@@ -51,6 +51,9 @@
             clientesToolStripMenuItem = new ToolStripMenuItem();
             miniToolStrip = new MenuStrip();
             tableLayoutPanel4 = new TableLayoutPanel();
+            btn_sincronizar = new MaterialSkin.Controls.MaterialButton();
+            progressBar1 = new ProgressBar();
+            Barraprogre = new MaterialSkin.Controls.MaterialProgressBar();
             tableLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -318,7 +321,7 @@
             // nuevoToolStripMenuItem
             // 
             nuevoToolStripMenuItem.Name = "nuevoToolStripMenuItem";
-            nuevoToolStripMenuItem.Size = new Size(180, 22);
+            nuevoToolStripMenuItem.Size = new Size(162, 22);
             nuevoToolStripMenuItem.Text = "Nuevo Usuario";
             nuevoToolStripMenuItem.Click += nuevoToolStripMenuItem_Click;
             // 
@@ -326,20 +329,20 @@
             // 
             cargarDatosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { productosToolStripMenuItem, clientesToolStripMenuItem });
             cargarDatosToolStripMenuItem.Name = "cargarDatosToolStripMenuItem";
-            cargarDatosToolStripMenuItem.Size = new Size(180, 22);
+            cargarDatosToolStripMenuItem.Size = new Size(162, 22);
             cargarDatosToolStripMenuItem.Text = "Cargar Datos";
             // 
             // productosToolStripMenuItem
             // 
             productosToolStripMenuItem.Name = "productosToolStripMenuItem";
-            productosToolStripMenuItem.Size = new Size(180, 22);
+            productosToolStripMenuItem.Size = new Size(136, 22);
             productosToolStripMenuItem.Text = "Productos";
             productosToolStripMenuItem.Click += productosToolStripMenuItem_Click;
             // 
             // clientesToolStripMenuItem
             // 
             clientesToolStripMenuItem.Name = "clientesToolStripMenuItem";
-            clientesToolStripMenuItem.Size = new Size(180, 22);
+            clientesToolStripMenuItem.Size = new Size(136, 22);
             clientesToolStripMenuItem.Text = "Clientes";
             clientesToolStripMenuItem.Click += clientesToolStripMenuItem_Click;
             // 
@@ -374,12 +377,51 @@
             tableLayoutPanel4.Size = new Size(820, 501);
             tableLayoutPanel4.TabIndex = 10;
             // 
+            // btn_sincronizar
+            // 
+            btn_sincronizar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btn_sincronizar.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            btn_sincronizar.Depth = 0;
+            btn_sincronizar.HighEmphasis = true;
+            btn_sincronizar.Icon = null;
+            btn_sincronizar.Location = new Point(352, 20);
+            btn_sincronizar.Margin = new Padding(4, 6, 4, 6);
+            btn_sincronizar.MouseState = MaterialSkin.MouseState.HOVER;
+            btn_sincronizar.Name = "btn_sincronizar";
+            btn_sincronizar.NoAccentTextColor = Color.Empty;
+            btn_sincronizar.Size = new Size(167, 36);
+            btn_sincronizar.TabIndex = 11;
+            btn_sincronizar.Text = "Sincronizar Datos";
+            btn_sincronizar.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            btn_sincronizar.UseAccentColor = false;
+            btn_sincronizar.UseVisualStyleBackColor = true;
+            btn_sincronizar.Click += btn_sincronizar_Click;
+            // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(526, 20);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(100, 23);
+            progressBar1.TabIndex = 12;
+            // 
+            // Barraprogre
+            // 
+            Barraprogre.Depth = 0;
+            Barraprogre.Location = new Point(672, 32);
+            Barraprogre.MouseState = MaterialSkin.MouseState.HOVER;
+            Barraprogre.Name = "Barraprogre";
+            Barraprogre.Size = new Size(100, 5);
+            Barraprogre.TabIndex = 13;
+            // 
             // ENSUMEX
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 192, 0);
             ClientSize = new Size(1024, 568);
+            Controls.Add(Barraprogre);
+            Controls.Add(progressBar1);
+            Controls.Add(btn_sincronizar);
             Controls.Add(tableLayoutPanel4);
             Controls.Add(panel1);
             Controls.Add(tableLayoutPanel1);
@@ -399,6 +441,7 @@
             menu_usuario.PerformLayout();
             tableLayoutPanel4.ResumeLayout(false);
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -424,5 +467,8 @@
         private ToolStripMenuItem clientesToolStripMenuItem;
         private MenuStrip miniToolStrip;
         private TableLayoutPanel tableLayoutPanel4;
+        private MaterialSkin.Controls.MaterialButton btn_sincronizar;
+        private ProgressBar progressBar1;
+        private MaterialSkin.Controls.MaterialProgressBar Barraprogre;
     }
 }

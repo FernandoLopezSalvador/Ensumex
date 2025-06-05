@@ -60,6 +60,7 @@ namespace Ensumex.Utils
                 doc.Add(new Paragraph("\nPresente"));
                 doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para la venta e instalación del siguiente producto:", fontNormal));
                 doc.Add(new Paragraph("\n", fontNormal));
+
                     // Agregar descripciones de los productos
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {

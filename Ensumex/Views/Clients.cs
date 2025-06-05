@@ -90,7 +90,6 @@ namespace Ensumex.Views
         {
             PDFClients.ExportarClientes(tabla_clientes, "Clientes.xlsx");
         }
-
         private void tabla_clientes_CellDoubleClick_1(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -98,7 +97,6 @@ namespace Ensumex.Views
                 var row = tabla_clientes.Rows[e.RowIndex];
                 string nombre = row.Cells["NOMBRE"].Value?.ToString();
                 string calle = row.Cells["CALLE"].Value?.ToString();
-
                 var result = MessageBox.Show(
                     $"¿Desea agregar el cliente '{nombre}'?",
                     "Agregar cliente",
@@ -110,7 +108,6 @@ namespace Ensumex.Views
                     // Guarda los datos seleccionados en propiedades públicas
                     ClienteSeleccionadoNombre = nombre;
                     ClienteSeleccionadoCalle = calle;
-
                     // Cambiar la lógica para cerrar el formulario o manejar el evento de cierre
                     var parentForm = this.FindForm();
                     if (parentForm != null)
@@ -122,7 +119,6 @@ namespace Ensumex.Views
             }
 
         }
-
         // Propiedades públicas para exponer los datos seleccionados
         public string ClienteSeleccionadoNombre { get; private set; }
         public string ClienteSeleccionadoCalle { get; private set; }
