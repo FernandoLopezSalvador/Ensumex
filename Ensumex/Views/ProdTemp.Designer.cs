@@ -39,7 +39,7 @@
             txb_PrecioUnitarioTemp = new MaterialSkin.Controls.MaterialMaskedTextBox();
             txb_ClaveTemp = new MaterialSkin.Controls.MaterialMaskedTextBox();
             txb_Descripcion = new MaterialSkin.Controls.MaterialMaskedTextBox();
-            txb_PrecioPublicoTemp = new MaterialSkin.Controls.MaterialMaskedTextBox();
+            txb_cantidadTemp = new MaterialSkin.Controls.MaterialMaskedTextBox();
             materialButton1 = new MaterialSkin.Controls.MaterialButton();
             cmb_Unidentrada = new MaterialSkin.Controls.MaterialComboBox();
             tableLayoutPanel1.SuspendLayout();
@@ -71,7 +71,7 @@
             tableLayoutPanel1.Controls.Add(txb_PrecioUnitarioTemp, 1, 2);
             tableLayoutPanel1.Controls.Add(txb_ClaveTemp, 1, 0);
             tableLayoutPanel1.Controls.Add(txb_Descripcion, 1, 1);
-            tableLayoutPanel1.Controls.Add(txb_PrecioPublicoTemp, 1, 3);
+            tableLayoutPanel1.Controls.Add(txb_cantidadTemp, 1, 3);
             tableLayoutPanel1.Controls.Add(materialButton1, 0, 6);
             tableLayoutPanel1.Controls.Add(cmb_Unidentrada, 1, 4);
             tableLayoutPanel1.Dock = DockStyle.Fill;
@@ -162,9 +162,9 @@
             lbl_PPTemp.Location = new Point(3, 235);
             lbl_PPTemp.MouseState = MaterialSkin.MouseState.HOVER;
             lbl_PPTemp.Name = "lbl_PPTemp";
-            lbl_PPTemp.Size = new Size(102, 19);
+            lbl_PPTemp.Size = new Size(65, 19);
             lbl_PPTemp.TabIndex = 34;
-            lbl_PPTemp.Text = "Precio Publico";
+            lbl_PPTemp.Text = "Cantidad";
             // 
             // lbl_UnidadTemp
             // 
@@ -307,48 +307,48 @@
             txb_Descripcion.UseSystemPasswordChar = false;
             txb_Descripcion.ValidatingType = null;
             // 
-            // txb_PrecioPublicoTemp
+            // txb_cantidadTemp
             // 
-            txb_PrecioPublicoTemp.AllowPromptAsInput = true;
-            txb_PrecioPublicoTemp.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            txb_PrecioPublicoTemp.AnimateReadOnly = false;
-            txb_PrecioPublicoTemp.AsciiOnly = false;
-            txb_PrecioPublicoTemp.BackgroundImageLayout = ImageLayout.None;
-            txb_PrecioPublicoTemp.BeepOnError = false;
-            txb_PrecioPublicoTemp.CutCopyMaskFormat = MaskFormat.IncludeLiterals;
-            txb_PrecioPublicoTemp.Depth = 0;
-            txb_PrecioPublicoTemp.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
-            txb_PrecioPublicoTemp.HidePromptOnLeave = false;
-            txb_PrecioPublicoTemp.HideSelection = true;
-            txb_PrecioPublicoTemp.InsertKeyMode = InsertKeyMode.Default;
-            txb_PrecioPublicoTemp.LeadingIcon = null;
-            txb_PrecioPublicoTemp.Location = new Point(186, 221);
-            txb_PrecioPublicoTemp.Mask = "";
-            txb_PrecioPublicoTemp.MaxLength = 32767;
-            txb_PrecioPublicoTemp.MouseState = MaterialSkin.MouseState.OUT;
-            txb_PrecioPublicoTemp.Name = "txb_PrecioPublicoTemp";
-            txb_PrecioPublicoTemp.PasswordChar = '\0';
-            txb_PrecioPublicoTemp.PrefixSuffixText = null;
-            txb_PrecioPublicoTemp.PromptChar = '_';
-            txb_PrecioPublicoTemp.ReadOnly = false;
-            txb_PrecioPublicoTemp.RejectInputOnFirstFailure = false;
-            txb_PrecioPublicoTemp.ResetOnPrompt = true;
-            txb_PrecioPublicoTemp.ResetOnSpace = true;
-            txb_PrecioPublicoTemp.RightToLeft = RightToLeft.No;
-            txb_PrecioPublicoTemp.SelectedText = "";
-            txb_PrecioPublicoTemp.SelectionLength = 0;
-            txb_PrecioPublicoTemp.SelectionStart = 0;
-            txb_PrecioPublicoTemp.ShortcutsEnabled = true;
-            txb_PrecioPublicoTemp.Size = new Size(265, 48);
-            txb_PrecioPublicoTemp.SkipLiterals = true;
-            txb_PrecioPublicoTemp.TabIndex = 4;
-            txb_PrecioPublicoTemp.TabStop = false;
-            txb_PrecioPublicoTemp.TextAlign = HorizontalAlignment.Left;
-            txb_PrecioPublicoTemp.TextMaskFormat = MaskFormat.IncludeLiterals;
-            txb_PrecioPublicoTemp.TrailingIcon = null;
-            txb_PrecioPublicoTemp.UseSystemPasswordChar = false;
-            txb_PrecioPublicoTemp.ValidatingType = null;
-            txb_PrecioPublicoTemp.KeyPress += txb_PrecioPublicoTemp_KeyPress;
+            txb_cantidadTemp.AllowPromptAsInput = true;
+            txb_cantidadTemp.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txb_cantidadTemp.AnimateReadOnly = false;
+            txb_cantidadTemp.AsciiOnly = false;
+            txb_cantidadTemp.BackgroundImageLayout = ImageLayout.None;
+            txb_cantidadTemp.BeepOnError = false;
+            txb_cantidadTemp.CutCopyMaskFormat = MaskFormat.IncludeLiterals;
+            txb_cantidadTemp.Depth = 0;
+            txb_cantidadTemp.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            txb_cantidadTemp.HidePromptOnLeave = false;
+            txb_cantidadTemp.HideSelection = true;
+            txb_cantidadTemp.InsertKeyMode = InsertKeyMode.Default;
+            txb_cantidadTemp.LeadingIcon = null;
+            txb_cantidadTemp.Location = new Point(186, 221);
+            txb_cantidadTemp.Mask = "";
+            txb_cantidadTemp.MaxLength = 32767;
+            txb_cantidadTemp.MouseState = MaterialSkin.MouseState.OUT;
+            txb_cantidadTemp.Name = "txb_cantidadTemp";
+            txb_cantidadTemp.PasswordChar = '\0';
+            txb_cantidadTemp.PrefixSuffixText = null;
+            txb_cantidadTemp.PromptChar = '_';
+            txb_cantidadTemp.ReadOnly = false;
+            txb_cantidadTemp.RejectInputOnFirstFailure = false;
+            txb_cantidadTemp.ResetOnPrompt = true;
+            txb_cantidadTemp.ResetOnSpace = true;
+            txb_cantidadTemp.RightToLeft = RightToLeft.No;
+            txb_cantidadTemp.SelectedText = "";
+            txb_cantidadTemp.SelectionLength = 0;
+            txb_cantidadTemp.SelectionStart = 0;
+            txb_cantidadTemp.ShortcutsEnabled = true;
+            txb_cantidadTemp.Size = new Size(265, 48);
+            txb_cantidadTemp.SkipLiterals = true;
+            txb_cantidadTemp.TabIndex = 4;
+            txb_cantidadTemp.TabStop = false;
+            txb_cantidadTemp.TextAlign = HorizontalAlignment.Left;
+            txb_cantidadTemp.TextMaskFormat = MaskFormat.IncludeLiterals;
+            txb_cantidadTemp.TrailingIcon = null;
+            txb_cantidadTemp.UseSystemPasswordChar = false;
+            txb_cantidadTemp.ValidatingType = null;
+            txb_cantidadTemp.KeyPress += txb_PrecioPublicoTemp_KeyPress;
             // 
             // materialButton1
             // 
@@ -421,7 +421,7 @@
         private MaterialSkin.Controls.MaterialLabel lbl_descripcionTemp;
         private MaterialSkin.Controls.MaterialLabel materialLabel1;
         private MaterialSkin.Controls.MaterialMaskedTextBox txb_Descripcion;
-        private MaterialSkin.Controls.MaterialMaskedTextBox txb_PrecioPublicoTemp;
+        private MaterialSkin.Controls.MaterialMaskedTextBox txb_cantidadTemp;
         private MaterialSkin.Controls.MaterialLabel lbl_PPTemp;
         private MaterialSkin.Controls.MaterialLabel lbl_UnidadTemp;
         private MaterialSkin.Controls.MaterialButton materialButton2;

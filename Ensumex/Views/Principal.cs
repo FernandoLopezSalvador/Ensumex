@@ -45,9 +45,9 @@ namespace Ensumex.Forms
             skinManager.AddFormToManage(this);
             skinManager.Theme = MaterialSkinManager.Themes.DARK;
             skinManager.ColorScheme = new ColorScheme(
-                Primary.Green600,   // Color base
+                Primary.BlueGrey900,   // Color base
                 Primary.Green700,   // Tono oscuro
-                Primary.Green400,   // Tono claro
+                Primary.BlueGrey400,   // Tono claro
                 Accent.LightGreen200, // Acento
                 TextShade.WHITE);   // Tono del texto
         }
@@ -216,7 +216,7 @@ namespace Ensumex.Forms
             using (FbConnection connFb = new FbConnection(connFirebird))
             {
                 connFb.Open();
-                string queryC = "SELECT CLAVE, STATUS, NOMBRE, CALLE, COLONIA, MUNICIPIO, MAIL FROM CLIE01";
+                string queryC = "SELECT CLAVE, STATUS, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED FROM CLIE01";
                 FbCommand cmdC = new FbCommand(queryC, connFb);
                 FbDataAdapter adapterC = new FbDataAdapter(cmdC);
                 adapterC.Fill(clientesFB);
@@ -281,8 +281,8 @@ namespace Ensumex.Forms
                             foreach (DataRow row in clientesFB.Rows)
                             {
                                 using (SqlCommand insertC = new SqlCommand(
-                                    @"INSERT INTO CLIE01 (CLAVE, STATUS, NOMBRE, CALLE, COLONIA, MUNICIPIO, MAIL)
-                                    VALUES (@CLAVE, @STATUS, @NOMBRE, @CALLE, @COLONIA, @MUNICIPIO, @MAIL)", connSql, transaction))
+                                    @"INSERT INTO CLIE01 (CLAVE, STATUS, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED)
+                                    VALUES (@CLAVE, @STATUS, @NOMBRE, @CALLE, @COLONIA, @MUNICIPIO, @EMAILPRED)", connSql, transaction))
                                 {
                                     insertC.Parameters.AddWithValue("@CLAVE", row["CLAVE"] ?? DBNull.Value);
                                     insertC.Parameters.AddWithValue("@STATUS", row["STATUS"] ?? DBNull.Value);
@@ -290,7 +290,7 @@ namespace Ensumex.Forms
                                     insertC.Parameters.AddWithValue("@CALLE", row["CALLE"] ?? DBNull.Value);
                                     insertC.Parameters.AddWithValue("@COLONIA", row["COLONIA"] ?? DBNull.Value);
                                     insertC.Parameters.AddWithValue("@MUNICIPIO", row["MUNICIPIO"] ?? DBNull.Value);
-                                    insertC.Parameters.AddWithValue("@MAIL", row["MAIL"] ?? DBNull.Value);
+                                    insertC.Parameters.AddWithValue("@EMAILPRED", row["EMAILPRED"] ?? DBNull.Value);
                                     insertC.ExecuteNonQuery();
                                 }
                                 progreso++;

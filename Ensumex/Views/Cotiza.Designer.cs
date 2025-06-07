@@ -319,7 +319,7 @@
             btn_Cancelarcotizacion.Name = "btn_Cancelarcotizacion";
             btn_Cancelarcotizacion.NoAccentTextColor = Color.Empty;
             btn_Cancelarcotizacion.Size = new Size(96, 36);
-            btn_Cancelarcotizacion.TabIndex = 7;
+            btn_Cancelarcotizacion.TabIndex = 8;
             btn_Cancelarcotizacion.Text = "Cancelar";
             btn_Cancelarcotizacion.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btn_Cancelarcotizacion.UseAccentColor = false;
@@ -340,7 +340,7 @@
             btn_AgregarProducto.Name = "btn_AgregarProducto";
             btn_AgregarProducto.NoAccentTextColor = Color.Empty;
             btn_AgregarProducto.Size = new Size(88, 36);
-            btn_AgregarProducto.TabIndex = 9;
+            btn_AgregarProducto.TabIndex = 10;
             btn_AgregarProducto.Text = "Agregar";
             btn_AgregarProducto.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btn_AgregarProducto.UseAccentColor = false;
@@ -361,7 +361,7 @@
             Btn_guardarCotizacion.Name = "Btn_guardarCotizacion";
             Btn_guardarCotizacion.NoAccentTextColor = Color.Empty;
             Btn_guardarCotizacion.Size = new Size(88, 36);
-            Btn_guardarCotizacion.TabIndex = 8;
+            Btn_guardarCotizacion.TabIndex = 9;
             Btn_guardarCotizacion.Text = "Guardar";
             Btn_guardarCotizacion.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             Btn_guardarCotizacion.UseAccentColor = false;
@@ -413,7 +413,7 @@
             cmb_Descuento.Name = "cmb_Descuento";
             cmb_Descuento.Size = new Size(148, 49);
             cmb_Descuento.StartIndex = 0;
-            cmb_Descuento.TabIndex = 19;
+            cmb_Descuento.TabIndex = 7;
             cmb_Descuento.SelectedIndexChanged += cmb_Descuento_SelectedIndexChanged;
             // 
             // materialLabel11
@@ -588,7 +588,7 @@
             txt_Bases.ShortcutsEnabled = true;
             txt_Bases.Size = new Size(247, 48);
             txt_Bases.SkipLiterals = true;
-            txt_Bases.TabIndex = 29;
+            txt_Bases.TabIndex = 6;
             txt_Bases.TabStop = false;
             txt_Bases.TextAlign = HorizontalAlignment.Left;
             txt_Bases.TextMaskFormat = MaskFormat.IncludeLiterals;
@@ -657,9 +657,9 @@
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.ColumnCount = 3;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 19.3899784F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 58.2788658F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.3311539F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20.4081631F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 59.1836739F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20.4081631F));
             tableLayoutPanel3.Controls.Add(tbl_Productos, 1, 0);
             tableLayoutPanel3.Controls.Add(tbl_Cotizacion, 1, 2);
             tableLayoutPanel3.Dock = DockStyle.Fill;
@@ -678,11 +678,11 @@
             tbl_Productos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tbl_Productos.Dock = DockStyle.Fill;
             tbl_Productos.GridColor = Color.LightGray;
-            tbl_Productos.Location = new Point(181, 2);
+            tbl_Productos.Location = new Point(190, 2);
             tbl_Productos.Margin = new Padding(3, 2, 3, 2);
             tbl_Productos.Name = "tbl_Productos";
             tbl_Productos.RowHeadersWidth = 51;
-            tbl_Productos.Size = new Size(529, 77);
+            tbl_Productos.Size = new Size(537, 77);
             tbl_Productos.TabIndex = 7;
             tbl_Productos.CellClick += tbl_Productos_CellClick;
             // 
@@ -690,11 +690,11 @@
             // 
             tbl_Cotizacion.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tbl_Cotizacion.Dock = DockStyle.Fill;
-            tbl_Cotizacion.Location = new Point(181, 99);
+            tbl_Cotizacion.Location = new Point(190, 99);
             tbl_Cotizacion.Margin = new Padding(3, 2, 3, 2);
             tbl_Cotizacion.Name = "tbl_Cotizacion";
             tbl_Cotizacion.RowHeadersWidth = 51;
-            tbl_Cotizacion.Size = new Size(529, 78);
+            tbl_Cotizacion.Size = new Size(537, 78);
             tbl_Cotizacion.TabIndex = 8;
             tbl_Cotizacion.CellClick += tbl_Cotizacion_CellClick;
             tbl_Cotizacion.CellEndEdit += tbl_Cotizacion_CellEndEdit;

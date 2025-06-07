@@ -34,10 +34,12 @@
             panelContenedor = new Panel();
             panel1 = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
-            btn_cerrarsesion = new Button();
+            progressBar1 = new ProgressBar();
             btn_inventarioP = new MaterialSkin.Controls.MaterialButton();
+            btn_sincronizar = new MaterialSkin.Controls.MaterialButton();
             materialButton2 = new MaterialSkin.Controls.MaterialButton();
             materialButton3 = new MaterialSkin.Controls.MaterialButton();
+            btn_cerrarsesion = new Button();
             panel2 = new Panel();
             materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
             lbl_usuario = new Label();
@@ -51,9 +53,6 @@
             clientesToolStripMenuItem = new ToolStripMenuItem();
             miniToolStrip = new MenuStrip();
             tableLayoutPanel4 = new TableLayoutPanel();
-            btn_sincronizar = new MaterialSkin.Controls.MaterialButton();
-            progressBar1 = new ProgressBar();
-            Barraprogre = new MaterialSkin.Controls.MaterialProgressBar();
             tableLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -78,7 +77,7 @@
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(1018, 17);
+            tableLayoutPanel1.Size = new Size(1018, 15);
             tableLayoutPanel1.TabIndex = 7;
             // 
             // materialSwitch1
@@ -93,7 +92,7 @@
             materialSwitch1.MouseState = MaterialSkin.MouseState.HOVER;
             materialSwitch1.Name = "materialSwitch1";
             materialSwitch1.Ripple = true;
-            materialSwitch1.Size = new Size(99, 17);
+            materialSwitch1.Size = new Size(99, 15);
             materialSwitch1.TabIndex = 6;
             materialSwitch1.Text = "Tema";
             materialSwitch1.UseVisualStyleBackColor = false;
@@ -101,11 +100,12 @@
             // 
             // panelContenedor
             // 
+            panelContenedor.BackColor = Color.White;
             panelContenedor.Dock = DockStyle.Fill;
             panelContenedor.Location = new Point(3, 2);
             panelContenedor.Margin = new Padding(3, 2, 3, 2);
             panelContenedor.Name = "panelContenedor";
-            panelContenedor.Size = new Size(814, 497);
+            panelContenedor.Size = new Size(814, 499);
             panelContenedor.TabIndex = 8;
             // 
             // panel1
@@ -115,52 +115,45 @@
             panel1.Controls.Add(panel2);
             panel1.Cursor = Cursors.IBeam;
             panel1.Dock = DockStyle.Left;
-            panel1.Location = new Point(3, 65);
+            panel1.Location = new Point(3, 63);
             panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(198, 501);
+            panel1.Size = new Size(198, 503);
             panel1.TabIndex = 2;
             panel1.Paint += panel1_Paint;
             // 
             // tableLayoutPanel2
             // 
+            tableLayoutPanel2.BackColor = Color.DodgerBlue;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.Controls.Add(btn_cerrarsesion, 0, 3);
+            tableLayoutPanel2.Controls.Add(progressBar1, 0, 4);
             tableLayoutPanel2.Controls.Add(btn_inventarioP, 0, 0);
+            tableLayoutPanel2.Controls.Add(btn_sincronizar, 0, 3);
             tableLayoutPanel2.Controls.Add(materialButton2, 0, 1);
             tableLayoutPanel2.Controls.Add(materialButton3, 0, 2);
+            tableLayoutPanel2.Controls.Add(btn_cerrarsesion, 0, 5);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 79);
             tableLayoutPanel2.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 4;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.Size = new Size(198, 422);
+            tableLayoutPanel2.RowCount = 6;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanel2.Size = new Size(198, 424);
             tableLayoutPanel2.TabIndex = 5;
             // 
-            // btn_cerrarsesion
+            // progressBar1
             // 
-            btn_cerrarsesion.BackColor = Color.LightGray;
-            btn_cerrarsesion.Dock = DockStyle.Bottom;
-            btn_cerrarsesion.FlatStyle = FlatStyle.Popup;
-            btn_cerrarsesion.Font = new Font("Century Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            btn_cerrarsesion.ForeColor = Color.Black;
-            btn_cerrarsesion.Image = (Image)resources.GetObject("btn_cerrarsesion.Image");
-            btn_cerrarsesion.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_cerrarsesion.Location = new Point(3, 391);
-            btn_cerrarsesion.Margin = new Padding(3, 2, 3, 2);
-            btn_cerrarsesion.Name = "btn_cerrarsesion";
-            btn_cerrarsesion.Size = new Size(214, 29);
-            btn_cerrarsesion.TabIndex = 4;
-            btn_cerrarsesion.Text = "  Cerrar sesión";
-            btn_cerrarsesion.UseVisualStyleBackColor = false;
-            btn_cerrarsesion.Click += btn_cerrarsesion_Click;
-            btn_cerrarsesion.MouseEnter += btn_cerrarsesion_MouseEnter;
-            btn_cerrarsesion.MouseLeave += btn_cerrarsesion_MouseLeave;
+            progressBar1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            progressBar1.Location = new Point(3, 309);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(214, 11);
+            progressBar1.TabIndex = 12;
             // 
             // btn_inventarioP
             // 
@@ -172,7 +165,7 @@
             btn_inventarioP.Icon = null;
             btn_inventarioP.Image = (Image)resources.GetObject("btn_inventarioP.Image");
             btn_inventarioP.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_inventarioP.Location = new Point(4, 34);
+            btn_inventarioP.Location = new Point(4, 17);
             btn_inventarioP.Margin = new Padding(4);
             btn_inventarioP.MouseState = MaterialSkin.MouseState.HOVER;
             btn_inventarioP.Name = "btn_inventarioP";
@@ -187,6 +180,27 @@
             btn_inventarioP.MouseEnter += materialButton1_MouseEnter;
             btn_inventarioP.MouseLeave += btn_inventarioP_MouseLeave;
             // 
+            // btn_sincronizar
+            // 
+            btn_sincronizar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            btn_sincronizar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btn_sincronizar.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            btn_sincronizar.Depth = 0;
+            btn_sincronizar.HighEmphasis = true;
+            btn_sincronizar.Icon = null;
+            btn_sincronizar.Location = new Point(4, 227);
+            btn_sincronizar.Margin = new Padding(4, 6, 4, 6);
+            btn_sincronizar.MouseState = MaterialSkin.MouseState.HOVER;
+            btn_sincronizar.Name = "btn_sincronizar";
+            btn_sincronizar.NoAccentTextColor = Color.Empty;
+            btn_sincronizar.Size = new Size(212, 36);
+            btn_sincronizar.TabIndex = 11;
+            btn_sincronizar.Text = "Sincronizar Datos";
+            btn_sincronizar.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            btn_sincronizar.UseAccentColor = false;
+            btn_sincronizar.UseVisualStyleBackColor = true;
+            btn_sincronizar.Click += btn_sincronizar_Click;
+            // 
             // materialButton2
             // 
             materialButton2.Anchor = AnchorStyles.Left | AnchorStyles.Right;
@@ -195,7 +209,7 @@
             materialButton2.Depth = 0;
             materialButton2.HighEmphasis = true;
             materialButton2.Icon = null;
-            materialButton2.Location = new Point(4, 139);
+            materialButton2.Location = new Point(4, 87);
             materialButton2.Margin = new Padding(4);
             materialButton2.MouseState = MaterialSkin.MouseState.HOVER;
             materialButton2.Name = "materialButton2";
@@ -216,7 +230,7 @@
             materialButton3.Depth = 0;
             materialButton3.HighEmphasis = true;
             materialButton3.Icon = null;
-            materialButton3.Location = new Point(4, 244);
+            materialButton3.Location = new Point(4, 157);
             materialButton3.Margin = new Padding(4);
             materialButton3.MouseState = MaterialSkin.MouseState.HOVER;
             materialButton3.Name = "materialButton3";
@@ -229,9 +243,29 @@
             materialButton3.UseVisualStyleBackColor = true;
             materialButton3.Click += materialButton3_Click;
             // 
+            // btn_cerrarsesion
+            // 
+            btn_cerrarsesion.BackColor = Color.LightGray;
+            btn_cerrarsesion.Dock = DockStyle.Bottom;
+            btn_cerrarsesion.FlatStyle = FlatStyle.Popup;
+            btn_cerrarsesion.Font = new Font("Century Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btn_cerrarsesion.ForeColor = Color.Black;
+            btn_cerrarsesion.Image = (Image)resources.GetObject("btn_cerrarsesion.Image");
+            btn_cerrarsesion.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_cerrarsesion.Location = new Point(3, 393);
+            btn_cerrarsesion.Margin = new Padding(3, 2, 3, 2);
+            btn_cerrarsesion.Name = "btn_cerrarsesion";
+            btn_cerrarsesion.Size = new Size(214, 29);
+            btn_cerrarsesion.TabIndex = 4;
+            btn_cerrarsesion.Text = "  Cerrar sesión";
+            btn_cerrarsesion.UseVisualStyleBackColor = false;
+            btn_cerrarsesion.Click += btn_cerrarsesion_Click;
+            btn_cerrarsesion.MouseEnter += btn_cerrarsesion_MouseEnter;
+            btn_cerrarsesion.MouseLeave += btn_cerrarsesion_MouseLeave;
+            // 
             // panel2
             // 
-            panel2.BackColor = Color.FromArgb(0, 81, 46);
+            panel2.BackColor = Color.DodgerBlue;
             panel2.Controls.Add(materialLabel1);
             panel2.Controls.Add(lbl_usuario);
             panel2.Controls.Add(lbl_posicion);
@@ -280,7 +314,7 @@
             // 
             // txt_usuario
             // 
-            txt_usuario.BackColor = Color.FromArgb(0, 81, 46);
+            txt_usuario.BackColor = Color.DodgerBlue;
             txt_usuario.BorderStyle = BorderStyle.None;
             txt_usuario.Enabled = false;
             txt_usuario.Font = new Font("Century Gothic", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -297,7 +331,7 @@
             // 
             // menu_usuario
             // 
-            menu_usuario.BackColor = Color.FromArgb(0, 81, 46);
+            menu_usuario.BackColor = Color.DodgerBlue;
             menu_usuario.BackgroundImageLayout = ImageLayout.None;
             menu_usuario.Font = new Font("Century Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             menu_usuario.ImageScalingSize = new Size(20, 20);
@@ -365,53 +399,18 @@
             // 
             // tableLayoutPanel4
             // 
+            tableLayoutPanel4.BackColor = Color.White;
             tableLayoutPanel4.ColumnCount = 1;
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanel4.Controls.Add(panelContenedor, 0, 0);
             tableLayoutPanel4.Dock = DockStyle.Fill;
-            tableLayoutPanel4.Location = new Point(201, 65);
+            tableLayoutPanel4.Location = new Point(201, 63);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.Size = new Size(820, 501);
+            tableLayoutPanel4.Size = new Size(820, 503);
             tableLayoutPanel4.TabIndex = 10;
-            // 
-            // btn_sincronizar
-            // 
-            btn_sincronizar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btn_sincronizar.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            btn_sincronizar.Depth = 0;
-            btn_sincronizar.HighEmphasis = true;
-            btn_sincronizar.Icon = null;
-            btn_sincronizar.Location = new Point(352, 20);
-            btn_sincronizar.Margin = new Padding(4, 6, 4, 6);
-            btn_sincronizar.MouseState = MaterialSkin.MouseState.HOVER;
-            btn_sincronizar.Name = "btn_sincronizar";
-            btn_sincronizar.NoAccentTextColor = Color.Empty;
-            btn_sincronizar.Size = new Size(167, 36);
-            btn_sincronizar.TabIndex = 11;
-            btn_sincronizar.Text = "Sincronizar Datos";
-            btn_sincronizar.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            btn_sincronizar.UseAccentColor = false;
-            btn_sincronizar.UseVisualStyleBackColor = true;
-            btn_sincronizar.Click += btn_sincronizar_Click;
-            // 
-            // progressBar1
-            // 
-            progressBar1.Location = new Point(526, 20);
-            progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(100, 23);
-            progressBar1.TabIndex = 12;
-            // 
-            // Barraprogre
-            // 
-            Barraprogre.Depth = 0;
-            Barraprogre.Location = new Point(672, 32);
-            Barraprogre.MouseState = MaterialSkin.MouseState.HOVER;
-            Barraprogre.Name = "Barraprogre";
-            Barraprogre.Size = new Size(100, 5);
-            Barraprogre.TabIndex = 13;
             // 
             // ENSUMEX
             // 
@@ -419,9 +418,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 192, 0);
             ClientSize = new Size(1024, 568);
-            Controls.Add(Barraprogre);
-            Controls.Add(progressBar1);
-            Controls.Add(btn_sincronizar);
             Controls.Add(tableLayoutPanel4);
             Controls.Add(panel1);
             Controls.Add(tableLayoutPanel1);
@@ -441,7 +437,6 @@
             menu_usuario.PerformLayout();
             tableLayoutPanel4.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -469,6 +464,5 @@
         private TableLayoutPanel tableLayoutPanel4;
         private MaterialSkin.Controls.MaterialButton btn_sincronizar;
         private ProgressBar progressBar1;
-        private MaterialSkin.Controls.MaterialProgressBar Barraprogre;
     }
 }

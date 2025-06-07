@@ -35,11 +35,17 @@ namespace Ensumex.Views
         // Método para aplicar estilos
         private void AplicarEstilosTabla(DataGridView tabla)
         {
+            tabla.EnableHeadersVisualStyles = false;
+            tabla.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(64, 64, 64);
+            tabla.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            tabla.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
+            tabla.DefaultCellStyle.BackColor = Color.White;
             tabla.DefaultCellStyle.ForeColor = Color.Black;
-            tabla.BackgroundColor = Color.FromArgb(45, 45, 48);
-            tabla.DefaultCellStyle.ForeColor = Color.Black;
-            tabla.BackgroundColor = Color.FromArgb(45, 45, 48);
-            tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            tabla.DefaultCellStyle.SelectionBackColor = Color.LightSkyBlue;
+            tabla.DefaultCellStyle.SelectionForeColor = Color.Black;
+            tabla.RowTemplate.Height = 30;
+            tabla.GridColor = Color.LightGray;
+            tabla.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
         }
         // Método para agregar descuentos
         private void AgregarDescuentos(string[] descuentos)
@@ -57,7 +63,7 @@ namespace Ensumex.Views
             { "UNIDAD", "Unidad" },
             { "PRECIO", "precio" },
             { "CANTIDAD", "Cantidad" },
-            { "TasaCambio", "Tasa de Cambio" },
+            { "TasaCambio", "Tasa Cambio" },
             { "Subtotal", "Subtotal" }
         };
 
@@ -72,6 +78,8 @@ namespace Ensumex.Views
                         tbl_Cotizacion.Columns.Add(nombreInterno, encabezado);
                     }
                 }
+                tbl_Cotizacion.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
 
                 // Verifica si la columna "TasaCambio" fue creada exitosamente
                 if (tbl_Cotizacion.Columns.Contains("TasaCambio"))
@@ -142,7 +150,7 @@ namespace Ensumex.Views
             {
                 var productoService = new ProductoServices1();
                 var productos = productoService.ObtenerProductos(limite)
-                    .Where(p => int.TryParse(p.EXIST, out var existencias) && existencias > 0) // Convertir EXIST a entero antes de comparar
+                    .Where(p => int.TryParse(p.EXIST, out var existencias) && existencias > 0)
                     .Select(p => new
                     {
                         CLAVE = p.CVE_ART,
@@ -155,6 +163,7 @@ namespace Ensumex.Views
 
                 tbl_Productos.DataSource = productos;
 
+                // Evitar columnas duplicadas
                 if (!tbl_Productos.Columns.Contains("Agregar"))
                 {
                     DataGridViewButtonColumn btnAgregar = new DataGridViewButtonColumn();
@@ -164,14 +173,26 @@ namespace Ensumex.Views
                     btnAgregar.UseColumnTextForButtonValue = true;
                     tbl_Productos.Columns.Add(btnAgregar);
                 }
+
+                // Estilo del botón "Agregar"
+                foreach (DataGridViewRow fila in tbl_Productos.Rows)
+                {
+                    DataGridViewButtonCell btn = fila.Cells["Agregar"] as DataGridViewButtonCell;
+                    if (btn != null)
+                    {
+                        btn.Style.BackColor = Color.SeaGreen;
+                        btn.Style.ForeColor = Color.White;
+                        btn.Style.Font = new System.Drawing.Font("Segoe UI", 9, FontStyle.Bold);
+                        btn.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    }
+                }
+                // Ajustar columnas automáticamente
+                tbl_Productos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar productos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-        private void btn_Cancelarcotizacion_Click(object sender, EventArgs e)
-        {
         }
         private void tbl_Productos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -315,12 +336,12 @@ namespace Ensumex.Views
                         }
                         string clave = formProducto.Clave;
                         string descripcion = formProducto.Descripcion;
-                        decimal precioUnitario = formProducto.PrecioUnitarioTemp;
-                        decimal precioPublico = formProducto.PrecioPublicoTemp;
                         string unidad = formProducto.Unidentrada;
+                        decimal precioUnitario = formProducto.PrecioUnitarioTemp;
+                        decimal Cantidad = formProducto.cantidad;
                         decimal tasaCambio = 1;
-                        decimal subtotal = precioPublico * tasaCambio;
-                        tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precioPublico, precioUnitario, 1, tasaCambio, subtotal);
+                        decimal subtotal = (precioUnitario * Cantidad);
+                        tbl_Cotizacion.Rows.Add(clave, descripcion, unidad, precioUnitario, Cantidad, tasaCambio, subtotal);
                         ActualizarTotales();
                     }
                     // Asegura que la columna de "Eliminar" solo se agregue una vez
@@ -398,7 +419,7 @@ namespace Ensumex.Views
             try
             {
                 // 1. Calcular Subtotal
-                subtotal = 0; // Reiniciar subtotal para evitar acumulaciones previas
+                subtotal = 0; 
                 foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                 {
                     if (row.Cells["Subtotal"].Value != null &&
@@ -409,7 +430,7 @@ namespace Ensumex.Views
                 }
                 lbl_Subtotal.Text = $"${subtotal:F2}";
                 // 2. Calcular Descuento
-                descuento = 0; // Reiniciar descuento
+                descuento = 0; 
                 if (cmb_Descuento.SelectedItem != null)
                 {
                     string descuentoTexto = cmb_Descuento.SelectedItem.ToString().Replace("%", "").Trim();
@@ -429,7 +450,6 @@ namespace Ensumex.Views
             catch (Exception ex)
             {
                 lbl_TotalNeto.Text = "Error";
-                // Opcional: mostrar mensaje de error
                 MessageBox.Show($"Se produjo un error al calcular el total: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

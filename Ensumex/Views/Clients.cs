@@ -1,4 +1,5 @@
-﻿using Ensumex.Services;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using Ensumex.Services;
 using Ensumex.Utils;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,17 @@ namespace Ensumex.Views
             tabla_clientes.Columns.Add("COLONIA", "Colonia");
             tabla_clientes.Columns.Add("MUNICIPIO", "Municipio");
             tabla_clientes.Columns.Add("EMAILPRED", "Email");
+            tabla_clientes.EnableHeadersVisualStyles = false;
+            tabla_clientes.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(64, 64, 64);
+            tabla_clientes.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            tabla_clientes.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
+            tabla_clientes.DefaultCellStyle.BackColor = Color.White;
+            tabla_clientes.DefaultCellStyle.ForeColor = Color.Black;
+            tabla_clientes.DefaultCellStyle.SelectionBackColor = Color.LightSkyBlue;
+            tabla_clientes.DefaultCellStyle.SelectionForeColor = Color.Black;
+            tabla_clientes.RowTemplate.Height = 30;
+            tabla_clientes.GridColor = Color.LightGray;
+            tabla_clientes.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
         }
         private void InicializarComboClientes()
         {
@@ -48,11 +60,9 @@ namespace Ensumex.Views
             {
                 tabla_clientes.Rows.Add(cliente.CLAVE, cliente.STATUS, cliente.NOMBRE, cliente.CALLE, cliente.COLONIA, cliente.MUNICIPIO, cliente.EMAILPRED);
             }
-            //tabla_clientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
         private void cmb_clientes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Por ejemplo, podrías filtrar los clientes según la selección
             var selectedValue = cmb_clientes.SelectedItem.ToString();
             if (selectedValue == "Todos")
             {
@@ -70,13 +80,12 @@ namespace Ensumex.Views
                 }
             }
         }
-
         private void txt_buscar_TextChanged(object sender, EventArgs e)
         {
             var searchText = txt_buscar.Text.ToLower();
             foreach (DataGridViewRow row in tabla_clientes.Rows)
             {
-                if (!row.IsNewRow) // Skip uncommitted rows
+                if (!row.IsNewRow)
                 {
                     var nombreCell = row.Cells["NOMBRE"].Value?.ToString().ToLower();
                     var claveCell = row.Cells["CLAVE"].Value?.ToString().ToLower();
@@ -99,15 +108,13 @@ namespace Ensumex.Views
                 var result = MessageBox.Show(
                     $"¿Desea agregar el cliente '{nombre}'?",
                     "Agregar cliente",
-                    MessageBoxButtons.YesNo,
+                    MessageBoxButtons.YesNo,    
                     MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
                 {
-                    // Guarda los datos seleccionados en propiedades públicas
                     ClienteSeleccionadoNombre = nombre;
                     ClienteSeleccionadoCalle = calle;
-                    // Cambiar la lógica para cerrar el formulario o manejar el evento de cierre
                     var parentForm = this.FindForm();
                     if (parentForm != null)
                     {
@@ -116,9 +123,7 @@ namespace Ensumex.Views
                     }
                 }
             }
-
         }
-
         public string ClienteSeleccionadoNombre { get; private set; }
         public string ClienteSeleccionadoCalle { get; private set; }
     }

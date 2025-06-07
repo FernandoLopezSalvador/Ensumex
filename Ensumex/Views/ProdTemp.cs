@@ -63,7 +63,7 @@ namespace Ensumex.Views
         private void materialButton2_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txb_ClaveTemp.Text) ||
-                 string.IsNullOrWhiteSpace(txb_PrecioPublicoTemp.Text) ||
+                 string.IsNullOrWhiteSpace(txb_cantidadTemp.Text) ||
                  string.IsNullOrWhiteSpace(txb_PrecioUnitarioTemp.Text))
             {
                 MessageBox.Show("Por favor, completa todos los campos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -76,8 +76,9 @@ namespace Ensumex.Views
         }
         public string Clave => txb_ClaveTemp.Text.Trim();
         public string Descripcion => txb_Descripcion.Text.Trim();
-        public decimal PrecioUnitarioTemp => decimal.TryParse(txb_PrecioUnitarioTemp.Text, out decimal p) ? p : 0;
-        public decimal PrecioPublicoTemp => decimal.TryParse(txb_PrecioPublicoTemp.Text, out decimal p) ? p : 0;
         public string Unidentrada => cmb_Unidentrada.Text.Trim();
+        public decimal PrecioUnitarioTemp => decimal.TryParse(txb_PrecioUnitarioTemp.Text, out decimal p) ? p : 0;
+        public decimal cantidad => decimal.TryParse(txb_cantidadTemp.Text, out decimal p) ? p : 0;
+        
     }
 }
