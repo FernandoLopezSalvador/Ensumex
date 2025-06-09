@@ -14,24 +14,25 @@ namespace Ensumex.Views
 {
     public partial class Product : UserControl
     {
+        public event Action<string, string, string, decimal, decimal> ProductoSeleccionado;
+
         public Product()
         {
             InitializeComponent();
-            ConfigurarTablaProductos();
+            TablaFormat.AplicarEstilosTabla(tabla_productos);
             InicializarComboProductos();
             CargarProductoss();
+            // Suscribe el evento de doble clic
+            tabla_productos.CellDoubleClick += tabla_productos_CellDoubleClick;
         }
-        private void ConfigurarTablaProductos()
-        {
-            tabla_productos.DefaultCellStyle.ForeColor = Color.Black;
-            tabla_productos.BackgroundColor = Color.FromArgb(45, 45, 48);
-        }
+
         private void InicializarComboProductos()
         {
             object[] opciones = { "Todos", 5, 10, 20, 50, 100 };
             cmb_productos.Items.AddRange(opciones);
             cmb_productos.SelectedIndex = 0;
         }
+
         private void CargarProductoss(int? limite = 100)
         {
             try
@@ -58,49 +59,49 @@ namespace Ensumex.Views
                 MessageBox.Show($"Error al cargar productos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void txt_buscar_TextChanged(object sender, EventArgs e)
         {
             BuscarEnGrid(txt_buscar.Text.Trim());
         }
+
         private void BuscarEnGrid(string texto)
         {
-            try
+            // Si el texto está vacío, muestra todas las filas rápidamente
+            if (string.IsNullOrWhiteSpace(texto))
             {
                 foreach (DataGridViewRow row in tabla_productos.Rows)
                 {
-                    // Saltar filas nuevas (vacías)
-                    if (row.IsNewRow) continue;
-
-                    bool visible = false;
-
-                    foreach (DataGridViewCell cell in row.Cells)
-                    {
-                        if (cell.Value != null)
-                        {
-                            try
-                            {
-                                if (cell.Value.ToString().IndexOf(texto, StringComparison.OrdinalIgnoreCase) >= 0)
-                                {
-                                    visible = true;
-                                    break;
-                                }
-                            }
-                            catch (Exception cellEx)
-                            {
-                                // Log opcional por celda, si quisieras
-                                Console.WriteLine("Error al procesar celda: " + cellEx.Message);
-                            }
-                        }
-                    }
-                    row.Visible = visible;
+                    if (!row.IsNewRow)
+                        row.Visible = true;
                 }
+                return;
             }
-            catch (Exception ex)
+
+            // Suspende el layout y el enlace de datos para mejorar el rendimiento
+            tabla_productos.SuspendLayout();
+            CurrencyManager cm = (CurrencyManager)BindingContext[tabla_productos.DataSource];
+            cm.SuspendBinding();
+            string textoBusqueda = texto.ToLower();
+            foreach (DataGridViewRow row in tabla_productos.Rows)
             {
-                MessageBox.Show("Ocurrió un error al buscar en la tabla:\n" + ex.Message,
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (row.IsNewRow) continue;
+
+                bool visible = false;
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    if (cell.Value != null && cell.Value.ToString().IndexOf(textoBusqueda, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        visible = true;
+                        break;
+                    }
+                }
+                row.Visible = visible;
             }
+            cm.ResumeBinding();
+            tabla_productos.ResumeLayout();
         }
+
         private void cmb_productos_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -132,11 +133,12 @@ namespace Ensumex.Views
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void ImprimirProd_Click(object sender, EventArgs e)
         {
             PDFClients.ExportarClientes(tabla_productos, "Productos.xlsx");
-
         }
+
         private void btn_Existencia_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -195,6 +197,20 @@ namespace Ensumex.Views
             {
                 MessageBox.Show("Ocurrió un error al filtrar los productos por existencia:\n" + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void tabla_productos_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                var row = tabla_productos.Rows[e.RowIndex];
+                string clave = row.Cells["CLAVE"].Value?.ToString();
+                string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString();
+                string unidad = row.Cells["UNDMED"].Value?.ToString();
+                decimal precio = Convert.ToDecimal(row.Cells["ULT_COSTO"].Value?.ToString().Replace("$", "").Trim() ?? "0"); decimal cantidad = 1; // Por defecto 1, puedes pedirlo en un input si lo deseas
+
+                ProductoSeleccionado?.Invoke(clave, descripcion, unidad, precio, cantidad);
             }
         }
     }

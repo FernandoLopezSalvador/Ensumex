@@ -24,8 +24,7 @@ namespace Ensumex.Views
         }
         private void ConfigurarTablaClientes()
         {
-            tabla_clientes.DefaultCellStyle.ForeColor = Color.Black;
-            tabla_clientes.BackgroundColor = Color.FromArgb(45, 45, 48);
+            TablaFormat.AplicarEstilosTabla(tabla_clientes);
             tabla_clientes.Columns.Add("CLAVE", "Clave");
             tabla_clientes.Columns.Add("STATUS", "Status");
             tabla_clientes.Columns.Add("NOMBRE", "Nombre");
@@ -34,16 +33,6 @@ namespace Ensumex.Views
             tabla_clientes.Columns.Add("MUNICIPIO", "Municipio");
             tabla_clientes.Columns.Add("EMAILPRED", "Email");
             tabla_clientes.EnableHeadersVisualStyles = false;
-            tabla_clientes.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(64, 64, 64);
-            tabla_clientes.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            tabla_clientes.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 10, FontStyle.Bold);
-            tabla_clientes.DefaultCellStyle.BackColor = Color.White;
-            tabla_clientes.DefaultCellStyle.ForeColor = Color.Black;
-            tabla_clientes.DefaultCellStyle.SelectionBackColor = Color.LightSkyBlue;
-            tabla_clientes.DefaultCellStyle.SelectionForeColor = Color.Black;
-            tabla_clientes.RowTemplate.Height = 30;
-            tabla_clientes.GridColor = Color.LightGray;
-            tabla_clientes.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 240, 240);
         }
         private void InicializarComboClientes()
         {

@@ -45,26 +45,29 @@
             lblFecha = new Label();
             materialLabel10 = new MaterialSkin.Controls.MaterialLabel();
             cmb_Descuento = new MaterialSkin.Controls.MaterialComboBox();
-            materialLabel11 = new MaterialSkin.Controls.MaterialLabel();
-            lbl_costoDescuento = new MaterialSkin.Controls.MaterialLabel();
-            materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
-            lbl_TotalNeto = new MaterialSkin.Controls.MaterialLabel();
             txt_Direccioncliente = new MaterialSkin.Controls.MaterialTextBox2();
             materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
-            lbl_Subtotal = new MaterialSkin.Controls.MaterialLabel();
-            materialLabel9 = new MaterialSkin.Controls.MaterialLabel();
             lbl_Bases = new MaterialSkin.Controls.MaterialLabel();
             txt_Bases = new MaterialSkin.Controls.MaterialMaskedTextBox();
             Buscarcliente = new PictureBox();
             txt_Buscarentabla = new MaterialSkin.Controls.MaterialMaskedTextBox();
+            materialLabel11 = new MaterialSkin.Controls.MaterialLabel();
+            lbl_costoDescuento = new MaterialSkin.Controls.MaterialLabel();
+            materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
+            lbl_TotalNeto = new MaterialSkin.Controls.MaterialLabel();
+            lbl_Subtotal = new MaterialSkin.Controls.MaterialLabel();
+            materialLabel9 = new MaterialSkin.Controls.MaterialLabel();
             tableLayoutPanel3 = new TableLayoutPanel();
-            tbl_Productos = new DataGridView();
+            materialButton1 = new MaterialSkin.Controls.MaterialButton();
             tbl_Cotizacion = new DataGridView();
+            lbl_observaciones = new MaterialSkin.Controls.MaterialLabel();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            Txt_observaciones = new MaterialSkin.Controls.MaterialMaskedTextBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Buscarcliente).BeginInit();
             tableLayoutPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)tbl_Productos).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbl_Cotizacion).BeginInit();
+            tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -91,14 +94,8 @@
             tableLayoutPanel1.Controls.Add(lblFecha, 3, 0);
             tableLayoutPanel1.Controls.Add(materialLabel10, 2, 3);
             tableLayoutPanel1.Controls.Add(cmb_Descuento, 3, 3);
-            tableLayoutPanel1.Controls.Add(materialLabel11, 4, 2);
-            tableLayoutPanel1.Controls.Add(lbl_costoDescuento, 5, 2);
-            tableLayoutPanel1.Controls.Add(materialLabel1, 4, 3);
-            tableLayoutPanel1.Controls.Add(lbl_TotalNeto, 5, 3);
             tableLayoutPanel1.Controls.Add(txt_Direccioncliente, 5, 1);
             tableLayoutPanel1.Controls.Add(materialLabel5, 4, 1);
-            tableLayoutPanel1.Controls.Add(lbl_Subtotal, 1, 4);
-            tableLayoutPanel1.Controls.Add(materialLabel9, 0, 4);
             tableLayoutPanel1.Controls.Add(lbl_Bases, 0, 3);
             tableLayoutPanel1.Controls.Add(txt_Bases, 1, 3);
             tableLayoutPanel1.Controls.Add(Buscarcliente, 2, 1);
@@ -113,7 +110,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 19.38326F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel1.Size = new Size(918, 227);
+            tableLayoutPanel1.Size = new Size(918, 223);
             tableLayoutPanel1.TabIndex = 7;
             // 
             // materialLabel2
@@ -122,7 +119,7 @@
             materialLabel2.AutoSize = true;
             materialLabel2.Depth = 0;
             materialLabel2.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel2.Location = new Point(7, 13);
+            materialLabel2.Location = new Point(7, 12);
             materialLabel2.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel2.Name = "materialLabel2";
             materialLabel2.Size = new Size(100, 19);
@@ -165,7 +162,7 @@
             materialLabel4.AutoSize = true;
             materialLabel4.Depth = 0;
             materialLabel4.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel4.Location = new Point(54, 58);
+            materialLabel4.Location = new Point(54, 57);
             materialLabel4.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel4.Name = "materialLabel4";
             materialLabel4.Size = new Size(53, 19);
@@ -182,7 +179,7 @@
             txt_Costoflete.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             txt_Costoflete.HideSelection = true;
             txt_Costoflete.LeadingIcon = null;
-            txt_Costoflete.Location = new Point(460, 93);
+            txt_Costoflete.Location = new Point(460, 91);
             txt_Costoflete.Margin = new Padding(3, 2, 3, 2);
             txt_Costoflete.MaxLength = 32767;
             txt_Costoflete.MouseState = MaterialSkin.MouseState.OUT;
@@ -214,7 +211,7 @@
             txt_Nombrecliente.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             txt_Nombrecliente.HideSelection = true;
             txt_Nombrecliente.LeadingIcon = null;
-            txt_Nombrecliente.Location = new Point(113, 47);
+            txt_Nombrecliente.Location = new Point(113, 46);
             txt_Nombrecliente.Margin = new Padding(3, 2, 3, 2);
             txt_Nombrecliente.MaxLength = 32767;
             txt_Nombrecliente.MouseState = MaterialSkin.MouseState.OUT;
@@ -240,7 +237,7 @@
             materialLabel7.AutoSize = true;
             materialLabel7.Depth = 0;
             materialLabel7.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel7.Location = new Point(415, 103);
+            materialLabel7.Location = new Point(415, 101);
             materialLabel7.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel7.Name = "materialLabel7";
             materialLabel7.Size = new Size(39, 19);
@@ -257,7 +254,7 @@
             txt_Costoinstalacion.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             txt_Costoinstalacion.HideSelection = true;
             txt_Costoinstalacion.LeadingIcon = null;
-            txt_Costoinstalacion.Location = new Point(113, 93);
+            txt_Costoinstalacion.Location = new Point(113, 91);
             txt_Costoinstalacion.Margin = new Padding(3, 2, 3, 2);
             txt_Costoinstalacion.MaxLength = 32767;
             txt_Costoinstalacion.MouseState = MaterialSkin.MouseState.OUT;
@@ -285,7 +282,7 @@
             materialLabel6.AutoSize = true;
             materialLabel6.Depth = 0;
             materialLabel6.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel6.Location = new Point(24, 103);
+            materialLabel6.Location = new Point(24, 101);
             materialLabel6.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel6.Name = "materialLabel6";
             materialLabel6.Size = new Size(83, 19);
@@ -298,7 +295,7 @@
             materialLabel3.AutoSize = true;
             materialLabel3.Depth = 0;
             materialLabel3.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel3.Location = new Point(410, 13);
+            materialLabel3.Location = new Point(410, 12);
             materialLabel3.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel3.Name = "materialLabel3";
             materialLabel3.Size = new Size(44, 19);
@@ -313,7 +310,7 @@
             btn_Cancelarcotizacion.Depth = 0;
             btn_Cancelarcotizacion.HighEmphasis = true;
             btn_Cancelarcotizacion.Icon = null;
-            btn_Cancelarcotizacion.Location = new Point(461, 184);
+            btn_Cancelarcotizacion.Location = new Point(461, 180);
             btn_Cancelarcotizacion.Margin = new Padding(4);
             btn_Cancelarcotizacion.MouseState = MaterialSkin.MouseState.HOVER;
             btn_Cancelarcotizacion.Name = "btn_Cancelarcotizacion";
@@ -334,7 +331,7 @@
             btn_AgregarProducto.Depth = 0;
             btn_AgregarProducto.HighEmphasis = true;
             btn_AgregarProducto.Icon = null;
-            btn_AgregarProducto.Location = new Point(768, 184);
+            btn_AgregarProducto.Location = new Point(768, 180);
             btn_AgregarProducto.Margin = new Padding(4);
             btn_AgregarProducto.MouseState = MaterialSkin.MouseState.HOVER;
             btn_AgregarProducto.Name = "btn_AgregarProducto";
@@ -355,7 +352,7 @@
             Btn_guardarCotizacion.Depth = 0;
             Btn_guardarCotizacion.HighEmphasis = true;
             Btn_guardarCotizacion.Icon = null;
-            Btn_guardarCotizacion.Location = new Point(615, 184);
+            Btn_guardarCotizacion.Location = new Point(615, 180);
             Btn_guardarCotizacion.Margin = new Padding(4);
             Btn_guardarCotizacion.MouseState = MaterialSkin.MouseState.HOVER;
             Btn_guardarCotizacion.Name = "Btn_guardarCotizacion";
@@ -372,7 +369,7 @@
             // 
             lblFecha.Anchor = AnchorStyles.None;
             lblFecha.AutoSize = true;
-            lblFecha.Location = new Point(515, 15);
+            lblFecha.Location = new Point(515, 14);
             lblFecha.Name = "lblFecha";
             lblFecha.Size = new Size(38, 15);
             lblFecha.TabIndex = 25;
@@ -384,7 +381,7 @@
             materialLabel10.AutoSize = true;
             materialLabel10.Depth = 0;
             materialLabel10.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel10.Location = new Point(374, 148);
+            materialLabel10.Location = new Point(374, 144);
             materialLabel10.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel10.Name = "materialLabel10";
             materialLabel10.Size = new Size(80, 19);
@@ -406,7 +403,7 @@
             cmb_Descuento.FormattingEnabled = true;
             cmb_Descuento.IntegralHeight = false;
             cmb_Descuento.ItemHeight = 43;
-            cmb_Descuento.Location = new Point(460, 137);
+            cmb_Descuento.Location = new Point(460, 134);
             cmb_Descuento.Margin = new Padding(3, 2, 3, 2);
             cmb_Descuento.MaxDropDownItems = 4;
             cmb_Descuento.MouseState = MaterialSkin.MouseState.OUT;
@@ -415,62 +412,6 @@
             cmb_Descuento.StartIndex = 0;
             cmb_Descuento.TabIndex = 7;
             cmb_Descuento.SelectedIndexChanged += cmb_Descuento_SelectedIndexChanged;
-            // 
-            // materialLabel11
-            // 
-            materialLabel11.Anchor = AnchorStyles.Right;
-            materialLabel11.AutoSize = true;
-            materialLabel11.Depth = 0;
-            materialLabel11.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel11.Location = new Point(640, 103);
-            materialLabel11.MouseState = MaterialSkin.MouseState.HOVER;
-            materialLabel11.Name = "materialLabel11";
-            materialLabel11.Size = new Size(121, 19);
-            materialLabel11.TabIndex = 22;
-            materialLabel11.Text = "Total Descuento:";
-            // 
-            // lbl_costoDescuento
-            // 
-            lbl_costoDescuento.Anchor = AnchorStyles.None;
-            lbl_costoDescuento.AutoSize = true;
-            lbl_costoDescuento.Cursor = Cursors.IBeam;
-            lbl_costoDescuento.Depth = 0;
-            lbl_costoDescuento.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lbl_costoDescuento.Location = new Point(820, 103);
-            lbl_costoDescuento.MouseState = MaterialSkin.MouseState.HOVER;
-            lbl_costoDescuento.Name = "lbl_costoDescuento";
-            lbl_costoDescuento.Size = new Size(41, 19);
-            lbl_costoDescuento.TabIndex = 23;
-            lbl_costoDescuento.Text = "$0.00";
-            lbl_costoDescuento.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // materialLabel1
-            // 
-            materialLabel1.Anchor = AnchorStyles.Right;
-            materialLabel1.AutoSize = true;
-            materialLabel1.Depth = 0;
-            materialLabel1.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel1.Location = new Point(682, 148);
-            materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
-            materialLabel1.Name = "materialLabel1";
-            materialLabel1.Size = new Size(79, 19);
-            materialLabel1.TabIndex = 26;
-            materialLabel1.Text = "Total Neto:";
-            // 
-            // lbl_TotalNeto
-            // 
-            lbl_TotalNeto.Anchor = AnchorStyles.None;
-            lbl_TotalNeto.AutoSize = true;
-            lbl_TotalNeto.Cursor = Cursors.IBeam;
-            lbl_TotalNeto.Depth = 0;
-            lbl_TotalNeto.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lbl_TotalNeto.Location = new Point(820, 148);
-            lbl_TotalNeto.MouseState = MaterialSkin.MouseState.HOVER;
-            lbl_TotalNeto.Name = "lbl_TotalNeto";
-            lbl_TotalNeto.Size = new Size(41, 19);
-            lbl_TotalNeto.TabIndex = 27;
-            lbl_TotalNeto.Text = "$0.00";
-            lbl_TotalNeto.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // txt_Direccioncliente
             // 
@@ -482,7 +423,7 @@
             txt_Direccioncliente.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
             txt_Direccioncliente.HideSelection = true;
             txt_Direccioncliente.LeadingIcon = null;
-            txt_Direccioncliente.Location = new Point(767, 47);
+            txt_Direccioncliente.Location = new Point(767, 46);
             txt_Direccioncliente.Margin = new Padding(3, 2, 3, 2);
             txt_Direccioncliente.MaxLength = 32767;
             txt_Direccioncliente.MouseState = MaterialSkin.MouseState.OUT;
@@ -508,38 +449,12 @@
             materialLabel5.AutoSize = true;
             materialLabel5.Depth = 0;
             materialLabel5.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel5.Location = new Point(690, 58);
+            materialLabel5.Location = new Point(690, 57);
             materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel5.Name = "materialLabel5";
             materialLabel5.Size = new Size(71, 19);
             materialLabel5.TabIndex = 7;
             materialLabel5.Text = "Dirección:";
-            // 
-            // lbl_Subtotal
-            // 
-            lbl_Subtotal.Anchor = AnchorStyles.None;
-            lbl_Subtotal.AutoSize = true;
-            lbl_Subtotal.Depth = 0;
-            lbl_Subtotal.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lbl_Subtotal.Location = new Point(216, 194);
-            lbl_Subtotal.MouseState = MaterialSkin.MouseState.HOVER;
-            lbl_Subtotal.Name = "lbl_Subtotal";
-            lbl_Subtotal.Size = new Size(41, 19);
-            lbl_Subtotal.TabIndex = 24;
-            lbl_Subtotal.Text = "$0.00";
-            // 
-            // materialLabel9
-            // 
-            materialLabel9.Anchor = AnchorStyles.Right;
-            materialLabel9.AutoSize = true;
-            materialLabel9.Depth = 0;
-            materialLabel9.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel9.Location = new Point(33, 194);
-            materialLabel9.MouseState = MaterialSkin.MouseState.HOVER;
-            materialLabel9.Name = "materialLabel9";
-            materialLabel9.Size = new Size(74, 19);
-            materialLabel9.TabIndex = 16;
-            materialLabel9.Text = "Sub Total:";
             // 
             // lbl_Bases
             // 
@@ -547,7 +462,7 @@
             lbl_Bases.AutoSize = true;
             lbl_Bases.Depth = 0;
             lbl_Bases.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lbl_Bases.Location = new Point(59, 148);
+            lbl_Bases.Location = new Point(59, 144);
             lbl_Bases.MouseState = MaterialSkin.MouseState.HOVER;
             lbl_Bases.Name = "lbl_Bases";
             lbl_Bases.Size = new Size(48, 19);
@@ -569,7 +484,7 @@
             txt_Bases.HideSelection = true;
             txt_Bases.InsertKeyMode = InsertKeyMode.Default;
             txt_Bases.LeadingIcon = null;
-            txt_Bases.Location = new Point(113, 138);
+            txt_Bases.Location = new Point(113, 135);
             txt_Bases.Mask = "";
             txt_Bases.MaxLength = 32767;
             txt_Bases.MouseState = MaterialSkin.MouseState.OUT;
@@ -600,7 +515,7 @@
             // 
             Buscarcliente.Anchor = AnchorStyles.Left;
             Buscarcliente.Image = (Image)resources.GetObject("Buscarcliente.Image");
-            Buscarcliente.Location = new Point(366, 53);
+            Buscarcliente.Location = new Point(366, 51);
             Buscarcliente.Margin = new Padding(3, 2, 3, 2);
             Buscarcliente.Name = "Buscarcliente";
             Buscarcliente.Size = new Size(37, 30);
@@ -623,7 +538,7 @@
             txt_Buscarentabla.HideSelection = true;
             txt_Buscarentabla.InsertKeyMode = InsertKeyMode.Default;
             txt_Buscarentabla.LeadingIcon = null;
-            txt_Buscarentabla.Location = new Point(366, 183);
+            txt_Buscarentabla.Location = new Point(366, 179);
             txt_Buscarentabla.Mask = "";
             txt_Buscarentabla.MaxLength = 32767;
             txt_Buscarentabla.MouseState = MaterialSkin.MouseState.OUT;
@@ -654,50 +569,222 @@
             txt_Buscarentabla.MouseLeave += txt_Buscarentabla_MouseLeave;
             txt_Buscarentabla.TextChanged += txt_Buscarentabla_TextChanged;
             // 
+            // materialLabel11
+            // 
+            materialLabel11.Anchor = AnchorStyles.Right;
+            materialLabel11.AutoSize = true;
+            materialLabel11.Depth = 0;
+            materialLabel11.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            materialLabel11.Location = new Point(144, 29);
+            materialLabel11.MouseState = MaterialSkin.MouseState.HOVER;
+            materialLabel11.Name = "materialLabel11";
+            materialLabel11.Size = new Size(121, 19);
+            materialLabel11.TabIndex = 22;
+            materialLabel11.Text = "Total Descuento:";
+            materialLabel11.Click += materialLabel11_Click;
+            // 
+            // lbl_costoDescuento
+            // 
+            lbl_costoDescuento.Anchor = AnchorStyles.None;
+            lbl_costoDescuento.AutoSize = true;
+            lbl_costoDescuento.Cursor = Cursors.IBeam;
+            lbl_costoDescuento.Depth = 0;
+            lbl_costoDescuento.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            lbl_costoDescuento.Location = new Point(382, 29);
+            lbl_costoDescuento.MouseState = MaterialSkin.MouseState.HOVER;
+            lbl_costoDescuento.Name = "lbl_costoDescuento";
+            lbl_costoDescuento.Size = new Size(41, 19);
+            lbl_costoDescuento.TabIndex = 23;
+            lbl_costoDescuento.Text = "$0.00";
+            lbl_costoDescuento.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // materialLabel1
+            // 
+            materialLabel1.Anchor = AnchorStyles.Right;
+            materialLabel1.AutoSize = true;
+            materialLabel1.Depth = 0;
+            materialLabel1.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            materialLabel1.Location = new Point(186, 55);
+            materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
+            materialLabel1.Name = "materialLabel1";
+            materialLabel1.Size = new Size(79, 19);
+            materialLabel1.TabIndex = 26;
+            materialLabel1.Text = "Total Neto:";
+            // 
+            // lbl_TotalNeto
+            // 
+            lbl_TotalNeto.Anchor = AnchorStyles.None;
+            lbl_TotalNeto.AutoSize = true;
+            lbl_TotalNeto.Cursor = Cursors.IBeam;
+            lbl_TotalNeto.Depth = 0;
+            lbl_TotalNeto.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            lbl_TotalNeto.Location = new Point(382, 55);
+            lbl_TotalNeto.MouseState = MaterialSkin.MouseState.HOVER;
+            lbl_TotalNeto.Name = "lbl_TotalNeto";
+            lbl_TotalNeto.Size = new Size(41, 19);
+            lbl_TotalNeto.TabIndex = 27;
+            lbl_TotalNeto.Text = "$0.00";
+            lbl_TotalNeto.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lbl_Subtotal
+            // 
+            lbl_Subtotal.Anchor = AnchorStyles.None;
+            lbl_Subtotal.AutoSize = true;
+            lbl_Subtotal.Depth = 0;
+            lbl_Subtotal.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            lbl_Subtotal.Location = new Point(382, 3);
+            lbl_Subtotal.MouseState = MaterialSkin.MouseState.HOVER;
+            lbl_Subtotal.Name = "lbl_Subtotal";
+            lbl_Subtotal.Size = new Size(41, 19);
+            lbl_Subtotal.TabIndex = 24;
+            lbl_Subtotal.Text = "$0.00";
+            // 
+            // materialLabel9
+            // 
+            materialLabel9.Anchor = AnchorStyles.Right;
+            materialLabel9.AutoSize = true;
+            materialLabel9.Depth = 0;
+            materialLabel9.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            materialLabel9.Location = new Point(191, 3);
+            materialLabel9.MouseState = MaterialSkin.MouseState.HOVER;
+            materialLabel9.Name = "materialLabel9";
+            materialLabel9.Size = new Size(74, 19);
+            materialLabel9.TabIndex = 16;
+            materialLabel9.Text = "Sub Total:";
+            // 
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.ColumnCount = 3;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20.4081631F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 59.1836739F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20.4081631F));
-            tableLayoutPanel3.Controls.Add(tbl_Productos, 1, 0);
-            tableLayoutPanel3.Controls.Add(tbl_Cotizacion, 1, 2);
+            tableLayoutPanel3.Controls.Add(materialButton1, 2, 0);
+            tableLayoutPanel3.Controls.Add(tbl_Cotizacion, 1, 0);
+            tableLayoutPanel3.Controls.Add(lbl_observaciones, 0, 1);
+            tableLayoutPanel3.Controls.Add(tableLayoutPanel2, 1, 2);
+            tableLayoutPanel3.Controls.Add(Txt_observaciones, 0, 2);
             tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(0, 227);
+            tableLayoutPanel3.Location = new Point(0, 223);
             tableLayoutPanel3.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 3;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 45.45454F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 9.09091F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 45.4545479F));
-            tableLayoutPanel3.Size = new Size(918, 179);
+            tableLayoutPanel3.Size = new Size(918, 183);
             tableLayoutPanel3.TabIndex = 10;
             // 
-            // tbl_Productos
+            // materialButton1
             // 
-            tbl_Productos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            tbl_Productos.Dock = DockStyle.Fill;
-            tbl_Productos.GridColor = Color.LightGray;
-            tbl_Productos.Location = new Point(190, 2);
-            tbl_Productos.Margin = new Padding(3, 2, 3, 2);
-            tbl_Productos.Name = "tbl_Productos";
-            tbl_Productos.RowHeadersWidth = 51;
-            tbl_Productos.Size = new Size(537, 77);
-            tbl_Productos.TabIndex = 7;
-            tbl_Productos.CellClick += tbl_Productos_CellClick;
+            materialButton1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            materialButton1.BackColor = Color.Cyan;
+            materialButton1.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            materialButton1.Depth = 0;
+            materialButton1.HighEmphasis = true;
+            materialButton1.Icon = null;
+            materialButton1.Location = new Point(734, 4);
+            materialButton1.Margin = new Padding(4);
+            materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            materialButton1.Name = "materialButton1";
+            materialButton1.NoAccentTextColor = Color.Empty;
+            materialButton1.Size = new Size(155, 36);
+            materialButton1.TabIndex = 31;
+            materialButton1.Text = "Añadir Producto";
+            materialButton1.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            materialButton1.UseAccentColor = false;
+            materialButton1.UseVisualStyleBackColor = false;
+            materialButton1.Click += materialButton1_Click;
             // 
             // tbl_Cotizacion
             // 
             tbl_Cotizacion.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tbl_Cotizacion.Dock = DockStyle.Fill;
-            tbl_Cotizacion.Location = new Point(190, 99);
+            tbl_Cotizacion.Location = new Point(190, 2);
             tbl_Cotizacion.Margin = new Padding(3, 2, 3, 2);
             tbl_Cotizacion.Name = "tbl_Cotizacion";
             tbl_Cotizacion.RowHeadersWidth = 51;
-            tbl_Cotizacion.Size = new Size(537, 78);
+            tbl_Cotizacion.Size = new Size(537, 79);
             tbl_Cotizacion.TabIndex = 8;
             tbl_Cotizacion.CellClick += tbl_Cotizacion_CellClick;
-            tbl_Cotizacion.CellEndEdit += tbl_Cotizacion_CellEndEdit;
+            tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
+            // 
+            // lbl_observaciones
+            // 
+            lbl_observaciones.AutoSize = true;
+            lbl_observaciones.Depth = 0;
+            lbl_observaciones.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            lbl_observaciones.Location = new Point(3, 83);
+            lbl_observaciones.MouseState = MaterialSkin.MouseState.HOVER;
+            lbl_observaciones.Name = "lbl_observaciones";
+            lbl_observaciones.Size = new Size(105, 16);
+            lbl_observaciones.TabIndex = 9;
+            lbl_observaciones.Text = "Observaciones";
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel2.Controls.Add(materialLabel9, 0, 0);
+            tableLayoutPanel2.Controls.Add(lbl_Subtotal, 1, 0);
+            tableLayoutPanel2.Controls.Add(materialLabel11, 0, 1);
+            tableLayoutPanel2.Controls.Add(lbl_costoDescuento, 1, 1);
+            tableLayoutPanel2.Controls.Add(materialLabel1, 0, 2);
+            tableLayoutPanel2.Controls.Add(lbl_TotalNeto, 1, 2);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(190, 102);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 3;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.Size = new Size(537, 78);
+            tableLayoutPanel2.TabIndex = 10;
+            // 
+            // Txt_observaciones
+            // 
+            Txt_observaciones.AllowPromptAsInput = true;
+            Txt_observaciones.Anchor = AnchorStyles.None;
+            Txt_observaciones.AnimateReadOnly = false;
+            Txt_observaciones.AsciiOnly = false;
+            Txt_observaciones.BackgroundImageLayout = ImageLayout.None;
+            Txt_observaciones.BeepOnError = false;
+            Txt_observaciones.CutCopyMaskFormat = MaskFormat.IncludeLiterals;
+            Txt_observaciones.Depth = 0;
+            Txt_observaciones.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            Txt_observaciones.HidePromptOnLeave = false;
+            Txt_observaciones.HideSelection = true;
+            Txt_observaciones.InsertKeyMode = InsertKeyMode.Default;
+            Txt_observaciones.LeadingIcon = null;
+            Txt_observaciones.Location = new Point(3, 117);
+            Txt_observaciones.Mask = "";
+            Txt_observaciones.MaxLength = 32767;
+            Txt_observaciones.MouseState = MaterialSkin.MouseState.OUT;
+            Txt_observaciones.Name = "Txt_observaciones";
+            Txt_observaciones.PasswordChar = '\0';
+            Txt_observaciones.PrefixSuffixText = null;
+            Txt_observaciones.PromptChar = '_';
+            Txt_observaciones.ReadOnly = false;
+            Txt_observaciones.RejectInputOnFirstFailure = false;
+            Txt_observaciones.ResetOnPrompt = true;
+            Txt_observaciones.ResetOnSpace = true;
+            Txt_observaciones.RightToLeft = RightToLeft.No;
+            Txt_observaciones.SelectedText = "";
+            Txt_observaciones.SelectionLength = 0;
+            Txt_observaciones.SelectionStart = 0;
+            Txt_observaciones.ShortcutsEnabled = true;
+            Txt_observaciones.Size = new Size(181, 48);
+            Txt_observaciones.SkipLiterals = true;
+            Txt_observaciones.TabIndex = 32;
+            Txt_observaciones.TabStop = false;
+            Txt_observaciones.Text = "Ingrese observaciones .....";
+            Txt_observaciones.TextAlign = HorizontalAlignment.Left;
+            Txt_observaciones.TextMaskFormat = MaskFormat.IncludeLiterals;
+            Txt_observaciones.TrailingIcon = null;
+            Txt_observaciones.UseSystemPasswordChar = false;
+            Txt_observaciones.ValidatingType = null;
+            Txt_observaciones.MouseEnter += Txt_observaciones_MouseEnter;
             // 
             // Cotiza
             // 
@@ -712,8 +799,10 @@
             tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)Buscarcliente).EndInit();
             tableLayoutPanel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)tbl_Productos).EndInit();
+            tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)tbl_Cotizacion).EndInit();
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -742,7 +831,6 @@
         private MaterialSkin.Controls.MaterialLabel lbl_Subtotal;
         private MaterialSkin.Controls.MaterialLabel lbl_costoDescuento;
         private TableLayoutPanel tableLayoutPanel3;
-        private DataGridView tbl_Productos;
         private DataGridView tbl_Cotizacion;
         private Label lblFecha;
         private MaterialSkin.Controls.MaterialLabel materialLabel1;
@@ -750,5 +838,9 @@
         private MaterialSkin.Controls.MaterialLabel lbl_Bases;
         private MaterialSkin.Controls.MaterialMaskedTextBox txt_Bases;
         private MaterialSkin.Controls.MaterialMaskedTextBox txt_Buscarentabla;
+        private MaterialSkin.Controls.MaterialLabel lbl_observaciones;
+        private TableLayoutPanel tableLayoutPanel2;
+        private MaterialSkin.Controls.MaterialButton materialButton1;
+        private MaterialSkin.Controls.MaterialMaskedTextBox Txt_observaciones;
     }
 }

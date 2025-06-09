@@ -30,8 +30,8 @@ namespace Ensumex.Forms
         {
             InitializeComponent();
             InicializarFormulario();
-            ConfigurarTema();
             ConfigurarMenu();
+            Tema.ConfigurarTema(this); 
             CargarDatosUsuario();
         }
         private void InicializarFormulario()
@@ -39,18 +39,7 @@ namespace Ensumex.Forms
             this.WindowState = FormWindowState.Maximized;
             panel1.Cursor = Cursors.Hand;
         }
-        private void ConfigurarTema()
-        {
-            var skinManager = MaterialSkinManager.Instance;
-            skinManager.AddFormToManage(this);
-            skinManager.Theme = MaterialSkinManager.Themes.DARK;
-            skinManager.ColorScheme = new ColorScheme(
-                Primary.BlueGrey900,   // Color base
-                Primary.Green700,   // Tono oscuro
-                Primary.BlueGrey400,   // Tono claro
-                Accent.LightGreen200, // Acento
-                TextShade.WHITE);   // Tono del texto
-        }
+        
         private void ConfigurarMenu()
         {
             menu_usuario.Renderer = new CustomMenuRenderer();

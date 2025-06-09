@@ -1,4 +1,5 @@
-﻿using MaterialSkin;
+﻿using Ensumex.Utils;
+using MaterialSkin;
 using MaterialSkin.Controls;
 using System;
 using System.Collections.Generic;
@@ -17,20 +18,9 @@ namespace Ensumex.Views
         public ProdTemp()
         {
             InitializeComponent();
-            ConfigurarTema();
+            Tema.ConfigurarTema(this);
+            
             cmb_Unidentrada.Items.AddRange(new object[] { "PZA", "PRODUCTO", "SERVICIO"});
-        }
-        private void ConfigurarTema()
-        {
-            var skinManager = MaterialSkinManager.Instance;
-            skinManager.AddFormToManage(this);
-            skinManager.Theme = MaterialSkinManager.Themes.DARK;
-            skinManager.ColorScheme = new ColorScheme(
-                Primary.Green600,   // Color base
-                Primary.Green700,   // Tono oscuro
-                Primary.Green400,   // Tono claro
-                Accent.LightGreen200, // Acento
-                TextShade.WHITE);   // Tono del texto
         }
         private void txb_PrecioUnitarioTemp_TabIndexChanged(object sender, EventArgs e)
         {
