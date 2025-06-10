@@ -29,18 +29,16 @@ namespace Ensumex.Forms
         public ENSUMEX()
         {
             InitializeComponent();
+            Tema.ConfigurarTema(this);
             InicializarFormulario();
             ConfigurarMenu();
-            Tema.ConfigurarTema(this); 
             CargarDatosUsuario();
         }
         private void InicializarFormulario()
         {
             this.WindowState = FormWindowState.Maximized;
             panel1.Cursor = Cursors.Hand;
-        }
-        
-        private void ConfigurarMenu()
+        }        private void ConfigurarMenu()
         {
             menu_usuario.Renderer = new CustomMenuRenderer();
         }
@@ -199,7 +197,6 @@ namespace Ensumex.Forms
                 adapterP.Fill(productosFB);
                 connFb.Close();
             }
-
             // 2. Traer clientes de Firebird
             DataTable clientesFB = new DataTable();
             using (FbConnection connFb = new FbConnection(connFirebird))
@@ -211,16 +208,13 @@ namespace Ensumex.Forms
                 adapterC.Fill(clientesFB);
                 connFb.Close();
             }
-
             int totalRegistros = productosFB.Rows.Count + clientesFB.Rows.Count;
-
             // Configurar progressBar en UI
             this.Invoke((Action)(() =>
             {
                 progressBar1.Maximum = totalRegistros;
                 progressBar1.Value = 0;
             }));
-
             using (SqlConnection connSql = new SqlConnection(connSqlServer))
             {
                 connSql.Open();
@@ -239,7 +233,6 @@ namespace Ensumex.Forms
                     int progreso = 0;
                     int total = productosFB.Rows.Count + clientesFB.Rows.Count;
                     progressBar1.Maximum = total;
-
                     using (SqlTransaction transaction = connSql.BeginTransaction())
                     {
                         try
@@ -257,7 +250,6 @@ namespace Ensumex.Forms
                                     insertP.Parameters.AddWithValue("@COSTO_PROM", row["COSTO_PROM"] ?? DBNull.Value);
                                     insertP.Parameters.AddWithValue("@ULT_COSTO", row["ULT_COSTO"] ?? DBNull.Value);
                                     insertP.Parameters.AddWithValue("@EXIST", row["EXIST"] ?? DBNull.Value);
-
                                     insertP.ExecuteNonQuery();
                                 }
                                 progreso++;

@@ -16,11 +16,11 @@ namespace Ensumex.Utils
             skinManager.AddFormToManage(form);
             skinManager.Theme = MaterialSkinManager.Themes.DARK;
             skinManager.ColorScheme = new ColorScheme(
-                Primary.BlueGrey900,   // Color base  
-                Primary.Green700,   // Tono oscuro  
-                Primary.BlueGrey400,   // Tono claro  
-                Accent.LightGreen200, // Acento  
-                TextShade.WHITE);   // Tono del texto  
+                Primary.BlueGrey900,
+                Primary.BlueGrey800,
+                Primary.BlueGrey500,
+                Accent.LightBlue100,
+                TextShade.WHITE);
         }
     }
 }

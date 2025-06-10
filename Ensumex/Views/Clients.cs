@@ -55,7 +55,7 @@ namespace Ensumex.Views
             var selectedValue = cmb_clientes.SelectedItem.ToString();
             if (selectedValue == "Todos")
             {
-                CargarClientes(); 
+                CargarClientes();
             }
             else
             {
@@ -66,20 +66,6 @@ namespace Ensumex.Views
                 foreach (var cliente in clientes)
                 {
                     tabla_clientes.Rows.Add(cliente.CLAVE, cliente.STATUS, cliente.NOMBRE, cliente.CALLE, cliente.COLONIA, cliente.MUNICIPIO, cliente.EMAILPRED);
-                }
-            }
-        }
-        private void txt_buscar_TextChanged(object sender, EventArgs e)
-        {
-            var searchText = txt_buscar.Text.ToLower();
-            foreach (DataGridViewRow row in tabla_clientes.Rows)
-            {
-                if (!row.IsNewRow)
-                {
-                    var nombreCell = row.Cells["NOMBRE"].Value?.ToString().ToLower();
-                    var claveCell = row.Cells["CLAVE"].Value?.ToString().ToLower();
-                    row.Visible = (nombreCell?.Contains(searchText) ?? false) ||
-                                  (claveCell?.Contains(searchText) ?? false);
                 }
             }
         }
@@ -97,7 +83,7 @@ namespace Ensumex.Views
                 var result = MessageBox.Show(
                     $"¿Desea agregar el cliente '{nombre}'?",
                     "Agregar cliente",
-                    MessageBoxButtons.YesNo,    
+                    MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
@@ -113,6 +99,23 @@ namespace Ensumex.Views
                 }
             }
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            var searchText = text_buscar.Text.ToLower();
+            foreach (DataGridViewRow row in tabla_clientes.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    var nombreCell = row.Cells["NOMBRE"].Value?.ToString().ToLower();
+                    var claveCell = row.Cells["CLAVE"].Value?.ToString().ToLower();
+                    row.Visible = (nombreCell?.Contains(searchText) ?? false) ||
+                                  (claveCell?.Contains(searchText) ?? false);
+                }
+            }
+
+        }
+
         public string ClienteSeleccionadoNombre { get; private set; }
         public string ClienteSeleccionadoCalle { get; private set; }
     }

@@ -1,4 +1,5 @@
-﻿using iTextSharp.text;
+﻿using DocumentFormat.OpenXml.Office2013.Word;
+using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace Ensumex.Utils
             string subtotal,
             string total,
             string descuento,
+            string notas,
             DataGridView tablaCotizacion){
             try
             {
@@ -52,6 +54,7 @@ namespace Ensumex.Utils
                 {
                     doc.Add(new Paragraph("\n\nEstimado Cliente: ", fontNormal));
                     doc.Add(new Paragraph(nombreCliente, fontNegrita));
+                    
                 }
                 else
                 {
@@ -129,20 +132,23 @@ namespace Ensumex.Utils
                         "- No incluye material de plomería.\n" +
                         "- Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
                         "- Precios sujetos a cambios sin previo aviso.\n" +
-                        "Sin otro particular, quedo a sus órdenes.\n\n\n\n\n", fontNormal));
+                        "Sin otro particular, quedo a sus órdenes.\n\n", fontNormal));
                 }
                 else
                 {
                     doc.Add(new Paragraph(
                     "- Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
                     "- Precios sujetos a cambios sin previo aviso.\n" +
-                    "Sin otro particular, quedo a sus órdenes.\n\n\n\n\n", fontNormal));
+                    "Sin otro particular, quedo a sus órdenes.\n\n", fontNormal));
                 }
-                    // Crear una tabla de una columna centrada
+               
+                doc.Add(new Paragraph(notas, fontNormal));
+
+                // Crear una tabla de una columna centrada
                 PdfPTable tablaFirma = new PdfPTable(1);  
                 tablaFirma.WidthPercentage = 100;
                     // Celda con texto
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\nCarlos Valdez\nRepresentante de Ventas", fontCursiva));
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("\n\n\n\n\nAtentamente,\nCarlos Valdez\nRepresentante de Ventas", fontCursiva));
                 celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;
                 celdaTexto.Border = Rectangle.NO_BORDER;
                 celdaTexto.PaddingBottom = 10f; 

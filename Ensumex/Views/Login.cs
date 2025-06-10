@@ -27,7 +27,7 @@ namespace Ensumex
                 Primary.Green700,       // Color oscuro
                 Primary.Green400,       // Color claro
                 Accent.LightGreen200,   // Color de acento
-                TextShade.BLACK         // Sombra del texto
+                TextShade.WHITE         // Sombra del texto
             );
         }
         private void ConfigurarTextosPorDefecto()
@@ -99,8 +99,10 @@ namespace Ensumex
                     } 
                 }
                 else msgError("Ingrese su contraseña");
+                    txt_contraseñalogin.Focus(); // Mueve el foco al campo de contraseña
             }
             else msgError("Ingrese su usuario");
+                txt_contraseñalogin.Focus(); // Mueve el foco al campo de contraseña
         }
         private void txt_Usuariologin_MouseEnter(object sender, EventArgs e)
         {

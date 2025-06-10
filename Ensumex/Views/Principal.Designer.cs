@@ -124,7 +124,7 @@
             // 
             // tableLayoutPanel2
             // 
-            tableLayoutPanel2.BackColor = Color.DodgerBlue;
+            tableLayoutPanel2.BackColor = SystemColors.Control;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel2.Controls.Add(progressBar1, 0, 4);
@@ -162,7 +162,7 @@
             btn_inventarioP.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
             btn_inventarioP.Depth = 0;
             btn_inventarioP.HighEmphasis = true;
-            btn_inventarioP.Icon = null;
+            btn_inventarioP.Icon = (Image)resources.GetObject("btn_inventarioP.Icon");
             btn_inventarioP.Image = (Image)resources.GetObject("btn_inventarioP.Image");
             btn_inventarioP.ImageAlign = ContentAlignment.MiddleLeft;
             btn_inventarioP.Location = new Point(4, 17);
@@ -187,7 +187,7 @@
             btn_sincronizar.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
             btn_sincronizar.Depth = 0;
             btn_sincronizar.HighEmphasis = true;
-            btn_sincronizar.Icon = null;
+            btn_sincronizar.Icon = (Image)resources.GetObject("btn_sincronizar.Icon");
             btn_sincronizar.Location = new Point(4, 227);
             btn_sincronizar.Margin = new Padding(4, 6, 4, 6);
             btn_sincronizar.MouseState = MaterialSkin.MouseState.HOVER;
@@ -208,7 +208,7 @@
             materialButton2.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
             materialButton2.Depth = 0;
             materialButton2.HighEmphasis = true;
-            materialButton2.Icon = null;
+            materialButton2.Icon = (Image)resources.GetObject("materialButton2.Icon");
             materialButton2.Location = new Point(4, 87);
             materialButton2.Margin = new Padding(4);
             materialButton2.MouseState = MaterialSkin.MouseState.HOVER;
@@ -229,7 +229,7 @@
             materialButton3.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
             materialButton3.Depth = 0;
             materialButton3.HighEmphasis = true;
-            materialButton3.Icon = null;
+            materialButton3.Icon = (Image)resources.GetObject("materialButton3.Icon");
             materialButton3.Location = new Point(4, 157);
             materialButton3.Margin = new Padding(4);
             materialButton3.MouseState = MaterialSkin.MouseState.HOVER;
@@ -265,7 +265,7 @@
             // 
             // panel2
             // 
-            panel2.BackColor = Color.DodgerBlue;
+            panel2.BackColor = SystemColors.Control;
             panel2.Controls.Add(materialLabel1);
             panel2.Controls.Add(lbl_usuario);
             panel2.Controls.Add(lbl_posicion);
@@ -314,7 +314,7 @@
             // 
             // txt_usuario
             // 
-            txt_usuario.BackColor = Color.DodgerBlue;
+            txt_usuario.BackColor = SystemColors.Control;
             txt_usuario.BorderStyle = BorderStyle.None;
             txt_usuario.Enabled = false;
             txt_usuario.Font = new Font("Century Gothic", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -331,7 +331,7 @@
             // 
             // menu_usuario
             // 
-            menu_usuario.BackColor = Color.DodgerBlue;
+            menu_usuario.BackColor = SystemColors.Control;
             menu_usuario.BackgroundImageLayout = ImageLayout.None;
             menu_usuario.Font = new Font("Century Gothic", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             menu_usuario.ImageScalingSize = new Size(20, 20);
@@ -416,7 +416,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(0, 192, 0);
+            BackColor = Color.White;
             ClientSize = new Size(1024, 568);
             Controls.Add(tableLayoutPanel4);
             Controls.Add(panel1);

@@ -62,7 +62,7 @@
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             tableLayoutPanel2.Controls.Add(btn_nuevoUsuario, 3, 0);
-            tableLayoutPanel2.Controls.Add(lbl_NuevoUsuario, 1, 0);
+            tableLayoutPanel2.Controls.Add(lbl_NuevoUsuario, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Top;
             tableLayoutPanel2.Location = new Point(0, 0);
             tableLayoutPanel2.Margin = new Padding(3, 2, 3, 2);
@@ -90,7 +90,7 @@
             // 
             lbl_NuevoUsuario.Anchor = AnchorStyles.Right;
             lbl_NuevoUsuario.AutoSize = true;
-            lbl_NuevoUsuario.Location = new Point(230, 19);
+            lbl_NuevoUsuario.Location = new Point(47, 19);
             lbl_NuevoUsuario.Name = "lbl_NuevoUsuario";
             lbl_NuevoUsuario.Size = new Size(133, 15);
             lbl_NuevoUsuario.TabIndex = 2;
@@ -104,16 +104,16 @@
             Tabla_usuarios.Margin = new Padding(3, 2, 3, 2);
             Tabla_usuarios.Name = "Tabla_usuarios";
             Tabla_usuarios.RowHeadersWidth = 51;
-            Tabla_usuarios.Size = new Size(520, 245);
+            Tabla_usuarios.Size = new Size(448, 269);
             Tabla_usuarios.TabIndex = 20;
             // 
             // Panel_Nuevousuario
             // 
             Panel_Nuevousuario.ColumnCount = 4;
-            Panel_Nuevousuario.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.272727F));
-            Panel_Nuevousuario.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 38.5454559F));
-            Panel_Nuevousuario.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 14.727273F));
-            Panel_Nuevousuario.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35.4545441F));
+            Panel_Nuevousuario.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 19.4630871F));
+            Panel_Nuevousuario.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 26.8456383F));
+            Panel_Nuevousuario.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22.5950775F));
+            Panel_Nuevousuario.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30.8724823F));
             Panel_Nuevousuario.Controls.Add(lbl1_usuariocrear, 0, 0);
             Panel_Nuevousuario.Controls.Add(btn_GuardarUsuario, 3, 2);
             Panel_Nuevousuario.Controls.Add(btn_Cancelar, 2, 2);
@@ -127,23 +127,23 @@
             Panel_Nuevousuario.Controls.Add(textNewCorreo, 3, 1);
             Panel_Nuevousuario.Controls.Add(cmb_NewPosicion, 1, 2);
             Panel_Nuevousuario.Dock = DockStyle.Fill;
-            Panel_Nuevousuario.Location = new Point(566, 2);
+            Panel_Nuevousuario.Location = new Point(466, 2);
             Panel_Nuevousuario.Margin = new Padding(3, 2, 3, 2);
             Panel_Nuevousuario.Name = "Panel_Nuevousuario";
             Panel_Nuevousuario.RowCount = 3;
             Panel_Nuevousuario.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             Panel_Nuevousuario.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             Panel_Nuevousuario.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Panel_Nuevousuario.Size = new Size(347, 245);
+            Panel_Nuevousuario.Size = new Size(447, 269);
             Panel_Nuevousuario.TabIndex = 20;
             // 
             // lbl1_usuariocrear
             // 
             lbl1_usuariocrear.Anchor = AnchorStyles.None;
             lbl1_usuariocrear.AutoSize = true;
-            lbl1_usuariocrear.Location = new Point(3, 25);
+            lbl1_usuariocrear.Location = new Point(18, 37);
             lbl1_usuariocrear.Name = "lbl1_usuariocrear";
-            lbl1_usuariocrear.Size = new Size(33, 30);
+            lbl1_usuariocrear.Size = new Size(50, 15);
             lbl1_usuariocrear.TabIndex = 6;
             lbl1_usuariocrear.Text = "Usuario:";
             // 
@@ -152,10 +152,10 @@
             btn_GuardarUsuario.Anchor = AnchorStyles.None;
             btn_GuardarUsuario.BackColor = Color.Lime;
             btn_GuardarUsuario.FlatStyle = FlatStyle.Flat;
-            btn_GuardarUsuario.Location = new Point(244, 195);
+            btn_GuardarUsuario.Location = new Point(336, 212);
             btn_GuardarUsuario.Margin = new Padding(3, 2, 3, 2);
             btn_GuardarUsuario.Name = "btn_GuardarUsuario";
-            btn_GuardarUsuario.Size = new Size(82, 17);
+            btn_GuardarUsuario.Size = new Size(82, 23);
             btn_GuardarUsuario.TabIndex = 15;
             btn_GuardarUsuario.Text = "Guardar";
             btn_GuardarUsuario.UseVisualStyleBackColor = false;
@@ -165,10 +165,10 @@
             btn_Cancelar.Anchor = AnchorStyles.None;
             btn_Cancelar.BackColor = Color.Red;
             btn_Cancelar.FlatStyle = FlatStyle.Flat;
-            btn_Cancelar.Location = new Point(176, 195);
+            btn_Cancelar.Location = new Point(226, 212);
             btn_Cancelar.Margin = new Padding(3, 2, 3, 2);
             btn_Cancelar.Name = "btn_Cancelar";
-            btn_Cancelar.Size = new Size(43, 17);
+            btn_Cancelar.Size = new Size(63, 23);
             btn_Cancelar.TabIndex = 16;
             btn_Cancelar.Text = "Cancelar";
             btn_Cancelar.UseVisualStyleBackColor = false;
@@ -177,17 +177,17 @@
             // 
             textnewUsuario.Anchor = AnchorStyles.Left;
             textnewUsuario.BackColor = Color.Silver;
-            textnewUsuario.Location = new Point(42, 29);
+            textnewUsuario.Location = new Point(90, 33);
             textnewUsuario.Margin = new Padding(3, 2, 3, 2);
             textnewUsuario.Name = "textnewUsuario";
-            textnewUsuario.Size = new Size(123, 23);
+            textnewUsuario.Size = new Size(114, 23);
             textnewUsuario.TabIndex = 4;
             // 
             // textNewContraseña
             // 
             textNewContraseña.Anchor = AnchorStyles.Left;
             textNewContraseña.BackColor = Color.Silver;
-            textNewContraseña.Location = new Point(226, 29);
+            textNewContraseña.Location = new Point(311, 33);
             textNewContraseña.Margin = new Padding(3, 2, 3, 2);
             textNewContraseña.Name = "textNewContraseña";
             textNewContraseña.Size = new Size(116, 23);
@@ -197,9 +197,9 @@
             // 
             label1.Anchor = AnchorStyles.None;
             label1.AutoSize = true;
-            label1.Location = new Point(176, 25);
+            label1.Location = new Point(222, 37);
             label1.Name = "label1";
-            label1.Size = new Size(43, 30);
+            label1.Size = new Size(70, 15);
             label1.TabIndex = 9;
             label1.Text = "Contraseña:";
             // 
@@ -207,9 +207,9 @@
             // 
             label2.Anchor = AnchorStyles.None;
             label2.AutoSize = true;
-            label2.Location = new Point(5, 99);
+            label2.Location = new Point(16, 126);
             label2.Name = "label2";
-            label2.Size = new Size(29, 45);
+            label2.Size = new Size(54, 15);
             label2.TabIndex = 10;
             label2.Text = "Nombre:";
             // 
@@ -217,19 +217,19 @@
             // 
             textNewNombre.Anchor = AnchorStyles.Left;
             textNewNombre.BackColor = Color.Silver;
-            textNewNombre.Location = new Point(42, 110);
+            textNewNombre.Location = new Point(90, 122);
             textNewNombre.Margin = new Padding(3, 2, 3, 2);
             textNewNombre.Name = "textNewNombre";
-            textNewNombre.Size = new Size(123, 23);
+            textNewNombre.Size = new Size(114, 23);
             textNewNombre.TabIndex = 6;
             // 
             // label3
             // 
             label3.Anchor = AnchorStyles.None;
             label3.AutoSize = true;
-            label3.Location = new Point(3, 188);
+            label3.Location = new Point(16, 216);
             label3.Name = "label3";
-            label3.Size = new Size(33, 30);
+            label3.Size = new Size(55, 15);
             label3.TabIndex = 12;
             label3.Text = "Posición:";
             // 
@@ -237,9 +237,9 @@
             // 
             label4.Anchor = AnchorStyles.None;
             label4.AutoSize = true;
-            label4.Location = new Point(176, 106);
+            label4.Location = new Point(234, 126);
             label4.Name = "label4";
-            label4.Size = new Size(43, 30);
+            label4.Size = new Size(46, 15);
             label4.TabIndex = 14;
             label4.Text = "Correo:";
             // 
@@ -247,7 +247,7 @@
             // 
             textNewCorreo.Anchor = AnchorStyles.Left;
             textNewCorreo.BackColor = Color.Silver;
-            textNewCorreo.Location = new Point(226, 110);
+            textNewCorreo.Location = new Point(311, 122);
             textNewCorreo.Margin = new Padding(3, 2, 3, 2);
             textNewCorreo.Name = "textNewCorreo";
             textNewCorreo.Size = new Size(116, 23);
@@ -259,26 +259,26 @@
             cmb_NewPosicion.BackColor = Color.Silver;
             cmb_NewPosicion.FormattingEnabled = true;
             cmb_NewPosicion.Items.AddRange(new object[] { "Administrador", "Vendedor" });
-            cmb_NewPosicion.Location = new Point(42, 192);
+            cmb_NewPosicion.Location = new Point(90, 212);
             cmb_NewPosicion.Margin = new Padding(3, 2, 3, 2);
             cmb_NewPosicion.Name = "cmb_NewPosicion";
-            cmb_NewPosicion.Size = new Size(123, 23);
+            cmb_NewPosicion.Size = new Size(114, 23);
             cmb_NewPosicion.TabIndex = 7;
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 3;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 57.53253F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 4.109466F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 38.3580055F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 49.56332F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0.98253274F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 49.4541473F));
             tableLayoutPanel1.Controls.Add(Panel_Nuevousuario, 2, 0);
             tableLayoutPanel1.Controls.Add(Tabla_usuarios, 0, 0);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 54);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 75.9146347F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 24.0853653F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 83.2317047F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 16.7682934F));
             tableLayoutPanel1.Size = new Size(916, 328);
             tableLayoutPanel1.TabIndex = 19;
             // 
