@@ -293,7 +293,7 @@
             // lbl_usuario
             // 
             lbl_usuario.AutoSize = true;
-            lbl_usuario.ForeColor = Color.White;
+            lbl_usuario.ForeColor = SystemColors.ControlText;
             lbl_usuario.Location = new Point(70, 49);
             lbl_usuario.Name = "lbl_usuario";
             lbl_usuario.Size = new Size(92, 15);
@@ -304,7 +304,7 @@
             // 
             lbl_posicion.AutoSize = true;
             lbl_posicion.Font = new Font("Century Gothic", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lbl_posicion.ForeColor = Color.White;
+            lbl_posicion.ForeColor = SystemColors.ControlText;
             lbl_posicion.Location = new Point(70, 24);
             lbl_posicion.Name = "lbl_posicion";
             lbl_posicion.Size = new Size(66, 19);

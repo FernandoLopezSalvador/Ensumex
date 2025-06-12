@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             tableLayoutPanel1 = new TableLayoutPanel();
-            ImprimirClientes = new MaterialSkin.Controls.MaterialButton();
             label1 = new Label();
-            cmb_clientes = new ComboBox();
             label2 = new Label();
+            ImprimirClientes = new MaterialSkin.Controls.MaterialButton();
+            cmb_clientes = new ComboBox();
             text_buscar = new TextBox();
             tabla_clientes = new DataGridView();
             tableLayoutPanel1.SuspendLayout();
@@ -47,12 +47,13 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            tableLayoutPanel1.Controls.Add(ImprimirClientes, 0, 1);
             tableLayoutPanel1.Controls.Add(label1, 1, 0);
-            tableLayoutPanel1.Controls.Add(cmb_clientes, 2, 0);
             tableLayoutPanel1.Controls.Add(label2, 1, 1);
+            tableLayoutPanel1.Controls.Add(ImprimirClientes, 0, 1);
+            tableLayoutPanel1.Controls.Add(cmb_clientes, 2, 0);
             tableLayoutPanel1.Controls.Add(text_buscar, 2, 1);
             tableLayoutPanel1.Dock = DockStyle.Top;
+            tableLayoutPanel1.ForeColor = SystemColors.ControlText;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -61,6 +62,28 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.Size = new Size(863, 128);
             tableLayoutPanel1.TabIndex = 18;
+            // 
+            // label1
+            // 
+            label1.Anchor = AnchorStyles.Right;
+            label1.AutoSize = true;
+            label1.BackColor = SystemColors.Control;
+            label1.Location = new Point(376, 24);
+            label1.Name = "label1";
+            label1.Size = new Size(51, 15);
+            label1.TabIndex = 11;
+            label1.Text = "Mostrar:";
+            // 
+            // label2
+            // 
+            label2.Anchor = AnchorStyles.Right;
+            label2.AutoSize = true;
+            label2.BackColor = SystemColors.Control;
+            label2.Location = new Point(382, 88);
+            label2.Name = "label2";
+            label2.Size = new Size(45, 15);
+            label2.TabIndex = 13;
+            label2.Text = "Buscar:";
             // 
             // ImprimirClientes
             // 
@@ -83,16 +106,6 @@
             ImprimirClientes.UseVisualStyleBackColor = true;
             ImprimirClientes.Click += materialButton1_Click;
             // 
-            // label1
-            // 
-            label1.Anchor = AnchorStyles.Right;
-            label1.AutoSize = true;
-            label1.Location = new Point(376, 24);
-            label1.Name = "label1";
-            label1.Size = new Size(51, 15);
-            label1.TabIndex = 11;
-            label1.Text = "Mostrar:";
-            // 
             // cmb_clientes
             // 
             cmb_clientes.Anchor = AnchorStyles.None;
@@ -103,16 +116,6 @@
             cmb_clientes.Size = new Size(180, 23);
             cmb_clientes.TabIndex = 12;
             cmb_clientes.SelectedIndexChanged += cmb_clientes_SelectedIndexChanged;
-            // 
-            // label2
-            // 
-            label2.Anchor = AnchorStyles.Right;
-            label2.AutoSize = true;
-            label2.Location = new Point(382, 88);
-            label2.Name = "label2";
-            label2.Size = new Size(45, 15);
-            label2.TabIndex = 13;
-            label2.Text = "Buscar:";
             // 
             // text_buscar
             // 

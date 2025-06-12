@@ -367,11 +367,11 @@
             // 
             lblFecha.Anchor = AnchorStyles.None;
             lblFecha.AutoSize = true;
-            lblFecha.Location = new Point(515, 14);
+            lblFecha.Location = new Point(510, 14);
             lblFecha.Name = "lblFecha";
-            lblFecha.Size = new Size(38, 15);
+            lblFecha.Size = new Size(47, 15);
             lblFecha.TabIndex = 25;
-            lblFecha.Text = "label1";
+            lblFecha.Text = "Fecha...";
             // 
             // materialLabel10
             // 
@@ -511,9 +511,9 @@
             // 
             // Buscarcliente
             // 
-            Buscarcliente.Anchor = AnchorStyles.Left;
+            Buscarcliente.Anchor = AnchorStyles.None;
             Buscarcliente.Image = (Image)resources.GetObject("Buscarcliente.Image");
-            Buscarcliente.Location = new Point(366, 51);
+            Buscarcliente.Location = new Point(391, 51);
             Buscarcliente.Margin = new Padding(3, 2, 3, 2);
             Buscarcliente.Name = "Buscarcliente";
             Buscarcliente.Size = new Size(37, 30);
@@ -528,7 +528,7 @@
             materialLabel11.AutoSize = true;
             materialLabel11.Depth = 0;
             materialLabel11.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel11.Location = new Point(21, 19);
+            materialLabel11.Location = new Point(26, 19);
             materialLabel11.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel11.Name = "materialLabel11";
             materialLabel11.Size = new Size(80, 19);
@@ -541,11 +541,12 @@
             // 
             lbl_costoDescuento.Anchor = AnchorStyles.None;
             lbl_costoDescuento.AutoSize = true;
+            lbl_costoDescuento.BackColor = SystemColors.Control;
             lbl_costoDescuento.Cursor = Cursors.IBeam;
             lbl_costoDescuento.Depth = 0;
             lbl_costoDescuento.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
             lbl_costoDescuento.ForeColor = SystemColors.ControlText;
-            lbl_costoDescuento.Location = new Point(136, 19);
+            lbl_costoDescuento.Location = new Point(143, 19);
             lbl_costoDescuento.MouseState = MaterialSkin.MouseState.HOVER;
             lbl_costoDescuento.Name = "lbl_costoDescuento";
             lbl_costoDescuento.Size = new Size(41, 19);
@@ -559,7 +560,7 @@
             materialLabel1.AutoSize = true;
             materialLabel1.Depth = 0;
             materialLabel1.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel1.Location = new Point(22, 38);
+            materialLabel1.Location = new Point(27, 38);
             materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel1.Name = "materialLabel1";
             materialLabel1.Size = new Size(79, 19);
@@ -573,7 +574,7 @@
             lbl_TotalNeto.Cursor = Cursors.IBeam;
             lbl_TotalNeto.Depth = 0;
             lbl_TotalNeto.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lbl_TotalNeto.Location = new Point(136, 38);
+            lbl_TotalNeto.Location = new Point(143, 38);
             lbl_TotalNeto.MouseState = MaterialSkin.MouseState.HOVER;
             lbl_TotalNeto.Name = "lbl_TotalNeto";
             lbl_TotalNeto.Size = new Size(41, 19);
@@ -587,7 +588,7 @@
             lbl_Subtotal.AutoSize = true;
             lbl_Subtotal.Depth = 0;
             lbl_Subtotal.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lbl_Subtotal.Location = new Point(136, 0);
+            lbl_Subtotal.Location = new Point(143, 0);
             lbl_Subtotal.MouseState = MaterialSkin.MouseState.HOVER;
             lbl_Subtotal.Name = "lbl_Subtotal";
             lbl_Subtotal.Size = new Size(41, 19);
@@ -600,7 +601,7 @@
             materialLabel9.AutoSize = true;
             materialLabel9.Depth = 0;
             materialLabel9.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel9.Location = new Point(27, 0);
+            materialLabel9.Location = new Point(32, 0);
             materialLabel9.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel9.Name = "materialLabel9";
             materialLabel9.Size = new Size(74, 19);
@@ -610,9 +611,9 @@
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.ColumnCount = 3;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 13.8344231F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 62.7451F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23.3510933F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.4062395F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65.29405F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24.2997074F));
             tableLayoutPanel3.Controls.Add(materialButton1, 2, 0);
             tableLayoutPanel3.Controls.Add(tbl_Cotizacion, 1, 0);
             tableLayoutPanel3.Controls.Add(tableLayoutPanel2, 2, 2);
@@ -638,7 +639,7 @@
             materialButton1.Depth = 0;
             materialButton1.HighEmphasis = true;
             materialButton1.Icon = null;
-            materialButton1.Location = new Point(707, 23);
+            materialButton1.Location = new Point(698, 23);
             materialButton1.Margin = new Padding(4);
             materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
             materialButton1.Name = "materialButton1";
@@ -655,11 +656,11 @@
             // 
             tbl_Cotizacion.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tbl_Cotizacion.Dock = DockStyle.Fill;
-            tbl_Cotizacion.Location = new Point(130, 2);
+            tbl_Cotizacion.Location = new Point(98, 2);
             tbl_Cotizacion.Margin = new Padding(3, 2, 3, 2);
             tbl_Cotizacion.Name = "tbl_Cotizacion";
             tbl_Cotizacion.RowHeadersWidth = 51;
-            tbl_Cotizacion.Size = new Size(570, 79);
+            tbl_Cotizacion.Size = new Size(593, 79);
             tbl_Cotizacion.TabIndex = 8;
             tbl_Cotizacion.CellClick += tbl_Cotizacion_CellClick;
             tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
@@ -676,14 +677,14 @@
             tableLayoutPanel2.Controls.Add(materialLabel1, 0, 2);
             tableLayoutPanel2.Controls.Add(lbl_TotalNeto, 1, 2);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(706, 102);
+            tableLayoutPanel2.Location = new Point(697, 102);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 4;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.Size = new Size(209, 78);
+            tableLayoutPanel2.Size = new Size(218, 78);
             tableLayoutPanel2.TabIndex = 10;
             // 
             // Txt_observaciones
@@ -701,7 +702,7 @@
             Txt_observaciones.HideSelection = true;
             Txt_observaciones.InsertKeyMode = InsertKeyMode.Default;
             Txt_observaciones.LeadingIcon = null;
-            Txt_observaciones.Location = new Point(130, 117);
+            Txt_observaciones.Location = new Point(98, 117);
             Txt_observaciones.Mask = "";
             Txt_observaciones.MaxLength = 32767;
             Txt_observaciones.MouseState = MaterialSkin.MouseState.OUT;
@@ -718,7 +719,7 @@
             Txt_observaciones.SelectionLength = 0;
             Txt_observaciones.SelectionStart = 0;
             Txt_observaciones.ShortcutsEnabled = true;
-            Txt_observaciones.Size = new Size(570, 48);
+            Txt_observaciones.Size = new Size(593, 48);
             Txt_observaciones.SkipLiterals = true;
             Txt_observaciones.TabIndex = 32;
             Txt_observaciones.TabStop = false;
@@ -735,7 +736,7 @@
             lbl_observaciones.AutoSize = true;
             lbl_observaciones.Depth = 0;
             lbl_observaciones.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lbl_observaciones.Location = new Point(67, 131);
+            lbl_observaciones.Location = new Point(35, 131);
             lbl_observaciones.MouseState = MaterialSkin.MouseState.HOVER;
             lbl_observaciones.Name = "lbl_observaciones";
             lbl_observaciones.Size = new Size(57, 19);

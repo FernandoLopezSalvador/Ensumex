@@ -99,14 +99,10 @@ namespace Ensumex.Views
                 CargarProductoss(null);
             }
         }
-
         private void ImprimirProd_Click(object sender, EventArgs e)
         {
             PDFClients.ExportarClientes(tabla_productos, "Productos.xlsx");
         }
-
-
-
         private void tabla_productos_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)

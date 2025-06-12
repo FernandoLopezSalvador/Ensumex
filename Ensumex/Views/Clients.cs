@@ -99,7 +99,6 @@ namespace Ensumex.Views
                 }
             }
         }
-
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             var searchText = text_buscar.Text.ToLower();
@@ -115,7 +114,6 @@ namespace Ensumex.Views
             }
 
         }
-
         public string ClienteSeleccionadoNombre { get; private set; }
         public string ClienteSeleccionadoCalle { get; private set; }
     }
