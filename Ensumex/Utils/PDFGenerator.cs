@@ -75,7 +75,7 @@ namespace Ensumex.Utils
                 PdfPTable tabla = new PdfPTable(5);
                 tabla.WidthPercentage = 100;
                 tabla.SetWidths(new float[] {1f, 3f, 1.5f, .8f, 1f});
-                string[] headers = {"CLAVE", "DESCRICIÓN", "PRECIO", "Cantidad", "Tasa de cambio"};
+                string[] headers = {"Clave", "Descripción", "Precio", "Cantidad", "Tasa de cambio"};
                 foreach (string header in headers)
                 {
                     PdfPCell celda = new PdfPCell(new Phrase(header, fontNormal));
@@ -112,8 +112,8 @@ namespace Ensumex.Utils
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
                     if (fila.IsNewRow) continue;
-                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
-                    if (descripcion.Contains("CALENTADOR"))
+                        string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
+                    if (descripcion.Contains("CALENT"))
                     {
                         contieneCalentador = true;
                         break;
@@ -163,7 +163,6 @@ namespace Ensumex.Utils
                 doc.Add(tablaFirma);
                 doc.Add(new Paragraph("Av. Lázaro Cárdenas 104-B. ", fontNormal) { Alignment = Element.ALIGN_CENTER });
                 doc.Add(new Paragraph("Sta. Lucía del Camino, Oaxaca. Tels: 951-206-6895 y 951-206-0293", fontNormal) { Alignment = Element.ALIGN_CENTER });
-                
                 doc.Close();
                 MessageBox.Show("📄 PDF generado correctamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

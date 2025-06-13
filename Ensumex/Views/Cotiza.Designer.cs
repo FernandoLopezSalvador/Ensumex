@@ -43,13 +43,13 @@
             btn_AgregarProducto = new MaterialSkin.Controls.MaterialButton();
             Btn_guardarCotizacion = new MaterialSkin.Controls.MaterialButton();
             lblFecha = new Label();
+            lbl_Bases = new MaterialSkin.Controls.MaterialLabel();
+            txt_Bases = new MaterialSkin.Controls.MaterialMaskedTextBox();
+            Buscarcliente = new PictureBox();
             materialLabel10 = new MaterialSkin.Controls.MaterialLabel();
             cmb_Descuento = new MaterialSkin.Controls.MaterialComboBox();
             txt_Direccioncliente = new MaterialSkin.Controls.MaterialTextBox2();
             materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
-            lbl_Bases = new MaterialSkin.Controls.MaterialLabel();
-            txt_Bases = new MaterialSkin.Controls.MaterialMaskedTextBox();
-            Buscarcliente = new PictureBox();
             materialLabel11 = new MaterialSkin.Controls.MaterialLabel();
             lbl_costoDescuento = new MaterialSkin.Controls.MaterialLabel();
             materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
@@ -91,13 +91,13 @@
             tableLayoutPanel1.Controls.Add(btn_AgregarProducto, 5, 4);
             tableLayoutPanel1.Controls.Add(Btn_guardarCotizacion, 4, 4);
             tableLayoutPanel1.Controls.Add(lblFecha, 3, 0);
-            tableLayoutPanel1.Controls.Add(materialLabel10, 2, 3);
-            tableLayoutPanel1.Controls.Add(cmb_Descuento, 3, 3);
-            tableLayoutPanel1.Controls.Add(txt_Direccioncliente, 5, 1);
-            tableLayoutPanel1.Controls.Add(materialLabel5, 4, 1);
             tableLayoutPanel1.Controls.Add(lbl_Bases, 0, 3);
             tableLayoutPanel1.Controls.Add(txt_Bases, 1, 3);
             tableLayoutPanel1.Controls.Add(Buscarcliente, 2, 1);
+            tableLayoutPanel1.Controls.Add(materialLabel10, 4, 2);
+            tableLayoutPanel1.Controls.Add(cmb_Descuento, 5, 2);
+            tableLayoutPanel1.Controls.Add(txt_Direccioncliente, 5, 1);
+            tableLayoutPanel1.Controls.Add(materialLabel5, 4, 1);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
@@ -373,87 +373,6 @@
             lblFecha.TabIndex = 25;
             lblFecha.Text = "Fecha...";
             // 
-            // materialLabel10
-            // 
-            materialLabel10.Anchor = AnchorStyles.Right;
-            materialLabel10.AutoSize = true;
-            materialLabel10.Depth = 0;
-            materialLabel10.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel10.Location = new Point(374, 144);
-            materialLabel10.MouseState = MaterialSkin.MouseState.HOVER;
-            materialLabel10.Name = "materialLabel10";
-            materialLabel10.Size = new Size(80, 19);
-            materialLabel10.TabIndex = 18;
-            materialLabel10.Text = "Descuento:";
-            // 
-            // cmb_Descuento
-            // 
-            cmb_Descuento.AutoResize = false;
-            cmb_Descuento.BackColor = Color.FromArgb(255, 255, 255);
-            cmb_Descuento.Depth = 0;
-            cmb_Descuento.Dock = DockStyle.Fill;
-            cmb_Descuento.DrawMode = DrawMode.OwnerDrawVariable;
-            cmb_Descuento.DropDownHeight = 174;
-            cmb_Descuento.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmb_Descuento.DropDownWidth = 121;
-            cmb_Descuento.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
-            cmb_Descuento.ForeColor = Color.FromArgb(222, 0, 0, 0);
-            cmb_Descuento.FormattingEnabled = true;
-            cmb_Descuento.IntegralHeight = false;
-            cmb_Descuento.ItemHeight = 43;
-            cmb_Descuento.Location = new Point(460, 134);
-            cmb_Descuento.Margin = new Padding(3, 2, 3, 2);
-            cmb_Descuento.MaxDropDownItems = 4;
-            cmb_Descuento.MouseState = MaterialSkin.MouseState.OUT;
-            cmb_Descuento.Name = "cmb_Descuento";
-            cmb_Descuento.Size = new Size(148, 49);
-            cmb_Descuento.StartIndex = 0;
-            cmb_Descuento.TabIndex = 7;
-            cmb_Descuento.SelectedIndexChanged += cmb_Descuento_SelectedIndexChanged;
-            // 
-            // txt_Direccioncliente
-            // 
-            txt_Direccioncliente.AnimateReadOnly = false;
-            txt_Direccioncliente.BackgroundImageLayout = ImageLayout.None;
-            txt_Direccioncliente.CharacterCasing = CharacterCasing.Normal;
-            txt_Direccioncliente.Depth = 0;
-            txt_Direccioncliente.Dock = DockStyle.Fill;
-            txt_Direccioncliente.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
-            txt_Direccioncliente.HideSelection = true;
-            txt_Direccioncliente.LeadingIcon = null;
-            txt_Direccioncliente.Location = new Point(767, 46);
-            txt_Direccioncliente.Margin = new Padding(3, 2, 3, 2);
-            txt_Direccioncliente.MaxLength = 32767;
-            txt_Direccioncliente.MouseState = MaterialSkin.MouseState.OUT;
-            txt_Direccioncliente.Name = "txt_Direccioncliente";
-            txt_Direccioncliente.PasswordChar = '\0';
-            txt_Direccioncliente.PrefixSuffixText = null;
-            txt_Direccioncliente.ReadOnly = false;
-            txt_Direccioncliente.RightToLeft = RightToLeft.No;
-            txt_Direccioncliente.SelectedText = "";
-            txt_Direccioncliente.SelectionLength = 0;
-            txt_Direccioncliente.SelectionStart = 0;
-            txt_Direccioncliente.ShortcutsEnabled = true;
-            txt_Direccioncliente.Size = new Size(148, 48);
-            txt_Direccioncliente.TabIndex = 3;
-            txt_Direccioncliente.TabStop = false;
-            txt_Direccioncliente.TextAlign = HorizontalAlignment.Left;
-            txt_Direccioncliente.TrailingIcon = null;
-            txt_Direccioncliente.UseSystemPasswordChar = false;
-            // 
-            // materialLabel5
-            // 
-            materialLabel5.Anchor = AnchorStyles.Right;
-            materialLabel5.AutoSize = true;
-            materialLabel5.Depth = 0;
-            materialLabel5.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel5.Location = new Point(690, 57);
-            materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
-            materialLabel5.Name = "materialLabel5";
-            materialLabel5.Size = new Size(71, 19);
-            materialLabel5.TabIndex = 7;
-            materialLabel5.Text = "Dirección:";
-            // 
             // lbl_Bases
             // 
             lbl_Bases.Anchor = AnchorStyles.Right;
@@ -511,16 +430,97 @@
             // 
             // Buscarcliente
             // 
-            Buscarcliente.Anchor = AnchorStyles.None;
+            Buscarcliente.Anchor = AnchorStyles.Left;
             Buscarcliente.Image = (Image)resources.GetObject("Buscarcliente.Image");
-            Buscarcliente.Location = new Point(391, 51);
+            Buscarcliente.Location = new Point(366, 51);
             Buscarcliente.Margin = new Padding(3, 2, 3, 2);
             Buscarcliente.Name = "Buscarcliente";
-            Buscarcliente.Size = new Size(37, 30);
+            Buscarcliente.Size = new Size(39, 30);
             Buscarcliente.SizeMode = PictureBoxSizeMode.Zoom;
             Buscarcliente.TabIndex = 11;
             Buscarcliente.TabStop = false;
             Buscarcliente.Click += pictureBox1_Click;
+            // 
+            // materialLabel10
+            // 
+            materialLabel10.Anchor = AnchorStyles.Right;
+            materialLabel10.AutoSize = true;
+            materialLabel10.Depth = 0;
+            materialLabel10.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            materialLabel10.Location = new Point(681, 101);
+            materialLabel10.MouseState = MaterialSkin.MouseState.HOVER;
+            materialLabel10.Name = "materialLabel10";
+            materialLabel10.Size = new Size(80, 19);
+            materialLabel10.TabIndex = 18;
+            materialLabel10.Text = "Descuento:";
+            // 
+            // cmb_Descuento
+            // 
+            cmb_Descuento.AutoResize = false;
+            cmb_Descuento.BackColor = Color.FromArgb(255, 255, 255);
+            cmb_Descuento.Depth = 0;
+            cmb_Descuento.Dock = DockStyle.Fill;
+            cmb_Descuento.DrawMode = DrawMode.OwnerDrawVariable;
+            cmb_Descuento.DropDownHeight = 174;
+            cmb_Descuento.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmb_Descuento.DropDownWidth = 121;
+            cmb_Descuento.Font = new Font("Microsoft Sans Serif", 14F, FontStyle.Bold, GraphicsUnit.Pixel);
+            cmb_Descuento.ForeColor = Color.FromArgb(222, 0, 0, 0);
+            cmb_Descuento.FormattingEnabled = true;
+            cmb_Descuento.IntegralHeight = false;
+            cmb_Descuento.ItemHeight = 43;
+            cmb_Descuento.Location = new Point(767, 91);
+            cmb_Descuento.Margin = new Padding(3, 2, 3, 2);
+            cmb_Descuento.MaxDropDownItems = 4;
+            cmb_Descuento.MouseState = MaterialSkin.MouseState.OUT;
+            cmb_Descuento.Name = "cmb_Descuento";
+            cmb_Descuento.Size = new Size(148, 49);
+            cmb_Descuento.StartIndex = 0;
+            cmb_Descuento.TabIndex = 7;
+            cmb_Descuento.SelectedIndexChanged += cmb_Descuento_SelectedIndexChanged;
+            // 
+            // txt_Direccioncliente
+            // 
+            txt_Direccioncliente.AnimateReadOnly = false;
+            txt_Direccioncliente.BackgroundImageLayout = ImageLayout.None;
+            txt_Direccioncliente.CharacterCasing = CharacterCasing.Normal;
+            txt_Direccioncliente.Depth = 0;
+            txt_Direccioncliente.Dock = DockStyle.Fill;
+            txt_Direccioncliente.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            txt_Direccioncliente.HideSelection = true;
+            txt_Direccioncliente.LeadingIcon = null;
+            txt_Direccioncliente.Location = new Point(767, 46);
+            txt_Direccioncliente.Margin = new Padding(3, 2, 3, 2);
+            txt_Direccioncliente.MaxLength = 32767;
+            txt_Direccioncliente.MouseState = MaterialSkin.MouseState.OUT;
+            txt_Direccioncliente.Name = "txt_Direccioncliente";
+            txt_Direccioncliente.PasswordChar = '\0';
+            txt_Direccioncliente.PrefixSuffixText = null;
+            txt_Direccioncliente.ReadOnly = false;
+            txt_Direccioncliente.RightToLeft = RightToLeft.No;
+            txt_Direccioncliente.SelectedText = "";
+            txt_Direccioncliente.SelectionLength = 0;
+            txt_Direccioncliente.SelectionStart = 0;
+            txt_Direccioncliente.ShortcutsEnabled = true;
+            txt_Direccioncliente.Size = new Size(148, 48);
+            txt_Direccioncliente.TabIndex = 3;
+            txt_Direccioncliente.TabStop = false;
+            txt_Direccioncliente.TextAlign = HorizontalAlignment.Left;
+            txt_Direccioncliente.TrailingIcon = null;
+            txt_Direccioncliente.UseSystemPasswordChar = false;
+            // 
+            // materialLabel5
+            // 
+            materialLabel5.Anchor = AnchorStyles.Right;
+            materialLabel5.AutoSize = true;
+            materialLabel5.Depth = 0;
+            materialLabel5.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            materialLabel5.Location = new Point(690, 57);
+            materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
+            materialLabel5.Name = "materialLabel5";
+            materialLabel5.Size = new Size(71, 19);
+            materialLabel5.TabIndex = 7;
+            materialLabel5.Text = "Dirección:";
             // 
             // materialLabel11
             // 

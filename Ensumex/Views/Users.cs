@@ -26,8 +26,8 @@ namespace Ensumex.Views
         }
         private void ConfigurarTablaUsuarios()
         {
-            Tabla_usuarios.DefaultCellStyle.ForeColor = Color.Black; // Color de texto blanco
-            Tabla_usuarios.BackgroundColor = Color.FromArgb(45, 45, 48); // Fondo oscuro
+            Tabla_usuarios.DefaultCellStyle.ForeColor = Color.Black; 
+            Tabla_usuarios.BackgroundColor = Color.FromArgb(45, 45, 48); 
         }
         private void btn_nuevoUsuario_Click(object sender, EventArgs e)
         {
@@ -48,7 +48,6 @@ namespace Ensumex.Views
                     }
                     else
                     {
-                        // Crear un nuevo objeto de Usuarios y asignar los valores de los campos de texto
                         Usuarios usuarios = new Usuarios()
                         {
                             Usuario = textnewUsuario.Text.Trim(),
@@ -57,7 +56,6 @@ namespace Ensumex.Views
                             Posision = cmb_NewPosicion.SelectedItem.ToString(),
                             Correo = textNewCorreo.Text.Trim()
                         };
-                        // Crear una instancia del controlador de usuarios y guardar el nuevo usuario
                         UsuarioController controller = new UsuarioController();
                         bool guardado = controller.GuardarUsuario(usuarios);
                         if (guardado)
@@ -84,17 +82,14 @@ namespace Ensumex.Views
             }
             catch (FormatException ex)
             {
-                // Manejar errores de formato, como una conversión incorrecta
                 MessageBox.Show($"Error de formato: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (SqlException ex)
             {
-                // Manejar errores específicos de la base de datos
                 MessageBox.Show($"Error de base de datos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                // Capturar cualquier otra excepción no prevista
                 MessageBox.Show($"Ocurrió un error inesperado: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -131,7 +126,6 @@ namespace Ensumex.Views
                 UsuarioDao modelo = new UsuarioDao();
                 DataTable dt = modelo.ObtenerUsuarios();
                 Tabla_usuarios.DataSource = dt;
-
                 if (Tabla_usuarios.Columns["Editar"] == null)
                 {
                     DataGridViewButtonColumn btnEditar = new DataGridViewButtonColumn();

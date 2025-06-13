@@ -227,7 +227,7 @@ namespace Ensumex.Views
         {
             try
             {
-                if (e.RowIndex < 0 || e.RowIndex >= tbl_Cotizacion.Rows.Count) return; // Evitar errores de índice
+                if (e.RowIndex < 0 || e.RowIndex >= tbl_Cotizacion.Rows.Count) return;
                 if (tbl_Cotizacion.Columns[e.ColumnIndex].Name == "Eliminar")
                 {
                     // Confirmar eliminación
@@ -352,7 +352,6 @@ namespace Ensumex.Views
         }
         private void materialLabel11_Click(object sender, EventArgs e)
         {
-
         }
         private void materialButton1_Click(object sender, EventArgs e)
         {
@@ -362,7 +361,6 @@ namespace Ensumex.Views
                 {
                     Dock = DockStyle.Fill
                 };
-
                 productosForm.Controls.Add(productControl);
                 productosForm.StartPosition = FormStartPosition.CenterParent;
                 productosForm.Size = new Size(800, 600);
@@ -386,7 +384,6 @@ namespace Ensumex.Views
                                 "Tasa de cambio",
                                 "1"
                             );
-
                             if (!decimal.TryParse(input, out decimal tasaInput) || tasaInput <= 0)
                             {
                                 MessageBox.Show("Tasa inválida. Se usará 1 por defecto.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -413,7 +410,6 @@ namespace Ensumex.Views
                         }
                         cantidad = cantidadFinal;
                         decimal subtotal = precio * cantidad * tasaCambio;
-
                         // Verificar si el producto ya está en la tabla
                         foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                         {
@@ -435,20 +431,12 @@ namespace Ensumex.Views
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Error al agregar el producto:\n" + ex.Message, "Err" +
-                            "" +
-                            "" +
-                            "" +
-                            "" +
-                            "" +
-                            "or", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Error al agregar el producto:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 };
-
                 productosForm.ShowDialog();
             }
         }
-
         private void Txt_observaciones_MouseEnter(object sender, EventArgs e)
         {
             if (Txt_observaciones.Text == "Ingrese notas adicionales .....")
@@ -456,7 +444,6 @@ namespace Ensumex.Views
                 Txt_observaciones.Text = "";
             }
         }
-
         private void tbl_Cotizacion_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -468,7 +455,6 @@ namespace Ensumex.Views
                 }
             }
         }
-
         private void tbl_Cotizacion_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (tbl_Cotizacion.IsCurrentCellDirty &&
