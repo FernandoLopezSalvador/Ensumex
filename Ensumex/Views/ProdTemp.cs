@@ -60,7 +60,6 @@ namespace Ensumex.Views
                 return;
             }
             MessageBox.Show("Producto Agregado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            // Aquí está la clave:
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

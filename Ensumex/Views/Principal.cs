@@ -159,6 +159,7 @@ namespace Ensumex.Forms
         {
         }
 
+        // Evento para el botón de sincronización
         private async void btn_sincronizar_Click(object sender, EventArgs e)
         {
             btn_sincronizar.Enabled = false;
@@ -169,6 +170,7 @@ namespace Ensumex.Forms
             {
                 await Task.Run(() =>
                 {
+                    // Llamar al método de sincronización de productos y clientes
                     SincronizarProductosYClientes();
                 });
 
@@ -184,6 +186,7 @@ namespace Ensumex.Forms
                 progressBar1.Value = 0;
             }
         }
+        // Método para sincronizar productos y clientes desde Firebird a SQL Server
         private void SincronizarProductosYClientes()
         {
             // 1. Traer productos de Firebird

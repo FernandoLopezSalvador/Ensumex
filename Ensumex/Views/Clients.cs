@@ -52,6 +52,7 @@ namespace Ensumex.Views
         }
         private void cmb_clientes_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Limpiar la tabla antes de cargar nuevos datos
             var selectedValue = cmb_clientes.SelectedItem.ToString();
             if (selectedValue == "Todos")
             {
@@ -59,6 +60,7 @@ namespace Ensumex.Views
             }
             else
             {
+                // Convertir el valor seleccionado a entero y cargar los clientes correspondientes
                 int count = int.Parse(selectedValue);
                 var clienteService = new ClienteServices1();
                 var clientes = clienteService.ObtenerClientes().Take(count).ToList();
@@ -75,6 +77,7 @@ namespace Ensumex.Views
         }
         private void tabla_clientes_CellDoubleClick_1(object sender, DataGridViewCellEventArgs e)
         {
+            // Evitar errores al hacer clic en encabezados
             if (e.RowIndex >= 0)
             {
                 var row = tabla_clientes.Rows[e.RowIndex];
@@ -101,6 +104,7 @@ namespace Ensumex.Views
         }
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            // Filtrar la tabla de clientes según el texto ingresado
             var searchText = text_buscar.Text.ToLower();
             foreach (DataGridViewRow row in tabla_clientes.Rows)
             {

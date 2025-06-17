@@ -34,6 +34,7 @@ namespace Ensumex.Views
 
         private void CargarProductoss(int? limite = 100)
         {
+            // Limpia la tabla antes de cargar nuevos datos y carga los productos
             try
             {
                 var productoService = new ProductoServices1();
@@ -54,6 +55,7 @@ namespace Ensumex.Views
                 MessageBox.Show($"Error al cargar productos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        // Método para buscar en el DataGridView
         private void BuscarEnGrid(string texto)
         {
             if (string.IsNullOrWhiteSpace(texto))
@@ -88,6 +90,7 @@ namespace Ensumex.Views
             cm.ResumeBinding();
             tabla_productos.ResumeLayout();
         }
+        // Evento para manejar el cambio de selección en el ComboBox de productos
         private void cmb_productos_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmb_productos.SelectedItem is int limite)
@@ -99,10 +102,12 @@ namespace Ensumex.Views
                 CargarProductoss(null);
             }
         }
+        // Evento para manejar el clic en el botón para exportar productos a Excel
         private void ImprimirProd_Click(object sender, EventArgs e)
         {
             PDFClients.ExportarClientes(tabla_productos, "Productos.xlsx");
         }
+        // Evento para manejar el doble clic en una celda del DataGridView y seleccionar un producto
         private void tabla_productos_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)

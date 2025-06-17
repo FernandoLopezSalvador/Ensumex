@@ -1,5 +1,6 @@
 ﻿using Ensumex.Controllers;
 using Ensumex.Models;
+using Ensumex.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,20 +22,68 @@ namespace Ensumex.Views
         {
             InitializeComponent();
             Panel_Nuevousuario.Visible = false;
-            ConfigurarTablaUsuarios();
+            TablaFormat.AplicarEstilosTabla(Tabla_usuarios);
             CargarUsuariosEnTabla();
-        }
-        private void ConfigurarTablaUsuarios()
-        {
-            Tabla_usuarios.DefaultCellStyle.ForeColor = Color.Black; 
-            Tabla_usuarios.BackgroundColor = Color.FromArgb(45, 45, 48); 
         }
         private void btn_nuevoUsuario_Click(object sender, EventArgs e)
         {
             Panel_Nuevousuario.Visible = true;
         }
-        [Obsolete]
-        private void btn_GuardarUsuario_Click(object sender, EventArgs e)
+        private bool ValidarCorreo(string correo)
+        {
+            // Expresión regular para validar un correo electrónico
+            string patronCorreo = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            // Verifica si el correo coincide con el patrón
+            return Regex.IsMatch(correo, patronCorreo);
+        }
+        private void btn_Cancelar_Click(object sender, EventArgs e)
+        {
+            Panel_Nuevousuario.Visible = false;
+        }
+        private void Tabla_usuarios_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Evitar errores al hacer clic en encabezados
+            if (e.RowIndex < 0)
+                return;
+            string usuario = Tabla_usuarios.Rows[e.RowIndex].Cells["Usuario"].Value.ToString();
+
+            if (Tabla_usuarios.Columns[e.ColumnIndex].Name == "Editar")
+            {
+                MessageBox.Show("Editar usuario: " + usuario);
+            }
+        }
+        private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
+        {
+        }
+        // Método para cargar los usuarios en la tabla
+        private void CargarUsuariosEnTabla()
+        {
+            try
+            {
+                UsuarioDao modelo = new UsuarioDao();
+                DataTable dt = modelo.ObtenerUsuarios();
+                Tabla_usuarios.DataSource = dt;
+                if (Tabla_usuarios.Columns["Editar"] == null)
+                {
+                    DataGridViewButtonColumn btnEditar = new DataGridViewButtonColumn();
+                    btnEditar.Name = "Editar";
+                    btnEditar.HeaderText = "Editar";
+                    btnEditar.Text = "Editar";
+                    btnEditar.UseColumnTextForButtonValue = true;
+                    Tabla_usuarios.Columns.Add(btnEditar);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al cargar los usuarios:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void btn_GuardarUsuario_Click_1(object sender, EventArgs e)
+        {
+        }
+
+        private void btn_GuardarUsuario_Click_2(object sender, EventArgs e)
         {
             try
             {
@@ -92,58 +141,6 @@ namespace Ensumex.Views
             {
                 MessageBox.Show($"Ocurrió un error inesperado: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-        private bool ValidarCorreo(string correo)
-        {
-            // Expresión regular para validar un correo electrónico
-            string patronCorreo = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-            // Verifica si el correo coincide con el patrón
-            return Regex.IsMatch(correo, patronCorreo);
-        }
-        private void btn_Cancelar_Click(object sender, EventArgs e)
-        {
-            Panel_Nuevousuario.Visible = false;
-        }
-        private void Tabla_usuarios_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Evitar errores al hacer clic en encabezados
-            if (e.RowIndex < 0)
-                return;
-            string usuario = Tabla_usuarios.Rows[e.RowIndex].Cells["Usuario"].Value.ToString();
-
-            if (Tabla_usuarios.Columns[e.ColumnIndex].Name == "Editar")
-            {
-                MessageBox.Show("Editar usuario: " + usuario);
-            }
-        }
-        private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
-        {
-        }
-        private void CargarUsuariosEnTabla()
-        {
-            try
-            {
-                UsuarioDao modelo = new UsuarioDao();
-                DataTable dt = modelo.ObtenerUsuarios();
-                Tabla_usuarios.DataSource = dt;
-                if (Tabla_usuarios.Columns["Editar"] == null)
-                {
-                    DataGridViewButtonColumn btnEditar = new DataGridViewButtonColumn();
-                    btnEditar.Name = "Editar";
-                    btnEditar.HeaderText = "Editar";
-                    btnEditar.Text = "Editar";
-                    btnEditar.UseColumnTextForButtonValue = true;
-                    Tabla_usuarios.Columns.Add(btnEditar);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ocurrió un error al cargar los usuarios:\n" + ex.Message,
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        private void btn_GuardarUsuario_Click_1(object sender, EventArgs e)
-        {
         }
     }
 }

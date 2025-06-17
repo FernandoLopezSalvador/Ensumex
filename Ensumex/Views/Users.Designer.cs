@@ -159,6 +159,7 @@
             btn_GuardarUsuario.TabIndex = 15;
             btn_GuardarUsuario.Text = "Guardar";
             btn_GuardarUsuario.UseVisualStyleBackColor = false;
+            btn_GuardarUsuario.Click += btn_GuardarUsuario_Click_2;
             // 
             // btn_Cancelar
             // 

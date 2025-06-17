@@ -60,8 +60,8 @@
             materialButton1 = new MaterialSkin.Controls.MaterialButton();
             tbl_Cotizacion = new DataGridView();
             tableLayoutPanel2 = new TableLayoutPanel();
-            Txt_observaciones = new MaterialSkin.Controls.MaterialMaskedTextBox();
             lbl_observaciones = new MaterialSkin.Controls.MaterialLabel();
+            Txt_observaciones = new TextBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Buscarcliente).BeginInit();
             tableLayoutPanel3.SuspendLayout();
@@ -617,8 +617,8 @@
             tableLayoutPanel3.Controls.Add(materialButton1, 2, 0);
             tableLayoutPanel3.Controls.Add(tbl_Cotizacion, 1, 0);
             tableLayoutPanel3.Controls.Add(tableLayoutPanel2, 2, 2);
-            tableLayoutPanel3.Controls.Add(Txt_observaciones, 1, 2);
             tableLayoutPanel3.Controls.Add(lbl_observaciones, 0, 2);
+            tableLayoutPanel3.Controls.Add(Txt_observaciones, 1, 2);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(0, 223);
             tableLayoutPanel3.Margin = new Padding(3, 2, 3, 2);
@@ -687,49 +687,6 @@
             tableLayoutPanel2.Size = new Size(218, 78);
             tableLayoutPanel2.TabIndex = 10;
             // 
-            // Txt_observaciones
-            // 
-            Txt_observaciones.AllowPromptAsInput = true;
-            Txt_observaciones.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            Txt_observaciones.AnimateReadOnly = false;
-            Txt_observaciones.AsciiOnly = false;
-            Txt_observaciones.BackgroundImageLayout = ImageLayout.None;
-            Txt_observaciones.BeepOnError = false;
-            Txt_observaciones.CutCopyMaskFormat = MaskFormat.IncludeLiterals;
-            Txt_observaciones.Depth = 0;
-            Txt_observaciones.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
-            Txt_observaciones.HidePromptOnLeave = false;
-            Txt_observaciones.HideSelection = true;
-            Txt_observaciones.InsertKeyMode = InsertKeyMode.Default;
-            Txt_observaciones.LeadingIcon = null;
-            Txt_observaciones.Location = new Point(98, 117);
-            Txt_observaciones.Mask = "";
-            Txt_observaciones.MaxLength = 32767;
-            Txt_observaciones.MouseState = MaterialSkin.MouseState.OUT;
-            Txt_observaciones.Name = "Txt_observaciones";
-            Txt_observaciones.PasswordChar = '\0';
-            Txt_observaciones.PrefixSuffixText = null;
-            Txt_observaciones.PromptChar = '_';
-            Txt_observaciones.ReadOnly = false;
-            Txt_observaciones.RejectInputOnFirstFailure = false;
-            Txt_observaciones.ResetOnPrompt = true;
-            Txt_observaciones.ResetOnSpace = true;
-            Txt_observaciones.RightToLeft = RightToLeft.No;
-            Txt_observaciones.SelectedText = "";
-            Txt_observaciones.SelectionLength = 0;
-            Txt_observaciones.SelectionStart = 0;
-            Txt_observaciones.ShortcutsEnabled = true;
-            Txt_observaciones.Size = new Size(593, 48);
-            Txt_observaciones.SkipLiterals = true;
-            Txt_observaciones.TabIndex = 32;
-            Txt_observaciones.TabStop = false;
-            Txt_observaciones.TextAlign = HorizontalAlignment.Left;
-            Txt_observaciones.TextMaskFormat = MaskFormat.IncludeLiterals;
-            Txt_observaciones.TrailingIcon = null;
-            Txt_observaciones.UseSystemPasswordChar = false;
-            Txt_observaciones.ValidatingType = null;
-            Txt_observaciones.MouseEnter += Txt_observaciones_MouseEnter;
-            // 
             // lbl_observaciones
             // 
             lbl_observaciones.Anchor = AnchorStyles.Right;
@@ -742,6 +699,15 @@
             lbl_observaciones.Size = new Size(57, 19);
             lbl_observaciones.TabIndex = 9;
             lbl_observaciones.Text = "NOTAS:";
+            // 
+            // Txt_observaciones
+            // 
+            Txt_observaciones.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Txt_observaciones.Location = new Point(98, 102);
+            Txt_observaciones.Multiline = true;
+            Txt_observaciones.Name = "Txt_observaciones";
+            Txt_observaciones.Size = new Size(593, 78);
+            Txt_observaciones.TabIndex = 34;
             // 
             // Cotiza
             // 
@@ -797,6 +763,6 @@
         private MaterialSkin.Controls.MaterialLabel lbl_observaciones;
         private TableLayoutPanel tableLayoutPanel2;
         private MaterialSkin.Controls.MaterialButton materialButton1;
-        private MaterialSkin.Controls.MaterialMaskedTextBox Txt_observaciones;
+        private TextBox Txt_observaciones;
     }
 }

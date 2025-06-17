@@ -207,6 +207,7 @@ namespace Ensumex.Views
                     }
                 }
             }
+            //Manejo de excepciones para errores comunes
             catch (FormatException fe)
             {
                 MessageBox.Show("Error en el formato de los valores numéricos: " + fe.Message,
@@ -292,6 +293,7 @@ namespace Ensumex.Views
                         }
                     }
                 }
+                // 3. Actualizar etiquetas de totales
                 lbl_costoDescuento.Text = $"-${descuento:F2}";
                 instalacion = decimal.TryParse(txt_Costoinstalacion.Text, out var inst) ? inst : 0;
                 flete = decimal.TryParse(txt_Costoflete.Text, out var flt) ? flt : 0;
@@ -322,7 +324,7 @@ namespace Ensumex.Views
             lbl_TotalNeto.Text = "$0.00";
             tbl_Cotizacion.Rows.Clear();
             cmb_Descuento.SelectedIndex = 0; 
-            Txt_observaciones.Text = "Ingrese notas adicionales .....";
+            Txt_observaciones.Text = string.Empty;
         }
         private void pictureBox1_Click(object sender, EventArgs e)
         {
@@ -346,6 +348,7 @@ namespace Ensumex.Views
             }
             catch (Exception ex)
             {
+                // Manejo de excepciones al abrir el formulario de clientes
                 MessageBox.Show("Ocurrió un error al abrir el formulario de clientes:\n" + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -355,6 +358,7 @@ namespace Ensumex.Views
         }
         private void materialButton1_Click(object sender, EventArgs e)
         {
+            // Abre el formulario de selección de productos
             using (var productosForm = new Form())
             {
                 var productControl = new Product
@@ -367,6 +371,7 @@ namespace Ensumex.Views
                 productosForm.Text = "Seleccionar Producto";
                 productControl.ProductoSeleccionado += (clave, descripcion, unidad, precio, cantidad) =>
                 {
+                    // Validar que los datos no sean nulos o vacíos
                     try
                     {
                         decimal tasaCambio = 1;
@@ -393,6 +398,7 @@ namespace Ensumex.Views
                                 tasaCambio = tasaInput;
                             }
                         }
+                        // Validar la cantidad que desesea agregar
                         decimal cantidadFinal = 1;
                         var resultCantidad = MessageBox.Show("¿Requiere más de 1 unidad?", "Cantidad", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (resultCantidad == DialogResult.Yes)
@@ -437,15 +443,9 @@ namespace Ensumex.Views
                 productosForm.ShowDialog();
             }
         }
-        private void Txt_observaciones_MouseEnter(object sender, EventArgs e)
-        {
-            if (Txt_observaciones.Text == "Ingrese notas adicionales .....")
-            {
-                Txt_observaciones.Text = "";
-            }
-        }
         private void tbl_Cotizacion_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            // Verifica que la fila sea válida y no sea la fila nueva
             if (e.RowIndex >= 0)
             {
                 var colName = tbl_Cotizacion.Columns[e.ColumnIndex].Name;

@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office2013.Word;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using DocumentFormat.OpenXml.Office2013.Word;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System;
@@ -31,6 +32,7 @@ namespace Ensumex.Utils
                 doc.Open();
                 var fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
                 var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+                var fontrojo = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED);
                 var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
                 var fontCursiva = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 10);
                 string rutaLogo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
@@ -60,22 +62,24 @@ namespace Ensumex.Utils
                 {
                     doc.Add(new Paragraph("\nEstimado Cliente:", fontNegrita));
                 }
-                doc.Add(new Paragraph("\nPresente"));
-                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para la venta y/o la instalación del siguiente producto:", fontNormal));
-                //doc.Add(new Paragraph("\n", fontNormal));
-                // Agregar descripciones de los productos
+                doc.Add(new Paragraph("Presente"));
+                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización " +
+                    "para la venta y/o la instalación del siguiente producto:", fontNormal));
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
                     if (fila.IsNewRow) continue; // Ignora la fila nueva vacía
-                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString() ?? "Sin descripción";
-                    doc.Add(new Paragraph(descripcion, fontNegrita));
+                        string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString() ?? "Sin descripción";
+                    if (descripcion.ToLower().Contains("calent"))
+                    {
+                        doc.Add(new Paragraph(descripcion, fontNegrita));
+                    }
                 }
                 doc.Add(new Paragraph("\n", fontNormal));
                 // Tabla
                 PdfPTable tabla = new PdfPTable(5);
                 tabla.WidthPercentage = 100;
-                tabla.SetWidths(new float[] {1f, 3f, 1.5f, .8f, 1f});
-                string[] headers = {"Clave", "Descripción", "Precio", "Cantidad", "Tasa de cambio"};
+                tabla.SetWidths(new float[] {1f, 3f, .9f, .8f, .9f});
+                string[] headers = {"Clave", "Descripción", "Precio", "Cantidad", "Tasa/cambio"};
                 foreach (string header in headers)
                 {
                     PdfPCell celda = new PdfPCell(new Phrase(header, fontNormal));
@@ -87,18 +91,25 @@ namespace Ensumex.Utils
                 {
                     if (!row.IsNewRow)
                     {
-                        tabla.AddCell(new Phrase(row.Cells["CLAVE"].Value?.ToString() ?? "", fontNormal));
-                        tabla.AddCell(new Phrase(row.Cells["DESCRIPCIÓN"].Value?.ToString() ?? "", fontNormal));
-                        tabla.AddCell(new Phrase(row.Cells["PRECIO"].Value?.ToString() ?? "", fontNormal));
-                        tabla.AddCell(new Phrase(row.Cells["Cantidad"].Value?.ToString() ?? "", fontNormal));
-                        tabla.AddCell(new Phrase(row.Cells["TasaCambio"].Value?.ToString() ?? "", fontNormal));
+                        PdfPCell celdaClave = new PdfPCell(new Phrase(row.Cells["CLAVE"].Value?.ToString() ?? "", fontNormal));
+                        PdfPCell celdaDescripcion = new PdfPCell(new Phrase(row.Cells["DESCRIPCIÓN"].Value?.ToString() ?? "", fontNormal));
+                        PdfPCell celdaPrecio = new PdfPCell(new Phrase(row.Cells["PRECIO"].Value?.ToString() ?? "", fontNormal));
+                        PdfPCell celdaCantidad = new PdfPCell(new Phrase(row.Cells["Cantidad"].Value?.ToString() ?? "", fontNormal));
+                        celdaCantidad.HorizontalAlignment = Element.ALIGN_CENTER;
+                        PdfPCell celdaTasaCambio = new PdfPCell(new Phrase(row.Cells["TasaCambio"].Value?.ToString() ?? "", fontNormal));
+                        celdaTasaCambio.HorizontalAlignment = Element.ALIGN_CENTER;
+                        tabla.AddCell(celdaClave);
+                        tabla.AddCell(celdaDescripcion);    
+                        tabla.AddCell(celdaPrecio);
+                        tabla.AddCell(celdaCantidad);
+                        tabla.AddCell(celdaTasaCambio);
                     }
                 }
                 // Ajustando lo que se muestra en la tabla 
                 tabla.AddCell(new PdfPCell(new Phrase("Subtotal:", fontNegrita)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                 tabla.AddCell(new Phrase(subtotal, fontNormal));
                 tabla.AddCell(new PdfPCell(new Phrase("Descuento:", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
-                tabla.AddCell(new Phrase(descuento, fontNormal));
+                tabla.AddCell(new Phrase(descuento, fontrojo));
                 tabla.AddCell(new PdfPCell(new Phrase("Mano de obra por instalción:", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
                 tabla.AddCell(new Phrase("$"+costoInstalacion, fontNormal));
                 tabla.AddCell(new PdfPCell(new Phrase("Costo por Envio/Flete:", fontNormal)) { Colspan = 4, HorizontalAlignment = Element.ALIGN_LEFT });
@@ -123,23 +134,22 @@ namespace Ensumex.Utils
                 if (contieneCalentador)
                 {
                     doc.Add(new Paragraph(
-                        "- Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
+                        "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
                         "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
-                        "- Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
-                        "- Equipos en existencia para entrega inmediata.\n" +
-                        "- No incluye material de plomería.\n" +
-                        "- Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                        "- Precios sujetos a cambios sin previo aviso.\n" +
+                        "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
+                        "-No incluye material de plomería.\n" +
+                        "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
+                        "-Precios sujetos a cambios sin previo aviso.\n" +
                         "-Sin otro particular, quedo a sus órdenes.\n\n", fontNormal));
                 }
                 else
                 {
                     doc.Add(new Paragraph(
-                    "- Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                    "- Precios sujetos a cambios sin previo aviso.\n" +
-                    "Sin otro particular, quedo a sus órdenes.\n\n", fontNormal));
+                    "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
+                    "-Precios sujetos a cambios sin previo aviso.\n" +
+                    "-Sin otro particular, quedo a sus órdenes.\n\n", fontNormal));
                 }
-                doc.Add(new Paragraph(notas, fontNormal));
+                    doc.Add(new Paragraph(notas, fontNormal));
                 // Crear una tabla de una columna centrada
                 PdfPTable tablaFirma = new PdfPTable(1);  
                 tablaFirma.WidthPercentage = 100;
