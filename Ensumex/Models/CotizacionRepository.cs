@@ -108,5 +108,26 @@ namespace Ensumex.Models
                 }
             }
         }
+
+        public static DataTable ObtenerDetallePorId(int idCotizacion)
+        {
+            using (var conn = new SqlConnection(connSqlServer))
+            {
+                string query = @"SELECT ClaveProducto, Descripcion, Unidad, PrecioUnitario, Cantidad, TasaCambio, Subtotal, AplicaDescuento
+                                 FROM CotizacionDetalle
+                                 WHERE IdCotizacion = @IdCotizacion";
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
+                    using (var adapter = new SqlDataAdapter(cmd))
+                    {
+                        var dt = new DataTable();
+                        conn.Open();
+                        adapter.Fill(dt);
+                        return dt;
+                    }
+                }
+            }
+        }
     }
 }

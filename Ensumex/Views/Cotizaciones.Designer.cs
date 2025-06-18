@@ -126,6 +126,7 @@
             cmb_clientes.Name = "cmb_clientes";
             cmb_clientes.Size = new Size(163, 23);
             cmb_clientes.TabIndex = 12;
+            cmb_clientes.SelectedIndexChanged += cmb_clientes_SelectedIndexChanged;
             // 
             // text_buscar
             // 
@@ -134,6 +135,7 @@
             text_buscar.Name = "text_buscar";
             text_buscar.Size = new Size(163, 23);
             text_buscar.TabIndex = 17;
+            text_buscar.TextChanged += text_buscar_TextChanged;
             // 
             // Cotizaciones
             // 
