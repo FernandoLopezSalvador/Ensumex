@@ -103,6 +103,7 @@ namespace Ensumex.Views
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        /// Evento para manejar el botón de guardar cotización
         private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
         {
             try
@@ -124,6 +125,21 @@ namespace Ensumex.Views
                             MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
+
+                        // GUARDAR EN BASE DE DATOS
+                        CotizacionRepository.GuardarCotizacion(
+                            numeroCotizacion: txt_Nocotizacion.Text,
+                            fecha: DateTime.Now,
+                            nombreCliente: txt_Nombrecliente.Text,
+                            direccionCliente: txt_Direccioncliente.Text,
+                            costoInstalacion: decimal.TryParse(txt_Costoinstalacion.Text, out var inst) ? inst : 0,
+                            costoFlete: decimal.TryParse(txt_Costoflete.Text, out var flt) ? flt : 0,
+                            subtotal: decimal.TryParse(lbl_Subtotal.Text.Replace("$", ""), out var sub) ? sub : 0,
+                            descuento: decimal.TryParse(lbl_costoDescuento.Text.Replace("$", "").Replace("-", ""), out var desc) ? desc : 0,
+                            total: decimal.TryParse(lbl_TotalNeto.Text.Replace("$", ""), out var tot) ? tot : 0,
+                            notas: Txt_observaciones.Text,
+                            tablaCotizacion: tbl_Cotizacion
+                        );
                         // Generar el PDF
                         PDFGenerator.GenerarPDFCotizacion(
                         rutaArchivo: sfd.FileName,
@@ -169,6 +185,7 @@ namespace Ensumex.Views
                 e.Handled = true;
             }
         }
+        // Evento para manejar el botón de agregar producto
         private void btn_AgregarProducto_Click(object sender, EventArgs e)
         {
             try
@@ -226,6 +243,7 @@ namespace Ensumex.Views
         }
         private void tbl_Cotizacion_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            // Evitar errores al hacer clic en encabezados o filas nuevas
             try
             {
                 if (e.RowIndex < 0 || e.RowIndex >= tbl_Cotizacion.Rows.Count) return;
@@ -239,7 +257,7 @@ namespace Ensumex.Views
                         ActualizarTotales();
                     }
                 }
-            }
+            }           
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -254,6 +272,7 @@ namespace Ensumex.Views
         {
             ActualizarTotales();
         }
+        // Método para actualizar los totales de la cotización
         private void ActualizarTotales()
         {
             decimal instalacion = 0;
@@ -326,6 +345,7 @@ namespace Ensumex.Views
             cmb_Descuento.SelectedIndex = 0; 
             Txt_observaciones.Text = string.Empty;
         }
+        // Evento para manejar la busqueda para seleccionar cliente
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             try
@@ -375,7 +395,6 @@ namespace Ensumex.Views
                     try
                     {
                         decimal tasaCambio = 1;
-
                         var result = MessageBox.Show(
                             "¿Desea ingresar una tasa de cambio personalizada?",
                             "Tasa de cambio",

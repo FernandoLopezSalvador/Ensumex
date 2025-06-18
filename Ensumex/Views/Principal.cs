@@ -33,12 +33,14 @@ namespace Ensumex.Forms
             InicializarFormulario();
             ConfigurarMenu();
             CargarDatosUsuario();
+            CargarUserControl(new Cotizaciones());
         }
         private void InicializarFormulario()
         {
             this.WindowState = FormWindowState.Maximized;
             panel1.Cursor = Cursors.Hand;
-        }        private void ConfigurarMenu()
+        }
+        private void ConfigurarMenu()
         {
             menu_usuario.Renderer = new CustomMenuRenderer();
         }
@@ -215,6 +217,7 @@ namespace Ensumex.Forms
             // Configurar progressBar en UI
             this.Invoke((Action)(() =>
             {
+                // Actualizar el máximo de la barra de progreso y reiniciar su valor
                 progressBar1.Maximum = totalRegistros;
                 progressBar1.Value = 0;
             }));
@@ -302,6 +305,11 @@ namespace Ensumex.Forms
                 }
                 connSql.Close();
             }
+        }
+        //Boton para regresar al form Principal.
+        private void Btn_Inicio_Click(object sender, EventArgs e)
+        {
+            CargarUserControl(new Cotizaciones());
         }
     }
 } 

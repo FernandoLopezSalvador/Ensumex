@@ -34,12 +34,13 @@
             panelContenedor = new Panel();
             panel1 = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
-            progressBar1 = new ProgressBar();
-            btn_inventarioP = new MaterialSkin.Controls.MaterialButton();
-            btn_sincronizar = new MaterialSkin.Controls.MaterialButton();
-            materialButton2 = new MaterialSkin.Controls.MaterialButton();
-            materialButton3 = new MaterialSkin.Controls.MaterialButton();
+            Btn_Inicio = new MaterialSkin.Controls.MaterialButton();
             btn_cerrarsesion = new Button();
+            progressBar1 = new ProgressBar();
+            btn_sincronizar = new MaterialSkin.Controls.MaterialButton();
+            materialButton3 = new MaterialSkin.Controls.MaterialButton();
+            materialButton2 = new MaterialSkin.Controls.MaterialButton();
+            btn_inventarioP = new MaterialSkin.Controls.MaterialButton();
             panel2 = new Panel();
             materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
             lbl_usuario = new Label();
@@ -127,121 +128,50 @@
             tableLayoutPanel2.BackColor = SystemColors.Control;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.Controls.Add(progressBar1, 0, 4);
-            tableLayoutPanel2.Controls.Add(btn_inventarioP, 0, 0);
-            tableLayoutPanel2.Controls.Add(btn_sincronizar, 0, 3);
-            tableLayoutPanel2.Controls.Add(materialButton2, 0, 1);
-            tableLayoutPanel2.Controls.Add(materialButton3, 0, 2);
-            tableLayoutPanel2.Controls.Add(btn_cerrarsesion, 0, 5);
+            tableLayoutPanel2.Controls.Add(Btn_Inicio, 0, 0);
+            tableLayoutPanel2.Controls.Add(btn_cerrarsesion, 0, 6);
+            tableLayoutPanel2.Controls.Add(progressBar1, 0, 5);
+            tableLayoutPanel2.Controls.Add(btn_sincronizar, 0, 4);
+            tableLayoutPanel2.Controls.Add(materialButton3, 0, 3);
+            tableLayoutPanel2.Controls.Add(materialButton2, 0, 2);
+            tableLayoutPanel2.Controls.Add(btn_inventarioP, 0, 1);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 79);
             tableLayoutPanel2.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 6;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
+            tableLayoutPanel2.RowCount = 7;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2857113F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2857151F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2857151F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2857151F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2857151F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2857151F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 14.2857151F));
             tableLayoutPanel2.Size = new Size(198, 424);
             tableLayoutPanel2.TabIndex = 5;
             // 
-            // progressBar1
+            // Btn_Inicio
             // 
-            progressBar1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            progressBar1.Location = new Point(3, 309);
-            progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(214, 11);
-            progressBar1.TabIndex = 12;
-            // 
-            // btn_inventarioP
-            // 
-            btn_inventarioP.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            btn_inventarioP.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btn_inventarioP.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            btn_inventarioP.Depth = 0;
-            btn_inventarioP.HighEmphasis = true;
-            btn_inventarioP.Icon = (Image)resources.GetObject("btn_inventarioP.Icon");
-            btn_inventarioP.Image = (Image)resources.GetObject("btn_inventarioP.Image");
-            btn_inventarioP.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_inventarioP.Location = new Point(4, 17);
-            btn_inventarioP.Margin = new Padding(4);
-            btn_inventarioP.MouseState = MaterialSkin.MouseState.HOVER;
-            btn_inventarioP.Name = "btn_inventarioP";
-            btn_inventarioP.NoAccentTextColor = Color.Empty;
-            btn_inventarioP.Size = new Size(212, 36);
-            btn_inventarioP.TabIndex = 1;
-            btn_inventarioP.Text = "Inventario";
-            btn_inventarioP.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            btn_inventarioP.UseAccentColor = false;
-            btn_inventarioP.UseVisualStyleBackColor = true;
-            btn_inventarioP.Click += btn_inventarioP_Click;
-            btn_inventarioP.MouseEnter += materialButton1_MouseEnter;
-            btn_inventarioP.MouseLeave += btn_inventarioP_MouseLeave;
-            // 
-            // btn_sincronizar
-            // 
-            btn_sincronizar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            btn_sincronizar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btn_sincronizar.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            btn_sincronizar.Depth = 0;
-            btn_sincronizar.HighEmphasis = true;
-            btn_sincronizar.Icon = (Image)resources.GetObject("btn_sincronizar.Icon");
-            btn_sincronizar.Location = new Point(4, 227);
-            btn_sincronizar.Margin = new Padding(4, 6, 4, 6);
-            btn_sincronizar.MouseState = MaterialSkin.MouseState.HOVER;
-            btn_sincronizar.Name = "btn_sincronizar";
-            btn_sincronizar.NoAccentTextColor = Color.Empty;
-            btn_sincronizar.Size = new Size(212, 36);
-            btn_sincronizar.TabIndex = 11;
-            btn_sincronizar.Text = "Sincronizar Datos";
-            btn_sincronizar.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            btn_sincronizar.UseAccentColor = false;
-            btn_sincronizar.UseVisualStyleBackColor = true;
-            btn_sincronizar.Click += btn_sincronizar_Click;
-            // 
-            // materialButton2
-            // 
-            materialButton2.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            materialButton2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            materialButton2.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            materialButton2.Depth = 0;
-            materialButton2.HighEmphasis = true;
-            materialButton2.Icon = (Image)resources.GetObject("materialButton2.Icon");
-            materialButton2.Location = new Point(4, 87);
-            materialButton2.Margin = new Padding(4);
-            materialButton2.MouseState = MaterialSkin.MouseState.HOVER;
-            materialButton2.Name = "materialButton2";
-            materialButton2.NoAccentTextColor = Color.Empty;
-            materialButton2.Size = new Size(212, 36);
-            materialButton2.TabIndex = 2;
-            materialButton2.Text = "Cotización";
-            materialButton2.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            materialButton2.UseAccentColor = false;
-            materialButton2.UseVisualStyleBackColor = true;
-            materialButton2.Click += materialButton2_Click;
-            // 
-            // materialButton3
-            // 
-            materialButton3.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            materialButton3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            materialButton3.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            materialButton3.Depth = 0;
-            materialButton3.HighEmphasis = true;
-            materialButton3.Icon = (Image)resources.GetObject("materialButton3.Icon");
-            materialButton3.Location = new Point(4, 157);
-            materialButton3.Margin = new Padding(4);
-            materialButton3.MouseState = MaterialSkin.MouseState.HOVER;
-            materialButton3.Name = "materialButton3";
-            materialButton3.NoAccentTextColor = Color.Empty;
-            materialButton3.Size = new Size(212, 36);
-            materialButton3.TabIndex = 3;
-            materialButton3.Text = "Clientes";
-            materialButton3.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            materialButton3.UseAccentColor = false;
-            materialButton3.UseVisualStyleBackColor = true;
-            materialButton3.Click += materialButton3_Click;
+            Btn_Inicio.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Btn_Inicio.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Btn_Inicio.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            Btn_Inicio.Depth = 0;
+            Btn_Inicio.HighEmphasis = true;
+            Btn_Inicio.Icon = (Image)resources.GetObject("Btn_Inicio.Icon");
+            Btn_Inicio.Image = (Image)resources.GetObject("Btn_Inicio.Image");
+            Btn_Inicio.ImageAlign = ContentAlignment.MiddleLeft;
+            Btn_Inicio.Location = new Point(4, 12);
+            Btn_Inicio.Margin = new Padding(4);
+            Btn_Inicio.MouseState = MaterialSkin.MouseState.HOVER;
+            Btn_Inicio.Name = "Btn_Inicio";
+            Btn_Inicio.NoAccentTextColor = Color.Empty;
+            Btn_Inicio.Size = new Size(195, 36);
+            Btn_Inicio.TabIndex = 13;
+            Btn_Inicio.Text = "Inicio";
+            Btn_Inicio.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            Btn_Inicio.UseAccentColor = false;
+            Btn_Inicio.UseVisualStyleBackColor = true;
+            Btn_Inicio.Click += Btn_Inicio_Click;
             // 
             // btn_cerrarsesion
             // 
@@ -255,13 +185,109 @@
             btn_cerrarsesion.Location = new Point(3, 393);
             btn_cerrarsesion.Margin = new Padding(3, 2, 3, 2);
             btn_cerrarsesion.Name = "btn_cerrarsesion";
-            btn_cerrarsesion.Size = new Size(214, 29);
+            btn_cerrarsesion.Size = new Size(197, 29);
             btn_cerrarsesion.TabIndex = 4;
             btn_cerrarsesion.Text = "  Cerrar sesión";
             btn_cerrarsesion.UseVisualStyleBackColor = false;
             btn_cerrarsesion.Click += btn_cerrarsesion_Click;
             btn_cerrarsesion.MouseEnter += btn_cerrarsesion_MouseEnter;
             btn_cerrarsesion.MouseLeave += btn_cerrarsesion_MouseLeave;
+            // 
+            // progressBar1
+            // 
+            progressBar1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            progressBar1.Location = new Point(3, 320);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(197, 20);
+            progressBar1.TabIndex = 12;
+            // 
+            // btn_sincronizar
+            // 
+            btn_sincronizar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            btn_sincronizar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btn_sincronizar.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            btn_sincronizar.Depth = 0;
+            btn_sincronizar.HighEmphasis = true;
+            btn_sincronizar.Icon = (Image)resources.GetObject("btn_sincronizar.Icon");
+            btn_sincronizar.Location = new Point(4, 252);
+            btn_sincronizar.Margin = new Padding(4, 6, 4, 6);
+            btn_sincronizar.MouseState = MaterialSkin.MouseState.HOVER;
+            btn_sincronizar.Name = "btn_sincronizar";
+            btn_sincronizar.NoAccentTextColor = Color.Empty;
+            btn_sincronizar.Size = new Size(195, 36);
+            btn_sincronizar.TabIndex = 11;
+            btn_sincronizar.Text = "Sincronizar Datos";
+            btn_sincronizar.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            btn_sincronizar.UseAccentColor = false;
+            btn_sincronizar.UseVisualStyleBackColor = true;
+            btn_sincronizar.Click += btn_sincronizar_Click;
+            // 
+            // materialButton3
+            // 
+            materialButton3.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            materialButton3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            materialButton3.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            materialButton3.Depth = 0;
+            materialButton3.HighEmphasis = true;
+            materialButton3.Icon = (Image)resources.GetObject("materialButton3.Icon");
+            materialButton3.Location = new Point(4, 192);
+            materialButton3.Margin = new Padding(4);
+            materialButton3.MouseState = MaterialSkin.MouseState.HOVER;
+            materialButton3.Name = "materialButton3";
+            materialButton3.NoAccentTextColor = Color.Empty;
+            materialButton3.Size = new Size(195, 36);
+            materialButton3.TabIndex = 3;
+            materialButton3.Text = "Clientes";
+            materialButton3.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            materialButton3.UseAccentColor = false;
+            materialButton3.UseVisualStyleBackColor = true;
+            materialButton3.Click += materialButton3_Click;
+            // 
+            // materialButton2
+            // 
+            materialButton2.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            materialButton2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            materialButton2.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            materialButton2.Depth = 0;
+            materialButton2.HighEmphasis = true;
+            materialButton2.Icon = (Image)resources.GetObject("materialButton2.Icon");
+            materialButton2.Location = new Point(4, 132);
+            materialButton2.Margin = new Padding(4);
+            materialButton2.MouseState = MaterialSkin.MouseState.HOVER;
+            materialButton2.Name = "materialButton2";
+            materialButton2.NoAccentTextColor = Color.Empty;
+            materialButton2.Size = new Size(195, 36);
+            materialButton2.TabIndex = 2;
+            materialButton2.Text = "Cotización";
+            materialButton2.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            materialButton2.UseAccentColor = false;
+            materialButton2.UseVisualStyleBackColor = true;
+            materialButton2.Click += materialButton2_Click;
+            // 
+            // btn_inventarioP
+            // 
+            btn_inventarioP.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            btn_inventarioP.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btn_inventarioP.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            btn_inventarioP.Depth = 0;
+            btn_inventarioP.HighEmphasis = true;
+            btn_inventarioP.Icon = (Image)resources.GetObject("btn_inventarioP.Icon");
+            btn_inventarioP.Image = (Image)resources.GetObject("btn_inventarioP.Image");
+            btn_inventarioP.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_inventarioP.Location = new Point(4, 72);
+            btn_inventarioP.Margin = new Padding(4);
+            btn_inventarioP.MouseState = MaterialSkin.MouseState.HOVER;
+            btn_inventarioP.Name = "btn_inventarioP";
+            btn_inventarioP.NoAccentTextColor = Color.Empty;
+            btn_inventarioP.Size = new Size(195, 36);
+            btn_inventarioP.TabIndex = 1;
+            btn_inventarioP.Text = "Inventario";
+            btn_inventarioP.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            btn_inventarioP.UseAccentColor = false;
+            btn_inventarioP.UseVisualStyleBackColor = true;
+            btn_inventarioP.Click += btn_inventarioP_Click;
+            btn_inventarioP.MouseEnter += materialButton1_MouseEnter;
+            btn_inventarioP.MouseLeave += btn_inventarioP_MouseLeave;
             // 
             // panel2
             // 
@@ -464,5 +490,6 @@
         private TableLayoutPanel tableLayoutPanel4;
         private MaterialSkin.Controls.MaterialButton btn_sincronizar;
         private ProgressBar progressBar1;
+        private MaterialSkin.Controls.MaterialButton Btn_Inicio;
     }
 }
