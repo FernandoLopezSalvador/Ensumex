@@ -27,7 +27,7 @@ namespace Ensumex.Views
                     HeaderText = "Acción",
                     Text = "Detalle",
                     UseColumnTextForButtonValue = true
-                };
+                };  
                 tabla_cotizaciones.Columns.Add(btnDetalle);
             }
             CargarCotizaciones();
@@ -41,7 +41,7 @@ namespace Ensumex.Views
         private void cmb_clientes_SelectedIndexChanged(object sender, EventArgs e)
         {
             // Limpiar la tabla antes de cargar nuevos datos
-            var selectedValue = cmb_clientes.SelectedItem.ToString();
+            var selectedValue = cmb_filtrarcotiza.SelectedItem.ToString();
             if (selectedValue == "Todos")
             {
                 CargarCotizaciones();
@@ -49,8 +49,8 @@ namespace Ensumex.Views
             else
             {
                 int limite = int.Parse(selectedValue);
-                //DataTable dt = CotizacionRepository.ObtenerCotizacionesPorLimite(limite);
-                //tabla_cotizaciones.DataSource = dt;
+                DataTable dt = CotizacionRepository.ObtenerCotizacionesPorLimite(limite);
+                tabla_cotizaciones.DataSource = dt;
             }
         }
         private void text_buscar_TextChanged(object sender, EventArgs e)
@@ -63,8 +63,8 @@ namespace Ensumex.Views
             }
             else
             {
-                //DataTable dt = CotizacionRepository.ObtenerCotizacionesFiltradas(searchText);
-                //tabla_cotizaciones.DataSource = dt;
+                DataTable dt = CotizacionRepository.ObtenerCotizacionesFiltradas(searchText);
+                tabla_cotizaciones.DataSource = dt;
             }
         }
         private void tabla_cotizaciones_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -106,7 +106,6 @@ namespace Ensumex.Views
                             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
                            
                         };
-
                         detalleForm.Controls.Add(dgvDetalle);
                         detalleForm.ShowDialog();
                     }

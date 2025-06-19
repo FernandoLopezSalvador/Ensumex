@@ -51,11 +51,9 @@ namespace Ensumex.Models
                         cmdEncabezado.Parameters.AddWithValue("@Total", total);
                         cmdEncabezado.Parameters.AddWithValue("@Notas", notas ?? (object)DBNull.Value);
                         cmdEncabezado.Parameters.AddWithValue("@Estado", "Vigente");
-
                         int idCotizacion = Convert.ToInt32(cmdEncabezado.ExecuteScalar());
-
                         // 2. Insertar detalle
-                        foreach (DataGridViewRow row in tablaCotizacion.Rows)
+                        foreach (DataGridViewRow row in tablaCotizacion.Rows)   
                         {
                             if (row.IsNewRow) continue;
 
@@ -73,7 +71,6 @@ namespace Ensumex.Models
                             cmdDetalle.Parameters.AddWithValue("@TasaCambio", row.Cells["TasaCambio"].Value ?? 1);
                             cmdDetalle.Parameters.AddWithValue("@Subtotal", row.Cells["Subtotal"].Value ?? 0);
                             cmdDetalle.Parameters.AddWithValue("@AplicaDescuento", row.Cells["AplicarDescuento"].Value ?? false);
-
                             cmdDetalle.ExecuteNonQuery();
                         }
 
@@ -87,7 +84,6 @@ namespace Ensumex.Models
                 }
             }
         }
-
         public static DataTable ObtenerCotizaciones()
         {
             using (var conn = new SqlConnection(connSqlServer))
@@ -108,7 +104,6 @@ namespace Ensumex.Models
                 }
             }
         }
-
         public static DataTable ObtenerDetallePorId(int idCotizacion)
         {
             using (var conn = new SqlConnection(connSqlServer))
@@ -119,6 +114,49 @@ namespace Ensumex.Models
                 using (var cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
+                    using (var adapter = new SqlDataAdapter(cmd))
+                    {
+                        var dt = new DataTable();
+                        conn.Open();
+                        adapter.Fill(dt);
+                        return dt;  
+                    }
+                }
+            }
+        }
+        public static DataTable ObtenerCotizacionesPorLimite(int limite)
+        {
+            using (var conn = new SqlConnection(connSqlServer))
+            {
+                string query = @"SELECT TOP (@Limite) IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, DireccionCliente, 
+                                        CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
+                                 FROM Cotizacion
+                                 ORDER BY Fecha DESC";
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Limite", limite);
+                    using (var adapter = new SqlDataAdapter(cmd))
+                    {
+                        var dt = new DataTable();
+                        conn.Open();
+                        adapter.Fill(dt);   
+                        return dt;
+                    }
+                }
+            }
+        }
+        public static DataTable ObtenerCotizacionesFiltradas(string searchText)
+        { 
+            using (var conn = new SqlConnection(connSqlServer))
+            {
+                string query = @"SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, DireccionCliente, 
+                                        CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
+                                 FROM Cotizacion
+                                 WHERE NombreCliente LIKE @SearchText OR DireccionCliente LIKE @SearchText
+                                 ORDER BY Fecha DESC";
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@SearchText", "%" + searchText + "%");
                     using (var adapter = new SqlDataAdapter(cmd))
                     {
                         var dt = new DataTable();

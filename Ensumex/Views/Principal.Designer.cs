@@ -166,7 +166,7 @@
             Btn_Inicio.Name = "Btn_Inicio";
             Btn_Inicio.NoAccentTextColor = Color.Empty;
             Btn_Inicio.Size = new Size(195, 36);
-            Btn_Inicio.TabIndex = 13;
+            Btn_Inicio.TabIndex = 1;
             Btn_Inicio.Text = "Inicio";
             Btn_Inicio.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             Btn_Inicio.UseAccentColor = false;
@@ -186,7 +186,7 @@
             btn_cerrarsesion.Margin = new Padding(3, 2, 3, 2);
             btn_cerrarsesion.Name = "btn_cerrarsesion";
             btn_cerrarsesion.Size = new Size(197, 29);
-            btn_cerrarsesion.TabIndex = 4;
+            btn_cerrarsesion.TabIndex = 6;
             btn_cerrarsesion.Text = "  Cerrar sesión";
             btn_cerrarsesion.UseVisualStyleBackColor = false;
             btn_cerrarsesion.Click += btn_cerrarsesion_Click;
@@ -215,7 +215,7 @@
             btn_sincronizar.Name = "btn_sincronizar";
             btn_sincronizar.NoAccentTextColor = Color.Empty;
             btn_sincronizar.Size = new Size(195, 36);
-            btn_sincronizar.TabIndex = 11;
+            btn_sincronizar.TabIndex = 5;
             btn_sincronizar.Text = "Sincronizar Datos";
             btn_sincronizar.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btn_sincronizar.UseAccentColor = false;
@@ -236,7 +236,7 @@
             materialButton3.Name = "materialButton3";
             materialButton3.NoAccentTextColor = Color.Empty;
             materialButton3.Size = new Size(195, 36);
-            materialButton3.TabIndex = 3;
+            materialButton3.TabIndex = 4;
             materialButton3.Text = "Clientes";
             materialButton3.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             materialButton3.UseAccentColor = false;
@@ -257,7 +257,7 @@
             materialButton2.Name = "materialButton2";
             materialButton2.NoAccentTextColor = Color.Empty;
             materialButton2.Size = new Size(195, 36);
-            materialButton2.TabIndex = 2;
+            materialButton2.TabIndex = 3;
             materialButton2.Text = "Cotización";
             materialButton2.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             materialButton2.UseAccentColor = false;
@@ -280,7 +280,7 @@
             btn_inventarioP.Name = "btn_inventarioP";
             btn_inventarioP.NoAccentTextColor = Color.Empty;
             btn_inventarioP.Size = new Size(195, 36);
-            btn_inventarioP.TabIndex = 1;
+            btn_inventarioP.TabIndex = 2;
             btn_inventarioP.Text = "Inventario";
             btn_inventarioP.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             btn_inventarioP.UseAccentColor = false;

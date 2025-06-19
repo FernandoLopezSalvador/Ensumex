@@ -33,7 +33,7 @@
             label1 = new Label();
             label2 = new Label();
             ImprimirClientes = new MaterialSkin.Controls.MaterialButton();
-            cmb_clientes = new ComboBox();
+            cmb_filtrarcotiza = new ComboBox();
             text_buscar = new TextBox();
             ((System.ComponentModel.ISupportInitialize)tabla_cotizaciones).BeginInit();
             tableLayoutPanel1.SuspendLayout();
@@ -62,7 +62,7 @@
             tableLayoutPanel1.Controls.Add(label1, 1, 0);
             tableLayoutPanel1.Controls.Add(label2, 1, 1);
             tableLayoutPanel1.Controls.Add(ImprimirClientes, 0, 1);
-            tableLayoutPanel1.Controls.Add(cmb_clientes, 2, 0);
+            tableLayoutPanel1.Controls.Add(cmb_filtrarcotiza, 2, 0);
             tableLayoutPanel1.Controls.Add(text_buscar, 2, 1);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.ForeColor = SystemColors.ControlText;
@@ -117,16 +117,16 @@
             ImprimirClientes.UseAccentColor = false;
             ImprimirClientes.UseVisualStyleBackColor = true;
             // 
-            // cmb_clientes
+            // cmb_filtrarcotiza
             // 
-            cmb_clientes.Anchor = AnchorStyles.None;
-            cmb_clientes.FormattingEnabled = true;
-            cmb_clientes.Location = new Point(341, 20);
-            cmb_clientes.Margin = new Padding(3, 2, 3, 2);
-            cmb_clientes.Name = "cmb_clientes";
-            cmb_clientes.Size = new Size(163, 23);
-            cmb_clientes.TabIndex = 12;
-            cmb_clientes.SelectedIndexChanged += cmb_clientes_SelectedIndexChanged;
+            cmb_filtrarcotiza.Anchor = AnchorStyles.None;
+            cmb_filtrarcotiza.FormattingEnabled = true;
+            cmb_filtrarcotiza.Location = new Point(341, 20);
+            cmb_filtrarcotiza.Margin = new Padding(3, 2, 3, 2);
+            cmb_filtrarcotiza.Name = "cmb_filtrarcotiza";
+            cmb_filtrarcotiza.Size = new Size(163, 23);
+            cmb_filtrarcotiza.TabIndex = 12;
+            cmb_filtrarcotiza.SelectedIndexChanged += cmb_clientes_SelectedIndexChanged;
             // 
             // text_buscar
             // 
@@ -158,7 +158,7 @@
         private Label label1;
         private Label label2;
         private MaterialSkin.Controls.MaterialButton ImprimirClientes;
-        private ComboBox cmb_clientes;
+        private ComboBox cmb_filtrarcotiza;
         private TextBox text_buscar;
     }
 }

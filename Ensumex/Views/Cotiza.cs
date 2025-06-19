@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Office2013.Word;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Ensumex.Forms;
 using Ensumex.Models;
+using Ensumex.PDFtemplates;
 using Ensumex.Services;
 using Ensumex.Utils;
 using iTextSharp.text;
@@ -46,26 +47,25 @@ namespace Ensumex.Views
             try
             {
                 string[,] columnas = {
-                { "CLAVE", "Clave" },
-                { "DESCRIPCIÓN", "Descripción" },
-                { "UNIDAD", "Unidad" },
-                { "PRECIO", "precio" },
-                { "CANTIDAD", "Cantidad" },
-                { "TasaCambio", "Tasa Cambio" },
-                { "Subtotal", "Subtotal" }
+                    { "CLAVE", "Clave" },
+                    { "DESCRIPCIÓN", "Descripción" },
+                    { "UNIDAD", "Unidad" },
+                    { "PRECIO", "precio" },
+                    { "CANTIDAD", "Cantidad" },
+                    { "TasaCambio", "Tasa Cambio" },
+                    { "Subtotal", "Subtotal" }
                 };
+
                 for (int i = 0; i < columnas.GetLength(0); i++)
                 {
                     string nombreInterno = columnas[i, 0];
                     string encabezado = columnas[i, 1];
-                    // Verifica si la columna ya existe antes de agregar
                     if (!tbl_Cotizacion.Columns.Contains(nombreInterno))
                     {
                         tbl_Cotizacion.Columns.Add(nombreInterno, encabezado);
                     }
-                    tbl_Cotizacion.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
                 }
-                // Agregar columna de selección de descuento si no existe
+
                 if (!tbl_Cotizacion.Columns.Contains("AplicarDescuento"))
                 {
                     var colSeleccion = new DataGridViewCheckBoxColumn();
@@ -74,17 +74,16 @@ namespace Ensumex.Views
                     colSeleccion.Width = 70;
                     tbl_Cotizacion.Columns.Insert(0, colSeleccion);
                 }
-                // Verifica si la columna "TasaCambio" fue creada exitosamente
+
                 if (tbl_Cotizacion.Columns.Contains("TasaCambio"))
                 {
-                    tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = false; 
+                    tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = false;
                 }
                 else
                 {
                     MessageBox.Show("La columna 'TasaCambio' no fue creada correctamente.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
-                // Verifica si la columna "Eliminar" fue creada exitosamente
                 if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
                 {
                     DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn
@@ -96,6 +95,9 @@ namespace Ensumex.Views
                     };
                     tbl_Cotizacion.Columns.Add(btnEliminar);
                 }
+
+                // Ajusta las columnas para que llenen todo el ancho del grid
+                tbl_Cotizacion.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
             catch (Exception ex)
             {
@@ -141,18 +143,22 @@ namespace Ensumex.Views
                             tablaCotizacion: tbl_Cotizacion
                         );
                         // Generar el PDF
+                        string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
+                        decimal.TryParse(descuentoTexto, out decimal porcentajeDescuento);
+
                         PDFGenerator.GenerarPDFCotizacion(
-                        rutaArchivo: sfd.FileName,
-                        numeroCotizacion: txt_Nocotizacion.Text,
-                        nombreCliente: txt_Nombrecliente.Text,
-                        costoInstalacion: txt_Costoinstalacion.Text,
-                        costoFlete: txt_Costoflete.Text,
-                        subtotal: lbl_Subtotal.Text,
-                        total: lbl_TotalNeto.Text,
-                        descuento: lbl_costoDescuento.Text,
-                        tablaCotizacion: tbl_Cotizacion,
-                        notas: Txt_observaciones.Text
-                    );
+                            rutaArchivo: sfd.FileName,
+                            numeroCotizacion: txt_Nocotizacion.Text,
+                            nombreCliente: txt_Nombrecliente.Text,
+                            costoInstalacion: txt_Costoinstalacion.Text,
+                            costoFlete: txt_Costoflete.Text,
+                            subtotal: lbl_Subtotal.Text,
+                            total: lbl_TotalNeto.Text,
+                            descuento: lbl_costoDescuento.Text,
+                            porcentajeDescuento: porcentajeDescuento,
+                            notas: Txt_observaciones.Text,
+                            tablaCotizacion: tbl_Cotizacion
+                        );
                         MessageBox.Show("Cotización guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         limpiaCampos();
                     }
@@ -295,20 +301,21 @@ namespace Ensumex.Views
                 lbl_Subtotal.Text = $"${subtotal:F2}";
                 // 2. Calcular Descuento solo en productos seleccionados
                 descuento = 0;
-                if (cmb_Descuento.SelectedItem != null)
+
+                // Extraer el porcentaje del ComboBox
+                string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
+                decimal.TryParse(descuentoTexto, out decimal porcentajeDescuento);
+
+                if (porcentajeDescuento > 0)
                 {
-                    string descuentoTexto = cmb_Descuento.SelectedItem.ToString().Replace("%", "").Trim();
-                    if (decimal.TryParse(descuentoTexto, out decimal porcentaje))
+                    foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                     {
-                        foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
+                        if (row.IsNewRow) continue;
+                        bool aplicar = row.Cells["AplicarDescuento"].Value is bool b && b;
+                        if (aplicar && row.Cells["Subtotal"].Value != null &&
+                            decimal.TryParse(row.Cells["Subtotal"].Value.ToString(), out decimal valor))
                         {
-                            if (row.IsNewRow) continue;
-                            bool aplicar = row.Cells["AplicarDescuento"].Value is bool b && b;
-                            if (aplicar && row.Cells["Subtotal"].Value != null &&
-                                decimal.TryParse(row.Cells["Subtotal"].Value.ToString(), out decimal valor))
-                            {
-                                descuento += valor * (porcentaje / 100m);
-                            }
+                            descuento += valor * (porcentajeDescuento / 100m);
                         }
                     }
                 }
