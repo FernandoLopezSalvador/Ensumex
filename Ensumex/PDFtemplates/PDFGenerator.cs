@@ -118,7 +118,7 @@ namespace Ensumex.PDFtemplates
                     // Precio
                     string precioStr = row.Cells["PRECIO"].Value?.ToString() ?? "0";
                     decimal.TryParse(precioStr, out decimal precioUnitario);
-                    tabla.AddCell(new PdfPCell(new Phrase(precioStr, fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
+                    tabla.AddCell(new PdfPCell(new Phrase("$"+precioStr, fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
 
                     // Descuento (por producto, en rojo)
                     decimal descuentoProd = 0;
@@ -126,24 +126,18 @@ namespace Ensumex.PDFtemplates
                     {
                         descuentoProd = (precioUnitario * cantidad) * (porcentajeDescuento / 100m);
                     }
-                    PdfPCell celdaDescuento = new PdfPCell(new Phrase(descuentoProd.ToString("0.00"), fontrojo))
+                    PdfPCell celdaDescuento = new PdfPCell(new Phrase("$"+descuentoProd.ToString("0.00"), fontrojo))
                     {
                         HorizontalAlignment = Element.ALIGN_RIGHT
                     };
                     tabla.AddCell(celdaDescuento);
-
-                    // Importe = (precio * cantidad) - descuentoProd
                     decimal importe = (precioUnitario * cantidad) - descuentoProd;
                     tabla.AddCell(new PdfPCell(new Phrase(importe.ToString("0.00"), fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
-
                     pos++;
                 }
-
                 doc.Add(tabla);
-
                 // --- TOTALES Y COSTOS ADICIONALES ---
                 doc.Add(new Paragraph("\n"));
-
                 PdfPTable tablaTotales = new PdfPTable(2);
                 tablaTotales.WidthPercentage = 50;
                 tablaTotales.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -160,8 +154,12 @@ namespace Ensumex.PDFtemplates
 
                 doc.Add(tablaTotales);
 
-                // Verifica si alguna descripción contiene la palabra "CALENTADOR" para mostrar notas adicionales o notas personalizadas dependiendo de lo que se quiera vender
+                // Variables para verificar otros tipos de productos
                 bool contieneCalentador = false;
+                bool contieneMotobomba = false;
+                bool contieneAire = false;
+                bool contieneBomba = false;
+                // Recorre las filas de la tabla para verificar los tipos de productos
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
                     if (fila.IsNewRow) continue;
@@ -172,31 +170,93 @@ namespace Ensumex.PDFtemplates
                         break;
                     }
                 }
-                doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
-                if (contieneCalentador)
+                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
-                    doc.Add(new Paragraph(
-                        "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
-                        "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
-                        "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
-                        "-No incluye material de plomería.\n" +
-                        "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                        "-Precios sujetos a cambios sin previo aviso.\n" +
-                        "-Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                    if (fila.IsNewRow) continue;
+                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
+                    if (descripcion.Contains("MOTOBOMBA"))
+                    {
+                        contieneMotobomba = true;
+                        break;
+                    }
                 }
-                else
+                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
-                    doc.Add(new Paragraph(
+                    if (fila.IsNewRow) continue;
+                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
+                    if (descripcion.Contains("BOMBA DE")||descripcion.Contains("BOMBA TIPO"))
+                    {
+                        contieneBomba = true;
+                        break;
+                    }
+                }
+                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
+                {
+                    if (fila.IsNewRow) continue;
+                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
+                    if (descripcion.Contains("AIRE"))
+                    {
+                        contieneAire = true;
+                        break;
+                    }
+                }
+                doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
+                // Agregar notas dependiendo del tipo de producto
+                switch (true)
+                {
+                    case true when contieneCalentador:
+                        doc.Add(new Paragraph(
+                         "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
+                         "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
+                         "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
+                         "-No incluye material de plomería.\n" +
+                         "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
+                         "-Precios sujetos a cambios sin previo aviso.\n" +
+                         "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                        break;
+                    case true when contieneMotobomba:
+                        doc.Add(new Paragraph(
+                        "- La Motobomba incluye: Bomba, motor, controlador, 2m de cable plano sumergible, kit de instalación y ganchos de seguridad(mosquetón).\n" +
+                        "- Garantías: 12 años en Paneles Solares. 2 años en Bomba y Desconectador. 1 año en Accesorios.\n" +
+                        "- Garantía de la instalación: 6 meses contra fallos.\n" +
+                        "- No incluye material hidráulico (tubo de columna, tubería ni conexiones).\n" +
+                        "- El equipo se dimensionó en función de los datos proporcionados en el esquema entregado.\n" +
+                        "- Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
+                        "- Precios sujetos a cambios sin previo aviso" +
+                        "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                        break;
+                    case true when contieneBomba:
+                        doc.Add(new Paragraph(
+                        "- Garantía: 2 años en bomba motor y arrancador.\n" +
+                        "- Equipos sobre pedido. Es necesario un anticipo del 60%\n" +
+                        "- Entrega de 3 a 5 dias hábiles\n" +
+                        "- No incluye instalación"+
+                        "- Precios sujetos a cambios sin previo aviso" +
+                        "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                        break;
+                    case true when contieneAire:
+                        doc.Add(new Paragraph(
+                        "- Garantía del Aire Acondicionado: 5 años contra defectos de fabricación.\n" +
+                        "- Garantía de la mano de obra: 6 meses.\n" +
+                        "- Equipo en existencia para entrega inmediata.\n" +
+                        "- El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
+                        "- Si necesita factura, la mano de obra es más I.V.A.\n" +
+                        "- Precios sujetos a cambios sin previo aviso.\n" +
+                        "Sin otro particular quedo a sus órdenes.\n\n", fontnotas));
+                        break;
+                    default:
+                        doc.Add(new Paragraph(
                         "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
                         "-Precios sujetos a cambios sin previo aviso.\n" +
                         "-Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                        break;
                 }
                 doc.Add(new Paragraph(notas, fontNormal));
 
                 // Crear una tabla de una columna centrada
                 PdfPTable tablaFirma = new PdfPTable(1);
                 tablaFirma.WidthPercentage = 100;
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("\n\n\n\nAtentamente,\nCarlos Valdez\nRepresentante de Ventas", fontCursiva));
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("\n\n\n\nAtentamente,\nCarlos Hernández Velasco\nRepresentante de Ventas", fontCursiva));
                 celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;
                 celdaTexto.Border = Rectangle.NO_BORDER;
                 celdaTexto.PaddingBottom = 10f;
@@ -214,7 +274,7 @@ namespace Ensumex.PDFtemplates
                 }
                 // Agregar la tabla al documento
                 doc.Add(tablaFirma);
-                doc.Add(new Paragraph("Av. Lázaro Cárdenas 104-B. ", fontNormal) { Alignment = Element.ALIGN_CENTER });
+                doc.Add(new Paragraph("Av. Lázaro Cárdenas 104-B.", fontNormal) { Alignment = Element.ALIGN_CENTER });
                 doc.Add(new Paragraph("Sta. Lucía del Camino, Oaxaca. Tels: 951-206-6895 y 951-206-0293", fontNormal) { Alignment = Element.ALIGN_CENTER });
                 doc.Close();
                 MessageBox.Show("📄 PDF generado correctamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);

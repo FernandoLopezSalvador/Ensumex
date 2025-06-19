@@ -108,6 +108,10 @@ namespace Ensumex.Views
         /// Evento para manejar el botón de guardar cotización
         private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
         {
+           GuardarCotizacion();
+        }
+        private void GuardarCotizacion()
+        {
             try
             {
                 using (SaveFileDialog sfd = new SaveFileDialog())
@@ -301,7 +305,6 @@ namespace Ensumex.Views
                 lbl_Subtotal.Text = $"${subtotal:F2}";
                 // 2. Calcular Descuento solo en productos seleccionados
                 descuento = 0;
-
                 // Extraer el porcentaje del ComboBox
                 string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
                 decimal.TryParse(descuentoTexto, out decimal porcentajeDescuento);
