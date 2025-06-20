@@ -28,7 +28,7 @@ namespace Ensumex.Utils
                 _imagen.ScaleToFit(300f, 300f);
 
                 // Centrado manual (posición X y Y)
-                float x = (document.PageSize.Width - _imagen.ScaledWidth) / 2;
+                 float x = (document.PageSize.Width - _imagen.ScaledWidth) / 2;
                 float y = (document.PageSize.Height - _imagen.ScaledHeight) / 2;
                 _imagen.SetAbsolutePosition(x, y);
             }

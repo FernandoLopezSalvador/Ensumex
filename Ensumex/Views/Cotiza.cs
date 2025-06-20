@@ -24,7 +24,7 @@ using System.Windows.Forms;
 
 namespace Ensumex.Views
 {
-    public partial class Cotiza : UserControl 
+    public partial class Cotiza : UserControl
     {
         public Cotiza()
         {
@@ -36,7 +36,7 @@ namespace Ensumex.Views
             AgregarColumnasCotizacion();
             tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
             tbl_Cotizacion.CurrentCellDirtyStateChanged += tbl_Cotizacion_CurrentCellDirtyStateChanged;
-            tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit; 
+            tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit;
         }
         private void AgregarDescuentos(string[] descuentos)
         {
@@ -108,7 +108,7 @@ namespace Ensumex.Views
         /// Evento para manejar el botón de guardar cotización
         private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
         {
-           GuardarCotizacion();
+            GuardarCotizacion();
         }
         private void GuardarCotizacion()
         {
@@ -183,14 +183,14 @@ namespace Ensumex.Views
         }
         private void txt_Costoinstalacion_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)8) 
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)8)
             {
                 e.Handled = true;
             }
         }
         private void txt_Costoflete_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)8) 
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)8)
             {
                 e.Handled = true;
             }
@@ -212,7 +212,7 @@ namespace Ensumex.Views
                         }
                         string clave = formProducto.Clave;
                         string descripcion = formProducto.Descripcion;
-                        string unidad = formProducto.Unidentrada;   
+                        string unidad = formProducto.Unidentrada;
                         decimal precioUnitario = formProducto.PrecioUnitarioTemp;
                         decimal Cantidad = formProducto.cantidad;
                         decimal tasaCambio = 1;
@@ -267,11 +267,11 @@ namespace Ensumex.Views
                         ActualizarTotales();
                     }
                 }
-            }           
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                
+
             }
         }
         private void txt_Costoinstalacion_TextChanged(object sender, EventArgs e)
@@ -352,7 +352,7 @@ namespace Ensumex.Views
             lbl_costoDescuento.Text = "$0.00";
             lbl_TotalNeto.Text = "$0.00";
             tbl_Cotizacion.Rows.Clear();
-            cmb_Descuento.SelectedIndex = 0; 
+            cmb_Descuento.SelectedIndex = 0;
             Txt_observaciones.Text = string.Empty;
         }
         // Evento para manejar la busqueda para seleccionar cliente
@@ -450,11 +450,10 @@ namespace Ensumex.Views
                         {
                             if (row.Cells[0].Value?.ToString() == clave)
                             {
-                                // Ya existe: sumar cantidades
                                 decimal cantidadExistente = Convert.ToDecimal(row.Cells[4].Value);
                                 cantidad += cantidadExistente;
                                 row.Cells[4].Value = cantidad;
-                                row.Cells[6].Value = precio * cantidad * tasaCambio; 
+                                row.Cells[6].Value = precio * cantidad * tasaCambio;
                                 ActualizarTotales();
                                 productosForm.Close();
                                 return;
@@ -497,7 +496,7 @@ namespace Ensumex.Views
         {
             if (tbl_Cotizacion.Columns[e.ColumnIndex].Name == "AplicarDescuento")
             {
-                // Solo permitir si hay al menos un producto (más de una fila y no solo la fila nueva)
+                // Solo permitir si hay al menos un producto
                 int productos = tbl_Cotizacion.Rows.Cast<DataGridViewRow>().Count(r => !r.IsNewRow);
                 if (productos == 0)
                 {
