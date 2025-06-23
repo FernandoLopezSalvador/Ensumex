@@ -134,7 +134,7 @@
             text_buscar.Location = new Point(341, 84);
             text_buscar.Name = "text_buscar";
             text_buscar.Size = new Size(163, 23);
-            text_buscar.TabIndex = 17;
+            text_buscar.TabIndex = 1;
             text_buscar.TextChanged += text_buscar_TextChanged;
             // 
             // Cotizaciones

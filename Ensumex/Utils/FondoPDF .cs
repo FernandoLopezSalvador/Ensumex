@@ -24,15 +24,14 @@ namespace Ensumex.Utils
             {
                 _imagen = iTextSharp.text.Image.GetInstance(_rutaImagen);
 
-                // Escalamos la imagen (ajústalo si quieres más grande o chico)
-                _imagen.ScaleToFit(300f, 300f);
+                // Escalamos la imagen 
+                _imagen.ScaleToFit(400f, 400f);
 
                 // Centrado manual (posición X y Y)
                  float x = (document.PageSize.Width - _imagen.ScaledWidth) / 2;
                 float y = (document.PageSize.Height - _imagen.ScaledHeight) / 2;
                 _imagen.SetAbsolutePosition(x, y);
             }
-
             if (_imagen != null)
             {
                 PdfContentByte canvas = writer.DirectContentUnder;
@@ -40,13 +39,12 @@ namespace Ensumex.Utils
                 // Aplicar opacidad
                 PdfGState gState = new PdfGState
                 {
-                    FillOpacity = 0.5f, 
-                    StrokeOpacity = 0.5f
+                    FillOpacity = 0.3f, 
+                    StrokeOpacity = 0.3f
                 };
                 canvas.SaveState();
                 canvas.SetGState(gState);
                 canvas.AddImage(_imagen);
-
                 canvas.RestoreState();
             }
         }

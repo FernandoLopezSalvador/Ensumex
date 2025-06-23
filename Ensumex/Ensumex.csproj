@@ -35,6 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="IMG\Fondo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="IMG\Logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

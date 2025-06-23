@@ -135,7 +135,7 @@
             text_buscar.Location = new Point(446, 84);
             text_buscar.Name = "text_buscar";
             text_buscar.Size = new Size(183, 23);
-            text_buscar.TabIndex = 19;
+            text_buscar.TabIndex = 1;
             text_buscar.TextChanged += textBox1_TextChanged;
             // 
             // tabla_productos
