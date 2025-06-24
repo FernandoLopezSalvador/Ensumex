@@ -32,10 +32,8 @@ namespace Ensumex.PDFtemplates
             {
                 Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
-
                 // Agregar fondo 
-                //string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Nombre.jpg");
-                string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Fondo.jpg");
+                string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
                 writer.PageEvent = new FondoPDF(rutaFondo);
                 doc.Open();
                 var fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
@@ -69,18 +67,39 @@ namespace Ensumex.PDFtemplates
                 }
                 else
                 {
-                    doc.Add(new Paragraph("\nEstimado Cliente:", fontNegrita));
+                    doc.Add(new Paragraph("\nEstimado(a) Cliente:", fontNegrita));
                 }
                 doc.Add(new Paragraph("\nPresente"));
                 doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización " +
                     "para la venta y/o la instalación del siguiente producto:", fontNormal));
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
-                    if (fila.IsNewRow) continue; // Ignora la fila nueva vacía
-                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString() ?? "Sin descripción";
-                    if (descripcion.ToLower().Contains("calent"))
+                    if (fila.IsNewRow) continue;
+                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
+                    if (descripcion.Contains("CALENT"))
                     {
-                        doc.Add(new Paragraph(descripcion, fontCursiva));
+                        doc.Add(new Paragraph("-" + descripcion, fontNormal));
+                        break;
+                    }
+                    else if (descripcion.Contains("MOTOBOMBA")|| descripcion.Contains("MOTB"))
+                    {
+                        doc.Add(new Paragraph("-" + descripcion, fontNormal));
+                        break;
+                    }
+                    else if (descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO"))
+                    {
+                        doc.Add(new Paragraph("-" + descripcion, fontNormal));
+                        break;
+                    }
+                    else if (descripcion.Contains("AIRE"))
+                    {
+                        doc.Add(new Paragraph("-" + descripcion, fontNormal));
+                        break;
+                    }
+                    else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
+                    {
+                        doc.Add(new Paragraph("-" + descripcion, fontNormal));
+                        break;
                     }
                 }
                 doc.Add(new Paragraph("\n", fontNormal));
@@ -101,7 +120,7 @@ namespace Ensumex.PDFtemplates
 
                 int pos = 1;
                 foreach (DataGridViewRow row in tablaCotizacion.Rows)
-                {
+                {   
                     if (row.IsNewRow) continue;
 
                     // # (posición)
@@ -161,6 +180,7 @@ namespace Ensumex.PDFtemplates
                 bool contieneAire = false;
                 bool contieneBomba = false;
                 bool contieneMantenimiento = false;
+                bool contienePlomeria = false;
                 // Recorre las filas de la tabla para verificar los tipos de productos
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
@@ -170,45 +190,31 @@ namespace Ensumex.PDFtemplates
                     {
                         contieneCalentador = true;
                         break;
+
                     }
-                }
-                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
-                {
-                    if (fila.IsNewRow) continue;
-                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
-                    if (descripcion.Contains("MOTOBOMBA"))
+                    else if (descripcion.Contains("MOT")||descripcion.Contains("MOTB"))
                     {
                         contieneMotobomba = true;
                         break;
                     }
-                }
-                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
-                {
-                    if (fila.IsNewRow) continue;
-                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
-                    if (descripcion.Contains("BOMBA DE")||descripcion.Contains("BOMBA TIPO"))
-                    {   
+                    else if (descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO"))
+                    {
                         contieneBomba = true;
                         break;
                     }
-                }
-                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
-                {
-                    if (fila.IsNewRow) continue;
-                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
-                    if (descripcion.Contains("AIRE"))
+                    else if (descripcion.Contains("AIRE"))
                     {
                         contieneAire = true;
                         break;
                     }
-                }
-                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
-                {
-                    if (fila.IsNewRow) continue;
-                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
-                    if (descripcion.Contains("MANTEN"))
+                    else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
                     {
                         contieneMantenimiento = true;
+                        break;
+                    }
+                    else if (descripcion.Contains("KIT DE MATERIAL"))
+                    {
+                        contienePlomeria = true;
                         break;
                     }
                 }
@@ -220,7 +226,7 @@ namespace Ensumex.PDFtemplates
                         doc.Add(new Paragraph(
                         "- Mantenimiento correctivo de unidad tipo paquete incluye:\n" +
                         "Localización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante\n" +
-                        "- Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
+                        "-  Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
                         "   Limpieza de serpentín evaporador y serpentín condensador, turbinas de la unidad y carcasas de " +
                         "la misma. \n   Limpieza de la charola de condensados. \n   Limpieza y lavado de los filtros de aire del retorno " +
                         "de la unidad evaporadora. \n   Ajuste de la banda de turbina del evaporador. \n    Engrasado de chumaceras. " +
@@ -261,7 +267,19 @@ namespace Ensumex.PDFtemplates
                         "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
                         break;
                     case true when contieneCalentador:
-                        doc.Add(new Paragraph(
+                        if (contienePlomeria == false)
+                        {
+                            doc.Add(new Paragraph(
+                         "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
+                         "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
+                         "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
+                         "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
+                         "-Precios sujetos a cambios sin previo aviso.\n" +
+                         "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                            break;
+                        }
+                        else
+                            doc.Add(new Paragraph(
                          "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
                          "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
                          "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +

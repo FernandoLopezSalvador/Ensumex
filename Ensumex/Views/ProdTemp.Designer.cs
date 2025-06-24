@@ -221,6 +221,7 @@
             txb_PrecioUnitarioTemp.UseSystemPasswordChar = false;
             txb_PrecioUnitarioTemp.ValidatingType = null;
             txb_PrecioUnitarioTemp.KeyPress += txb_PrecioUnitarioTemp_KeyPress;
+            txb_PrecioUnitarioTemp.Leave += txb_PrecioUnitarioTemp_Leave;
             txb_PrecioUnitarioTemp.TabIndexChanged += txb_PrecioUnitarioTemp_TabIndexChanged;
             // 
             // txb_ClaveTemp

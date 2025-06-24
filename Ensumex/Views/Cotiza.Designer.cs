@@ -48,7 +48,7 @@
             Buscarcliente = new PictureBox();
             materialLabel10 = new MaterialSkin.Controls.MaterialLabel();
             cmb_Descuento = new MaterialSkin.Controls.MaterialComboBox();
-            txt_Direccioncliente = new MaterialSkin.Controls.MaterialTextBox2();
+            txt_NumeroCliente = new MaterialSkin.Controls.MaterialTextBox2();
             materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
             materialLabel11 = new MaterialSkin.Controls.MaterialLabel();
             lbl_costoDescuento = new MaterialSkin.Controls.MaterialLabel();
@@ -96,7 +96,7 @@
             tableLayoutPanel1.Controls.Add(Buscarcliente, 2, 1);
             tableLayoutPanel1.Controls.Add(materialLabel10, 4, 2);
             tableLayoutPanel1.Controls.Add(cmb_Descuento, 5, 2);
-            tableLayoutPanel1.Controls.Add(txt_Direccioncliente, 5, 1);
+            tableLayoutPanel1.Controls.Add(txt_NumeroCliente, 5, 1);
             tableLayoutPanel1.Controls.Add(materialLabel5, 4, 1);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
@@ -197,6 +197,7 @@
             txt_Costoflete.TrailingIcon = null;
             txt_Costoflete.UseSystemPasswordChar = false;
             txt_Costoflete.KeyPress += txt_Costoflete_KeyPress;
+            txt_Costoflete.Leave += txt_Costoflete_Leave;
             txt_Costoflete.TextChanged += txt_Costoflete_TextChanged;
             // 
             // txt_Nombrecliente
@@ -272,6 +273,7 @@
             txt_Costoinstalacion.TrailingIcon = null;
             txt_Costoinstalacion.UseSystemPasswordChar = false;
             txt_Costoinstalacion.KeyPress += txt_Costoinstalacion_KeyPress;
+            txt_Costoinstalacion.Leave += txt_Costoinstalacion_Leave;
             txt_Costoinstalacion.TextChanged += txt_Costoinstalacion_TextChanged;
             // 
             // materialLabel6
@@ -479,35 +481,35 @@
             cmb_Descuento.TabIndex = 7;
             cmb_Descuento.SelectedIndexChanged += cmb_Descuento_SelectedIndexChanged;
             // 
-            // txt_Direccioncliente
+            // txt_NumeroCliente
             // 
-            txt_Direccioncliente.AnimateReadOnly = false;
-            txt_Direccioncliente.BackgroundImageLayout = ImageLayout.None;
-            txt_Direccioncliente.CharacterCasing = CharacterCasing.Normal;
-            txt_Direccioncliente.Depth = 0;
-            txt_Direccioncliente.Dock = DockStyle.Fill;
-            txt_Direccioncliente.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
-            txt_Direccioncliente.HideSelection = true;
-            txt_Direccioncliente.LeadingIcon = null;
-            txt_Direccioncliente.Location = new Point(767, 46);
-            txt_Direccioncliente.Margin = new Padding(3, 2, 3, 2);
-            txt_Direccioncliente.MaxLength = 32767;
-            txt_Direccioncliente.MouseState = MaterialSkin.MouseState.OUT;
-            txt_Direccioncliente.Name = "txt_Direccioncliente";
-            txt_Direccioncliente.PasswordChar = '\0';
-            txt_Direccioncliente.PrefixSuffixText = null;
-            txt_Direccioncliente.ReadOnly = false;
-            txt_Direccioncliente.RightToLeft = RightToLeft.No;
-            txt_Direccioncliente.SelectedText = "";
-            txt_Direccioncliente.SelectionLength = 0;
-            txt_Direccioncliente.SelectionStart = 0;
-            txt_Direccioncliente.ShortcutsEnabled = true;
-            txt_Direccioncliente.Size = new Size(148, 48);
-            txt_Direccioncliente.TabIndex = 3;
-            txt_Direccioncliente.TabStop = false;
-            txt_Direccioncliente.TextAlign = HorizontalAlignment.Left;
-            txt_Direccioncliente.TrailingIcon = null;
-            txt_Direccioncliente.UseSystemPasswordChar = false;
+            txt_NumeroCliente.AnimateReadOnly = false;
+            txt_NumeroCliente.BackgroundImageLayout = ImageLayout.None;
+            txt_NumeroCliente.CharacterCasing = CharacterCasing.Normal;
+            txt_NumeroCliente.Depth = 0;
+            txt_NumeroCliente.Dock = DockStyle.Fill;
+            txt_NumeroCliente.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            txt_NumeroCliente.HideSelection = true;
+            txt_NumeroCliente.LeadingIcon = null;
+            txt_NumeroCliente.Location = new Point(767, 46);
+            txt_NumeroCliente.Margin = new Padding(3, 2, 3, 2);
+            txt_NumeroCliente.MaxLength = 32767;
+            txt_NumeroCliente.MouseState = MaterialSkin.MouseState.OUT;
+            txt_NumeroCliente.Name = "txt_NumeroCliente";
+            txt_NumeroCliente.PasswordChar = '\0';
+            txt_NumeroCliente.PrefixSuffixText = null;
+            txt_NumeroCliente.ReadOnly = false;
+            txt_NumeroCliente.RightToLeft = RightToLeft.No;
+            txt_NumeroCliente.SelectedText = "";
+            txt_NumeroCliente.SelectionLength = 0;
+            txt_NumeroCliente.SelectionStart = 0;
+            txt_NumeroCliente.ShortcutsEnabled = true;
+            txt_NumeroCliente.Size = new Size(148, 48);
+            txt_NumeroCliente.TabIndex = 3;
+            txt_NumeroCliente.TabStop = false;
+            txt_NumeroCliente.TextAlign = HorizontalAlignment.Left;
+            txt_NumeroCliente.TrailingIcon = null;
+            txt_NumeroCliente.UseSystemPasswordChar = false;
             // 
             // materialLabel5
             // 
@@ -515,12 +517,12 @@
             materialLabel5.AutoSize = true;
             materialLabel5.Depth = 0;
             materialLabel5.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel5.Location = new Point(690, 57);
+            materialLabel5.Location = new Point(700, 57);
             materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel5.Name = "materialLabel5";
-            materialLabel5.Size = new Size(71, 19);
+            materialLabel5.Size = new Size(61, 19);
             materialLabel5.TabIndex = 7;
-            materialLabel5.Text = "Dirección:";
+            materialLabel5.Text = "Numero:";
             // 
             // materialLabel11
             // 
@@ -742,7 +744,7 @@
         private MaterialSkin.Controls.MaterialTextBox2 txt_Costoinstalacion;
         private PictureBox Buscarcliente;
         private MaterialSkin.Controls.MaterialLabel materialLabel6;
-        private MaterialSkin.Controls.MaterialTextBox2 txt_Direccioncliente;
+        private MaterialSkin.Controls.MaterialTextBox2 txt_NumeroCliente;
         private MaterialSkin.Controls.MaterialLabel materialLabel5;
         private MaterialSkin.Controls.MaterialLabel materialLabel10;
         private MaterialSkin.Controls.MaterialComboBox cmb_Descuento;

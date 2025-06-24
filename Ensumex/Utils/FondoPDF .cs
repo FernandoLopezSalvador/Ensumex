@@ -27,9 +27,9 @@ namespace Ensumex.Utils
                 // Escalamos la imagen 
                 _imagen.ScaleToFit(400f, 400f);
 
-                // Centrado manual (posición X y Y)
-                 float x = (document.PageSize.Width - _imagen.ScaledWidth) / 2;
-                float y = (document.PageSize.Height - _imagen.ScaledHeight) / 2;
+                float x = document.PageSize.Width - _imagen.ScaledWidth;
+                float y = 0; // parte inferior
+
                 _imagen.SetAbsolutePosition(x, y);
             }
             if (_imagen != null)

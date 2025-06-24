@@ -137,7 +137,7 @@ namespace Ensumex.Views
                             numeroCotizacion: txt_Nocotizacion.Text,
                             fecha: DateTime.Now,
                             nombreCliente: txt_Nombrecliente.Text,
-                            direccionCliente: txt_Direccioncliente.Text,
+                            direccionCliente: txt_NumeroCliente.Text,
                             costoInstalacion: decimal.TryParse(txt_Costoinstalacion.Text, out var inst) ? inst : 0,
                             costoFlete: decimal.TryParse(txt_Costoflete.Text, out var flt) ? flt : 0,
                             subtotal: decimal.TryParse(lbl_Subtotal.Text.Replace("$", ""), out var sub) ? sub : 0,
@@ -163,7 +163,34 @@ namespace Ensumex.Views
                             notas: Txt_observaciones.Text,
                             tablaCotizacion: tbl_Cotizacion
                         );
-                        MessageBox.Show("Cotización guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        // Preguntar si desea enviar por WhatsApp
+                        var enviarWhats = MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                        if (enviarWhats == DialogResult.Yes)
+                        {
+                            string numeroCliente = txt_NumeroCliente.Text?.Trim();
+                            numeroCliente = NormalizarNumeroWhatsApp(numeroCliente);
+                            if (string.IsNullOrWhiteSpace(numeroCliente))
+                            {
+                                numeroCliente = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el número de WhatsApp del cliente (ejemplo: 9511234567):", "WhatsApp", "");
+                                numeroCliente = NormalizarNumeroWhatsApp(numeroCliente);
+                            }
+                            if (!string.IsNullOrWhiteSpace(numeroCliente))
+                            {
+                                string mensaje = $"Hola, le comparto la cotización {txt_Nocotizacion.Text}. Adjunto el PDF.";
+                                EnviarCotizacionPorWhatsApp(numeroCliente, mensaje);
+                                MessageBox.Show("Se abrió WhatsApp Web. Adjunte el PDF manualmente en el chat.", "WhatsApp", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                // Abre la carpeta del PDF
+                                string carpeta = System.IO.Path.GetDirectoryName(sfd.FileName);
+                                if (!string.IsNullOrEmpty(carpeta) && System.IO.Directory.Exists(carpeta))
+                                {
+                                    System.Diagnostics.Process.Start("explorer.exe", carpeta);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("No se proporcionó un número válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                        }
                         limpiaCampos();
                     }
                 }
@@ -183,17 +210,41 @@ namespace Ensumex.Views
         }
         private void txt_Costoinstalacion_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)8)
+
+            Validarmoneda(sender, e);
+        }
+        private void Validarmoneda(object sender, KeyPressEventArgs e)
+        {
+            if (sender is not TextBox txt)
+                return;
+
+            // Permitir teclas de control (Backspace, Delete, etc.)
+            if (char.IsControl(e.KeyChar))
+                return;
+
+            // Permitir solo dígitos y un punto
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Evitar más de un punto decimal
+            if (e.KeyChar == '.' && txt.Text.Contains('.'))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Evitar punto como primer carácter (opcional)
+            if (e.KeyChar == '.' && txt.SelectionStart == 0)
             {
                 e.Handled = true;
             }
         }
         private void txt_Costoflete_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)8)
-            {
-                e.Handled = true;
-            }
+            Validarmoneda(sender, e);
         }
         // Evento para manejar el botón de agregar producto
         private void btn_AgregarProducto_Click(object sender, EventArgs e)
@@ -344,7 +395,7 @@ namespace Ensumex.Views
         {
             txt_Costoflete.Text = string.Empty;
             txt_Costoinstalacion.Text = string.Empty;
-            txt_Direccioncliente.Text = string.Empty;
+            txt_NumeroCliente.Text = string.Empty;
             txt_Nocotizacion.Text = string.Empty;
             txt_Nombrecliente.Text = string.Empty;
             txt_Bases.Text = string.Empty;
@@ -372,7 +423,6 @@ namespace Ensumex.Views
                     {
                         // Asegúrate de que no sean nulos antes de asignarlos
                         txt_Nombrecliente.Text = clientsControl.ClienteSeleccionadoNombre ?? "N/A";
-                        txt_Direccioncliente.Text = clientsControl.ClienteSeleccionadoCalle ?? "N/A";
                     }
                 }
             }
@@ -504,6 +554,78 @@ namespace Ensumex.Views
                     e.Cancel = true;
                 }
             }
+        }
+        private void ValidarYFormatearMoneda_Leave(object sender, EventArgs e)
+        {
+            if (sender is not TextBox txt)
+                return;
+
+            // Si está vacío, no hacer nada
+            if (string.IsNullOrWhiteSpace(txt.Text))
+                return;
+
+            // Validar que el texto sea un decimal válido
+            if (decimal.TryParse(txt.Text, out decimal valor))
+            {
+                // Formatear como moneda sin símbolo
+                txt.Text = valor.ToString("N2"); // "1,234.56"
+            }
+            else
+            {
+                MessageBox.Show("Por favor ingresa un valor numérico válido.", "Formato inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txt.Focus();
+                txt.SelectAll();
+            }
+        }
+
+        private void txt_Costoinstalacion_Leave(object sender, EventArgs e)
+        {
+            ValidarYFormatearMoneda_Leave(sender, e); // Llama al método para validar y formatear
+        }
+
+        private void txt_Costoflete_Leave(object sender, EventArgs e)
+        {
+            ValidarYFormatearMoneda_Leave(sender, e); // Llama al método para validar y formatear
+        }
+
+        private void EnviarCotizacionPorWhatsApp(string numeroCliente, string mensaje)
+        {
+            try
+            {
+                string url = $"https://wa.me/{numeroCliente}?text={Uri.EscapeDataString(mensaje)}";
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir WhatsApp Web: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string NormalizarNumeroWhatsApp(string numero)
+        {
+            // Elimina espacios y guiones
+            numero = numero.Replace(" ", "").Replace("-", "");
+
+            // Si ya tiene el prefijo internacional, lo deja igual
+            if (numero.StartsWith("521") && numero.Length == 13)
+                return numero;
+            if (numero.StartsWith("52") && numero.Length == 12)
+                return numero;
+
+            // Si es celular (10 dígitos), antepone 521
+            if (numero.Length == 10 && numero.StartsWith("9"))
+                return "521" + numero;
+
+            // Si es fijo (10 dígitos), antepone 52
+            if (numero.Length == 10)
+                return "52" + numero;
+
+            // Si no cumple, regresa vacío
+            return "";
         }
     }
 }

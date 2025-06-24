@@ -17,6 +17,7 @@ namespace Ensumex.Views
         public Cotizaciones()
         {
             InitializeComponent();
+            tabla_cotizaciones.CellClick += Tabla_cotizaciones_CellClick; ;
             TablaFormat.AplicarEstilosTabla(tabla_cotizaciones);
             // Agregar columna de botón "Detalle" si no existe
             if (!tabla_cotizaciones.Columns.Contains("Detalle"))
@@ -27,11 +28,15 @@ namespace Ensumex.Views
                     HeaderText = "Acción",
                     Text = "Detalle",
                     UseColumnTextForButtonValue = true
-                };  
+                };
                 tabla_cotizaciones.Columns.Add(btnDetalle);
             }
             CargarCotizaciones();
             tabla_cotizaciones.CellClick += tabla_cotizaciones_CellClick;
+        }
+
+        private void Tabla_cotizaciones_CellClick(object? sender, DataGridViewCellEventArgs e)
+        {
         }
         private void CargarCotizaciones()
         {
@@ -72,7 +77,7 @@ namespace Ensumex.Views
             try
             {
                 // Validación básica de clic válido
-                if (e.RowIndex < 0 || e.ColumnIndex < 0)    
+                if (e.RowIndex < 0 || e.ColumnIndex < 0)
                     return;
 
                 if (tabla_cotizaciones.Columns[e.ColumnIndex].Name == "Detalle")
@@ -104,7 +109,7 @@ namespace Ensumex.Views
                             Dock = DockStyle.Fill,
                             ReadOnly = true,
                             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-                           
+
                         };
                         detalleForm.Controls.Add(dgvDetalle);
                         detalleForm.ShowDialog();
@@ -115,6 +120,11 @@ namespace Ensumex.Views
             {
                 MessageBox.Show("Ocurrió un error al mostrar el detalle:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void tabla_cotizaciones_CellClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+            
         }
     }
 }

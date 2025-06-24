@@ -19,32 +19,53 @@ namespace Ensumex.Views
         {
             InitializeComponent();
             Tema.ConfigurarTema(this);
-            
-            cmb_Unidentrada.Items.AddRange(new object[] { "PZA", "PRODUCTO", "SERVICIO"});
+
+            cmb_Unidentrada.Items.AddRange(new object[] { "PZA", "PRODUCTO", "SERVICIO" });
         }
         private void txb_PrecioUnitarioTemp_TabIndexChanged(object sender, EventArgs e)
         {
         }
         private void txb_PrecioUnitarioTemp_KeyPress(object sender, KeyPressEventArgs e)
         {
-            TextBox txt = sender as TextBox;
-            // Permitir teclas de control (Backspace, etc.)
-            if (char.IsControl(e.KeyChar))
-                return;
-            // Permitir solo dígitos y un punto
-            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+            Validaemoneda(sender, e);
+        }
+        private void Validaemoneda(object sender, KeyPressEventArgs e)
+        {
+            // Permitir solo números, punto decimal y retroceso
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
             {
-                e.Handled = true; // Bloquear tecla
-                return;
+                e.Handled = true; // Ignorar la entrada
             }
-            // No permitir más de un punto decimal
-            if (e.KeyChar == '.' && txt.Text.Contains('.'))
+            // Permitir solo un punto decimal
+            if (e.KeyChar == '.' && sender is TextBox textBox && textBox.Text.Contains('.'))
             {
-                e.Handled = true;
+                e.Handled = true; // Ignorar la entrada
+            }
+        }
+        private void ValidarYFormatearMoneda_Leave(object sender, EventArgs e)
+        {
+            if (sender is not TextBox txt)
+                return;
+
+            // Si está vacío, no hacer nada
+            if (string.IsNullOrWhiteSpace(txt.Text))
+                return;
+
+            // Validar que el texto sea un decimal válido
+            if (decimal.TryParse(txt.Text, out decimal valor))
+            {
+                // Formatear como moneda sin símbolo
+                txt.Text = valor.ToString("N2");
+            }
+            else
+            {
+                MessageBox.Show("Por favor ingresa un valor numérico válido.", "Formato inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txt.Focus();
+                txt.SelectAll();
             }
         }
         private void txb_PrecioPublicoTemp_KeyPress(object sender, KeyPressEventArgs e)
-        { 
+        {
         }
         private void materialButton1_Click(object sender, EventArgs e)
         {
@@ -63,11 +84,17 @@ namespace Ensumex.Views
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
+        private void txb_PrecioUnitarioTemp_Leave(object sender, EventArgs e)
+        {
+            ValidarYFormatearMoneda_Leave(sender, e);
+        }
+
         public string Clave => txb_ClaveTemp.Text.Trim();
         public string Descripcion => txb_Descripcion.Text.Trim();
         public string Unidentrada => cmb_Unidentrada.Text.Trim();
         public decimal PrecioUnitarioTemp => decimal.TryParse(txb_PrecioUnitarioTemp.Text, out decimal p) ? p : 0;
         public decimal cantidad => decimal.TryParse(txb_cantidadTemp.Text, out decimal p) ? p : 0;
-        
+
     }
 }

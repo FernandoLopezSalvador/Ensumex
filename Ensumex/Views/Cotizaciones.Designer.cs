@@ -50,6 +50,7 @@
             tabla_cotizaciones.RowHeadersWidth = 51;
             tabla_cotizaciones.Size = new Size(676, 255);
             tabla_cotizaciones.TabIndex = 21;
+            tabla_cotizaciones.CellClick += tabla_cotizaciones_CellClick_1;
             // 
             // tableLayoutPanel1
             // 

@@ -82,7 +82,6 @@ namespace Ensumex.Views
             {
                 var row = tabla_clientes.Rows[e.RowIndex];
                 string nombre = row.Cells["NOMBRE"].Value?.ToString();
-                string calle = row.Cells["CALLE"].Value?.ToString();
                 var result = MessageBox.Show(
                     $"¿Desea agregar el cliente '{nombre}'?",
                     "Agregar cliente",
@@ -92,7 +91,6 @@ namespace Ensumex.Views
                 if (result == DialogResult.Yes)
                 {
                     ClienteSeleccionadoNombre = nombre;
-                    ClienteSeleccionadoCalle = calle;
                     var parentForm = this.FindForm();
                     if (parentForm != null)
                     {
