@@ -160,9 +160,10 @@ namespace Ensumex.Views
                             total: lbl_TotalNeto.Text,
                             descuento: lbl_costoDescuento.Text,
                             porcentajeDescuento: porcentajeDescuento,
-                            notas: Txt_observaciones.Text,
+                            notas: Txt_observaciones.Text,  
                             tablaCotizacion: tbl_Cotizacion
                         );
+
                         // Preguntar si desea enviar por WhatsApp
                         var enviarWhats = MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (enviarWhats == DialogResult.Yes)
@@ -176,15 +177,21 @@ namespace Ensumex.Views
                             }
                             if (!string.IsNullOrWhiteSpace(numeroCliente))
                             {
+                                // Abre WhatsApp Web
                                 string mensaje = $"Hola, le comparto la cotización {txt_Nocotizacion.Text}. Adjunto el PDF.";
                                 EnviarCotizacionPorWhatsApp(numeroCliente, mensaje);
-                                MessageBox.Show("Se abrió WhatsApp Web. Adjunte el PDF manualmente en el chat.", "WhatsApp", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                // Abre la carpeta del PDF
+                                // Abre la carpeta del PDF en modo ventana y selecciona el archivo
                                 string carpeta = System.IO.Path.GetDirectoryName(sfd.FileName);
                                 if (!string.IsNullOrEmpty(carpeta) && System.IO.Directory.Exists(carpeta))
                                 {
-                                    System.Diagnostics.Process.Start("explorer.exe", carpeta);
+                                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                                    {
+                                        FileName = "explorer.exe",
+                                        Arguments = $"/select,\"{sfd.FileName}\"",
+                                        WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal
+                                    });
                                 }
+                                MessageBox.Show("Se abrió WhatsApp Web y la carpeta de la cotización. Adjunte el PDF manualmente en el chat.", "WhatsApp", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                             else
                             {

@@ -5,6 +5,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -169,11 +170,30 @@ namespace Ensumex.PDFtemplates
                 tablaTotales.AddCell(new PdfPCell(new Phrase("Costo por Envío/Flete:", fontNormal)) { Border = 0 });
                 tablaTotales.AddCell(new PdfPCell(new Phrase("$" + costoFlete, fontNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
 
-                tablaTotales.AddCell(new PdfPCell(new Phrase("Total:", fontNegrita)) { Border = 0 });
-                tablaTotales.AddCell(new PdfPCell(new Phrase(total, fontNegrita)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+                decimal valorNumerico = decimal.Parse(total, System.Globalization.NumberStyles.Any);
 
+                // Agregar fila con monto en número
+                tablaTotales.AddCell(new PdfPCell(new Phrase("Total:", fontNegrita))
+                {
+                    Border = 0
+                });
+                tablaTotales.AddCell(new PdfPCell(new Phrase(valorNumerico.ToString("C", new CultureInfo("es-MX")), fontNegrita))
+                {
+                    Border = 0,
+                    HorizontalAlignment = Element.ALIGN_RIGHT
+                });
+
+                // Agregar fila vacía
+                tablaTotales.AddCell(new PdfPCell(new Phrase("")) { Border = 0, Colspan = 2 });
+
+                tablaTotales.AddCell(new PdfPCell(new Phrase(Numerosaletras.Convertir(valorNumerico), fontNormal))
+                {
+                    Border = 0,
+                    Colspan = 2,
+                    HorizontalAlignment = Element.ALIGN_CENTER
+                });
                 doc.Add(tablaTotales);
-                
+
                 // Variables para verificar otros tipos de productos
                 bool contieneCalentador = false;
                 bool contieneMotobomba = false;

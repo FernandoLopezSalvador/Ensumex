@@ -39,8 +39,8 @@ namespace Ensumex.Utils
                 // Aplicar opacidad
                 PdfGState gState = new PdfGState
                 {
-                    FillOpacity = 0.3f, 
-                    StrokeOpacity = 0.3f
+                    FillOpacity = 0.2f, 
+                    StrokeOpacity = 0.2f
                 };
                 canvas.SaveState();
                 canvas.SetGState(gState);

@@ -34,7 +34,6 @@ namespace Ensumex.Views
             CargarCotizaciones();
             tabla_cotizaciones.CellClick += tabla_cotizaciones_CellClick;
         }
-
         private void Tabla_cotizaciones_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
         }
