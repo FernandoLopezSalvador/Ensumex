@@ -34,26 +34,11 @@ namespace Ensumex.Views
             // Expresión regular para validar un correo electrónico
             string patronCorreo = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             // Verifica si el correo coincide con el patrón
-            return Regex.IsMatch(correo, patronCorreo);
+            return Regex.IsMatch(correo, patronCorreo); 
         }
         private void btn_Cancelar_Click(object sender, EventArgs e)
         {
             Panel_Nuevousuario.Visible = false;
-        }
-        private void Tabla_usuarios_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            // Evitar errores al hacer clic en encabezados
-            if (e.RowIndex < 0)
-                return;
-            string usuario = Tabla_usuarios.Rows[e.RowIndex].Cells["Usuario"].Value.ToString();
-
-            if (Tabla_usuarios.Columns[e.ColumnIndex].Name == "Editar")
-            {
-                MessageBox.Show("Editar usuario: " + usuario);
-            }
-        }
-        private void tableLayoutPanel3_Paint(object sender, PaintEventArgs e)
-        {
         }
         // Método para cargar los usuarios en la tabla
         private void CargarUsuariosEnTabla()
@@ -79,12 +64,9 @@ namespace Ensumex.Views
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void btn_GuardarUsuario_Click_1(object sender, EventArgs e)
-        {
-        }
-
         private void btn_GuardarUsuario_Click_2(object sender, EventArgs e)
         {
+            // Validar el corre  electrónico antes de guardar el usuaio.
             try
             {
                 string correo = textNewCorreo.Text;

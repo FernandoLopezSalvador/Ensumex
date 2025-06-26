@@ -152,7 +152,6 @@ namespace Ensumex.Views
                             MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
-
                         // GUARDAR EN BASE DE DATOS
                         CotizacionRepository.GuardarCotizacion(
                             numeroCotizacion: txt_Nocotizacion.Text,

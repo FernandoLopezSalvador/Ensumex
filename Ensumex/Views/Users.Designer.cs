@@ -33,6 +33,7 @@
             btn_nuevoUsuario = new Button();
             lbl_NuevoUsuario = new Label();
             Tabla_usuarios = new DataGridView();
+            tableLayoutPanel1 = new TableLayoutPanel();
             Panel_Nuevousuario = new TableLayoutPanel();
             lbl1_usuariocrear = new Label();
             btn_GuardarUsuario = new Button();
@@ -46,11 +47,10 @@
             label4 = new Label();
             textNewCorreo = new TextBox();
             cmb_NewPosicion = new ComboBox();
-            tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Tabla_usuarios).BeginInit();
-            Panel_Nuevousuario.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
+            Panel_Nuevousuario.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel2
@@ -106,6 +106,23 @@
             Tabla_usuarios.RowHeadersWidth = 51;
             Tabla_usuarios.Size = new Size(448, 269);
             Tabla_usuarios.TabIndex = 20;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 49.56332F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0.98253274F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 49.4541473F));
+            tableLayoutPanel1.Controls.Add(Panel_Nuevousuario, 2, 0);
+            tableLayoutPanel1.Controls.Add(Tabla_usuarios, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Top;
+            tableLayoutPanel1.Location = new Point(0, 54);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 83.2317047F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 16.7682934F));
+            tableLayoutPanel1.Size = new Size(916, 328);
+            tableLayoutPanel1.TabIndex = 19;
             // 
             // Panel_Nuevousuario
             // 
@@ -266,23 +283,6 @@
             cmb_NewPosicion.Size = new Size(114, 23);
             cmb_NewPosicion.TabIndex = 7;
             // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.ColumnCount = 3;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 49.56332F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 0.98253274F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 49.4541473F));
-            tableLayoutPanel1.Controls.Add(Panel_Nuevousuario, 2, 0);
-            tableLayoutPanel1.Controls.Add(Tabla_usuarios, 0, 0);
-            tableLayoutPanel1.Dock = DockStyle.Top;
-            tableLayoutPanel1.Location = new Point(0, 54);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 83.2317047F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 16.7682934F));
-            tableLayoutPanel1.Size = new Size(916, 328);
-            tableLayoutPanel1.TabIndex = 19;
-            // 
             // Users
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -295,9 +295,9 @@
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)Tabla_usuarios).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
             Panel_Nuevousuario.ResumeLayout(false);
             Panel_Nuevousuario.PerformLayout();
-            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -307,6 +307,7 @@
         private Button btn_nuevoUsuario;
         private DataGridView Tabla_usuarios;
         private Label lbl_NuevoUsuario;
+        private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel Panel_Nuevousuario;
         private Label lbl1_usuariocrear;
         private Button btn_GuardarUsuario;
@@ -315,11 +316,10 @@
         private TextBox textNewContraseña;
         private Label label1;
         private Label label2;
-        private ComboBox cmb_NewPosicion;
         private TextBox textNewNombre;
         private Label label3;
         private Label label4;
         private TextBox textNewCorreo;
-        private TableLayoutPanel tableLayoutPanel1;
+        private ComboBox cmb_NewPosicion;
     }
 }

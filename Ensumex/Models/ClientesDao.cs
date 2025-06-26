@@ -12,6 +12,7 @@ namespace Ensumex.Models
     internal class ClientesDao : ConnectionToSql
     {
         [Obsolete]
+        // metodo para obtener los clientes de la base de datos
         public List<(string CLAVE, string STATUS, string NOMBRE, string CALLE, string COLONIA, string MUNICIPIO, string EMAILPRED, string NOMBRECOMERCIAL)> ObtenerClientes()
         {
             var clientes = new List<(string CLAVE, string STATUS, string NOMBRE, string CALLE, string COLONIA, string MUNICIPIO, string EMAILPRED, string NOMBRECOMERCIAL)>();
