@@ -510,6 +510,7 @@
             txt_NumeroCliente.TextAlign = HorizontalAlignment.Left;
             txt_NumeroCliente.TrailingIcon = null;
             txt_NumeroCliente.UseSystemPasswordChar = false;
+            txt_NumeroCliente.KeyPress += txt_NumeroCliente_KeyPress;
             // 
             // materialLabel5
             // 

@@ -22,7 +22,6 @@ namespace Ensumex.Utils
 
             return $"({textoEntero} pesos {textoCentavos})";
         }
-
         private static string ConvertirNumero(long numero)
         {
             if (numero == 0) return "cero";
@@ -73,7 +72,6 @@ namespace Ensumex.Utils
                 string millonesTexto = (millones == 1) ? "un millón" : ConvertirNumero(millones) + " millones";
                 return millonesTexto + ((resto > 0) ? " " + ConvertirNumero(resto) : "");
             }
-
             return numero.ToString();
         }
     }

@@ -26,14 +26,37 @@ namespace Ensumex.Views
 {
     public partial class Cotiza : UserControl
     {
-        public Cotiza()
+        private readonly string usuarioActual;
+
+        public Cotiza(string usuario)
         {
             InitializeComponent();
-            TablaFormat.AplicarEstilosTabla(tbl_Cotizacion);
+            usuarioActual = usuario;
+
+            InicializarFormulario();
+        }
+        private void InicializarFormulario()
+        {
+            AplicarConfiguracionesGenerales();
+            ConfigurarControles();
+            ConfigurarEventos();
+        }
+
+        private void AplicarConfiguracionesGenerales()
+        {
             lblFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
-            AgregarDescuentos(new[] { "0%", "5%", "10%", "15%", "20%", "25%", "30%" });
             txt_Nocotizacion.CharacterCasing = CharacterCasing.Upper;
+        }
+
+        private void ConfigurarControles()
+        {
+            TablaFormat.AplicarEstilosTabla(tbl_Cotizacion);
+            AgregarDescuentos(Enumerable.Range(0, 11).Select(i => $"{i * 5}%").ToArray());
             AgregarColumnasCotizacion();
+        }
+
+        private void ConfigurarEventos()
+        {
             tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
             tbl_Cotizacion.CurrentCellDirtyStateChanged += tbl_Cotizacion_CurrentCellDirtyStateChanged;
             tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit;
@@ -95,8 +118,6 @@ namespace Ensumex.Views
                     };
                     tbl_Cotizacion.Columns.Add(btnEliminar);
                 }
-
-                // Ajusta las columnas para que llenen todo el ancho del grid
                 tbl_Cotizacion.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
             catch (Exception ex)
@@ -137,7 +158,7 @@ namespace Ensumex.Views
                             numeroCotizacion: txt_Nocotizacion.Text,
                             fecha: DateTime.Now,
                             nombreCliente: txt_Nombrecliente.Text,
-                            direccionCliente: txt_NumeroCliente.Text,
+                            numeroCliente: txt_NumeroCliente.Text,
                             costoInstalacion: decimal.TryParse(txt_Costoinstalacion.Text, out var inst) ? inst : 0,
                             costoFlete: decimal.TryParse(txt_Costoflete.Text, out var flt) ? flt : 0,
                             subtotal: decimal.TryParse(lbl_Subtotal.Text.Replace("$", ""), out var sub) ? sub : 0,
@@ -160,8 +181,9 @@ namespace Ensumex.Views
                             total: lbl_TotalNeto.Text,
                             descuento: lbl_costoDescuento.Text,
                             porcentajeDescuento: porcentajeDescuento,
-                            notas: Txt_observaciones.Text,  
-                            tablaCotizacion: tbl_Cotizacion
+                            notas: Txt_observaciones.Text,
+                            tablaCotizacion: tbl_Cotizacion,
+                            usuario: usuarioActual
                         );
 
                         // Preguntar si desea enviar por WhatsApp
@@ -584,17 +606,14 @@ namespace Ensumex.Views
                 txt.SelectAll();
             }
         }
-
         private void txt_Costoinstalacion_Leave(object sender, EventArgs e)
         {
             ValidarYFormatearMoneda_Leave(sender, e); // Llama al método para validar y formatear
         }
-
         private void txt_Costoflete_Leave(object sender, EventArgs e)
         {
             ValidarYFormatearMoneda_Leave(sender, e); // Llama al método para validar y formatear
         }
-
         private void EnviarCotizacionPorWhatsApp(string numeroCliente, string mensaje)
         {
             try
@@ -611,12 +630,10 @@ namespace Ensumex.Views
                 MessageBox.Show($"Error al abrir WhatsApp Web: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private string NormalizarNumeroWhatsApp(string numero)
         {
             // Elimina espacios y guiones
             numero = numero.Replace(" ", "").Replace("-", "");
-
             // Si ya tiene el prefijo internacional, lo deja igual
             if (numero.StartsWith("521") && numero.Length == 13)
                 return numero;
@@ -630,9 +647,16 @@ namespace Ensumex.Views
             // Si es fijo (10 dígitos), antepone 52
             if (numero.Length == 10)
                 return "52" + numero;
-
             // Si no cumple, regresa vacío
             return "";
+        }
+        private void txt_NumeroCliente_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Permitir solo dígitos y teclas de control (como Backspace)
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; 
+            }
         }
     }
 }

@@ -46,26 +46,7 @@ namespace Ensumex.Forms
         }
         private void CargarDatosUsuario()
         {
-            CargaUsuario.CargarDatosUsuario(lbl_usuario, lbl_posicion);
-        }
-        private void txt_usuario_TextChanged(object sender, EventArgs e)
-        {
-        }
-        private void txt_usuario_Enter(object sender, EventArgs e)
-        {
-            if (txt_usuario.Text == "Usuario")
-            {
-                txt_usuario.Text = "";
-                txt_usuario.ForeColor = Color.Black;
-            }
-        }
-        private void txt_usuario_Leave(object sender, EventArgs e)
-        {
-            if (txt_usuario.Text == "")
-            {
-                txt_usuario.Text = "Usuario";
-                txt_usuario.ForeColor = Color.White;
-            }
+            CargaUsuario.CargarDatosUsuario(lbl_UsuarioInicio, lbl_posicion);
         }
         private void lbl_cuenta_Click(object sender, EventArgs e)
         {
@@ -120,7 +101,7 @@ namespace Ensumex.Forms
         }
         private void materialButton2_Click(object sender, EventArgs e)
         {
-            CargarUserControl(new Cotiza());
+            CargarUserControl(new Cotiza(lbl_UsuarioInicio.Text));
         }
         private void btn_clientes_Click(object sender, EventArgs e)
         {

@@ -17,7 +17,7 @@ namespace Ensumex.Models
             string numeroCotizacion,
             DateTime fecha,
             string nombreCliente,
-            string direccionCliente,
+            string numeroCliente,
             decimal costoInstalacion,
             decimal costoFlete,
             decimal subtotal,
@@ -36,14 +36,14 @@ namespace Ensumex.Models
                         // 1. Insertar encabezado
                         var cmdEncabezado = new SqlCommand(@"
                             INSERT INTO Cotizacion
-                            (NumeroCotizacion, Fecha, NombreCliente, DireccionCliente, CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado)
-                            VALUES (@NumeroCotizacion, @Fecha, @NombreCliente, @DireccionCliente, @CostoInstalacion, @CostoFlete, @Subtotal, @Descuento, @Total, @Notas, @Estado);
+                            (NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado)
+                            VALUES (@NumeroCotizacion, @Fecha, @NombreCliente, @NumeroCliente, @CostoInstalacion, @CostoFlete, @Subtotal, @Descuento, @Total, @Notas, @Estado);
                             SELECT SCOPE_IDENTITY();", conn, tran);
 
                         cmdEncabezado.Parameters.AddWithValue("@NumeroCotizacion", numeroCotizacion);
                         cmdEncabezado.Parameters.AddWithValue("@Fecha", fecha);
                         cmdEncabezado.Parameters.AddWithValue("@NombreCliente", nombreCliente);
-                        cmdEncabezado.Parameters.AddWithValue("@DireccionCliente", direccionCliente);
+                        cmdEncabezado.Parameters.AddWithValue("@NumeroCliente", numeroCliente); 
                         cmdEncabezado.Parameters.AddWithValue("@CostoInstalacion", costoInstalacion);
                         cmdEncabezado.Parameters.AddWithValue("@CostoFlete", costoFlete);
                         cmdEncabezado.Parameters.AddWithValue("@Subtotal", subtotal);
@@ -86,86 +86,134 @@ namespace Ensumex.Models
         }
         public static DataTable ObtenerCotizaciones()
         {
-            using (var conn = new SqlConnection(connSqlServer))
+            var dt = new DataTable();
+
+            try
             {
-                string query = @"SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, DireccionCliente, 
-                                        CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
-                                 FROM Cotizacion
-                                 ORDER BY Fecha DESC";
-                using (var cmd = new SqlCommand(query, conn))
+                using (var conn = new SqlConnection(connSqlServer))
                 {
+                    string query = @"
+                SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
+                       CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas
+                FROM Cotizacion
+                ORDER BY Fecha DESC";
+
+                    using (var cmd = new SqlCommand(query, conn))
                     using (var adapter = new SqlDataAdapter(cmd))
                     {
-                        var dt = new DataTable();
                         conn.Open();
                         adapter.Fill(dt);
-                        return dt;
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                // Puedes registrar el error o mostrar un mensaje
+                MessageBox.Show("Error al obtener cotizaciones: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return dt;
         }
         public static DataTable ObtenerDetallePorId(int idCotizacion)
         {
-            using (var conn = new SqlConnection(connSqlServer))
+            var dt = new DataTable();
+
+            try
             {
-                string query = @"SELECT ClaveProducto, Descripcion, Unidad, PrecioUnitario, Cantidad, TasaCambio, Subtotal, AplicaDescuento
-                                 FROM CotizacionDetalle
-                                 WHERE IdCotizacion = @IdCotizacion";
-                using (var cmd = new SqlCommand(query, conn))
+                using (var conn = new SqlConnection(connSqlServer))
                 {
-                    cmd.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
-                    using (var adapter = new SqlDataAdapter(cmd))
+                    string query = @"
+                SELECT ClaveProducto, Descripcion, Unidad, PrecioUnitario, 
+                       Cantidad, TasaCambio, Subtotal, AplicaDescuento
+                FROM CotizacionDetalle
+                WHERE IdCotizacion = @IdCotizacion";
+
+                    using (var cmd = new SqlCommand(query, conn))
                     {
-                        var dt = new DataTable();
-                        conn.Open();
-                        adapter.Fill(dt);
-                        return dt;  
+                        cmd.Parameters.Add("@IdCotizacion", SqlDbType.Int).Value = idCotizacion;
+
+                        using (var adapter = new SqlDataAdapter(cmd))
+                        {
+                            conn.Open();
+                            adapter.Fill(dt);
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al obtener el detalle de cotización: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return dt;
         }
         public static DataTable ObtenerCotizacionesPorLimite(int limite)
         {
-            using (var conn = new SqlConnection(connSqlServer))
+            var dt = new DataTable();
+
+            try
             {
-                string query = @"SELECT TOP (@Limite) IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, DireccionCliente, 
-                                        CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
-                                 FROM Cotizacion
-                                 ORDER BY Fecha DESC";
-                using (var cmd = new SqlCommand(query, conn))
+                using (var conn = new SqlConnection(connSqlServer))
                 {
-                    cmd.Parameters.AddWithValue("@Limite", limite);
+                    // IMPORTANTE: Aquí se concatena el valor en la cadena, ya que no se puede usar @param en TOP directamente
+                    string query = $@"
+                SELECT TOP {limite} IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
+                       CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
+                FROM Cotizacion
+                ORDER BY Fecha DESC";
+
+                    using (var cmd = new SqlCommand(query, conn))
                     using (var adapter = new SqlDataAdapter(cmd))
                     {
-                        var dt = new DataTable();
-                        conn.Open();
-                        adapter.Fill(dt);   
-                        return dt;
-                    }
-                }
-            }
-        }
-        public static DataTable ObtenerCotizacionesFiltradas(string searchText)
-        { 
-            using (var conn = new SqlConnection(connSqlServer))
-            {
-                string query = @"SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, DireccionCliente, 
-                                        CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
-                                 FROM Cotizacion
-                                 WHERE NombreCliente LIKE @SearchText OR DireccionCliente LIKE @SearchText
-                                 ORDER BY Fecha DESC";
-                using (var cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@SearchText", "%" + searchText + "%");
-                    using (var adapter = new SqlDataAdapter(cmd))
-                    {
-                        var dt = new DataTable();
                         conn.Open();
                         adapter.Fill(dt);
-                        return dt;
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al obtener las cotizaciones: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return dt;
+        }
+        public static DataTable ObtenerCotizacionesFiltradas(string searchText)
+        {
+            var dt = new DataTable();
+
+            try
+            {
+                using (var conn = new SqlConnection(connSqlServer))
+                {
+                    string query = @"
+                SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
+                       CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
+                FROM Cotizacion
+                WHERE NombreCliente LIKE @SearchText OR NumeroCliente LIKE @SearchText
+                ORDER BY Fecha DESC";
+
+                    using (var cmd = new SqlCommand(query, conn))
+                    {
+                        // Validar entrada
+                        if (string.IsNullOrWhiteSpace(searchText))
+                            searchText = ""; // Si viene vacío, no filtra
+
+                        cmd.Parameters.Add("@SearchText", SqlDbType.NVarChar).Value = $"%{searchText}%";
+
+                        using (var adapter = new SqlDataAdapter(cmd))
+                        {
+                            conn.Open();
+                            adapter.Fill(dt);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al buscar cotizaciones: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return dt;
         }
     }
 }

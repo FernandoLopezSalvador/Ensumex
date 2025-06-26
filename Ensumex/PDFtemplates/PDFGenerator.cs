@@ -27,7 +27,9 @@ namespace Ensumex.PDFtemplates
             string descuento,
             decimal porcentajeDescuento, 
             string notas,
-            DataGridView tablaCotizacion)
+            DataGridView tablaCotizacion,
+            string usuario // <--- Nuevo parámetro
+        )
         {
             try
             {
@@ -201,6 +203,7 @@ namespace Ensumex.PDFtemplates
                 bool contieneBomba = false;
                 bool contieneMantenimiento = false;
                 bool contienePlomeria = false;
+
                 // Recorre las filas de la tabla para verificar los tipos de productos
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
@@ -245,7 +248,7 @@ namespace Ensumex.PDFtemplates
                     case true when contieneMantenimiento:
                         doc.Add(new Paragraph(
                         "- Mantenimiento correctivo de unidad tipo paquete incluye:\n" +
-                        "Localización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante\n" +
+                        "   Localización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante\n" +
                         "-  Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
                         "   Limpieza de serpentín evaporador y serpentín condensador, turbinas de la unidad y carcasas de " +
                         "la misma. \n   Limpieza de la charola de condensados. \n   Limpieza y lavado de los filtros de aire del retorno " +
@@ -319,7 +322,7 @@ namespace Ensumex.PDFtemplates
                 // Crear una tabla de una columna centrada
                 PdfPTable tablaFirma = new PdfPTable(1);
                 tablaFirma.WidthPercentage = 100;
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("\n\n\n\nAtentamente,\nCarlos Hernández Velasco\nRepresentante de Ventas", fontCursiva));
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("\n\n\n\nAtentamente,\n"+usuario+"\nRepresentante de la Cotización", fontCursiva));
                 celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;
                 celdaTexto.Border = Rectangle.NO_BORDER;
                 celdaTexto.PaddingBottom = 10f;

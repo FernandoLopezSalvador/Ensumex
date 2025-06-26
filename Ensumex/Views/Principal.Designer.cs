@@ -42,10 +42,8 @@
             materialButton2 = new MaterialSkin.Controls.MaterialButton();
             btn_inventarioP = new MaterialSkin.Controls.MaterialButton();
             panel2 = new Panel();
-            materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
-            lbl_usuario = new Label();
+            lbl_UsuarioInicio = new Label();
             lbl_posicion = new Label();
-            txt_usuario = new TextBox();
             menu_usuario = new MenuStrip();
             administrarUsuarioToolStripMenuItem = new ToolStripMenuItem();
             nuevoToolStripMenuItem = new ToolStripMenuItem();
@@ -292,10 +290,8 @@
             // panel2
             // 
             panel2.BackColor = SystemColors.Control;
-            panel2.Controls.Add(materialLabel1);
-            panel2.Controls.Add(lbl_usuario);
+            panel2.Controls.Add(lbl_UsuarioInicio);
             panel2.Controls.Add(lbl_posicion);
-            panel2.Controls.Add(txt_usuario);
             panel2.Controls.Add(menu_usuario);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 0);
@@ -304,56 +300,28 @@
             panel2.Size = new Size(198, 79);
             panel2.TabIndex = 1;
             // 
-            // materialLabel1
+            // lbl_UsuarioInicio
             // 
-            materialLabel1.AutoSize = true;
-            materialLabel1.Depth = 0;
-            materialLabel1.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel1.Location = new Point(3, 24);
-            materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
-            materialLabel1.Name = "materialLabel1";
-            materialLabel1.Size = new Size(37, 19);
-            materialLabel1.TabIndex = 7;
-            materialLabel1.Text = "Tipo:";
-            // 
-            // lbl_usuario
-            // 
-            lbl_usuario.AutoSize = true;
-            lbl_usuario.ForeColor = SystemColors.ControlText;
-            lbl_usuario.Location = new Point(70, 49);
-            lbl_usuario.Name = "lbl_usuario";
-            lbl_usuario.Size = new Size(92, 15);
-            lbl_usuario.TabIndex = 5;
-            lbl_usuario.Text = "nombre Usuario";
+            lbl_UsuarioInicio.AutoSize = true;
+            lbl_UsuarioInicio.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lbl_UsuarioInicio.ForeColor = SystemColors.ControlText;
+            lbl_UsuarioInicio.Location = new Point(24, 52);
+            lbl_UsuarioInicio.Name = "lbl_UsuarioInicio";
+            lbl_UsuarioInicio.Size = new Size(148, 25);
+            lbl_UsuarioInicio.TabIndex = 5;
+            lbl_UsuarioInicio.Text = "nombre Usuario";
             // 
             // lbl_posicion
             // 
             lbl_posicion.AutoSize = true;
-            lbl_posicion.Font = new Font("Century Gothic", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lbl_posicion.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lbl_posicion.ForeColor = SystemColors.ControlText;
-            lbl_posicion.Location = new Point(70, 24);
+            lbl_posicion.Location = new Point(58, 25);
             lbl_posicion.Name = "lbl_posicion";
-            lbl_posicion.Size = new Size(66, 19);
+            lbl_posicion.Size = new Size(75, 21);
             lbl_posicion.TabIndex = 3;
             lbl_posicion.Text = "Cuenta:";
             lbl_posicion.Click += lbl_cuenta_Click;
-            // 
-            // txt_usuario
-            // 
-            txt_usuario.BackColor = SystemColors.Control;
-            txt_usuario.BorderStyle = BorderStyle.None;
-            txt_usuario.Enabled = false;
-            txt_usuario.Font = new Font("Century Gothic", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txt_usuario.ForeColor = Color.Black;
-            txt_usuario.Location = new Point(4, 49);
-            txt_usuario.Margin = new Padding(3, 2, 3, 2);
-            txt_usuario.Name = "txt_usuario";
-            txt_usuario.Size = new Size(61, 17);
-            txt_usuario.TabIndex = 6;
-            txt_usuario.Text = "Usuario:";
-            txt_usuario.TextChanged += txt_usuario_TextChanged;
-            txt_usuario.Enter += txt_usuario_Enter;
-            txt_usuario.Leave += txt_usuario_Leave;
             // 
             // menu_usuario
             // 
@@ -476,10 +444,8 @@
         private MaterialSkin.Controls.MaterialButton materialButton3;
         private Panel panel1;
         private Panel panel2;
-        private MaterialSkin.Controls.MaterialLabel materialLabel1;
-        private Label lbl_usuario;
+        private Label lbl_UsuarioInicio;
         private Label lbl_posicion;
-        private TextBox txt_usuario;
         private MenuStrip menu_usuario;
         private ToolStripMenuItem administrarUsuarioToolStripMenuItem;
         private ToolStripMenuItem nuevoToolStripMenuItem;

@@ -19,12 +19,15 @@ namespace Ensumex.Views
         public Product()
         {
             InitializeComponent();
+            InicializarFormulario();
+        }
+        private void InicializarFormulario()
+        {
             TablaFormat.AplicarEstilosTabla(tabla_productos);
             InicializarComboProductos();
-            CargarProductoss();
+            CargarProductoss(); 
             tabla_productos.CellDoubleClick += tabla_productos_CellDoubleClick;
         }
-
         private void InicializarComboProductos()
         {
             object[] opciones = { "Todos", 5, 10, 20, 50, 100 };

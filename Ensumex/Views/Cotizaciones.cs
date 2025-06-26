@@ -17,9 +17,14 @@ namespace Ensumex.Views
         public Cotizaciones()
         {
             InitializeComponent();
-            tabla_cotizaciones.CellClick += Tabla_cotizaciones_CellClick; ;
+            InicializarTabla();
+            CargarCotizaciones();
+        }
+        private void InicializarTabla()
+        {
+            tabla_cotizaciones.CellClick += Tabla_cotizaciones_CellClick;
             TablaFormat.AplicarEstilosTabla(tabla_cotizaciones);
-            // Agregar columna de botón "Detalle" si no existe
+
             if (!tabla_cotizaciones.Columns.Contains("Detalle"))
             {
                 var btnDetalle = new DataGridViewButtonColumn
@@ -31,8 +36,6 @@ namespace Ensumex.Views
                 };
                 tabla_cotizaciones.Columns.Add(btnDetalle);
             }
-            CargarCotizaciones();
-            tabla_cotizaciones.CellClick += tabla_cotizaciones_CellClick;
         }
         private void Tabla_cotizaciones_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
