@@ -10,17 +10,18 @@ namespace Ensumex.Clases
 {
     public abstract class ConnectionToSql
     {
-        // Funcion para la conexion con la base de datos
-        private readonly string connectionString;
-        public ConnectionToSql()
+        private static readonly string connectionString = "Server=192.168.1.231; Database=Ensumex; Integrated Security=True";
+
+        // Método estático para obtener la cadena de conexión
+        public static string GetConnectionString()
         {
-            connectionString = "Server=localhost; Database=Ensumex; Integrated Security=True";
+            return connectionString;
         }
 
-        [Obsolete]
-        protected SqlConnection GetConnection()
+        // Método estático para obtener una conexión lista para usar
+        public static SqlConnection GetConnection()
         {
-            return new SqlConnection(connectionString); 
+            return new SqlConnection(connectionString);
         }
     }
 }

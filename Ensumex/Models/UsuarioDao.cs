@@ -14,25 +14,6 @@ namespace Ensumex.Models
 {
     public class UsuarioDao : ConnectionToSql
     {
-        /*[Obsolete]
-        public bool Login(string usuario, string contraseña)
-        {
-            using (var connection = GetConnection())
-            {
-                connection.Open();
-                using (var command = new SqlCommand())  
-                {
-                    command.Connection = connection;
-                    command.CommandText = "SELECT COUNT(*) FROM Usuarios WHERE Usuario = @usuario AND Contraseña = @contraseña";
-                    command.Parameters.AddWithValue("@usuario", usuario);
-                    command.Parameters.AddWithValue("@contraseña", contraseña);
-                    command.CommandType = CommandType.Text;
-                    int count = Convert.ToInt32(command.ExecuteScalar());
-                    return count > 0;
-                }
-            }
-        }*/
-
         [Obsolete]
         public (string Nombre, string Posicion) ObtenerDatosUsuario(string usuario)
         {
@@ -59,7 +40,6 @@ namespace Ensumex.Models
             }
             return (null, null);
         }
-
         public DataTable ObtenerUsuarios()
         {
             DataTable dt = new DataTable();
@@ -92,7 +72,6 @@ namespace Ensumex.Models
                 MessageBox.Show("Ocurrió un error inesperado:\n" + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
             return dt;
         }
     }

@@ -95,8 +95,8 @@ namespace Ensumex.Models
                     string query = @"
                 SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
                        CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas
-                FROM Cotizacion
-                ORDER BY Fecha DESC";
+                       FROM Cotizacion
+                       ORDER BY Fecha DESC";
 
                     using (var cmd = new SqlCommand(query, conn))
                     using (var adapter = new SqlDataAdapter(cmd))

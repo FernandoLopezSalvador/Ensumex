@@ -182,7 +182,7 @@ namespace Ensumex.Views
                             porcentajeDescuento: porcentajeDescuento,
                             notas: Txt_observaciones.Text,
                             tablaCotizacion: tbl_Cotizacion,
-                            usuario: usuarioActual
+                            usuario: usuarioActual      
                         );
 
                         // Preguntar si desea enviar por WhatsApp

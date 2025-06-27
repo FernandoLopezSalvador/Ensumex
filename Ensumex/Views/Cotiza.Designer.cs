@@ -62,6 +62,7 @@
             tableLayoutPanel2 = new TableLayoutPanel();
             lbl_observaciones = new MaterialSkin.Controls.MaterialLabel();
             Txt_observaciones = new TextBox();
+            AgrgarTabla = new MaterialSkin.Controls.MaterialButton();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Buscarcliente).BeginInit();
             tableLayoutPanel3.SuspendLayout();
@@ -622,6 +623,7 @@
             tableLayoutPanel3.Controls.Add(tableLayoutPanel2, 2, 2);
             tableLayoutPanel3.Controls.Add(lbl_observaciones, 0, 2);
             tableLayoutPanel3.Controls.Add(Txt_observaciones, 1, 2);
+            tableLayoutPanel3.Controls.Add(AgrgarTabla, 0, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(0, 223);
             tableLayoutPanel3.Margin = new Padding(3, 2, 3, 2);
@@ -712,6 +714,27 @@
             Txt_observaciones.Size = new Size(593, 78);
             Txt_observaciones.TabIndex = 34;
             // 
+            // AgrgarTabla
+            // 
+            AgrgarTabla.Anchor = AnchorStyles.Left;
+            AgrgarTabla.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AgrgarTabla.BackColor = Color.Green;
+            AgrgarTabla.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            AgrgarTabla.Depth = 0;
+            AgrgarTabla.HighEmphasis = true;
+            AgrgarTabla.Icon = null;
+            AgrgarTabla.Location = new Point(4, 23);
+            AgrgarTabla.Margin = new Padding(4);
+            AgrgarTabla.MouseState = MaterialSkin.MouseState.HOVER;
+            AgrgarTabla.Name = "AgrgarTabla";
+            AgrgarTabla.NoAccentTextColor = Color.Empty;
+            AgrgarTabla.Size = new Size(87, 36);
+            AgrgarTabla.TabIndex = 35;
+            AgrgarTabla.Text = "Agregar Nueva tabla";
+            AgrgarTabla.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            AgrgarTabla.UseAccentColor = false;
+            AgrgarTabla.UseVisualStyleBackColor = false;
+            // 
             // Cotiza
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -767,5 +790,6 @@
         private TableLayoutPanel tableLayoutPanel2;
         private MaterialSkin.Controls.MaterialButton materialButton1;
         private TextBox Txt_observaciones;
+        private MaterialSkin.Controls.MaterialButton AgrgarTabla;
     }
 }

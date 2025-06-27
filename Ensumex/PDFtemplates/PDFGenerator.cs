@@ -212,33 +212,33 @@ namespace Ensumex.PDFtemplates
                     if (descripcion.Contains("CALENT"))
                     {
                         contieneCalentador = true;
-                        break;
+                       
 
                     }
-                    else if (descripcion.Contains("MOT")||descripcion.Contains("MOTB"))
+                     if (descripcion.Contains("MOT")||descripcion.Contains("MOTB"))
                     {
                         contieneMotobomba = true;
-                        break;
+                       
                     }
-                    else if (descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO"))
+                     if (descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO"))
                     {
                         contieneBomba = true;
-                        break;
+                       
                     }
-                    else if (descripcion.Contains("AIRE"))
+                     if (descripcion.Contains("AIRE"))
                     {
                         contieneAire = true;
-                        break;
+                        
                     }
-                    else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
+                    if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
                     {
                         contieneMantenimiento = true;
-                        break;
+                        
                     }
-                    else if (descripcion.Contains("KIT DE MATERIAL"))
+                     if (descripcion.Contains("KIT DE MATERIAL")|| descripcion.Contains("PLOMERIA")|| descripcion.Contains("PLOMERÍA"))
                     {
                         contienePlomeria = true;
-                        break;
+                        
                     }
                 }
                 doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
@@ -281,43 +281,60 @@ namespace Ensumex.PDFtemplates
                         "Sin otro particular quedo a sus órdenes.\n\n", fontnotas));
                         break;
                     case true when contieneBomba:
-                        doc.Add(new Paragraph(
+                        if (costoInstalacion == "")
+                        {
+                            doc.Add(new Paragraph(
                         "- Garantía: 2 años en bomba motor y arrancador.\n" +
                         "- Equipos sobre pedido. Es necesario un anticipo del 60%\n" +
                         "- Entrega de 3 a 5 dias hábiles\n" +
                         "- No incluye instalación\n" +
                         "- Precios sujetos a cambios sin previo aviso\n" +
                         "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
-                        break;
-                    case true when contieneCalentador:
-                        if (contienePlomeria == false)
-                        {
-                            doc.Add(new Paragraph(
-                         "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
-                         "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
-                         "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
-                         "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                         "-Precios sujetos a cambios sin previo aviso.\n" +
-                         "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
                             break;
                         }
                         else
+                        {
                             doc.Add(new Paragraph(
-                         "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
-                         "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
-                         "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
-                         "-No incluye material de plomería.\n" +
-                         "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                         "-Precios sujetos a cambios sin previo aviso.\n" +
-                         "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
-                        break;
-                    default:
-                        doc.Add(new Paragraph(
-                        "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                        "-Precios sujetos a cambios sin previo aviso.\n" +
+                        "- Garantía: 2 años en bomba motor y arrancador.\n" +
+                        "- Equipos sobre pedido. Es necesario un anticipo del 60%\n" +
+                        "- Entrega de 3 a 5 dias hábiles\n" +
+                        "- No incluye instalación\n" +
+                        "- Precios sujetos a cambios sin previo aviso\n" +
                         "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                        } 
                         break;
-                }
+                    case true when contieneCalentador:
+                                switch (true)
+                                {
+                                    case true when contienePlomeria:
+                                        doc.Add(new Paragraph(
+                                     "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
+                                     "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
+                                     "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
+                                     "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
+                                     "-Precios sujetos a cambios sin previo aviso.\n" +
+                                     "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                                        break;
+                                    default:
+                                        doc.Add(new Paragraph(
+                                     "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
+                                     "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
+                                     "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
+                                     "-No incluye material de plomería.\n" +
+                                     "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
+                                     "-Precios sujetos a cambios sin previo aviso.\n" +
+                                     "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                                        break;
+
+                                }
+                                break;
+                            default:
+                                doc.Add(new Paragraph(
+                                "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
+                                "-Precios sujetos a cambios sin previo aviso.\n" +
+                                "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                                break;
+                            }
                 doc.Add(new Paragraph(notas, fontnotas));
                 // Crear una tabla de una columna centrada
                 PdfPTable tablaFirma = new PdfPTable(1);
