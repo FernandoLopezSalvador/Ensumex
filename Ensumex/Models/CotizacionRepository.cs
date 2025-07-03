@@ -84,6 +84,82 @@ namespace Ensumex.Models
                 }
             }
         }
+
+        public static void GuardarCotizacionTablas(
+            string numeroCotizacion,
+            DateTime fecha,
+            string nombreCliente,
+            string numeroCliente,
+            decimal costoInstalacion,
+            decimal costoFlete,
+            decimal subtotal,
+            decimal descuento,
+            decimal total,
+            string notas,
+            List<List<object[]>> tablas
+        )
+        {
+            using (var conn = new SqlConnection(connSqlServer))
+            {
+                conn.Open();
+                using (var tran = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        // 1. Insertar encabezado
+                        var cmdEncabezado = new SqlCommand(@"
+                            INSERT INTO Cotizacion
+                            (NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado)
+                            VALUES (@NumeroCotizacion, @Fecha, @NombreCliente, @NumeroCliente, @CostoInstalacion, @CostoFlete, @Subtotal, @Descuento, @Total, @Notas, @Estado);
+                            SELECT SCOPE_IDENTITY();", conn, tran);
+
+                        cmdEncabezado.Parameters.AddWithValue("@NumeroCotizacion", numeroCotizacion);
+                        cmdEncabezado.Parameters.AddWithValue("@Fecha", fecha);
+                        cmdEncabezado.Parameters.AddWithValue("@NombreCliente", nombreCliente);
+                        cmdEncabezado.Parameters.AddWithValue("@NumeroCliente", numeroCliente);
+                        cmdEncabezado.Parameters.AddWithValue("@CostoInstalacion", costoInstalacion);
+                        cmdEncabezado.Parameters.AddWithValue("@CostoFlete", costoFlete);
+                        cmdEncabezado.Parameters.AddWithValue("@Subtotal", subtotal);
+                        cmdEncabezado.Parameters.AddWithValue("@Descuento", descuento);
+                        cmdEncabezado.Parameters.AddWithValue("@Total", total);
+                        cmdEncabezado.Parameters.AddWithValue("@Notas", notas ?? (object)DBNull.Value);
+                        cmdEncabezado.Parameters.AddWithValue("@Estado", "Vigente");
+                        int idCotizacion = Convert.ToInt32(cmdEncabezado.ExecuteScalar());
+
+                        // 2. Insertar detalles de todas las tablas
+                        foreach (var tabla in tablas)
+                        {
+                            foreach (var row in tabla)
+                            {
+                                var cmdDetalle = new SqlCommand(@"
+                                    INSERT INTO CotizacionDetalle
+                                    (IdCotizacion, ClaveProducto, Descripcion, Unidad, PrecioUnitario, Cantidad, TasaCambio, Subtotal, AplicaDescuento)
+                                    VALUES (@IdCotizacion, @ClaveProducto, @Descripcion, @Unidad, @PrecioUnitario, @Cantidad, @TasaCambio, @Subtotal, @AplicaDescuento);", conn, tran);
+
+                                cmdDetalle.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
+                                cmdDetalle.Parameters.AddWithValue("@ClaveProducto", row[1] ?? "");
+                                cmdDetalle.Parameters.AddWithValue("@Descripcion", row[2] ?? "");
+                                cmdDetalle.Parameters.AddWithValue("@Unidad", row[3] ?? "");
+                                cmdDetalle.Parameters.AddWithValue("@PrecioUnitario", row[4] ?? 0);
+                                cmdDetalle.Parameters.AddWithValue("@Cantidad", row[5] ?? 0);
+                                cmdDetalle.Parameters.AddWithValue("@TasaCambio", row.Length > 6 ? row[6] ?? 1 : 1);
+                                cmdDetalle.Parameters.AddWithValue("@Subtotal", row.Length > 7 ? row[7] ?? 0 : 0);
+                                cmdDetalle.Parameters.AddWithValue("@AplicaDescuento", row[0] ?? false);
+                                cmdDetalle.ExecuteNonQuery();
+                            }
+                        }
+
+                        tran.Commit();
+                    }
+                    catch
+                    {
+                        tran.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
         public static DataTable ObtenerCotizaciones()
         {
             var dt = new DataTable();
@@ -108,7 +184,6 @@ namespace Ensumex.Models
             }
             catch (Exception ex)
             {
-                // Puedes registrar el error o mostrar un mensaje
                 MessageBox.Show("Error al obtener cotizaciones: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
@@ -155,7 +230,6 @@ namespace Ensumex.Models
             {
                 using (var conn = new SqlConnection(connSqlServer))
                 {
-                    // IMPORTANTE: Aquí se concatena el valor en la cadena, ya que no se puede usar @param en TOP directamente
                     string query = $@"
                 SELECT TOP {limite} IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
                        CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado

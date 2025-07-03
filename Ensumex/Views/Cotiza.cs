@@ -27,6 +27,7 @@ namespace Ensumex.Views
     public partial class Cotiza : UserControl
     {
         private readonly string usuarioActual;
+        private List<List<object[]>> tablasGuardadas = new();
 
         public Cotiza(string usuario)
         {
@@ -38,6 +39,7 @@ namespace Ensumex.Views
         private void InicializarFormulario()
         {
             AplicarConfiguracionesGenerales();
+
             ConfigurarControles();
             ConfigurarEventos();
         }
@@ -129,7 +131,122 @@ namespace Ensumex.Views
         /// Evento para manejar el botón de guardar cotización
         private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
         {
-            GuardarCotizacion();
+            // Si hay una o más de una tabla guardada y tambien una cotizacion en tabla
+            if (tablasGuardadas.Count > 0 && tbl_Cotizacion.Rows.Count > 1)
+            {
+                // Si hay tablas guardadas, guarda todas las tablas
+                GuardarCotizacionTablas();
+            }
+            //si no hay tablas guardadas pero si una cotización en la tabla
+            else if (tbl_Cotizacion.Rows.Count > 1 && tablasGuardadas.Count==0)
+            {
+                // Si hay una tabla, guarda la cotización normal
+                GuardarCotizacion();
+            }
+        }
+        private void GuardarCotizacionTablas()
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "Archivo PDF|*.pdf";
+                sfd.FileName = $"CotizacionTablas_{DateTime.Now:yyyyMMdd}.pdf";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    // 1. Copia la lista de tablas guardadas
+                    var tablasParaGuardar = new List<List<object[]>>(tablasGuardadas);
+
+                    // 2. Agrega la tabla actual si tiene productos
+                    List<object[]> tablaActual = new();
+                    foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
+                    {
+                        if (!row.IsNewRow)
+                        {
+                            object[] valores = new object[row.Cells.Count];
+                            for (int i = 0; i < row.Cells.Count; i++)
+                                valores[i] = row.Cells[i].Value;
+                            tablaActual.Add(valores);
+                        }
+                    }
+                    if (tablaActual.Count > 0)
+                        tablasParaGuardar.Add(tablaActual);
+
+                    List<string> encabezados = new List<string>();
+                    foreach (DataGridViewColumn col in tbl_Cotizacion.Columns)
+                        encabezados.Add(col.HeaderText);
+
+                    string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
+                    decimal.TryParse(descuentoTexto, out decimal porcentajeDescuento);
+
+                    // --- GUARDAR EN BASE DE DATOS ---
+                    CotizacionRepository.GuardarCotizacionTablas(
+                        numeroCotizacion: txt_Nocotizacion.Text,
+                        fecha: DateTime.Now,
+                        nombreCliente: txt_Nombrecliente.Text,
+                        numeroCliente: txt_NumeroCliente.Text,
+                        costoInstalacion: decimal.TryParse(txt_Costoinstalacion.Text, out var inst) ? inst : 0,
+                        costoFlete: decimal.TryParse(txt_Costoflete.Text, out var flt) ? flt : 0,
+                        subtotal: decimal.TryParse(lbl_Subtotal.Text.Replace("$", ""), out var sub) ? sub : 0,
+                        descuento: decimal.TryParse(lbl_costoDescuento.Text.Replace("$", "").Replace("-", ""), out var desc) ? desc : 0,
+                        total: decimal.TryParse(lbl_TotalNeto.Text.Replace("$", ""), out var tot) ? tot : 0,
+                        notas: Txt_observaciones.Text,
+                        tablas: tablasParaGuardar // Ahora incluye todas las tablas
+                    );
+
+                    // --- GENERAR PDF ---
+                    GeneraPDFTablas.GenerarPDFConTablas(
+                        rutaArchivo: sfd.FileName,
+                        tablas: tablasParaGuardar,
+                        encabezados: encabezados,
+                        numeroCotizacion: txt_Nocotizacion.Text,
+                        nombreCliente: txt_Nombrecliente.Text,
+                        costoInstalacion: txt_Costoinstalacion.Text,
+                        costoFlete: txt_Costoflete.Text,
+                        subtotal: lbl_Subtotal.Text,
+                        total: lbl_TotalNeto.Text,
+                        descuento: lbl_costoDescuento.Text,
+                        porcentajeDescuento: porcentajeDescuento,
+                        notas: Txt_observaciones.Text,
+                        usuario: usuarioActual
+                    );
+
+
+                    // Preguntar si desea enviar por WhatsApp
+                    var enviarWhats = MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (enviarWhats == DialogResult.Yes)
+                    {
+                        string numeroCliente = txt_NumeroCliente.Text?.Trim();
+                        numeroCliente = NormalizarNumeroWhatsApp(numeroCliente);
+                        if (string.IsNullOrWhiteSpace(numeroCliente))
+                        {
+                            numeroCliente = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el número de WhatsApp del cliente (ejemplo: 9511234567):", "WhatsApp", "");
+                            numeroCliente = NormalizarNumeroWhatsApp(numeroCliente);
+                        }
+                        if (!string.IsNullOrWhiteSpace(numeroCliente))
+                        {
+                            // Abre WhatsApp Web
+                            string mensaje = $"Hola, le comparto la cotización {txt_Nocotizacion.Text}. Adjunto el PDF.";
+                            EnviarCotizacionPorWhatsApp(numeroCliente, mensaje);
+                            // Abre la carpeta del PDF en modo ventana y selecciona el archivo
+                            string carpeta = System.IO.Path.GetDirectoryName(sfd.FileName);
+                            if (!string.IsNullOrEmpty(carpeta) && System.IO.Directory.Exists(carpeta))
+                            {
+                                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                                {
+                                    FileName = "explorer.exe",
+                                    Arguments = $"/select,\"{sfd.FileName}\"",
+                                    WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal
+                                });
+                            }
+                            MessageBox.Show("Se abrió WhatsApp Web y la carpeta de la cotización. Adjunte el PDF manualmente en el chat.", "WhatsApp", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("No se proporcionó un número válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                    tablasGuardadas.Clear(); // Limpia la lista después de guardar
+                    limpiaCampos();
+                }            }
         }
         private void GuardarCotizacion()
         {
@@ -137,21 +254,22 @@ namespace Ensumex.Views
             {
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
+                    if (tbl_Cotizacion.Rows.Count == 1)
+                    {
+                        MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    // Validaciones mínimas
+                    if (string.IsNullOrWhiteSpace(txt_Nombrecliente.Text))
+                    {
+                        MessageBox.Show("El nombre del cliente es obligatorio.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
                     sfd.Filter = "Archivo PDF|*.pdf";
                     sfd.FileName = $"Cotizacion_{DateTime.Now:yyyyMMdd}.pdf";
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
-                        // Validaciones mínimas
-                        if (string.IsNullOrWhiteSpace(txt_Nombrecliente.Text))
-                        {
-                            MessageBox.Show("El nombre del cliente es obligatorio.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
-                        if (tbl_Cotizacion.Rows.Count == 1)
-                        {
-                            MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
                         // GUARDAR EN BASE DE DATOS
                         CotizacionRepository.GuardarCotizacion(
                             numeroCotizacion: txt_Nocotizacion.Text,
@@ -182,7 +300,7 @@ namespace Ensumex.Views
                             porcentajeDescuento: porcentajeDescuento,
                             notas: Txt_observaciones.Text,
                             tablaCotizacion: tbl_Cotizacion,
-                            usuario: usuarioActual      
+                            usuario: usuarioActual
                         );
 
                         // Preguntar si desea enviar por WhatsApp
@@ -232,6 +350,7 @@ namespace Ensumex.Views
                 MessageBox.Show($"Ocurrió un error al guardar la cotización.\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void cmb_Descuento_SelectedIndexChanged(object sender, EventArgs e)
         {
             ActualizarTotales();
@@ -466,6 +585,7 @@ namespace Ensumex.Views
         }
         private void materialButton1_Click(object sender, EventArgs e)
         {
+            
             // Abre el formulario de selección de productos
             using (var productosForm = new Form())
             {
@@ -654,7 +774,35 @@ namespace Ensumex.Views
             // Permitir solo dígitos y teclas de control (como Backspace)
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
-                e.Handled = true; 
+                e.Handled = true;
+            }
+        }
+
+        private void AgrgarTabla_Click(object sender, EventArgs e)
+        {
+            // Guarda toda la tabla actual
+            List<object[]> tablaActual = new();
+
+            foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    object[] valores = new object[row.Cells.Count];
+                    for (int i = 0; i < row.Cells.Count; i++)
+                        valores[i] = row.Cells[i].Value;
+                    tablaActual.Add(valores);
+                }
+            }
+
+            if (tablaActual.Count > 0)
+            {
+                tablasGuardadas.Add(tablaActual);
+                tbl_Cotizacion.Rows.Clear(); // Limpia la tabla para la siguiente
+                MessageBox.Show("Tabla guardada y lista para capturar una nueva.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("No hay productos para guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }

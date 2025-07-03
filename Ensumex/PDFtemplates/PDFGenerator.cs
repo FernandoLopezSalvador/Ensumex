@@ -35,9 +35,9 @@ namespace Ensumex.PDFtemplates
             {
                 Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
-                // Agregar fondo 
                 string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
-                writer.PageEvent = new FondoPDF(rutaFondo);
+                string rutaFirma = Path.Combine(Application.StartupPath, "IMG", "nombre.jpg");
+                writer.PageEvent = new FondoPiePDF(rutaFondo, rutaFirma);
                 doc.Open();
                 var fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
                 var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
@@ -47,7 +47,6 @@ namespace Ensumex.PDFtemplates
                 var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
                 var fontCursiva = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 10);
                 string rutaLogo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
-                string rutaFirma = Path.Combine(Application.StartupPath, "IMG", "nombre.jpg");
                 // Agregar logo
                 if (File.Exists(rutaLogo))
                 {
@@ -344,21 +343,6 @@ namespace Ensumex.PDFtemplates
                 celdaTexto.Border = Rectangle.NO_BORDER;
                 celdaTexto.PaddingBottom = 10f;
                 tablaFirma.AddCell(celdaTexto);
-                // Celda con imagen (si existe)
-                if (File.Exists(rutaFirma))
-                {
-                    iTextSharp.text.Image firma = iTextSharp.text.Image.GetInstance(rutaFirma);
-                    firma.ScaleAbsolute(120f, 60f);
-                    firma.Alignment = Element.ALIGN_CENTER;
-                    PdfPCell celdaImagen = new PdfPCell(firma);
-                    celdaImagen.HorizontalAlignment = Element.ALIGN_CENTER;
-                    celdaImagen.Border = Rectangle.NO_BORDER;
-                    tablaFirma.AddCell(celdaImagen);
-                }
-                // Agregar la tabla al documento
-                doc.Add(tablaFirma);
-                doc.Add(new Paragraph("Av. Lázaro Cárdenas 104-B.", fontNormal) { Alignment = Element.ALIGN_CENTER });
-                doc.Add(new Paragraph("Sta. Lucía del Camino, Oaxaca. Tels: 951-206-6895 y 951-206-0293", fontNormal) { Alignment = Element.ALIGN_CENTER });
                 doc.Close();
                 MessageBox.Show("📄 PDF generado correctamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

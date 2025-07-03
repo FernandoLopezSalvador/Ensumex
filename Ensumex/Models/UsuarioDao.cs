@@ -10,7 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 
 
 
-namespace Ensumex.Models
+namespace Ensumex.Models    
 {
     public class UsuarioDao : ConnectionToSql
     {
