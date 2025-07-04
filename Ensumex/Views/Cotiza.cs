@@ -47,7 +47,7 @@ namespace Ensumex.Views
         private void AplicarConfiguracionesGenerales()
         {
             lblFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
-            txt_Nocotizacion.CharacterCasing = CharacterCasing.Upper;
+            //txt_Nocotizacion.CharacterCasing = CharacterCasing.Upper;
         }
 
         private void ConfigurarControles()
@@ -138,7 +138,7 @@ namespace Ensumex.Views
                 GuardarCotizacionTablas();
             }
             //si no hay tablas guardadas pero si una cotización en la tabla
-            else if (tbl_Cotizacion.Rows.Count > 1 && tablasGuardadas.Count==0)
+            else if (tbl_Cotizacion.Rows.Count > 1 && tablasGuardadas.Count == 0)
             {
                 // Si hay una tabla, guarda la cotización normal
                 GuardarCotizacion();
@@ -179,7 +179,8 @@ namespace Ensumex.Views
 
                     // --- GUARDAR EN BASE DE DATOS ---
                     CotizacionRepository.GuardarCotizacionTablas(
-                        numeroCotizacion: txt_Nocotizacion.Text,
+                        //numeroCotizacion: txt_Nocotizacion.Text,
+                        numeroCotizacion: lbl_NoCotiza.Text,
                         fecha: DateTime.Now,
                         nombreCliente: txt_Nombrecliente.Text,
                         numeroCliente: txt_NumeroCliente.Text,
@@ -197,7 +198,8 @@ namespace Ensumex.Views
                         rutaArchivo: sfd.FileName,
                         tablas: tablasParaGuardar,
                         encabezados: encabezados,
-                        numeroCotizacion: txt_Nocotizacion.Text,
+                        //numeroCotizacion: txt_Nocotizacion.Text,
+                        numeroCotizacion: lbl_NoCotiza.Text,
                         nombreCliente: txt_Nombrecliente.Text,
                         costoInstalacion: txt_Costoinstalacion.Text,
                         costoFlete: txt_Costoflete.Text,
@@ -224,7 +226,7 @@ namespace Ensumex.Views
                         if (!string.IsNullOrWhiteSpace(numeroCliente))
                         {
                             // Abre WhatsApp Web
-                            string mensaje = $"Hola, le comparto la cotización {txt_Nocotizacion.Text}. Adjunto el PDF.";
+                            string mensaje = $"Hola, le comparto la cotización {lbl_NoCotiza.Text}. Adjunto el PDF.";
                             EnviarCotizacionPorWhatsApp(numeroCliente, mensaje);
                             // Abre la carpeta del PDF en modo ventana y selecciona el archivo
                             string carpeta = System.IO.Path.GetDirectoryName(sfd.FileName);
@@ -246,7 +248,8 @@ namespace Ensumex.Views
                     }
                     tablasGuardadas.Clear(); // Limpia la lista después de guardar
                     limpiaCampos();
-                }            }
+                }
+            }
         }
         private void GuardarCotizacion()
         {
@@ -259,20 +262,14 @@ namespace Ensumex.Views
                         MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
-                    // Validaciones mínimas
-                    if (string.IsNullOrWhiteSpace(txt_Nombrecliente.Text))
-                    {
-                        MessageBox.Show("El nombre del cliente es obligatorio.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-
                     sfd.Filter = "Archivo PDF|*.pdf";
                     sfd.FileName = $"Cotizacion_{DateTime.Now:yyyyMMdd}.pdf";
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         // GUARDAR EN BASE DE DATOS
                         CotizacionRepository.GuardarCotizacion(
-                            numeroCotizacion: txt_Nocotizacion.Text,
+                            //numeroCotizacion: txt_Nocotizacion.Text,
+                            numeroCotizacion: lbl_NoCotiza.Text,
                             fecha: DateTime.Now,
                             nombreCliente: txt_Nombrecliente.Text,
                             numeroCliente: txt_NumeroCliente.Text,
@@ -290,7 +287,8 @@ namespace Ensumex.Views
 
                         PDFGenerator.GenerarPDFCotizacion(
                             rutaArchivo: sfd.FileName,
-                            numeroCotizacion: txt_Nocotizacion.Text,
+                            //numeroCotizacion: txt_Nocotizacion.Text,
+                            numeroCotizacion: lbl_NoCotiza.Text,
                             nombreCliente: txt_Nombrecliente.Text,
                             costoInstalacion: txt_Costoinstalacion.Text,
                             costoFlete: txt_Costoflete.Text,
@@ -317,7 +315,7 @@ namespace Ensumex.Views
                             if (!string.IsNullOrWhiteSpace(numeroCliente))
                             {
                                 // Abre WhatsApp Web
-                                string mensaje = $"Hola, le comparto la cotización {txt_Nocotizacion.Text}. Adjunto el PDF.";
+                                string mensaje = $"Hola, le comparto la cotización {lbl_NoCotiza.Text}. Adjunto el PDF.";
                                 EnviarCotizacionPorWhatsApp(numeroCliente, mensaje);
                                 // Abre la carpeta del PDF en modo ventana y selecciona el archivo
                                 string carpeta = System.IO.Path.GetDirectoryName(sfd.FileName);
@@ -415,7 +413,10 @@ namespace Ensumex.Views
                         decimal Cantidad = formProducto.cantidad;
                         decimal tasaCambio = 1;
                         decimal subtotal = (precioUnitario * Cantidad);
+                        // --- Fin del código para generar y mostrar el número de cotización automático ---
+
                         tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioUnitario, Cantidad, tasaCambio, subtotal);
+                        ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
                     }
                     // Asegura que la columna de "Eliminar" solo se agregue una vez
@@ -543,7 +544,7 @@ namespace Ensumex.Views
             txt_Costoflete.Text = string.Empty;
             txt_Costoinstalacion.Text = string.Empty;
             txt_NumeroCliente.Text = string.Empty;
-            txt_Nocotizacion.Text = string.Empty;
+            lbl_NoCotiza.Text = string.Empty;
             txt_Nombrecliente.Text = string.Empty;
             txt_Bases.Text = string.Empty;
             lbl_Subtotal.Text = "$0.00";
@@ -585,7 +586,7 @@ namespace Ensumex.Views
         }
         private void materialButton1_Click(object sender, EventArgs e)
         {
-            
+
             // Abre el formulario de selección de productos
             using (var productosForm = new Form())
             {
@@ -595,28 +596,54 @@ namespace Ensumex.Views
                 };
                 productosForm.Controls.Add(productControl);
                 productosForm.StartPosition = FormStartPosition.CenterParent;
-                productosForm.Size = new Size(800, 600);
+                //productosForm.Size = new Size(1000, 800);
+                //pantalla completa del formulario
+                productosForm.WindowState = FormWindowState.Maximized;
                 productosForm.Text = "Seleccionar Producto";
                 productControl.ProductoSeleccionado += (clave, descripcion, unidad, precio, cantidad) =>
                 {
                     // Validar que los datos no sean nulos o vacíos
                     try
                     {
-                        decimal tasaCambio = 1;
+                        decimal precioFinal = precio;
                         var result = MessageBox.Show(
-                            "¿Desea ingresar una tasa de cambio personalizada?",
-                            "Tasa de cambio",
+                            "¿Desea cambiar el precio del producto?",
+                            "Modificar precio",
                             MessageBoxButtons.YesNo,
                             MessageBoxIcon.Question
                         );
                         if (result == DialogResult.Yes)
                         {
                             string input = Microsoft.VisualBasic.Interaction.InputBox(
+                                "Ingrese el nuevo precio:",
+                                "Modificar precio",
+                                precio.ToString("0.00")
+                            );
+                            if (!decimal.TryParse(input, out decimal precioInput) || precioInput <= 0)
+                            {
+                                MessageBox.Show("Precio inválido. Se usará el precio original.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                            else
+                            {
+                                precioFinal = precioInput;
+                            }
+                        }
+
+                        decimal tasaCambio = 1;
+                        var resultTasa = MessageBox.Show(
+                            "¿Desea ingresar una tasa de cambio personalizada?",
+                            "Tasa de cambio",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Question
+                        );
+                        if (resultTasa == DialogResult.Yes)
+                        {
+                            string inputTasa = Microsoft.VisualBasic.Interaction.InputBox(
                                 "Ingrese la tasa de cambio:",
                                 "Tasa de cambio",
                                 "1"
                             );
-                            if (!decimal.TryParse(input, out decimal tasaInput) || tasaInput <= 0)
+                            if (!decimal.TryParse(inputTasa, out decimal tasaInput) || tasaInput <= 0)
                             {
                                 MessageBox.Show("Tasa inválida. Se usará 1 por defecto.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
@@ -642,7 +669,7 @@ namespace Ensumex.Views
                             }
                         }
                         cantidad = cantidadFinal;
-                        decimal subtotal = precio * cantidad * tasaCambio;
+                        decimal subtotal = precioFinal * cantidad * tasaCambio;
                         // Verificar si el producto ya está en la tabla
                         foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                         {
@@ -651,13 +678,14 @@ namespace Ensumex.Views
                                 decimal cantidadExistente = Convert.ToDecimal(row.Cells[4].Value);
                                 cantidad += cantidadExistente;
                                 row.Cells[4].Value = cantidad;
-                                row.Cells[6].Value = precio * cantidad * tasaCambio;
+                                row.Cells[6].Value = precioFinal * cantidad * tasaCambio;
                                 ActualizarTotales();
                                 productosForm.Close();
                                 return;
                             }
                         }
-                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precio, cantidad, tasaCambio, subtotal);
+                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioFinal, cantidad, tasaCambio, subtotal);
+                        ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
                         productosForm.Close();
                     }
@@ -804,6 +832,55 @@ namespace Ensumex.Views
             {
                 MessageBox.Show("No hay productos para guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void ActualizarNumeroCotizacionEnLabel()
+        {
+            if (tbl_Cotizacion.Rows.Count == 0)
+            {
+                lbl_NoCotiza.Text = "";
+                return;
+            }
+
+            // Busca el último producto agregado (última fila no nueva)
+            DataGridViewRow ultimaFila = null;
+            for (int i = tbl_Cotizacion.Rows.Count - 1; i >= 0; i--)
+            {
+                if (!tbl_Cotizacion.Rows[i].IsNewRow)
+                {
+                    ultimaFila = tbl_Cotizacion.Rows[i];
+                    break;
+                }
+            }
+            if (ultimaFila == null)
+            {
+                lbl_NoCotiza.Text = "";
+                return;
+            }
+
+            string descripcion = ultimaFila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
+            string prefijo = "";
+
+            if (descripcion.Contains("CALENT"))
+                prefijo = "C";
+            else if (descripcion.Contains("AIRE"))
+                prefijo = "A";
+            else if ((descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO")) && !descripcion.Contains("MOT"))
+                prefijo = "B";
+            else if (descripcion.Contains("MOTOBOMBA") || descripcion.Contains("MOTB") || descripcion.Contains("MOT."))
+                prefijo = "MB";
+            else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
+                prefijo = "M";
+
+            // Tomar la fecha del label lblFecha (formato dd/MM/yyyy)
+            string fecha = lblFecha.Text.Replace("/", ""); // Ejemplo: "03072025"
+
+            lbl_NoCotiza.Text = !string.IsNullOrWhiteSpace(prefijo) ? prefijo + fecha : fecha;
+        }
+
+        private void lbl_NoCotiza_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Ensumex.Forms
 {
     public partial class ENSUMEX : MaterialForm
     {
-        private string connFirebird = "User=SYSDBA;Password=masterkey;Database=localhost:C:\\Users\\PC\\Documents\\SAE\\SAE90EMPRE01.FDB;DataSource=192.168.1.100;Port=3050;Dialect=3;Charset=NONE;ServerType=0;";
+        private string connFirebird = "User=SYSDBA;Password=masterkey;Database=localhost:C:\\Users\\PC\\Documents\\SAE\\Nueva carpeta\\SAE90EMPRE01.FDB;DataSource=192.168.1.100;Port=3050;Dialect=3;Charset=NONE;ServerType=0;";
         private string connSqlServer = "Server=localhost;Database=Ensumex;Trusted_Connection=True;";
 
         [Obsolete]

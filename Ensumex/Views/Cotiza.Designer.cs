@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Cotiza));
             tableLayoutPanel1 = new TableLayoutPanel();
             materialLabel2 = new MaterialSkin.Controls.MaterialLabel();
-            txt_Nocotizacion = new MaterialSkin.Controls.MaterialTextBox2();
             materialLabel4 = new MaterialSkin.Controls.MaterialLabel();
             txt_Costoflete = new MaterialSkin.Controls.MaterialTextBox2();
             txt_Nombrecliente = new MaterialSkin.Controls.MaterialTextBox2();
@@ -50,6 +49,7 @@
             cmb_Descuento = new MaterialSkin.Controls.MaterialComboBox();
             txt_NumeroCliente = new MaterialSkin.Controls.MaterialTextBox2();
             materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
+            lbl_NoCotiza = new Label();
             materialLabel11 = new MaterialSkin.Controls.MaterialLabel();
             lbl_costoDescuento = new MaterialSkin.Controls.MaterialLabel();
             materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
@@ -80,7 +80,6 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
             tableLayoutPanel1.Controls.Add(materialLabel2, 0, 0);
-            tableLayoutPanel1.Controls.Add(txt_Nocotizacion, 1, 0);
             tableLayoutPanel1.Controls.Add(materialLabel4, 0, 1);
             tableLayoutPanel1.Controls.Add(txt_Costoflete, 3, 2);
             tableLayoutPanel1.Controls.Add(txt_Nombrecliente, 1, 1);
@@ -99,6 +98,7 @@
             tableLayoutPanel1.Controls.Add(cmb_Descuento, 5, 2);
             tableLayoutPanel1.Controls.Add(txt_NumeroCliente, 5, 1);
             tableLayoutPanel1.Controls.Add(materialLabel5, 4, 1);
+            tableLayoutPanel1.Controls.Add(lbl_NoCotiza, 1, 0);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
@@ -124,36 +124,6 @@
             materialLabel2.Size = new Size(100, 19);
             materialLabel2.TabIndex = 0;
             materialLabel2.Text = "No.Cotización";
-            // 
-            // txt_Nocotizacion
-            // 
-            txt_Nocotizacion.AnimateReadOnly = false;
-            txt_Nocotizacion.BackgroundImageLayout = ImageLayout.None;
-            txt_Nocotizacion.CharacterCasing = CharacterCasing.Normal;
-            txt_Nocotizacion.Depth = 0;
-            txt_Nocotizacion.Dock = DockStyle.Fill;
-            txt_Nocotizacion.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
-            txt_Nocotizacion.HideSelection = true;
-            txt_Nocotizacion.LeadingIcon = null;
-            txt_Nocotizacion.Location = new Point(113, 2);
-            txt_Nocotizacion.Margin = new Padding(3, 2, 3, 2);
-            txt_Nocotizacion.MaxLength = 32767;
-            txt_Nocotizacion.MouseState = MaterialSkin.MouseState.OUT;
-            txt_Nocotizacion.Name = "txt_Nocotizacion";
-            txt_Nocotizacion.PasswordChar = '\0';
-            txt_Nocotizacion.PrefixSuffixText = null;
-            txt_Nocotizacion.ReadOnly = false;
-            txt_Nocotizacion.RightToLeft = RightToLeft.No;
-            txt_Nocotizacion.SelectedText = "";
-            txt_Nocotizacion.SelectionLength = 0;
-            txt_Nocotizacion.SelectionStart = 0;
-            txt_Nocotizacion.ShortcutsEnabled = true;
-            txt_Nocotizacion.Size = new Size(247, 48);
-            txt_Nocotizacion.TabIndex = 1;
-            txt_Nocotizacion.TabStop = false;
-            txt_Nocotizacion.TextAlign = HorizontalAlignment.Left;
-            txt_Nocotizacion.TrailingIcon = null;
-            txt_Nocotizacion.UseSystemPasswordChar = false;
             // 
             // materialLabel4
             // 
@@ -526,6 +496,18 @@
             materialLabel5.TabIndex = 7;
             materialLabel5.Text = "Numero:";
             // 
+            // lbl_NoCotiza
+            // 
+            lbl_NoCotiza.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lbl_NoCotiza.AutoSize = true;
+            lbl_NoCotiza.Font = new Font("Segoe UI", 12F);
+            lbl_NoCotiza.Location = new Point(113, 11);
+            lbl_NoCotiza.Name = "lbl_NoCotiza";
+            lbl_NoCotiza.Size = new Size(247, 21);
+            lbl_NoCotiza.TabIndex = 29;
+            lbl_NoCotiza.Text = "cotizacion:";
+            lbl_NoCotiza.Click += lbl_NoCotiza_Click;
+            // 
             // materialLabel11
             // 
             materialLabel11.Anchor = AnchorStyles.Right;
@@ -760,7 +742,6 @@
 
         private TableLayoutPanel tableLayoutPanel1;
         private MaterialSkin.Controls.MaterialLabel materialLabel2;
-        private MaterialSkin.Controls.MaterialTextBox2 txt_Nocotizacion;
         private MaterialSkin.Controls.MaterialLabel materialLabel9;
         private MaterialSkin.Controls.MaterialLabel materialLabel4;
         private MaterialSkin.Controls.MaterialTextBox2 txt_Costoflete;
@@ -792,5 +773,6 @@
         private MaterialSkin.Controls.MaterialButton materialButton1;
         private TextBox Txt_observaciones;
         private MaterialSkin.Controls.MaterialButton AgregarTabla;
+        private Label lbl_NoCotiza;
     }
 }

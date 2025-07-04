@@ -88,6 +88,27 @@ namespace Ensumex.PDFtemplates
                     doc.Add(new Paragraph($"Opcion:#{tablaNum}", fontgris));
                     doc.Add(new Paragraph("\n"));
 
+                    // --- DESCRIPCIÓN PRINCIPAL DEL PRODUCTO ---
+                    string descripcionPrincipal = "";
+                    foreach (var row in tabla)
+                    {
+                        string descripcion = row[2]?.ToString()?.ToUpper() ?? "";
+                        if (descripcion.Contains("CALENT") ||
+                            descripcion.Contains("MOTOBOMBA") || descripcion.Contains("MOTB") ||
+                            descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO") ||
+                            descripcion.Contains("AIRE") ||
+                            descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
+                        {
+                            descripcionPrincipal = descripcion;
+                            break;
+                        }
+                    }
+                    if (!string.IsNullOrWhiteSpace(descripcionPrincipal))
+                    {
+                        doc.Add(new Paragraph("-" + descripcionPrincipal, fontNormal));
+                        doc.Add(new Paragraph("\n", fontNormal));
+                    }
+
                     PdfPTable pdfTable = new PdfPTable(6);
                     pdfTable.WidthPercentage = 100;
                     pdfTable.SetWidths(new float[] { 0.5f, 0.8f, 3f, 1f, 1f, 1f });
@@ -146,22 +167,23 @@ namespace Ensumex.PDFtemplates
                         if (descMayus.Contains("CALENT")) contieneCalentador = true;
                         if (descMayus.Contains("MOT") || descMayus.Contains("MOTB")) contieneMotobomba = true;
                         if (descMayus.Contains("BOMBA DE") || descMayus.Contains("BOMBA TIPO")) contieneBomba = true;
-                        if (descMayus.Contains("AIRE")) contieneAire = true;
+                        if (descMayus.Contains("AIRE ACONDICIONADO")) contieneAire = true;
                         if (descMayus.Contains("MANTENIMIENTO") || descMayus.Contains("SERVICIO DE MANTENIM")) contieneMantenimiento = true;
                         if (descMayus.Contains("KIT DE MATERIAL") || descMayus.Contains("PLOMERIA") || descMayus.Contains("PLOMERÍA")) contienePlomeria = true;
 
                         pos++;
                     }
-
                     doc.Add(pdfTable);
-
                     // --- TOTALES ---
                     doc.Add(new Paragraph("\n"));
                     PdfPTable tablaTotales = new PdfPTable(2);
                     tablaTotales.WidthPercentage = 50;
                     tablaTotales.HorizontalAlignment = Element.ALIGN_RIGHT;
                     tablaTotales.SetWidths(new float[] { 2f, 1f });
-
+                    tablaTotales.AddCell(new PdfPCell(new Phrase("Mano de obra por instalación:", fontNormal)) { Border = 0 });
+                    tablaTotales.AddCell(new PdfPCell(new Phrase("$" + costoInstalacion, fontNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+                    tablaTotales.AddCell(new PdfPCell(new Phrase("Costo por Envío/Flete:", fontNormal)) { Border = 0 });
+                    tablaTotales.AddCell(new PdfPCell(new Phrase("$" + costoFlete, fontNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
                     tablaTotales.AddCell(new PdfPCell(new Phrase("Total:", fontNegrita)) { Border = 0 });
                     tablaTotales.AddCell(new PdfPCell(new Phrase(totalImporte.ToString("C", new CultureInfo("es-MX")), fontNegrita)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
 
@@ -175,9 +197,7 @@ namespace Ensumex.PDFtemplates
                         Colspan = 2,
                         HorizontalAlignment = Element.ALIGN_CENTER
                     });
-
                     doc.Add(tablaTotales);
-
                     tablaNum++;
                 }
 
@@ -203,25 +223,15 @@ namespace Ensumex.PDFtemplates
                         break;
                     case true when contieneMotobomba:
                         doc.Add(new Paragraph(
-                        "- La Motobomba incluye: Bomba, motor, controlador, 2m de cable plano sumergible, kit de instalación y ganchos de seguridad(mosquetón).\n" +
-                        "- Garantías: 12 años en Paneles Solares. 2 años en Bomba y Desconectador. 1 año en Accesorios.\n" +
-                        "- Garantía de la instalación: 6 meses contra fallos.\n" +
-                        "- No incluye material hidráulico (tubo de columna, tubería ni conexiones).\n" +
-                        "- El equipo se dimensionó en función de los datos proporcionados en el esquema entregado.\n" +
-                        "- Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
-                        "- Precios sujetos a cambios sin previo aviso\n" +
-                        "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                         //"- La Motobomba incluye: Bomba, motor, controlador, 2m de cable plano sumergible, kit de instalación y ganchos de seguridad(mosquetón).\n" +
+                         "- Garantía: 1 año contra defectos de fabricación.\n" +
+                         //"- Garantía de la instalación: 6 meses contra fallos.\n" +
+                         //"- No incluye material hidráulico (tubo de columna, tubería ni conexiones).\n" +
+                         //"- El equipo se dimensionó en función de los datos proporcionados en el esquema entregado.\n" +
+                         //"- Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
+                         "- Precios sujetos a cambios sin previo aviso\n", fontnotas));
                         break;
-                    case true when contieneAire:
-                        doc.Add(new Paragraph(
-                        "- Garantía del Aire Acondicionado: 5 años contra defectos de fabricación.\n" +
-                        "- Garantía de la mano de obra: 6 meses.\n" +
-                        "- Equipo en existencia para entrega inmediata.\n" +
-                        "- El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
-                        "- Si necesita factura, la mano de obra es más I.V.A.\n" +
-                        "- Precios sujetos a cambios sin previo aviso.\n" +
-                        "Sin otro particular quedo a sus órdenes.\n\n", fontnotas));
-                        break;
+
                     case true when contieneBomba:
                         doc.Add(new Paragraph(
                         "- Garantía: 2 años en bomba motor y arrancador.\n" +
@@ -269,7 +279,6 @@ namespace Ensumex.PDFtemplates
                     doc.Add(new Paragraph(notas, fontnotas));
                     doc.Add(new Paragraph("\n\n"));
                 }
-
                 // Firma y pie
                 PdfPTable tablaFirma = new PdfPTable(1);
                 tablaFirma.WidthPercentage = 100;
@@ -279,13 +288,20 @@ namespace Ensumex.PDFtemplates
                 celdaTexto.PaddingBottom = 10f;
                 tablaFirma.AddCell(celdaTexto);
                 doc.Add(tablaFirma);
-
                 doc.Close();
                 MessageBox.Show("PDF de tablas generado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            catch (IOException)
+            {
+                MessageBox.Show("Archivo en uso. Ciérralo e inténtalo de nuevo.", "Archivo en uso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show("No tienes permisos para guardar aquí.", "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al generar el PDF de tablas: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al generar el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

@@ -64,27 +64,33 @@ namespace Ensumex.PDFtemplates
 
                 if (!string.IsNullOrWhiteSpace(nombreCliente))
                 {
-                    doc.Add(new Paragraph("\n\nEstimado(a) Cliente: ", fontNormal));
-                    doc.Add(new Paragraph(nombreCliente, fontNegrita));
+                    doc.Add(new Paragraph("\n"+nombreCliente, fontNegrita));
                 }
                 else
                 {
                     doc.Add(new Paragraph("\nEstimado(a) Cliente:", fontNegrita));
                 }
-                doc.Add(new Paragraph("\nPresente"));
+                doc.Add(new Paragraph("Presente\n", fontNegrita));
                 doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización " +
-                    "para la venta y/o la instalación del siguiente producto:", fontNormal));
+                    "para la venta de los siguientes productos:", fontNormal));
+
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
                     if (fila.IsNewRow) continue;
+                    string clave = fila.Cells["CLAVE"].Value?.ToString()?.ToUpper() ?? "";
                     string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
                     if (descripcion.Contains("CALENT"))
                     {
-                        doc.Add(new Paragraph("-" + descripcion, fontNormal));
+                        if (clave.EndsWith("GA"))
+                            doc.Add(new Paragraph("-" + descripcion + " POR GRAVEDAD", fontNormal));
+                        else if (clave.EndsWith("HP"))
+                            doc.Add(new Paragraph("-" + descripcion + " POR PRESIÓN", fontNormal));
+                        else
+                            doc.Add(new Paragraph("-" + descripcion, fontNormal));
                         break;
                     }
-                    else if (descripcion.Contains("MOTOBOMBA")|| descripcion.Contains("MOTB"))
-                    {
+                    else  if (descripcion.Contains("MOT.") || descripcion.Contains("MOTB"))
+                        {
                         doc.Add(new Paragraph("-" + descripcion, fontNormal));
                         break;
                     }
@@ -214,7 +220,7 @@ namespace Ensumex.PDFtemplates
                        
 
                     }
-                     if (descripcion.Contains("MOT")||descripcion.Contains("MOTB"))
+                     if (descripcion.Contains("MOT.")||descripcion.Contains("MOTB"))
                     {
                         contieneMotobomba = true;
                        
@@ -224,7 +230,7 @@ namespace Ensumex.PDFtemplates
                         contieneBomba = true;
                        
                     }
-                     if (descripcion.Contains("AIRE"))
+                     if (descripcion.Contains("AIRE ACONDICIONADO"))
                     {
                         contieneAire = true;
                         
@@ -255,19 +261,17 @@ namespace Ensumex.PDFtemplates
                         "\n Revisión y ajuste de terminales eléctricas del equipo. Revisión y ajuste de la carga de gas refrigerante.\n" +
                         "- Se requiere anticipo del 50% para comenzar el trabajo.\n" +
                         "- Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
-                        "- Precios sujetos a cambios sin previo aviso.\n" +
-                        "Sin otro particular quedo a sus órdenes.", fontnotas));
+                        "- Precios sujetos a cambios sin previo aviso.\n", fontnotas));
                         break;
                     case true when contieneMotobomba:
                         doc.Add(new Paragraph(
-                        "- La Motobomba incluye: Bomba, motor, controlador, 2m de cable plano sumergible, kit de instalación y ganchos de seguridad(mosquetón).\n" +
-                        "- Garantías: 12 años en Paneles Solares. 2 años en Bomba y Desconectador. 1 año en Accesorios.\n" +
-                        "- Garantía de la instalación: 6 meses contra fallos.\n" +
-                        "- No incluye material hidráulico (tubo de columna, tubería ni conexiones).\n" +
-                        "- El equipo se dimensionó en función de los datos proporcionados en el esquema entregado.\n" +
-                        "- Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
-                        "- Precios sujetos a cambios sin previo aviso\n" +
-                        "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                        //"- La Motobomba incluye: Bomba, motor, controlador, 2m de cable plano sumergible, kit de instalación y ganchos de seguridad(mosquetón).\n" +
+                        "- Garantía: 1 año contra defectos de fabricación.\n" +
+                        //"- Garantía de la instalación: 6 meses contra fallos.\n" +
+                        //"- No incluye material hidráulico (tubo de columna, tubería ni conexiones).\n" +
+                        //"- El equipo se dimensionó en función de los datos proporcionados en el esquema entregado.\n" +
+                        //"- Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
+                        "- Precios sujetos a cambios sin previo aviso\n", fontnotas));
                         break;
                     case true when contieneAire:
                         doc.Add(new Paragraph(
@@ -276,8 +280,7 @@ namespace Ensumex.PDFtemplates
                         "- Equipo en existencia para entrega inmediata.\n" +
                         "- El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
                         "- Si necesita factura, la mano de obra es más I.V.A.\n" +
-                        "- Precios sujetos a cambios sin previo aviso.\n" +
-                        "Sin otro particular quedo a sus órdenes.\n\n", fontnotas));
+                        "- Precios sujetos a cambios sin previo aviso.\n", fontnotas));
                         break;
                     case true when contieneBomba:
                         if (costoInstalacion == "")
@@ -287,8 +290,7 @@ namespace Ensumex.PDFtemplates
                         "- Equipos sobre pedido. Es necesario un anticipo del 60%\n" +
                         "- Entrega de 3 a 5 dias hábiles\n" +
                         "- No incluye instalación\n" +
-                        "- Precios sujetos a cambios sin previo aviso\n" +
-                        "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                        "- Precios sujetos a cambios sin previo aviso\n", fontnotas));
                             break;
                         }
                         else
@@ -298,8 +300,7 @@ namespace Ensumex.PDFtemplates
                         "- Equipos sobre pedido. Es necesario un anticipo del 60%\n" +
                         "- Entrega de 3 a 5 dias hábiles\n" +
                         "- No incluye instalación\n" +
-                        "- Precios sujetos a cambios sin previo aviso\n" +
-                        "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                        "- Precios sujetos a cambios sin previo aviso\n", fontnotas));
                         } 
                         break;
                     case true when contieneCalentador:
@@ -311,9 +312,15 @@ namespace Ensumex.PDFtemplates
                                      "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
                                      "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
                                      "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                                     "-Precios sujetos a cambios sin previo aviso.\n" +
-                                     "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                                     "-Precios sujetos a cambios sin previo aviso.\n",fontnotas));
                                         break;
+                                case true when contieneCalentador && (string.IsNullOrEmpty(costoInstalacion) || costoInstalacion.Trim() == "$0.00"):
+                                doc.Add(new Paragraph(
+                                    "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
+                                     "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
+                                    "- No incluye mano de obra.\n" +
+                                    "- Precios sujetos a cambios sin previo aviso.\n", fontnotas));
+                                     break;
                                     default:
                                         doc.Add(new Paragraph(
                                      "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
@@ -321,28 +328,31 @@ namespace Ensumex.PDFtemplates
                                      "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
                                      "-No incluye material de plomería.\n" +
                                      "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                                     "-Precios sujetos a cambios sin previo aviso.\n" +
-                                     "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                                     "-Precios sujetos a cambios sin previo aviso.\n", fontnotas));
                                         break;
 
                                 }
                                 break;
                             default:
                                 doc.Add(new Paragraph(
+                                "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
+                                     "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
                                 "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                                "-Precios sujetos a cambios sin previo aviso.\n" +
-                                "Sin otro particular, quedo a sus órdenes.\n\n", fontnotas));
+                                "-Precios sujetos a cambios sin previo aviso.\n", fontnotas));
                                 break;
                             }
+                doc.Add(new Paragraph("Sin otro particular, quedo a sus órdenes, agradecemos su preferencia.\n\n", fontnotas));
                 doc.Add(new Paragraph(notas, fontnotas));
                 // Crear una tabla de una columna centrada
+                // Firma y pie
                 PdfPTable tablaFirma = new PdfPTable(1);
                 tablaFirma.WidthPercentage = 100;
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("\n\n\n\nAtentamente,\n"+usuario+"\nRepresentante de la Cotización", fontCursiva));
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("\n\n\n\nAtentamente,\n" + usuario + "\nRepresentante de la Cotización", fontCursiva));
                 celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;
                 celdaTexto.Border = Rectangle.NO_BORDER;
                 celdaTexto.PaddingBottom = 10f;
                 tablaFirma.AddCell(celdaTexto);
+                doc.Add(tablaFirma);
                 doc.Close();
                 MessageBox.Show("📄 PDF generado correctamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
