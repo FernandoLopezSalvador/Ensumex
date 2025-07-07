@@ -10,7 +10,7 @@ namespace Ensumex.Clases
 {
     public abstract class ConnectionToSql
     {
-        private static readonly string connectionString = "Server=192.168.1.231; Database=Ensumex; Integrated Security=True";
+        private static readonly string connectionString = "Server=192.168.1.236; Database=Ensumex; Integrated Security=True";
 
         // Método estático para obtener la cadena de conexión
         public static string GetConnectionString()

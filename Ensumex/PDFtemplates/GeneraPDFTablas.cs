@@ -121,7 +121,6 @@ namespace Ensumex.PDFtemplates
                         celda.HorizontalAlignment = Element.ALIGN_CENTER;
                         pdfTable.AddCell(celda);
                     }
-
                     int pos = 1;
                     decimal totalImporte = 0;
 

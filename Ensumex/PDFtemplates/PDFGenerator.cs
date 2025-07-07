@@ -162,7 +162,7 @@ namespace Ensumex.PDFtemplates
                     decimal importe = (precioUnitario * cantidad) - descuentoProd;
                     tabla.AddCell(new PdfPCell(new Phrase(importe.ToString("0.00"), fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
                     pos++;
-                }
+                   }
                 doc.Add(tabla);
                 // --- TOTALES Y COSTOS ADICIONALES ---
                 doc.Add(new Paragraph("\n"));
@@ -184,7 +184,7 @@ namespace Ensumex.PDFtemplates
                 {
                     Border = 0
                 });
-                tablaTotales.AddCell(new PdfPCell(new Phrase(valorNumerico.ToString("C", new CultureInfo("es-MX")), fontNegrita))
+                tablaTotales.AddCell(new PdfPCell(new Phrase(valorNumerico.ToString("C",new CultureInfo("es-MX")), fontNegrita))
                 {
                     Border = 0,
                     HorizontalAlignment = Element.ALIGN_RIGHT
@@ -214,37 +214,13 @@ namespace Ensumex.PDFtemplates
                 {
                     if (fila.IsNewRow) continue;
                     string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
-                    if (descripcion.Contains("CALENT"))
-                    {
-                        contieneCalentador = true;
-                       
-
-                    }
-                     if (descripcion.Contains("MOT.")||descripcion.Contains("MOTB"))
-                    {
-                        contieneMotobomba = true;
-                       
-                    }
-                     if (descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO"))
-                    {
-                        contieneBomba = true;
-                       
-                    }
-                     if (descripcion.Contains("AIRE ACONDICIONADO"))
-                    {
-                        contieneAire = true;
-                        
-                    }
-                    if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
-                    {
-                        contieneMantenimiento = true;
-                        
-                    }
-                     if (descripcion.Contains("KIT DE MATERIAL")|| descripcion.Contains("PLOMERIA")|| descripcion.Contains("PLOMERÍA"))
-                    {
-                        contienePlomeria = true;
-                        
-                    }
+                    string descMayus = descripcion.ToUpper();
+                    if (descMayus.Contains("CALENT")) contieneCalentador = true;
+                    if (descMayus.Contains("MOT") || descMayus.Contains("MOTB")) contieneMotobomba = true;
+                    if (descMayus.Contains("BOMBA DE") || descMayus.Contains("BOMBA TIPO")) contieneBomba = true;
+                    if (descMayus.Contains("AIRE ACONDICIONADO")) contieneAire = true;
+                    if (descMayus.Contains("MANTENIMIENTO") || descMayus.Contains("SERVICIO DE MANTENIM")) contieneMantenimiento = true;
+                    if (descMayus.Contains("KIT DE MATERIAL") || descMayus.Contains("PLOMERIA") || descMayus.Contains("PLOMERÍA")) contienePlomeria = true;
                 }
                 doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
                 // Agregar notas dependiendo del tipo de producto
@@ -265,19 +241,13 @@ namespace Ensumex.PDFtemplates
                         break;
                     case true when contieneMotobomba:
                         doc.Add(new Paragraph(
-                        //"- La Motobomba incluye: Bomba, motor, controlador, 2m de cable plano sumergible, kit de instalación y ganchos de seguridad(mosquetón).\n" +
                         "- Garantía: 1 año contra defectos de fabricación.\n" +
-                        //"- Garantía de la instalación: 6 meses contra fallos.\n" +
-                        //"- No incluye material hidráulico (tubo de columna, tubería ni conexiones).\n" +
-                        //"- El equipo se dimensionó en función de los datos proporcionados en el esquema entregado.\n" +
-                        //"- Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
                         "- Precios sujetos a cambios sin previo aviso\n", fontnotas));
                         break;
                     case true when contieneAire:
                         doc.Add(new Paragraph(
                         "- Garantía del Aire Acondicionado: 5 años contra defectos de fabricación.\n" +
                         "- Garantía de la mano de obra: 6 meses.\n" +
-                        "- Equipo en existencia para entrega inmediata.\n" +
                         "- El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
                         "- Si necesita factura, la mano de obra es más I.V.A.\n" +
                         "- Precios sujetos a cambios sin previo aviso.\n", fontnotas));
@@ -343,7 +313,7 @@ namespace Ensumex.PDFtemplates
                             }
                 doc.Add(new Paragraph("Sin otro particular, quedo a sus órdenes, agradecemos su preferencia.\n\n", fontnotas));
                 doc.Add(new Paragraph(notas, fontnotas));
-                // Crear una tabla de una columna centrada
+
                 // Firma y pie
                 PdfPTable tablaFirma = new PdfPTable(1);
                 tablaFirma.WidthPercentage = 100;

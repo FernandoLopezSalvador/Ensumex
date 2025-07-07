@@ -67,5 +67,12 @@ namespace Ensumex.Controllers
                 return BitConverter.ToString(hash).Replace("-", "").ToLower();
             }
         }
+
+        public bool ActualizarUsuario(string usuarioOriginal, Usuarios usuarioEditado)
+        {
+            // Cifrar la contraseña antes de actualizar
+            usuarioEditado.Contraseña = ObtenerHashSHA256(usuarioEditado.Contraseña);
+            return new UsuarioDao().ActualizarUsuario(usuarioOriginal, usuarioEditado);
+        }
     }
 }

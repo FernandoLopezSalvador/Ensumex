@@ -8,8 +8,6 @@ using System.Data.SqlClient;
 using Ensumex.Clases;
 using System.Security.Cryptography.X509Certificates;
 
-
-
 namespace Ensumex.Models    
 {
     public class UsuarioDao : ConnectionToSql
@@ -32,7 +30,6 @@ namespace Ensumex.Models
                     {
                         if (reader.Read())
                         {
-                            
                             return (reader.GetString(0), reader.GetString(1));
                         }
                     }
@@ -40,6 +37,7 @@ namespace Ensumex.Models
             }
             return (null, null);
         }
+
         public DataTable ObtenerUsuarios()
         {
             DataTable dt = new DataTable();
@@ -52,7 +50,7 @@ namespace Ensumex.Models
                     using (var command = new SqlCommand())
                     {
                         command.Connection = connection;
-                        command.CommandText = "SELECT Usuario, Nombre, Posision, Correo FROM Usuarios";
+                        command.CommandText = "SELECT Usuario, Contraseña, Nombre, Posision, Correo FROM Usuarios";
                         command.CommandType = CommandType.Text;
 
                         using (var reader = command.ExecuteReader())
@@ -73,6 +71,23 @@ namespace Ensumex.Models
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return dt;
+        }
+
+        public bool ActualizarUsuario(string usuarioOriginal, Usuarios usuarioEditado)
+        {
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+                var cmd = new SqlCommand(
+                    "UPDATE Usuarios SET Usuario=@Usuario, Contraseña=@Contraseña, Nombre=@Nombre, Posision=@Posision, Correo=@Correo WHERE Usuario=@UsuarioOriginal", connection);
+                cmd.Parameters.AddWithValue("@Usuario", usuarioEditado.Usuario);
+                cmd.Parameters.AddWithValue("@Contraseña", usuarioEditado.Contraseña);
+                cmd.Parameters.AddWithValue("@Nombre", usuarioEditado.Nombre);
+                cmd.Parameters.AddWithValue("@Posision", usuarioEditado.Posision);
+                cmd.Parameters.AddWithValue("@Correo", usuarioEditado.Correo);
+                cmd.Parameters.AddWithValue("@UsuarioOriginal", usuarioOriginal);
+                return cmd.ExecuteNonQuery() > 0;
+            }
         }
     }
 }

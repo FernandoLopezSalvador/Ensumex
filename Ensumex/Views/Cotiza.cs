@@ -47,7 +47,6 @@ namespace Ensumex.Views
         private void AplicarConfiguracionesGenerales()
         {
             lblFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
-            //txt_Nocotizacion.CharacterCasing = CharacterCasing.Upper;
         }
 
         private void ConfigurarControles()
@@ -134,10 +133,8 @@ namespace Ensumex.Views
             // Si hay una o más de una tabla guardada y tambien una cotizacion en tabla
             if (tablasGuardadas.Count > 0 && tbl_Cotizacion.Rows.Count > 1)
             {
-                // Si hay tablas guardadas, guarda todas las tablas
                 GuardarCotizacionTablas();
             }
-            //si no hay tablas guardadas pero si una cotización en la tabla
             else if (tbl_Cotizacion.Rows.Count > 1 && tablasGuardadas.Count == 0)
             {
                 // Si hay una tabla, guarda la cotización normal
@@ -190,7 +187,7 @@ namespace Ensumex.Views
                         descuento: decimal.TryParse(lbl_costoDescuento.Text.Replace("$", "").Replace("-", ""), out var desc) ? desc : 0,
                         total: decimal.TryParse(lbl_TotalNeto.Text.Replace("$", ""), out var tot) ? tot : 0,
                         notas: Txt_observaciones.Text,
-                        tablas: tablasParaGuardar // Ahora incluye todas las tablas
+                        tablas: tablasParaGuardar
                     );
 
                     // --- GENERAR PDF ---
@@ -363,25 +360,21 @@ namespace Ensumex.Views
             if (sender is not TextBox txt)
                 return;
 
-            // Permitir teclas de control (Backspace, Delete, etc.)
             if (char.IsControl(e.KeyChar))
                 return;
 
-            // Permitir solo dígitos y un punto
             if (!char.IsDigit(e.KeyChar) && e.KeyChar != '.')
             {
                 e.Handled = true;
                 return;
             }
 
-            // Evitar más de un punto decimal
             if (e.KeyChar == '.' && txt.Text.Contains('.'))
             {
                 e.Handled = true;
                 return;
             }
 
-            // Evitar punto como primer carácter (opcional)
             if (e.KeyChar == '.' && txt.SelectionStart == 0)
             {
                 e.Handled = true;
@@ -596,7 +589,6 @@ namespace Ensumex.Views
                 };
                 productosForm.Controls.Add(productControl);
                 productosForm.StartPosition = FormStartPosition.CenterParent;
-                //productosForm.Size = new Size(1000, 800);
                 //pantalla completa del formulario
                 productosForm.WindowState = FormWindowState.Maximized;
                 productosForm.Text = "Seleccionar Producto";

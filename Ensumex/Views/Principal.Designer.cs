@@ -305,7 +305,7 @@
             lbl_UsuarioInicio.AutoSize = true;
             lbl_UsuarioInicio.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lbl_UsuarioInicio.ForeColor = SystemColors.ControlText;
-            lbl_UsuarioInicio.Location = new Point(24, 52);
+            lbl_UsuarioInicio.Location = new Point(0, 52);
             lbl_UsuarioInicio.Name = "lbl_UsuarioInicio";
             lbl_UsuarioInicio.Size = new Size(148, 25);
             lbl_UsuarioInicio.TabIndex = 5;
