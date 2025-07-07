@@ -22,7 +22,7 @@ namespace Ensumex.Models
             using (var connection = GetConnection())
             {
                 connection.Open();
-                using (var command = new SqlCommand("SELECT nombre, Posision FROM Usuarios WHERE Usuario = @Usuario", connection))
+                using (var command = new SqlCommand("SELECT nombre, Posicion FROM Usuarios WHERE Usuario = @Usuario", connection))
                 {
                     command.Parameters.AddWithValue("@Usuario", usuario);
 
@@ -50,7 +50,7 @@ namespace Ensumex.Models
                     using (var command = new SqlCommand())
                     {
                         command.Connection = connection;
-                        command.CommandText = "SELECT Usuario, Contraseña, Nombre, Posision, Correo FROM Usuarios";
+                        command.CommandText = "SELECT Usuario, Contraseña, Nombre, Posicion, Correo FROM Usuarios";
                         command.CommandType = CommandType.Text;
 
                         using (var reader = command.ExecuteReader())
@@ -79,11 +79,11 @@ namespace Ensumex.Models
             {
                 connection.Open();
                 var cmd = new SqlCommand(
-                    "UPDATE Usuarios SET Usuario=@Usuario, Contraseña=@Contraseña, Nombre=@Nombre, Posision=@Posision, Correo=@Correo WHERE Usuario=@UsuarioOriginal", connection);
+                    "UPDATE Usuarios SET Usuario=@Usuario, Contraseña=@Contraseña, Nombre=@Nombre, Posicion=@Posicion, Correo=@Correo WHERE Usuario=@UsuarioOriginal", connection);
                 cmd.Parameters.AddWithValue("@Usuario", usuarioEditado.Usuario);
                 cmd.Parameters.AddWithValue("@Contraseña", usuarioEditado.Contraseña);
                 cmd.Parameters.AddWithValue("@Nombre", usuarioEditado.Nombre);
-                cmd.Parameters.AddWithValue("@Posision", usuarioEditado.Posision);
+                cmd.Parameters.AddWithValue("@Posicion", usuarioEditado.Posicion);
                 cmd.Parameters.AddWithValue("@Correo", usuarioEditado.Correo);
                 cmd.Parameters.AddWithValue("@UsuarioOriginal", usuarioOriginal);
                 return cmd.ExecuteNonQuery() > 0;

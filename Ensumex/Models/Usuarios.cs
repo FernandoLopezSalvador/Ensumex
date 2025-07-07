@@ -9,10 +9,10 @@ namespace Ensumex.Models
     public class Usuarios
     {
         public int UsuarioID { get; set; }
-        public string Usuario{ get; set; }
+        public string Usuario { get; set; }
         public string Contraseña { get; set; }
         public string Nombre { get; set; }
-        public string Posision { get; set; }
+        public string Posicion { get; set; } 
         public string Correo { get; set; }
     }
 }

@@ -41,14 +41,14 @@ namespace Ensumex.Controllers
                 // 3) Si no existe, insertamos con todos los parámetros correctamente:
                 using (var insertCmd = new SqlCommand(
                     @"INSERT INTO Usuarios 
-                    (Usuario, Contraseña, Nombre, Posision, Correo) 
-                    VALUES (@Usuario, @Contraseña, @Nombre, @Posision, @Correo)",
+                    (Usuario, Contraseña, Nombre, Posicion, Correo) 
+                    VALUES (@Usuario, @Contraseña, @Nombre, @Posicion, @Correo)",
                     connection))
                 {
                     insertCmd.Parameters.AddWithValue("@Usuario", usuario.Usuario);
                     insertCmd.Parameters.AddWithValue("@Contraseña", usuario.Contraseña);
                     insertCmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
-                    insertCmd.Parameters.AddWithValue("@Posision", usuario.Posision); 
+                    insertCmd.Parameters.AddWithValue("@Posicion", usuario.Posicion); 
                     insertCmd.Parameters.AddWithValue("@Correo", usuario.Correo);
 
                     int filasAfectadas = insertCmd.ExecuteNonQuery();

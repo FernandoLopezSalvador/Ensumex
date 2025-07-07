@@ -151,29 +151,32 @@
             // btn_GuardarUsuario
             // 
             btn_GuardarUsuario.Anchor = AnchorStyles.None;
-            btn_GuardarUsuario.BackColor = Color.Lime;
+            btn_GuardarUsuario.BackColor = SystemColors.Control;
             btn_GuardarUsuario.FlatStyle = FlatStyle.Flat;
-            btn_GuardarUsuario.Location = new Point(727, 231);
+            btn_GuardarUsuario.ForeColor = Color.Green;
+            btn_GuardarUsuario.Location = new Point(717, 231);
             btn_GuardarUsuario.Margin = new Padding(3, 2, 3, 2);
             btn_GuardarUsuario.Name = "btn_GuardarUsuario";
-            btn_GuardarUsuario.Size = new Size(82, 23);
+            btn_GuardarUsuario.Size = new Size(103, 23);
             btn_GuardarUsuario.TabIndex = 15;
             btn_GuardarUsuario.Text = "Guardar";
             btn_GuardarUsuario.UseVisualStyleBackColor = false;
-            btn_GuardarUsuario.Click += btn_GuardarUsuario_Click_2;
+            btn_GuardarUsuario.Click += btn_GuardarUsuario_Click;
             // 
             // btn_Cancelar
             // 
             btn_Cancelar.Anchor = AnchorStyles.None;
-            btn_Cancelar.BackColor = Color.Red;
+            btn_Cancelar.BackColor = SystemColors.Control;
             btn_Cancelar.FlatStyle = FlatStyle.Flat;
-            btn_Cancelar.Location = new Point(492, 231);
+            btn_Cancelar.ForeColor = Color.Red;
+            btn_Cancelar.Location = new Point(471, 231);
             btn_Cancelar.Margin = new Padding(3, 2, 3, 2);
             btn_Cancelar.Name = "btn_Cancelar";
-            btn_Cancelar.Size = new Size(63, 23);
+            btn_Cancelar.Size = new Size(105, 23);
             btn_Cancelar.TabIndex = 16;
             btn_Cancelar.Text = "Cancelar";
             btn_Cancelar.UseVisualStyleBackColor = false;
+            btn_Cancelar.Click += btn_Cancelar_Click_1;
             // 
             // textnewUsuario
             // 
@@ -290,7 +293,7 @@
             Controls.Add(tableLayoutPanel2);
             Margin = new Padding(3, 2, 3, 2);
             Name = "Users";
-            Size = new Size(916, 690);
+            Size = new Size(916, 701);
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)Tabla_usuarios).EndInit();

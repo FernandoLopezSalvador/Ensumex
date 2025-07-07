@@ -2,16 +2,9 @@
 using Ensumex.Models;
 using Ensumex.Utils;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Ensumex.Views
@@ -26,125 +19,118 @@ namespace Ensumex.Views
             InitializeComponent();
             Panel_Nuevousuario.Visible = false;
             TablaFormat.AplicarEstilosTabla(Tabla_usuarios);
+            ConfigurarTablaUsuarios();
             CargarUsuariosEnTabla();
         }
-        private void btn_nuevoUsuario_Click(object sender, EventArgs e)
+
+        private void ConfigurarTablaUsuarios()
         {
-            Panel_Nuevousuario.Visible = true;
+            Tabla_usuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            Tabla_usuarios.MultiSelect = false;
+            Tabla_usuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            Tabla_usuarios.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+
+            if (!Tabla_usuarios.Columns.Contains("Editar"))
+            {
+                DataGridViewButtonColumn btnEditar = new DataGridViewButtonColumn
+                {
+                    Name = "Editar",
+                    HeaderText = "Editar",
+                    Text = "Editar",
+                    UseColumnTextForButtonValue = true
+                };
+                Tabla_usuarios.Columns.Add(btnEditar);
+            }
+
+            Tabla_usuarios.CellClick += Tabla_usuarios_CellClick;
         }
-        private bool ValidarCorreo(string correo)
-        {
-            // Expresión regular para validar un correo electrónico
-            string patronCorreo = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-            // Verifica si el correo coincide con el patrón
-            return Regex.IsMatch(correo, patronCorreo);
-        }
-        private void btn_Cancelar_Click(object sender, EventArgs e)
-        {
-            Panel_Nuevousuario.Visible = false;
-        }
-        // Método para cargar los usuarios en la tabla
+
         private void CargarUsuariosEnTabla()
         {
             try
             {
                 UsuarioDao modelo = new UsuarioDao();
-                DataTable dt = modelo.ObtenerUsuarios(); // Removed the argument to match the method signature  
+                DataTable dt = modelo.ObtenerUsuarios();
                 Tabla_usuarios.DataSource = dt;
-
-                // Ajustar ancho y alto  
-                Tabla_usuarios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                Tabla_usuarios.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-
-                if (Tabla_usuarios.Columns["Editar"] == null)
-                {
-                    DataGridViewButtonColumn btnEditar = new DataGridViewButtonColumn();
-                    btnEditar.Name = "Editar";
-                    btnEditar.HeaderText = "Editar";
-                    btnEditar.Text = "Editar";
-                    btnEditar.UseColumnTextForButtonValue = true;
-                    Tabla_usuarios.Columns.Add(btnEditar);
-                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ocurrió un error al cargar los usuarios:\n" + ex.Message,
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostrarError("Ocurrió un error al cargar los usuarios.", ex);
             }
         }
-        private void btn_GuardarUsuario_Click_2(object sender, EventArgs e)
+
+        private void btn_nuevoUsuario_Click(object sender, EventArgs e)
+        {
+            editando = false;
+            LimpiarFormulario();
+            Panel_Nuevousuario.Visible = true;
+            btn_GuardarUsuario.Text = "Guardar";
+        }
+
+        private void btn_Cancelar_Click(object sender, EventArgs e)
+        {
+            ResetearFormulario();
+        }
+
+        private void btn_GuardarUsuario_Click(object sender, EventArgs e)
+        {
+            if (!CamposCompletos())
+            {
+                MessageBox.Show("Por favor, complete todos los campos.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!ValidarCorreo(textNewCorreo.Text))
+            {
+                MessageBox.Show("Correo inválido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            GuardarOActualizarUsuario();
+        }
+
+        private void GuardarOActualizarUsuario()
         {
             try
             {
-                string correo = textNewCorreo.Text;
-                if (ValidarCorreo(correo))
+                Usuarios usuario = new Usuarios
                 {
-                    if (string.IsNullOrEmpty(textnewUsuario.Text) || string.IsNullOrEmpty(textNewContraseña.Text) ||
-                        string.IsNullOrEmpty(textNewNombre.Text) || string.IsNullOrEmpty(cmb_NewPosicion.Text) ||
-                        string.IsNullOrEmpty(textNewCorreo.Text))
-                    {
-                        MessageBox.Show("Por favor, complete todos los campos.");
-                        return;
-                    }
-                    else
-                    {
-                        Usuarios usuarios = new Usuarios()
-                        {
-                            Usuario = textnewUsuario.Text.Trim(),
-                            Contraseña = textNewContraseña.Text.Trim(),
-                            Nombre = textNewNombre.Text.Trim(),
-                            Posision = cmb_NewPosicion.SelectedItem.ToString(),
-                            Correo = textNewCorreo.Text.Trim()
-                        };
-                        UsuarioController controller = new UsuarioController();
+                    Usuario = textnewUsuario.Text.Trim(),
+                    Contraseña = textNewContraseña.Text.Trim(),
+                    Nombre = textNewNombre.Text.Trim(),
+                    Posicion = cmb_NewPosicion.SelectedItem?.ToString() ?? string.Empty, // Fix for CS8601
+                    Correo = textNewCorreo.Text.Trim()
+                };
 
-                        bool resultado;
-                        if (editando)
-                        {
-                            // Actualizar usuario existente
-                            resultado = controller.ActualizarUsuario(usuarioOriginal, usuarios);
-                        }
-                        else
-                        {
-                            // Guardar nuevo usuario
-                            resultado = controller.GuardarUsuario(usuarios);
-                        }
+                UsuarioController controller = new UsuarioController();
+                bool resultado = editando
+                    ? controller.ActualizarUsuario(usuarioOriginal, usuario)
+                    : controller.GuardarUsuario(usuario);
 
-                        if (resultado)
-                        {
-                            MessageBox.Show(editando ? "Usuario actualizado correctamente." : "Usuario guardado correctamente.");
-                            CargarUsuariosEnTabla();
-                            this.Panel_Nuevousuario.Visible = false;
-                            textnewUsuario.Clear();
-                            textNewContraseña.Clear();
-                            textNewCorreo.Clear();
-                            textNewNombre.Clear();
-                            editando = false;
-                            usuarioOriginal = "";
-                        }
-                        else
-                        {
-                            MessageBox.Show(editando ? "Error al actualizar el usuario." : "Error al guardar el usuario.");
-                        }
-                    }
+                string mensaje = editando ? "Usuario actualizado correctamente." : "Usuario guardado correctamente.";
+
+                if (resultado)
+                {
+                    MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CargarUsuariosEnTabla();
+                    ResetearFormulario();
                 }
                 else
                 {
-                    MessageBox.Show("Correo inválido", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    textNewContraseña.Text = "";
+                    MessageBox.Show("No se pudo guardar el usuario.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
-            catch (FormatException ex)
-            {
-                MessageBox.Show($"Error de formato: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (SqlException ex)
             {
-                MessageBox.Show($"Error de base de datos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostrarError("Error de base de datos.", ex);
+            }
+            catch (FormatException ex)
+            {
+                MostrarError("Error de formato en los datos.", ex);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error inesperado: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostrarError("Ocurrió un error inesperado.", ex);
             }
         }
 
@@ -155,27 +141,66 @@ namespace Ensumex.Views
 
             try
             {
-                // Mostrar panel y establecer modo edición
-                Panel_Nuevousuario.Visible = true;
-                editando = true;
+                DataGridViewRow fila = Tabla_usuarios.Rows[e.RowIndex];
 
-                // Obtener fila seleccionada
-                var fila = Tabla_usuarios.Rows[e.RowIndex];
-
-                // Asignar valores a los controles
                 textnewUsuario.Text = fila.Cells["Usuario"]?.Value?.ToString() ?? "";
                 textNewContraseña.Text = fila.Cells["Contraseña"]?.Value?.ToString() ?? "";
                 textNewNombre.Text = fila.Cells["Nombre"]?.Value?.ToString() ?? "";
                 textNewCorreo.Text = fila.Cells["Correo"]?.Value?.ToString() ?? "";
-                cmb_NewPosicion.SelectedItem = fila.Cells["Posision"]?.Value?.ToString();
-
-                // Guardar usuario original
+                cmb_NewPosicion.SelectedItem = fila.Cells["Posicion"]?.Value?.ToString();
                 usuarioOriginal = textnewUsuario.Text;
+                editando = true;
+                btn_GuardarUsuario.Text = "Actualizar";
+                Panel_Nuevousuario.Visible = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar datos del usuario: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostrarError("Error al cargar datos del usuario seleccionado.", ex);
             }
+        }
+
+        private bool CamposCompletos()
+        {
+            return !string.IsNullOrWhiteSpace(textnewUsuario.Text)
+                && !string.IsNullOrWhiteSpace(textNewContraseña.Text)
+                && !string.IsNullOrWhiteSpace(textNewNombre.Text)
+                && !string.IsNullOrWhiteSpace(textNewCorreo.Text)
+                && !string.IsNullOrWhiteSpace(cmb_NewPosicion.Text);
+        }
+
+        private bool ValidarCorreo(string correo)
+        {
+            string patronCorreo = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            return Regex.IsMatch(correo, patronCorreo);
+        }
+
+        private void ResetearFormulario()
+        {
+            LimpiarFormulario();
+            Panel_Nuevousuario.Visible = false;
+            editando = false;
+            usuarioOriginal = "";
+            btn_GuardarUsuario.Text = "Guardar";
+        }
+
+        private void LimpiarFormulario()
+        {
+            textnewUsuario.Clear();
+            textNewContraseña.Clear();
+            textNewNombre.Clear();
+            textNewCorreo.Clear();
+            cmb_NewPosicion.SelectedIndex = -1;
+            Panel_Nuevousuario.Visible = false;
+        }
+
+        private void MostrarError(string mensaje, Exception ex)
+        {
+            MessageBox.Show($"{mensaje}\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void btn_Cancelar_Click_1(object sender, EventArgs e)
+        {
+            LimpiarFormulario();
         }
     }
 }
