@@ -64,15 +64,28 @@ namespace Ensumex.PDFtemplates
 
                 if (!string.IsNullOrWhiteSpace(nombreCliente))
                 {
-                    doc.Add(new Paragraph("\n"+nombreCliente, fontNegrita));
+                    doc.Add(new Paragraph("\n" + nombreCliente, fontNegrita));
                 }
                 else
                 {
                     doc.Add(new Paragraph("\nEstimado(a) Cliente:", fontNegrita));
                 }
-                doc.Add(new Paragraph("Presente\n", fontNegrita));
-                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización " +
-                    "para la venta de los siguientes productos:", fontNormal));
+                int totalProductos = tablaCotizacion.Rows.Cast<DataGridViewRow>().Count(r => !r.IsNewRow); // Excluye la fila vacía al final
+
+                if (totalProductos > 1)
+                {
+                    // Mensaje para más de un producto
+                    doc.Add(new Paragraph("Presente\n", fontNegrita));
+                    doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización " +
+                        "para la venta de los siguientes productos:", fontNormal));
+                }
+                else if (totalProductos == 1)
+                {
+                    // Mensaje para un solo producto
+                    doc.Add(new Paragraph("Presente\n", fontNegrita));
+                    doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización " +
+                        "para la venta del siguiente producto:", fontNormal));
+                }
 
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
@@ -89,8 +102,8 @@ namespace Ensumex.PDFtemplates
                             doc.Add(new Paragraph("-" + descripcion, fontNormal));
                         break;
                     }
-                    else  if (descripcion.Contains("MOT.") || descripcion.Contains("MOTB"))
-                        {
+                    else if (descripcion.Contains("MOT.") || descripcion.Contains("MOTB"))
+                    {
                         doc.Add(new Paragraph("-" + descripcion, fontNormal));
                         break;
                     }
@@ -116,19 +129,18 @@ namespace Ensumex.PDFtemplates
                 PdfPTable tabla = new PdfPTable(6);
                 tabla.WidthPercentage = 100;
                 tabla.SetWidths(new float[] { 0.5f, 0.9f, 3f, 1f, 1f, 1.2f });
-
                 string[] headers = { "#", "Canti", "Descripción", "Precio", "Descuento", "Importe" };
                 foreach (string header in headers)
                 {
                     PdfPCell celda = new PdfPCell(new Phrase(header, fontNegrita));
-                    celda.BackgroundColor = BaseColor.LIGHT_GRAY;
+                    celda.BackgroundColor = new BaseColor(144, 238, 144);
                     celda.HorizontalAlignment = Element.ALIGN_CENTER;
                     tabla.AddCell(celda);
                 }
 
                 int pos = 1;
                 foreach (DataGridViewRow row in tablaCotizacion.Rows)
-                {   
+                {
                     if (row.IsNewRow) continue;
 
                     // # (posición)
@@ -146,7 +158,7 @@ namespace Ensumex.PDFtemplates
                     // Precio
                     string precioStr = row.Cells["PRECIO"].Value?.ToString() ?? "0";
                     decimal.TryParse(precioStr, out decimal precioUnitario);
-                    tabla.AddCell(new PdfPCell(new Phrase("$"+precioStr, fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
+                    tabla.AddCell(new PdfPCell(new Phrase("$" + precioStr, fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
 
                     // Descuento (por producto)
                     decimal descuentoProd = 0;
@@ -154,7 +166,7 @@ namespace Ensumex.PDFtemplates
                     {
                         descuentoProd = (precioUnitario * cantidad) * (porcentajeDescuento / 100m);
                     }
-                    PdfPCell celdaDescuento = new PdfPCell(new Phrase("$"+descuentoProd.ToString("0.00"), fontrojo))
+                    PdfPCell celdaDescuento = new PdfPCell(new Phrase("$" + descuentoProd.ToString("0.00"), fontrojo))
                     {
                         HorizontalAlignment = Element.ALIGN_RIGHT
                     };
@@ -162,7 +174,7 @@ namespace Ensumex.PDFtemplates
                     decimal importe = (precioUnitario * cantidad) - descuentoProd;
                     tabla.AddCell(new PdfPCell(new Phrase(importe.ToString("0.00"), fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
                     pos++;
-                   }
+                }
                 doc.Add(tabla);
                 // --- TOTALES Y COSTOS ADICIONALES ---
                 doc.Add(new Paragraph("\n"));
@@ -184,7 +196,7 @@ namespace Ensumex.PDFtemplates
                 {
                     Border = 0
                 });
-                tablaTotales.AddCell(new PdfPCell(new Phrase(valorNumerico.ToString("C",new CultureInfo("es-MX")), fontNegrita))
+                tablaTotales.AddCell(new PdfPCell(new Phrase(valorNumerico.ToString("C", new CultureInfo("es-MX")), fontNegrita))
                 {
                     Border = 0,
                     HorizontalAlignment = Element.ALIGN_RIGHT
@@ -201,116 +213,88 @@ namespace Ensumex.PDFtemplates
                 });
                 doc.Add(tablaTotales);
 
-                // Variables para verificar otros tipos de productos
-                bool contieneCalentador = false;
-                bool contieneMotobomba = false;
-                bool contieneAire = false;
-                bool contieneBomba = false;
-                bool contieneMantenimiento = false;
-                bool contienePlomeria = false;
+                // Diccionario con claves y mensajes
+                var notasPorProducto = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["CALENTADOR"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n-Precios sujetos a cambios sin previo aviso.\n",
+                    ["CALENT"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n-Precios sujetos a cambios sin previo aviso.\n",
 
-                // Recorre las filas de la tabla para verificar los tipos de productos
+
+                    ["AIRE ACONDICIONADO"] = "-Garantía: 5 años contra defectos de fabricación.\n" +
+                    "-El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
+                    "-Precios sujetos a cambios sin previo aviso.\n",
+                    
+                    ["MOTOBOMBA"] = "-Garantía: 1 año contra defectos de fabricación." +
+                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
+                    "\n-Precios sujetos a cambios sin previo aviso.\n",
+
+                    ["MOT:BOMB"] = "-Garantía: 1 año contra defectos de fabricación." +
+                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
+                    "\n-Precios sujetos a cambios sin previo aviso.\n",
+
+
+                    ["BOMBA"] = "-Garantía: 2 años en bomba motor y arrancador\n" +
+                    "- Equipos sobre pedido. Es necesario un anticipo del 60%\n" +
+                    "- Entrega de 3 a 5 dias hábiles\n" +
+                    "-Precios sujetos a cambios sin previo aviso.\n",
+                    
+                    ["MANTENIMIENTO"] = "- Mantenimiento correctivo de unidad tipo paquete incluye:\nLocalización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante\n" +
+                    "Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
+                    "Limpieza de serpentín evaporador y serpentín condensador, turbinas de la unidad y carcasas de" +
+                    "la misma. \n   Limpieza de la charola de condensados. \n   Limpieza y lavado de los filtros de aire del retorno" +
+                    "de la unidad evaporadora. \n   Ajuste de la banda de turbina del evaporador. \n    Engrasado de chumaceras." +
+                    "\n Revisión y ajuste de terminales eléctricas del equipo. Revisión y ajuste de la carga de gas refrigerante.\n" +
+                    "- Se requiere anticipo del 50% para comenzar el trabajo.\n" +
+                    "- Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
+                    "- Precios sujetos a cambios sin previo aviso.\n" +
+                    "Sin otro particular quedo a sus órdenes.",
+
+                    ["MANTEMIN"] = "- Mantenimiento correctivo de unidad tipo paquete incluye:\nLocalización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante\n" +
+                    "Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
+                    "Limpieza de serpentín evaporador y serpentín condensador, turbinas de la unidad y carcasas de" +
+                    "la misma. \n   Limpieza de la charola de condensados. \n   Limpieza y lavado de los filtros de aire del retorno" +
+                    "de la unidad evaporadora. \n   Ajuste de la banda de turbina del evaporador. \n    Engrasado de chumaceras." +
+                    "\n Revisión y ajuste de terminales eléctricas del equipo. Revisión y ajuste de la carga de gas refrigerante.\n" +
+                    "- Se requiere anticipo del 50% para comenzar el trabajo.\n" +
+                    "- Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
+                    "- Precios sujetos a cambios sin previo aviso.\n" +
+                    "Sin otro particular quedo a sus órdenes."
+                };
+
+                // Buscar el primer producto que coincida
+                string notaSeleccionada = null;
+
                 foreach (DataGridViewRow fila in tablaCotizacion.Rows)
                 {
                     if (fila.IsNewRow) continue;
-                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
-                    string descMayus = descripcion.ToUpper();
-                    if (descMayus.Contains("CALENT")) contieneCalentador = true;
-                    if (descMayus.Contains("MOT") || descMayus.Contains("MOTB")) contieneMotobomba = true;
-                    if (descMayus.Contains("BOMBA DE") || descMayus.Contains("BOMBA TIPO")) contieneBomba = true;
-                    if (descMayus.Contains("AIRE ACONDICIONADO")) contieneAire = true;
-                    if (descMayus.Contains("MANTENIMIENTO") || descMayus.Contains("SERVICIO DE MANTENIM")) contieneMantenimiento = true;
-                    if (descMayus.Contains("KIT DE MATERIAL") || descMayus.Contains("PLOMERIA") || descMayus.Contains("PLOMERÍA")) contienePlomeria = true;
-                }
-                doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
-                // Agregar notas dependiendo del tipo de producto
-                switch (true)
-                {
-                    case true when contieneMantenimiento:
-                        doc.Add(new Paragraph(
-                        "- Mantenimiento correctivo de unidad tipo paquete incluye:\n" +
-                        "   Localización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante\n" +
-                        "-  Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
-                        "   Limpieza de serpentín evaporador y serpentín condensador, turbinas de la unidad y carcasas de " +
-                        "la misma. \n   Limpieza de la charola de condensados. \n   Limpieza y lavado de los filtros de aire del retorno " +
-                        "de la unidad evaporadora. \n   Ajuste de la banda de turbina del evaporador. \n    Engrasado de chumaceras. " +
-                        "\n Revisión y ajuste de terminales eléctricas del equipo. Revisión y ajuste de la carga de gas refrigerante.\n" +
-                        "- Se requiere anticipo del 50% para comenzar el trabajo.\n" +
-                        "- Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
-                        "- Precios sujetos a cambios sin previo aviso.\n", fontnotas));
-                        break;
-                    case true when contieneMotobomba:
-                        doc.Add(new Paragraph(
-                        "- Garantía: 1 año contra defectos de fabricación.\n" +
-                        "- Precios sujetos a cambios sin previo aviso\n", fontnotas));
-                        break;
-                    case true when contieneAire:
-                        doc.Add(new Paragraph(
-                        "- Garantía del Aire Acondicionado: 5 años contra defectos de fabricación.\n" +
-                        "- Garantía de la mano de obra: 6 meses.\n" +
-                        "- El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
-                        "- Si necesita factura, la mano de obra es más I.V.A.\n" +
-                        "- Precios sujetos a cambios sin previo aviso.\n", fontnotas));
-                        break;
-                    case true when contieneBomba:
-                        if (costoInstalacion == "")
-                        {
-                            doc.Add(new Paragraph(
-                        "- Garantía: 2 años en bomba motor y arrancador.\n" +
-                        "- Equipos sobre pedido. Es necesario un anticipo del 60%\n" +
-                        "- Entrega de 3 a 5 dias hábiles\n" +
-                        "- No incluye instalación\n" +
-                        "- Precios sujetos a cambios sin previo aviso\n", fontnotas));
-                            break;
-                        }
-                        else
-                        {
-                            doc.Add(new Paragraph(
-                        "- Garantía: 2 años en bomba motor y arrancador.\n" +
-                        "- Equipos sobre pedido. Es necesario un anticipo del 60%\n" +
-                        "- Entrega de 3 a 5 dias hábiles\n" +
-                        "- No incluye instalación\n" +
-                        "- Precios sujetos a cambios sin previo aviso\n", fontnotas));
-                        } 
-                        break;
-                    case true when contieneCalentador:
-                                switch (true)
-                                {
-                                    case true when contienePlomeria:
-                                        doc.Add(new Paragraph(
-                                     "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
-                                     "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
-                                     "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
-                                     "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                                     "-Precios sujetos a cambios sin previo aviso.\n",fontnotas));
-                                        break;
-                                case true when contieneCalentador && (string.IsNullOrEmpty(costoInstalacion) || costoInstalacion.Trim() == "$0.00"):
-                                doc.Add(new Paragraph(
-                                    "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
-                                     "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
-                                    "- No incluye mano de obra.\n" +
-                                    "- Precios sujetos a cambios sin previo aviso.\n", fontnotas));
-                                     break;
-                                    default:
-                                        doc.Add(new Paragraph(
-                                     "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
-                                     "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
-                                     "-Garantía de la mano de obra: 6 meses contra fugas de agua.\n" +
-                                     "-No incluye material de plomería.\n" +
-                                     "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                                     "-Precios sujetos a cambios sin previo aviso.\n", fontnotas));
-                                        break;
 
-                                }
-                                break;
-                            default:
-                                doc.Add(new Paragraph(
-                                "-Garantía: 5 años contra defectos de fabricación. La garantía aplica únicamente para el termo tanque. No aplica la garantía " +
-                                     "por omisión en los cuidados que requiere el equipo, de acuerdo al manual de instalación y garantía que se entrega.\n" +
-                                "-Si necesita factura, la mano de obra se agrega más I.V.A.\n" +
-                                "-Precios sujetos a cambios sin previo aviso.\n", fontnotas));
-                                break;
-                            }
+                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
+
+                    foreach (var clave in notasPorProducto.Keys)
+                    {
+                        if (descripcion.Contains(clave))
+                        {
+                            notaSeleccionada = notasPorProducto[clave];
+                            break; // Encontró un producto, no sigue buscando
+                        }
+                    }
+
+                    if (notaSeleccionada != null) break;
+                }
+
+                // Agregar la nota al PDF
+                doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
+
+                if (notaSeleccionada != null)
+                {
+                    doc.Add(new Paragraph(notaSeleccionada, fontnotas));
+                }
+                else
+                {
+                    // Nota genérica si no coincide ningún producto
+                    doc.Add(new Paragraph(
+                        "-Garantía estándar: 1 año contra defectos de fabricación.\n-Precios sujetos a cambios sin previo aviso.\n", fontnotas));
+                }
                 doc.Add(new Paragraph("Sin otro particular, quedo a sus órdenes, agradecemos su preferencia.\n\n", fontnotas));
                 doc.Add(new Paragraph(notas, fontnotas));
 

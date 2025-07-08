@@ -117,8 +117,7 @@ namespace Ensumex.PDFtemplates
                     foreach (string header in headers)
                     {
                         PdfPCell celda = new PdfPCell(new Phrase(header, fontNegrita));
-                        celda.BackgroundColor = BaseColor.LIGHT_GRAY;
-                        celda.HorizontalAlignment = Element.ALIGN_CENTER;
+                        celda.BackgroundColor = new BaseColor(144, 238, 144); celda.HorizontalAlignment = Element.ALIGN_CENTER;
                         pdfTable.AddCell(celda);
                     }
                     int pos = 1;
@@ -195,7 +194,7 @@ namespace Ensumex.PDFtemplates
                         Border = 0,
                         Colspan = 2,
                         HorizontalAlignment = Element.ALIGN_CENTER
-                    });
+                    }); 
                     doc.Add(tablaTotales);
                     tablaNum++;
                 }

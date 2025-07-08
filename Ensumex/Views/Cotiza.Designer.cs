@@ -50,30 +50,32 @@
             btn_Cancelarcotizacion = new Button();
             Btn_guardarCotizacion = new Button();
             btn_AgregarProducto = new Button();
-            materialLabel11 = new MaterialSkin.Controls.MaterialLabel();
             lbl_costoDescuento = new MaterialSkin.Controls.MaterialLabel();
-            materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
             lbl_TotalNeto = new MaterialSkin.Controls.MaterialLabel();
             lbl_Subtotal = new MaterialSkin.Controls.MaterialLabel();
-            materialLabel9 = new MaterialSkin.Controls.MaterialLabel();
             tableLayoutPanel3 = new TableLayoutPanel();
-            materialButton1 = new MaterialSkin.Controls.MaterialButton();
-            tbl_Cotizacion = new DataGridView();
             tableLayoutPanel2 = new TableLayoutPanel();
+            label1 = new Label();
+            label2 = new Label();
+            label3 = new Label();
             lbl_observaciones = new MaterialSkin.Controls.MaterialLabel();
             Txt_observaciones = new TextBox();
+            materialButton1 = new MaterialSkin.Controls.MaterialButton();
+            tbl_Cotizacion = new DataGridView();
             AgregarTabla = new MaterialSkin.Controls.MaterialButton();
+            tableLayoutPanel4 = new TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Buscarcliente).BeginInit();
             tableLayoutPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)tbl_Cotizacion).BeginInit();
             tableLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)tbl_Cotizacion).BeginInit();
+            tableLayoutPanel4.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 6;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.9956379F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.99564F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 27.5899715F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.2508192F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.7938938F));
@@ -446,21 +448,6 @@
             btn_AgregarProducto.UseVisualStyleBackColor = false;
             btn_AgregarProducto.Click += btn_AgregarProducto_Click_1;
             // 
-            // materialLabel11
-            // 
-            materialLabel11.Anchor = AnchorStyles.Right;
-            materialLabel11.AutoSize = true;
-            materialLabel11.Depth = 0;
-            materialLabel11.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel11.Location = new Point(26, 19);
-            materialLabel11.MouseState = MaterialSkin.MouseState.HOVER;
-            materialLabel11.Name = "materialLabel11";
-            materialLabel11.Size = new Size(80, 19);
-            materialLabel11.TabIndex = 22;
-            materialLabel11.Text = "Descuento:";
-            materialLabel11.TextAlign = ContentAlignment.TopRight;
-            materialLabel11.Click += materialLabel11_Click;
-            // 
             // lbl_costoDescuento
             // 
             lbl_costoDescuento.Anchor = AnchorStyles.None;
@@ -470,26 +457,13 @@
             lbl_costoDescuento.Depth = 0;
             lbl_costoDescuento.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
             lbl_costoDescuento.ForeColor = SystemColors.ControlText;
-            lbl_costoDescuento.Location = new Point(143, 19);
+            lbl_costoDescuento.Location = new Point(302, 65);
             lbl_costoDescuento.MouseState = MaterialSkin.MouseState.HOVER;
             lbl_costoDescuento.Name = "lbl_costoDescuento";
             lbl_costoDescuento.Size = new Size(41, 19);
             lbl_costoDescuento.TabIndex = 23;
             lbl_costoDescuento.Text = "$0.00";
             lbl_costoDescuento.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // materialLabel1
-            // 
-            materialLabel1.Anchor = AnchorStyles.Right;
-            materialLabel1.AutoSize = true;
-            materialLabel1.Depth = 0;
-            materialLabel1.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel1.Location = new Point(27, 38);
-            materialLabel1.MouseState = MaterialSkin.MouseState.HOVER;
-            materialLabel1.Name = "materialLabel1";
-            materialLabel1.Size = new Size(79, 19);
-            materialLabel1.TabIndex = 26;
-            materialLabel1.Text = "Total Neto:";
             // 
             // lbl_TotalNeto
             // 
@@ -498,7 +472,7 @@
             lbl_TotalNeto.Cursor = Cursors.IBeam;
             lbl_TotalNeto.Depth = 0;
             lbl_TotalNeto.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lbl_TotalNeto.Location = new Point(143, 38);
+            lbl_TotalNeto.Location = new Point(302, 115);
             lbl_TotalNeto.MouseState = MaterialSkin.MouseState.HOVER;
             lbl_TotalNeto.Name = "lbl_TotalNeto";
             lbl_TotalNeto.Size = new Size(41, 19);
@@ -512,48 +486,110 @@
             lbl_Subtotal.AutoSize = true;
             lbl_Subtotal.Depth = 0;
             lbl_Subtotal.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lbl_Subtotal.Location = new Point(143, 0);
+            lbl_Subtotal.Location = new Point(302, 15);
             lbl_Subtotal.MouseState = MaterialSkin.MouseState.HOVER;
             lbl_Subtotal.Name = "lbl_Subtotal";
             lbl_Subtotal.Size = new Size(41, 19);
             lbl_Subtotal.TabIndex = 24;
             lbl_Subtotal.Text = "$0.00";
             // 
-            // materialLabel9
-            // 
-            materialLabel9.Anchor = AnchorStyles.Right;
-            materialLabel9.AutoSize = true;
-            materialLabel9.Depth = 0;
-            materialLabel9.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel9.Location = new Point(32, 0);
-            materialLabel9.MouseState = MaterialSkin.MouseState.HOVER;
-            materialLabel9.Name = "materialLabel9";
-            materialLabel9.Size = new Size(74, 19);
-            materialLabel9.TabIndex = 16;
-            materialLabel9.Text = "Sub Total:";
-            // 
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.ColumnCount = 3;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.4062395F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65.29405F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24.2997074F));
-            tableLayoutPanel3.Controls.Add(materialButton1, 2, 0);
-            tableLayoutPanel3.Controls.Add(tbl_Cotizacion, 1, 0);
-            tableLayoutPanel3.Controls.Add(tableLayoutPanel2, 2, 2);
-            tableLayoutPanel3.Controls.Add(lbl_observaciones, 0, 2);
-            tableLayoutPanel3.Controls.Add(Txt_observaciones, 1, 2);
-            tableLayoutPanel3.Controls.Add(AgregarTabla, 0, 0);
-            tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(0, 223);
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.40624F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 38.7799568F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.87146F));
+            tableLayoutPanel3.Controls.Add(tableLayoutPanel2, 2, 0);
+            tableLayoutPanel3.Controls.Add(lbl_observaciones, 0, 0);
+            tableLayoutPanel3.Controls.Add(Txt_observaciones, 1, 0);
+            tableLayoutPanel3.Dock = DockStyle.Bottom;
+            tableLayoutPanel3.Location = new Point(0, 369);
             tableLayoutPanel3.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 3;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 45.45454F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 9.09091F));
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 45.4545479F));
-            tableLayoutPanel3.Size = new Size(918, 183);
+            tableLayoutPanel3.RowCount = 1;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel3.Size = new Size(918, 206);
             tableLayoutPanel3.TabIndex = 10;
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
+            tableLayoutPanel2.Controls.Add(lbl_Subtotal, 1, 0);
+            tableLayoutPanel2.Controls.Add(lbl_costoDescuento, 1, 1);
+            tableLayoutPanel2.Controls.Add(lbl_TotalNeto, 1, 2);
+            tableLayoutPanel2.Controls.Add(label1, 0, 0);
+            tableLayoutPanel2.Controls.Add(label2, 0, 1);
+            tableLayoutPanel2.Controls.Add(label3, 0, 2);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(453, 3);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 4;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel2.Size = new Size(462, 200);
+            tableLayoutPanel2.TabIndex = 10;
+            // 
+            // label1
+            // 
+            label1.Anchor = AnchorStyles.Right;
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label1.Location = new Point(88, 12);
+            label1.Name = "label1";
+            label1.Size = new Size(93, 25);
+            label1.TabIndex = 28;
+            label1.Text = "Sub Total:";
+            // 
+            // label2
+            // 
+            label2.Anchor = AnchorStyles.Right;
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.ForeColor = Color.Red;
+            label2.Location = new Point(70, 62);
+            label2.Name = "label2";
+            label2.Size = new Size(111, 25);
+            label2.TabIndex = 29;
+            label2.Text = "Descuento:";
+            // 
+            // label3
+            // 
+            label3.Anchor = AnchorStyles.Right;
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label3.Location = new Point(59, 110);
+            label3.Name = "label3";
+            label3.Size = new Size(122, 30);
+            label3.TabIndex = 30;
+            label3.Text = "Total Neto:";
+            // 
+            // lbl_observaciones
+            // 
+            lbl_observaciones.Anchor = AnchorStyles.Right;
+            lbl_observaciones.AutoSize = true;
+            lbl_observaciones.Depth = 0;
+            lbl_observaciones.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
+            lbl_observaciones.Location = new Point(35, 93);
+            lbl_observaciones.MouseState = MaterialSkin.MouseState.HOVER;
+            lbl_observaciones.Name = "lbl_observaciones";
+            lbl_observaciones.Size = new Size(57, 19);
+            lbl_observaciones.TabIndex = 9;
+            lbl_observaciones.Text = "NOTAS:";
+            // 
+            // Txt_observaciones
+            // 
+            Txt_observaciones.Anchor = AnchorStyles.None;
+            Txt_observaciones.Location = new Point(98, 34);
+            Txt_observaciones.Multiline = true;
+            Txt_observaciones.Name = "Txt_observaciones";
+            Txt_observaciones.Size = new Size(349, 137);
+            Txt_observaciones.TabIndex = 34;
             // 
             // materialButton1
             // 
@@ -564,12 +600,12 @@
             materialButton1.Depth = 0;
             materialButton1.HighEmphasis = true;
             materialButton1.Icon = null;
-            materialButton1.Location = new Point(698, 23);
+            materialButton1.Location = new Point(830, 55);
             materialButton1.Margin = new Padding(4);
             materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
             materialButton1.Name = "materialButton1";
             materialButton1.NoAccentTextColor = Color.Empty;
-            materialButton1.Size = new Size(155, 36);
+            materialButton1.Size = new Size(84, 36);
             materialButton1.TabIndex = 31;
             materialButton1.Text = "Añadir Producto";
             materialButton1.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
@@ -581,74 +617,30 @@
             // 
             tbl_Cotizacion.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tbl_Cotizacion.Dock = DockStyle.Fill;
-            tbl_Cotizacion.Location = new Point(98, 2);
+            tbl_Cotizacion.Location = new Point(110, 2);
             tbl_Cotizacion.Margin = new Padding(3, 2, 3, 2);
             tbl_Cotizacion.Name = "tbl_Cotizacion";
             tbl_Cotizacion.RowHeadersWidth = 51;
-            tbl_Cotizacion.Size = new Size(593, 79);
+            tbl_Cotizacion.Size = new Size(713, 142);
             tbl_Cotizacion.TabIndex = 8;
             tbl_Cotizacion.CellClick += tbl_Cotizacion_CellClick;
             tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
             // 
-            // tableLayoutPanel2
-            // 
-            tableLayoutPanel2.ColumnCount = 2;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Controls.Add(materialLabel9, 0, 0);
-            tableLayoutPanel2.Controls.Add(lbl_Subtotal, 1, 0);
-            tableLayoutPanel2.Controls.Add(materialLabel11, 0, 1);
-            tableLayoutPanel2.Controls.Add(lbl_costoDescuento, 1, 1);
-            tableLayoutPanel2.Controls.Add(materialLabel1, 0, 2);
-            tableLayoutPanel2.Controls.Add(lbl_TotalNeto, 1, 2);
-            tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(697, 102);
-            tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 4;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            tableLayoutPanel2.Size = new Size(218, 78);
-            tableLayoutPanel2.TabIndex = 10;
-            // 
-            // lbl_observaciones
-            // 
-            lbl_observaciones.Anchor = AnchorStyles.Right;
-            lbl_observaciones.AutoSize = true;
-            lbl_observaciones.Depth = 0;
-            lbl_observaciones.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            lbl_observaciones.Location = new Point(35, 131);
-            lbl_observaciones.MouseState = MaterialSkin.MouseState.HOVER;
-            lbl_observaciones.Name = "lbl_observaciones";
-            lbl_observaciones.Size = new Size(57, 19);
-            lbl_observaciones.TabIndex = 9;
-            lbl_observaciones.Text = "NOTAS:";
-            // 
-            // Txt_observaciones
-            // 
-            Txt_observaciones.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            Txt_observaciones.Location = new Point(98, 102);
-            Txt_observaciones.Multiline = true;
-            Txt_observaciones.Name = "Txt_observaciones";
-            Txt_observaciones.Size = new Size(593, 78);
-            Txt_observaciones.TabIndex = 34;
-            // 
             // AgregarTabla
             // 
-            AgregarTabla.Anchor = AnchorStyles.Left;
+            AgregarTabla.Anchor = AnchorStyles.Right;
             AgregarTabla.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AgregarTabla.BackColor = Color.Green;
             AgregarTabla.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
             AgregarTabla.Depth = 0;
             AgregarTabla.HighEmphasis = true;
             AgregarTabla.Icon = null;
-            AgregarTabla.Location = new Point(4, 23);
+            AgregarTabla.Location = new Point(4, 55);
             AgregarTabla.Margin = new Padding(4);
             AgregarTabla.MouseState = MaterialSkin.MouseState.HOVER;
             AgregarTabla.Name = "AgregarTabla";
             AgregarTabla.NoAccentTextColor = Color.Empty;
-            AgregarTabla.Size = new Size(87, 36);
+            AgregarTabla.Size = new Size(99, 36);
             AgregarTabla.TabIndex = 35;
             AgregarTabla.Text = "Agregar Nueva tabla";
             AgregarTabla.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
@@ -656,23 +648,43 @@
             AgregarTabla.UseVisualStyleBackColor = false;
             AgregarTabla.Click += AgrgarTabla_Click;
             // 
+            // tableLayoutPanel4
+            // 
+            tableLayoutPanel4.ColumnCount = 3;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.6557732F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 78.32244F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.0217867F));
+            tableLayoutPanel4.Controls.Add(tbl_Cotizacion, 1, 0);
+            tableLayoutPanel4.Controls.Add(materialButton1, 2, 0);
+            tableLayoutPanel4.Controls.Add(AgregarTabla, 0, 0);
+            tableLayoutPanel4.Dock = DockStyle.Fill;
+            tableLayoutPanel4.Location = new Point(0, 223);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.RowCount = 1;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel4.Size = new Size(918, 146);
+            tableLayoutPanel4.TabIndex = 11;
+            // 
             // Cotiza
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(tableLayoutPanel4);
             Controls.Add(tableLayoutPanel3);
             Controls.Add(tableLayoutPanel1);
             Margin = new Padding(3, 2, 3, 2);
             Name = "Cotiza";
-            Size = new Size(918, 406);
+            Size = new Size(918, 575);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)Buscarcliente).EndInit();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)tbl_Cotizacion).EndInit();
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)tbl_Cotizacion).EndInit();
+            tableLayoutPanel4.ResumeLayout(false);
+            tableLayoutPanel4.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -680,7 +692,6 @@
 
         private TableLayoutPanel tableLayoutPanel1;
         private MaterialSkin.Controls.MaterialLabel materialLabel2;
-        private MaterialSkin.Controls.MaterialLabel materialLabel9;
         private MaterialSkin.Controls.MaterialLabel materialLabel4;
         private MaterialSkin.Controls.MaterialTextBox2 txt_Costoflete;
         private MaterialSkin.Controls.MaterialTextBox2 txt_Nombrecliente;
@@ -693,13 +704,11 @@
         private MaterialSkin.Controls.MaterialLabel materialLabel10;
         private MaterialSkin.Controls.MaterialComboBox cmb_Descuento;
         private MaterialSkin.Controls.MaterialLabel materialLabel3;
-        private MaterialSkin.Controls.MaterialLabel materialLabel11;
         private MaterialSkin.Controls.MaterialLabel lbl_Subtotal;
         private MaterialSkin.Controls.MaterialLabel lbl_costoDescuento;
         private TableLayoutPanel tableLayoutPanel3;
         private DataGridView tbl_Cotizacion;
         private Label lblFecha;
-        private MaterialSkin.Controls.MaterialLabel materialLabel1;
         private MaterialSkin.Controls.MaterialLabel lbl_TotalNeto;
         private MaterialSkin.Controls.MaterialLabel lbl_observaciones;
         private TableLayoutPanel tableLayoutPanel2;
@@ -712,5 +721,9 @@
         private Button btn_Cancelarcotizacion;
         private Button Btn_guardarCotizacion;
         private Button btn_AgregarProducto;
+        private TableLayoutPanel tableLayoutPanel4;
+        private Label label1;
+        private Label label2;
+        private Label label3;
     }
 }
