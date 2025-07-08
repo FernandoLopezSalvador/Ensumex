@@ -47,6 +47,21 @@ namespace Ensumex.Forms
         private void CargarDatosUsuario()
         {
             CargaUsuario.CargarDatosUsuario(lbl_UsuarioInicio, lbl_posicion);
+
+            // Controlar visibilidad del menú principal según el rol
+            if (lbl_posicion.Text.Trim().Equals("Vendedor", StringComparison.OrdinalIgnoreCase))
+            {
+                menu_usuario.Visible = false; // Oculta el menú principal
+            }
+            else if (lbl_posicion.Text.Trim().Equals("Administrador", StringComparison.OrdinalIgnoreCase))
+            {
+                menu_usuario.Visible = true; // Muestra el menú principal
+            }
+            else
+            {
+                // Puedes decidir si ocultar o mostrar por defecto para otros roles
+                menu_usuario.Visible = false;
+            }
         }
         private void lbl_cuenta_Click(object sender, EventArgs e)
         {
@@ -103,9 +118,6 @@ namespace Ensumex.Forms
         {
             CargarUserControl(new Cotiza(lbl_UsuarioInicio.Text));
         }
-        private void btn_clientes_Click(object sender, EventArgs e)
-        {
-        }
         private void ENSUMEX_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!VentanaHelper.ConfirmarCerrarFormulario())
@@ -153,7 +165,6 @@ namespace Ensumex.Forms
             {
                 await Task.Run(() =>
                 {
-                    // Llamar al método de sincronización de productos y clientes
                     SincronizarProductosYClientes();
                 });
 
@@ -287,7 +298,6 @@ namespace Ensumex.Forms
                 connSql.Close();
             }
         }
-        //Boton para regresar al form Principal.
         private void Btn_Inicio_Click(object sender, EventArgs e)
         {
             CargarUserControl(new Cotizaciones());

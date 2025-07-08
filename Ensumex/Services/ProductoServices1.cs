@@ -14,8 +14,21 @@ namespace Ensumex.Services
         [Obsolete]
         public List <(string CVE_ART, string DESCR, string UNI_MED, decimal COSTO_PROM, decimal ULT_COSTO, string EXIST)> ObtenerProductos(int? limite = null)
         {
-            var productos = _productoDao.ObtenerProductoss();
-            return productos;
+            try
+            {
+                var productos = _productoDao.ObtenerProductoss();
+                
+                if (limite.HasValue && limite.Value > 0)
+                {
+                    return productos.Take(limite.Value).ToList();
+                }
+                
+                return productos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener productos: " + ex.Message);
+            }
         }
     }
 }

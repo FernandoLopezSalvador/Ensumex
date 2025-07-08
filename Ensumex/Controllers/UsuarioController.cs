@@ -13,7 +13,6 @@ namespace Ensumex.Controllers
 {
     internal class UsuarioController : ConnectionToSql
     {
-
         // Método para iniciar sesión y encriptar la contraseña
         [Obsolete]
         public bool GuardarUsuario(Usuarios usuario)
@@ -56,8 +55,6 @@ namespace Ensumex.Controllers
                 }
             }
         }
-
-        // Método para iniciar sesión Y Obtener el Hash de la contraseña
         private string ObtenerHashSHA256(string texto)
         {
             using (SHA256 sha256 = SHA256.Create())
@@ -67,7 +64,6 @@ namespace Ensumex.Controllers
                 return BitConverter.ToString(hash).Replace("-", "").ToLower();
             }
         }
-
         public bool ActualizarUsuario(string usuarioOriginal, Usuarios usuarioEditado)
         {
             // Cifrar la contraseña antes de actualizar

@@ -28,18 +28,22 @@ namespace Ensumex.Views
     {
         private readonly string usuarioActual;
         private List<List<object[]>> tablasGuardadas = new();
+        private Panel panelBusqueda;
+        private DataGridView dgvBusqueda;
+        private List<dynamic> productosCache = new(); // Cache de productos para búsqueda rápida
 
         public Cotiza(string usuario)
         {
             InitializeComponent();
             usuarioActual = usuario;
-
             InicializarFormulario();
+            InicializarPanelBusqueda();
+            CargarProductosCache();
+            Txt_Buscar.TextChanged += textBox1_TextChanged;
         }
         private void InicializarFormulario()
         {
             AplicarConfiguracionesGenerales();
-
             ConfigurarControles();
             ConfigurarEventos();
         }
@@ -52,7 +56,7 @@ namespace Ensumex.Views
         private void ConfigurarControles()
         {
             TablaFormat.AplicarEstilosTabla(tbl_Cotizacion);
-            AgregarDescuentos(Enumerable.Range(0, 11).Select(i => $"{i * 5}%").ToArray());
+            AgregarDescuentos(Enumerable.Range(0, 51).Select(i => $"{i}%").ToArray());
             AgregarColumnasCotizacion();
         }
 
@@ -75,8 +79,6 @@ namespace Ensumex.Views
                     { "DESCRIPCIÓN", "Descripción" },
                     { "UNIDAD", "Unidad" },
                     { "PRECIO", "precio" },
-                    { "CANTIDAD", "Cantidad" },
-                    { "TasaCambio", "Tasa Cambio" },
                     { "Subtotal", "Subtotal" }
                 };
 
@@ -90,6 +92,19 @@ namespace Ensumex.Views
                     }
                 }
 
+                if (!tbl_Cotizacion.Columns.Contains("CANTIDAD"))
+                {
+                    var colCantidad = new DataGridViewComboBoxColumn
+                    {
+                        Name = "CANTIDAD",
+                        HeaderText = "Cantidad",
+                        DataSource = Enumerable.Range(1, 100).ToList(), // Puedes ajustar el rango
+                        ValueType = typeof(int),
+                        FlatStyle = FlatStyle.Flat
+                    };
+                    tbl_Cotizacion.Columns.Add(colCantidad);
+                }
+
                 if (!tbl_Cotizacion.Columns.Contains("AplicarDescuento"))
                 {
                     var colSeleccion = new DataGridViewCheckBoxColumn();
@@ -98,16 +113,6 @@ namespace Ensumex.Views
                     colSeleccion.Width = 70;
                     tbl_Cotizacion.Columns.Insert(0, colSeleccion);
                 }
-
-                if (tbl_Cotizacion.Columns.Contains("TasaCambio"))
-                {
-                    tbl_Cotizacion.Columns["TasaCambio"].ReadOnly = false;
-                }
-                else
-                {
-                    MessageBox.Show("La columna 'TasaCambio' no fue creada correctamente.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-
                 if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
                 {
                     DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn
@@ -137,7 +142,6 @@ namespace Ensumex.Views
             }
             else if (tbl_Cotizacion.Rows.Count > 1 && tablasGuardadas.Count == 0)
             {
-                // Si hay una tabla, guarda la cotización normal
                 GuardarCotizacion();
             }
         }
@@ -195,7 +199,6 @@ namespace Ensumex.Views
                         rutaArchivo: sfd.FileName,
                         tablas: tablasParaGuardar,
                         encabezados: encabezados,
-                        //numeroCotizacion: txt_Nocotizacion.Text,
                         numeroCotizacion: lbl_NoCotiza.Text,
                         nombreCliente: txt_Nombrecliente.Text,
                         costoInstalacion: txt_Costoinstalacion.Text,
@@ -207,7 +210,6 @@ namespace Ensumex.Views
                         notas: Txt_observaciones.Text,
                         usuario: usuarioActual
                     );
-
 
                     // Preguntar si desea enviar por WhatsApp
                     var enviarWhats = MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -243,7 +245,7 @@ namespace Ensumex.Views
                             MessageBox.Show("No se proporcionó un número válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
-                    tablasGuardadas.Clear(); // Limpia la lista después de guardar
+                    tablasGuardadas.Clear();
                     limpiaCampos();
                 }
             }
@@ -345,7 +347,6 @@ namespace Ensumex.Views
                 MessageBox.Show($"Ocurrió un error al guardar la cotización.\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void cmb_Descuento_SelectedIndexChanged(object sender, EventArgs e)
         {
             ActualizarTotales();
@@ -359,22 +360,18 @@ namespace Ensumex.Views
         {
             if (sender is not TextBox txt)
                 return;
-
             if (char.IsControl(e.KeyChar))
                 return;
-
             if (!char.IsDigit(e.KeyChar) && e.KeyChar != '.')
             {
                 e.Handled = true;
                 return;
             }
-
             if (e.KeyChar == '.' && txt.Text.Contains('.'))
             {
                 e.Handled = true;
                 return;
             }
-
             if (e.KeyChar == '.' && txt.SelectionStart == 0)
             {
                 e.Handled = true;
@@ -404,11 +401,10 @@ namespace Ensumex.Views
                         string unidad = formProducto.Unidentrada;
                         decimal precioUnitario = formProducto.PrecioUnitarioTemp;
                         decimal Cantidad = formProducto.cantidad;
-                        decimal tasaCambio = 1;
                         decimal subtotal = (precioUnitario * Cantidad);
                         // --- Fin del código para generar y mostrar el número de cotización automático ---
-
-                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioUnitario, Cantidad, tasaCambio, subtotal);
+                        int cantidad = 1; // o el valor que corresponda, pero siempre int y dentro de 1-100
+                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioUnitario, cantidad, precioUnitario * cantidad);
                         ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
                     }
@@ -500,7 +496,6 @@ namespace Ensumex.Views
                 // Extraer el porcentaje del ComboBox
                 string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
                 decimal.TryParse(descuentoTexto, out decimal porcentajeDescuento);
-
                 if (porcentajeDescuento > 0)
                 {
                     foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
@@ -527,7 +522,6 @@ namespace Ensumex.Views
                 MessageBox.Show($"Se produjo un error al calcular el total: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void btn_Cancelarcotizacion_Click_1(object sender, EventArgs e)
         {
             limpiaCampos();
@@ -539,7 +533,6 @@ namespace Ensumex.Views
             txt_NumeroCliente.Text = string.Empty;
             lbl_NoCotiza.Text = string.Empty;
             txt_Nombrecliente.Text = string.Empty;
-            txt_Bases.Text = string.Empty;
             lbl_Subtotal.Text = "$0.00";
             lbl_costoDescuento.Text = "$0.00";
             lbl_TotalNeto.Text = "$0.00";
@@ -598,85 +591,25 @@ namespace Ensumex.Views
                     try
                     {
                         decimal precioFinal = precio;
-                        var result = MessageBox.Show(
-                            "¿Desea cambiar el precio del producto?",
-                            "Modificar precio",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Question
-                        );
-                        if (result == DialogResult.Yes)
-                        {
-                            string input = Microsoft.VisualBasic.Interaction.InputBox(
-                                "Ingrese el nuevo precio:",
-                                "Modificar precio",
-                                precio.ToString("0.00")
-                            );
-                            if (!decimal.TryParse(input, out decimal precioInput) || precioInput <= 0)
-                            {
-                                MessageBox.Show("Precio inválido. Se usará el precio original.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
-                            else
-                            {
-                                precioFinal = precioInput;
-                            }
-                        }
-
-                        decimal tasaCambio = 1;
-                        var resultTasa = MessageBox.Show(
-                            "¿Desea ingresar una tasa de cambio personalizada?",
-                            "Tasa de cambio",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Question
-                        );
-                        if (resultTasa == DialogResult.Yes)
-                        {
-                            string inputTasa = Microsoft.VisualBasic.Interaction.InputBox(
-                                "Ingrese la tasa de cambio:",
-                                "Tasa de cambio",
-                                "1"
-                            );
-                            if (!decimal.TryParse(inputTasa, out decimal tasaInput) || tasaInput <= 0)
-                            {
-                                MessageBox.Show("Tasa inválida. Se usará 1 por defecto.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
-                            else
-                            {
-                                tasaCambio = tasaInput;
-                            }
-                        }
-                        // Validar la cantidad que desesea agregar
-                        decimal cantidadFinal = 1;
-                        var resultCantidad = MessageBox.Show("¿Requiere más de 1 unidad?", "Cantidad", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (resultCantidad == DialogResult.Yes)
-                        {
-                            string inputCantidad = Microsoft.VisualBasic.Interaction.InputBox("¿Cuántos requiere?", "Cantidad", "1");
-
-                            if (!decimal.TryParse(inputCantidad, out decimal cantidadInput) || cantidadInput <= 0)
-                            {
-                                MessageBox.Show("Cantidad inválida. Se usará 1 por defecto.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            }
-                            else
-                            {
-                                cantidadFinal = cantidadInput;
-                            }
-                        }
+                        int cantidadFinal = 1;
                         cantidad = cantidadFinal;
-                        decimal subtotal = precioFinal * cantidad * tasaCambio;
+                        decimal subtotal = precioFinal * cantidad;
                         // Verificar si el producto ya está en la tabla
                         foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                         {
                             if (row.Cells[0].Value?.ToString() == clave)
                             {
-                                decimal cantidadExistente = Convert.ToDecimal(row.Cells[4].Value);
+                                decimal cantidadExistente = Convert.ToDecimal(row.Cells[6].Value);
                                 cantidad += cantidadExistente;
-                                row.Cells[4].Value = cantidad;
-                                row.Cells[6].Value = precioFinal * cantidad * tasaCambio;
+                                row.Cells[6].Value = cantidad;
+                                row.Cells[5].Value = precioFinal * cantidad;
                                 ActualizarTotales();
                                 productosForm.Close();
                                 return;
                             }
                         }
-                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioFinal, cantidad, tasaCambio, subtotal);
+                        //tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioFinal, subtotal, cantidad);
+                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precio, precio * cantidadFinal, cantidadFinal);
                         ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
                         productosForm.Close();
@@ -691,11 +624,29 @@ namespace Ensumex.Views
         }
         private void tbl_Cotizacion_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            // Verifica que la fila sea válida y no sea la fila nueva
             if (e.RowIndex >= 0)
             {
                 var colName = tbl_Cotizacion.Columns[e.ColumnIndex].Name;
-                if (colName == "AplicarDescuento" || colName == "TasaCambio")
+
+                // Nombres de columna consistentes
+                string colPrecio = "PRECIO";
+                string colCantidad = "CANTIDAD";
+                string colSubtotal = "Subtotal";
+
+                // Si se modifica Precio, Cantidad, recalcula el Subtotal
+                if (colName == colPrecio || colName == colCantidad)
+                {
+                    var row = tbl_Cotizacion.Rows[e.RowIndex];
+                    decimal precio = 0, cantidad = 0;
+
+                    decimal.TryParse(row.Cells[colPrecio].Value?.ToString(), out precio);
+                    decimal.TryParse(row.Cells[colCantidad].Value?.ToString(), out cantidad);
+
+                    row.Cells[colSubtotal].Value = precio * cantidad;
+                }
+
+                // Siempre actualiza los totales si cambia algo relevante
+                if (colName == "AplicarDescuento" || colName == colPrecio || colName == colCantidad || colName == colSubtotal)
                 {
                     ActualizarTotales();
                 }
@@ -703,6 +654,10 @@ namespace Ensumex.Views
         }
         private void tbl_Cotizacion_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
+            if (tbl_Cotizacion.IsCurrentCellDirty && tbl_Cotizacion.CurrentCell.OwningColumn.Name == "CANTIDAD")
+            {
+                tbl_Cotizacion.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
             if (tbl_Cotizacion.IsCurrentCellDirty &&
                 tbl_Cotizacion.CurrentCell is DataGridViewCheckBoxCell &&
                 tbl_Cotizacion.CurrentCell.OwningColumn.Name == "AplicarDescuento")
@@ -727,16 +682,12 @@ namespace Ensumex.Views
         {
             if (sender is not TextBox txt)
                 return;
-
-            // Si está vacío, no hacer nada
             if (string.IsNullOrWhiteSpace(txt.Text))
                 return;
-
-            // Validar que el texto sea un decimal válido
             if (decimal.TryParse(txt.Text, out decimal valor))
             {
                 // Formatear como moneda sin símbolo
-                txt.Text = valor.ToString("N2"); // "1,234.56"
+                txt.Text = valor.ToString("N2");
             }
             else
             {
@@ -747,11 +698,11 @@ namespace Ensumex.Views
         }
         private void txt_Costoinstalacion_Leave(object sender, EventArgs e)
         {
-            ValidarYFormatearMoneda_Leave(sender, e); // Llama al método para validar y formatear
+            ValidarYFormatearMoneda_Leave(sender, e);
         }
         private void txt_Costoflete_Leave(object sender, EventArgs e)
         {
-            ValidarYFormatearMoneda_Leave(sender, e); // Llama al método para validar y formatear
+            ValidarYFormatearMoneda_Leave(sender, e);
         }
         private void EnviarCotizacionPorWhatsApp(string numeroCliente, string mensaje)
         {
@@ -778,11 +729,9 @@ namespace Ensumex.Views
                 return numero;
             if (numero.StartsWith("52") && numero.Length == 12)
                 return numero;
-
             // Si es celular (10 dígitos), antepone 521
             if (numero.Length == 10 && numero.StartsWith("9"))
                 return "521" + numero;
-
             // Si es fijo (10 dígitos), antepone 52
             if (numero.Length == 10)
                 return "52" + numero;
@@ -797,7 +746,6 @@ namespace Ensumex.Views
                 e.Handled = true;
             }
         }
-
         private void AgrgarTabla_Click(object sender, EventArgs e)
         {
             // Guarda toda la tabla actual
@@ -833,7 +781,6 @@ namespace Ensumex.Views
                 lbl_NoCotiza.Text = "";
                 return;
             }
-
             // Busca el último producto agregado (última fila no nueva)
             DataGridViewRow ultimaFila = null;
             for (int i = tbl_Cotizacion.Rows.Count - 1; i >= 0; i--)
@@ -849,10 +796,8 @@ namespace Ensumex.Views
                 lbl_NoCotiza.Text = "";
                 return;
             }
-
             string descripcion = ultimaFila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
             string prefijo = "";
-
             if (descripcion.Contains("CALENT"))
                 prefijo = "C";
             else if (descripcion.Contains("AIRE"))
@@ -865,12 +810,119 @@ namespace Ensumex.Views
                 prefijo = "M";
 
             // Tomar la fecha del label lblFecha (formato dd/MM/yyyy)
-            string fecha = lblFecha.Text.Replace("/", ""); // Ejemplo: "03072025"
+            string fecha = lblFecha.Text.Replace("/", "");
 
             lbl_NoCotiza.Text = !string.IsNullOrWhiteSpace(prefijo) ? prefijo + fecha : fecha;
         }
 
         private void lbl_NoCotiza_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string texto = Txt_Buscar.Text.Trim().ToLower();
+            if (string.IsNullOrWhiteSpace(texto))
+            {
+                panelBusqueda.Visible = false;
+                return;
+            }
+
+            var resultados = productosCache
+                .Where(p =>
+                    p.CLAVE.ToLower().Contains(texto) ||
+                    p.DESCRIPCIÓN.ToLower().Contains(texto))
+                .ToList();
+
+            if (resultados.Any())
+            {
+                dgvBusqueda.DataSource = resultados;
+                panelBusqueda.Visible = true;
+                panelBusqueda.BringToFront();
+            }
+            else
+            {
+                panelBusqueda.Visible = false;
+            }
+        }
+
+        private void InicializarPanelBusqueda()
+        {
+            panelBusqueda = new Panel
+            {
+                Visible = false,
+                BorderStyle = BorderStyle.FixedSingle,
+                Width = 600,
+                Height = 280
+            };
+
+            dgvBusqueda = new DataGridView
+            {
+                Dock = DockStyle.Fill,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                RowHeadersVisible = false
+            };
+
+            // Aplica el mismo estilo que a las otras tablas
+            TablaFormat.AplicarEstilosTabla(dgvBusqueda);
+
+            panelBusqueda.Controls.Add(dgvBusqueda);
+            this.Controls.Add(panelBusqueda);
+
+            // Posiciona el panel justo debajo del Txt_Buscar
+            panelBusqueda.Location = new Point(Txt_Buscar.Left, Txt_Buscar.Bottom + 2);
+
+            dgvBusqueda.CellDoubleClick += DgvBusqueda_CellDoubleClick;
+
+            // Opcional: Oculta el panel si pierde el foco
+            dgvBusqueda.LostFocus += (s, e) => panelBusqueda.Visible = false;
+            Txt_Buscar.LostFocus += (s, e) => { if (!panelBusqueda.Focused && !dgvBusqueda.Focused) panelBusqueda.Visible = false; };
+        }
+
+        private void CargarProductosCache()
+        {
+            // Puedes obtener los productos desde tu servicio o base de datos
+            var productoService = new ProductoServices1();
+            var productos = productoService.ObtenerProductos(null); // null para traer todos
+            productosCache = productos.Select(p => new
+            {
+                CLAVE = p.CVE_ART ?? "N/A",
+                DESCRIPCIÓN = p.DESCR ?? "N/A",
+                UNIDAD = p.UNI_MED ?? "N/A",
+                PRECIO = p.ULT_COSTO != 0 ? p.ULT_COSTO : 0m
+            }).ToList<dynamic>();
+        }
+
+        private void DgvBusqueda_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                var row = dgvBusqueda.Rows[e.RowIndex];
+                string clave = row.Cells["CLAVE"].Value?.ToString();
+                string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString();
+                decimal precio = Convert.ToDecimal(row.Cells["PRECIO"].Value?.ToString().Replace("$", "").Trim() ?? "0");
+                int cantidad = 1;
+                string unidad = row.Cells["UNIDAD"].Value?.ToString();
+
+                tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precio, precio * cantidad, cantidad);
+
+                ActualizarNumeroCotizacionEnLabel();
+                ActualizarTotales();
+
+                panelBusqueda.Visible = false;
+                Txt_Buscar.Clear();
+                int lastRow = tbl_Cotizacion.Rows.Count - 1;
+                tbl_Cotizacion.CurrentCell = tbl_Cotizacion.Rows[lastRow].Cells["CANTIDAD"];
+                tbl_Cotizacion.BeginEdit(true);
+            }
+        }
+
+        private void lbl_Bases_Click(object sender, EventArgs e)
         {
 
         }

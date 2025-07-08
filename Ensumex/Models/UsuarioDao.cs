@@ -37,7 +37,6 @@ namespace Ensumex.Models
             }
             return (null, null);
         }
-
         public DataTable ObtenerUsuarios()
         {
             DataTable dt = new DataTable();
@@ -72,7 +71,6 @@ namespace Ensumex.Models
             }
             return dt;
         }
-
         public bool ActualizarUsuario(string usuarioOriginal, Usuarios usuarioEditado)
         {
             using (var connection = GetConnection())

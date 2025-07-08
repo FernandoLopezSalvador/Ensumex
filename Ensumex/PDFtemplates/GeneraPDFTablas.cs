@@ -130,7 +130,7 @@ namespace Ensumex.PDFtemplates
                         pdfTable.AddCell(new PdfPCell(new Phrase(pos.ToString(), fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
 
                         // Canti (cantidad)
-                        string cantidadStr = row[5]?.ToString() ?? "0";
+                        string cantidadStr = row[6]?.ToString() ?? "0";
                         decimal.TryParse(cantidadStr, out decimal cantidad);
                         pdfTable.AddCell(new PdfPCell(new Phrase(cantidadStr, fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
 

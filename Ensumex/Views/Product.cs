@@ -16,16 +16,19 @@ namespace Ensumex.Views
     {
         public event Action<string, string, string, decimal, decimal> ProductoSeleccionado;
 
+        // Variable de clase para cachear todos los productos
+        private List<dynamic> productosCache = new();
+
         public Product()
         {
             InitializeComponent();
             InicializarFormulario();
+            CargarTodosLosProductos();
         }
         private void InicializarFormulario()
         {
             TablaFormat.AplicarEstilosTabla(tabla_productos);
             InicializarComboProductos();
-            CargarProductoss(); 
             tabla_productos.CellDoubleClick += tabla_productos_CellDoubleClick;
         }
         private void InicializarComboProductos()
@@ -35,14 +38,13 @@ namespace Ensumex.Views
             cmb_productos.SelectedIndex = 0;
         }
 
-        private void CargarProductoss(int? limite = 100)
+        private void CargarTodosLosProductos()
         {
-            // Limpia la tabla antes de cargar nuevos datos y carga los productos
             try
             {
                 var productoService = new ProductoServices1();
-                var productos = productoService.ObtenerProductos(limite);
-                var productosConValoresSeguros = productos.Select(p => new
+                var productos = productoService.ObtenerProductos(null); // null para traer todos
+                productosCache = productos.Select(p => new
                 {
                     CLAVE = p.CVE_ART ?? "N/A",
                     DESCRIPCIÓN = p.DESCR ?? "N/A",
@@ -50,14 +52,47 @@ namespace Ensumex.Views
                     COSTO_PROM = p.COSTO_PROM != 0 ? p.COSTO_PROM.ToString("C2") : "$0.00",
                     ULT_COSTO = p.ULT_COSTO != 0 ? p.ULT_COSTO.ToString("C2") : "$0.00",
                     EXIST = p.EXIST ?? "N/A"
-                }).ToList();
-                tabla_productos.DataSource = productosConValoresSeguros;
+                }).ToList<dynamic>();
+
+                tabla_productos.DataSource = productosCache;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar productos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void CargarProductoss(int? limite = 100)
+        {
+            // Limpia la tabla antes de cargar nuevos datos y carga los productos
+            try
+            {
+                var productosFiltrados = productosCache.Take(limite ?? productosCache.Count).ToList();
+                tabla_productos.DataSource = productosFiltrados;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar productos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BuscarEnProductos(string texto)
+        {
+            if (string.IsNullOrWhiteSpace(texto))
+            {
+                tabla_productos.DataSource = productosCache;
+                return;
+            }
+
+            string textoBusqueda = texto.ToLower();
+            var filtrados = productosCache.Where(p =>
+                p.CLAVE.ToLower().Contains(textoBusqueda) ||
+                p.DESCRIPCIÓN.ToLower().Contains(textoBusqueda)
+            ).ToList();
+
+            tabla_productos.DataSource = filtrados;
+        }
+
         // Método para buscar en el DataGridView
         private void BuscarEnGrid(string texto)
         {
@@ -96,16 +131,22 @@ namespace Ensumex.Views
         // Evento para manejar el cambio de selección en el ComboBox de productos
         private void cmb_productos_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmb_productos.SelectedItem is int limite)
+            try
             {
-                CargarProductoss(limite);
+                if (cmb_productos.SelectedItem is int limite)
+                {
+                    CargarProductoss(limite);
+                }
+                else if (cmb_productos.SelectedItem.ToString() == "Todos")
+                {
+                    CargarProductoss(null);
+                }
             }
-            else if (cmb_productos.SelectedItem.ToString() == "Todos")
+            catch (Exception ex)
             {
-                CargarProductoss(null);
+                MessageBox.Show($"Error al cargar productos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        // Evento para manejar el clic en el botón para exportar productos a Excel
         private void ImprimirProd_Click(object sender, EventArgs e)
         {
             PDFClients.ExportarClientes(tabla_productos, "Productos.xlsx");
@@ -119,8 +160,7 @@ namespace Ensumex.Views
                 string clave = row.Cells["CLAVE"].Value?.ToString();
                 string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString();
                 string unidad = row.Cells["UNDMED"].Value?.ToString();
-                decimal precio = Convert.ToDecimal(row.Cells["ULT_COSTO"].Value?.ToString().Replace("$", "").Trim() ?? "0"); decimal cantidad = 1; // Por defecto 1, puedes pedirlo en un input si lo deseas
-
+                decimal precio = Convert.ToDecimal(row.Cells["ULT_COSTO"].Value?.ToString().Replace("$", "").Trim() ?? "0"); decimal cantidad = 1; 
                 ProductoSeleccionado?.Invoke(clave, descripcion, unidad, precio, cantidad);
             }
         }
@@ -130,43 +170,18 @@ namespace Ensumex.Views
             {
                 if (btn_existencias.Checked)
                 {
-                    var productosFiltrados = tabla_productos.Rows.Cast<DataGridViewRow>()
-                        .Where(row =>
+                    var productosFiltrados = productosCache
+                        .Where(p =>
                         {
                             try
                             {
-                                if (row.IsNewRow) return false;
-
-                                var cellValue = row.Cells["EXIST"].Value;
-                                return cellValue != null &&
-                                       decimal.TryParse(cellValue.ToString(), out decimal exist) &&
-                                       exist > 0;
+                                return decimal.TryParse(p.EXIST.ToString(), out decimal exist) && exist > 0;
                             }
                             catch
                             {
                                 return false;
                             }
                         })
-                        .Select(row =>
-                        {
-                            try
-                            {
-                                return new
-                                {
-                                    CLAVE = row.Cells["CLAVE"].Value?.ToString() ?? "N/A",
-                                    DESCRIPCIÓN = row.Cells["DESCRIPCIÓN"].Value?.ToString() ?? "N/A",
-                                    UNDMED = row.Cells["UNDMED"].Value?.ToString() ?? "N/A",
-                                    COSTO_PROM = row.Cells["COSTO_PROM"].Value?.ToString() ?? "$0.00",
-                                    ULT_COSTO = row.Cells["ULT_COSTO"].Value?.ToString() ?? "$0.00",
-                                    EXIST = row.Cells["EXIST"].Value?.ToString() ?? "N/A"
-                                };
-                            }
-                            catch
-                            {
-                                return null;
-                            }
-                        })
-                        .Where(p => p != null)
                         .ToList();
 
                     tabla_productos.DataSource = productosFiltrados;
@@ -185,7 +200,7 @@ namespace Ensumex.Views
         }
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            BuscarEnGrid(text_buscar.Text.Trim());
+            BuscarEnProductos(text_buscar.Text.Trim());
         }
     }
 }

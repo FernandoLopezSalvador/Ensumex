@@ -59,17 +59,16 @@ namespace Ensumex.Models
 
                             var cmdDetalle = new SqlCommand(@"
                                 INSERT INTO CotizacionDetalle
-                                (IdCotizacion, ClaveProducto, Descripcion, Unidad, PrecioUnitario, Cantidad, TasaCambio, Subtotal, AplicaDescuento)
-                                VALUES (@IdCotizacion, @ClaveProducto, @Descripcion, @Unidad, @PrecioUnitario, @Cantidad, @TasaCambio, @Subtotal, @AplicaDescuento);", conn, tran);
+                                (IdCotizacion, ClaveProducto, Descripcion, Unidad, PrecioUnitario, Cantidad, Subtotal, AplicaDescuento)
+                                VALUES (@IdCotizacion, @ClaveProducto, @Descripcion, @Unidad, @PrecioUnitario, @Cantidad, @Subtotal, @AplicaDescuento);", conn, tran);
 
                             cmdDetalle.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
                             cmdDetalle.Parameters.AddWithValue("@ClaveProducto", row.Cells["CLAVE"].Value ?? "");
                             cmdDetalle.Parameters.AddWithValue("@Descripcion", row.Cells["DESCRIPCIÓN"].Value ?? "");
                             cmdDetalle.Parameters.AddWithValue("@Unidad", row.Cells["UNIDAD"].Value ?? "");
                             cmdDetalle.Parameters.AddWithValue("@PrecioUnitario", row.Cells["PRECIO"].Value ?? 0);
-                            cmdDetalle.Parameters.AddWithValue("@Cantidad", row.Cells["CANTIDAD"].Value ?? 0);
-                            cmdDetalle.Parameters.AddWithValue("@TasaCambio", row.Cells["TasaCambio"].Value ?? 1);
                             cmdDetalle.Parameters.AddWithValue("@Subtotal", row.Cells["Subtotal"].Value ?? 0);
+                            cmdDetalle.Parameters.AddWithValue("@Cantidad", row.Cells["CANTIDAD"].Value ?? 0);
                             cmdDetalle.Parameters.AddWithValue("@AplicaDescuento", row.Cells["AplicarDescuento"].Value ?? false);
                             cmdDetalle.ExecuteNonQuery();
                         }
@@ -133,8 +132,8 @@ namespace Ensumex.Models
                             {
                                 var cmdDetalle = new SqlCommand(@"
                                     INSERT INTO CotizacionDetalle
-                                    (IdCotizacion, ClaveProducto, Descripcion, Unidad, PrecioUnitario, Cantidad, TasaCambio, Subtotal, AplicaDescuento)
-                                    VALUES (@IdCotizacion, @ClaveProducto, @Descripcion, @Unidad, @PrecioUnitario, @Cantidad, @TasaCambio, @Subtotal, @AplicaDescuento);", conn, tran);
+                                    (IdCotizacion, ClaveProducto, Descripcion, Unidad, PrecioUnitario, Cantidad, Subtotal, AplicaDescuento)
+                                    VALUES (@IdCotizacion, @ClaveProducto, @Descripcion, @Unidad, @PrecioUnitario, @Cantidad, @Subtotal, @AplicaDescuento);", conn, tran);
 
                                 cmdDetalle.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
                                 cmdDetalle.Parameters.AddWithValue("@ClaveProducto", row[1] ?? "");
@@ -142,8 +141,7 @@ namespace Ensumex.Models
                                 cmdDetalle.Parameters.AddWithValue("@Unidad", row[3] ?? "");
                                 cmdDetalle.Parameters.AddWithValue("@PrecioUnitario", row[4] ?? 0);
                                 cmdDetalle.Parameters.AddWithValue("@Cantidad", row[5] ?? 0);
-                                cmdDetalle.Parameters.AddWithValue("@TasaCambio", row.Length > 6 ? row[6] ?? 1 : 1);
-                                cmdDetalle.Parameters.AddWithValue("@Subtotal", row.Length > 7 ? row[7] ?? 0 : 0);
+                                cmdDetalle.Parameters.AddWithValue("@Subtotal", row.Length > 6 ? row[6] ?? 0 : 0);
                                 cmdDetalle.Parameters.AddWithValue("@AplicaDescuento", row[0] ?? false);
                                 cmdDetalle.ExecuteNonQuery();
                             }
@@ -199,7 +197,7 @@ namespace Ensumex.Models
                 {
                     string query = @"
                 SELECT ClaveProducto, Descripcion, Unidad, PrecioUnitario, 
-                       Cantidad, TasaCambio, Subtotal, AplicaDescuento
+                       Cantidad, Subtotal, AplicaDescuento
                 FROM CotizacionDetalle
                 WHERE IdCotizacion = @IdCotizacion";
 
