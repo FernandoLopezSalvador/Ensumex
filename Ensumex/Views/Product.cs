@@ -62,7 +62,7 @@ namespace Ensumex.Views
             }
         }
 
-        private void CargarProductoss(int? limite = 100)
+        private void CargarProductoss(int? limite = 100000)
         {
             // Limpia la tabla antes de cargar nuevos datos y carga los productos
             try
@@ -201,6 +201,6 @@ namespace Ensumex.Views
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             BuscarEnProductos(text_buscar.Text.Trim());
-        }
+}
     }
 }

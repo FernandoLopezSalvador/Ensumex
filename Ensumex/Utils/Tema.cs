@@ -16,9 +16,9 @@ namespace Ensumex.Utils
             skinManager.AddFormToManage(form);
             skinManager.Theme = MaterialSkinManager.Themes.DARK;
             skinManager.ColorScheme = new ColorScheme(
-                Primary.BlueGrey900,
                 Primary.BlueGrey800,
-                Primary.BlueGrey500,
+                Primary.BlueGrey700,
+                Primary.BlueGrey400,
                 Accent.LightBlue100,
                 TextShade.WHITE);
         }

@@ -19,7 +19,6 @@ namespace Ensumex.Views
         {
             InitializeComponent();
             Tema.ConfigurarTema(this);
-
             cmb_Unidentrada.Items.AddRange(new object[] { "PZA", "PRODUCTO", "SERVICIO" });
         }
         private void txb_PrecioUnitarioTemp_TabIndexChanged(object sender, EventArgs e)

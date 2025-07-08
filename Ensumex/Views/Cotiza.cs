@@ -132,19 +132,6 @@ namespace Ensumex.Views
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        /// Evento para manejar el botón de guardar cotización
-        private void Btn_guardarCotizacion_Click(object sender, EventArgs e)
-        {
-            // Si hay una o más de una tabla guardada y tambien una cotizacion en tabla
-            if (tablasGuardadas.Count > 0 && tbl_Cotizacion.Rows.Count > 1)
-            {
-                GuardarCotizacionTablas();
-            }
-            else if (tbl_Cotizacion.Rows.Count > 1 && tablasGuardadas.Count == 0)
-            {
-                GuardarCotizacion();
-            }
-        }
         private void GuardarCotizacionTablas()
         {
             using (SaveFileDialog sfd = new SaveFileDialog())
@@ -381,64 +368,6 @@ namespace Ensumex.Views
         {
             Validarmoneda(sender, e);
         }
-        // Evento para manejar el botón de agregar producto
-        private void btn_AgregarProducto_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                using (var formProducto = new ProdTemp())
-                {
-                    if (formProducto.ShowDialog() == DialogResult.OK)
-                    {
-                        // Validación de datos nulos o inconsistentes
-                        if (string.IsNullOrWhiteSpace(formProducto.Clave) || string.IsNullOrWhiteSpace(formProducto.Descripcion))
-                        {
-                            MessageBox.Show("El producto debe tener clave y descripción.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
-                        string clave = formProducto.Clave;
-                        string descripcion = formProducto.Descripcion;
-                        string unidad = formProducto.Unidentrada;
-                        decimal precioUnitario = formProducto.PrecioUnitarioTemp;
-                        decimal Cantidad = formProducto.cantidad;
-                        decimal subtotal = (precioUnitario * Cantidad);
-                        // --- Fin del código para generar y mostrar el número de cotización automático ---
-                        int cantidad = 1; // o el valor que corresponda, pero siempre int y dentro de 1-100
-                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioUnitario, cantidad, precioUnitario * cantidad);
-                        ActualizarNumeroCotizacionEnLabel();
-                        ActualizarTotales();
-                    }
-                    // Asegura que la columna de "Eliminar" solo se agregue una vez
-                    if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
-                    {
-                        DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn
-                        {
-                            Name = "Eliminar",
-                            HeaderText = "Acción",
-                            Text = "Eliminar",
-                            UseColumnTextForButtonValue = true
-                        };
-                        tbl_Cotizacion.Columns.Add(btnEliminar);
-                    }
-                }
-            }
-            //Manejo de excepciones para errores comunes
-            catch (FormatException fe)
-            {
-                MessageBox.Show("Error en el formato de los valores numéricos: " + fe.Message,
-                                "Formato incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            catch (NullReferenceException ne)
-            {
-                MessageBox.Show("Uno de los valores requeridos no fue proporcionado: " + ne.Message,
-                                "Dato faltante", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ocurrió un error al agregar el producto:\n" + ex.Message,
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
         private void tbl_Cotizacion_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Evitar errores al hacer clic en encabezados o filas nuevas
@@ -521,10 +450,6 @@ namespace Ensumex.Views
                 lbl_TotalNeto.Text = "Error";
                 MessageBox.Show($"Se produjo un error al calcular el total: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-        private void btn_Cancelarcotizacion_Click_1(object sender, EventArgs e)
-        {
-            limpiaCampos();
         }
         private void limpiaCampos()
         {
@@ -750,7 +675,6 @@ namespace Ensumex.Views
         {
             // Guarda toda la tabla actual
             List<object[]> tablaActual = new();
-
             foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
             {
                 if (!row.IsNewRow)
@@ -761,7 +685,6 @@ namespace Ensumex.Views
                     tablaActual.Add(valores);
                 }
             }
-
             if (tablaActual.Count > 0)
             {
                 tablasGuardadas.Add(tablaActual);
@@ -773,7 +696,6 @@ namespace Ensumex.Views
                 MessageBox.Show("No hay productos para guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
         private void ActualizarNumeroCotizacionEnLabel()
         {
             if (tbl_Cotizacion.Rows.Count == 0)
@@ -808,10 +730,8 @@ namespace Ensumex.Views
                 prefijo = "MB";
             else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
                 prefijo = "M";
-
             // Tomar la fecha del label lblFecha (formato dd/MM/yyyy)
             string fecha = lblFecha.Text.Replace("/", "");
-
             lbl_NoCotiza.Text = !string.IsNullOrWhiteSpace(prefijo) ? prefijo + fecha : fecha;
         }
 
@@ -819,7 +739,6 @@ namespace Ensumex.Views
         {
 
         }
-
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string texto = Txt_Buscar.Text.Trim().ToLower();
@@ -828,7 +747,6 @@ namespace Ensumex.Views
                 panelBusqueda.Visible = false;
                 return;
             }
-
             var resultados = productosCache
                 .Where(p =>
                     p.CLAVE.ToLower().Contains(texto) ||
@@ -846,7 +764,6 @@ namespace Ensumex.Views
                 panelBusqueda.Visible = false;
             }
         }
-
         private void InicializarPanelBusqueda()
         {
             panelBusqueda = new Panel
@@ -883,7 +800,6 @@ namespace Ensumex.Views
             dgvBusqueda.LostFocus += (s, e) => panelBusqueda.Visible = false;
             Txt_Buscar.LostFocus += (s, e) => { if (!panelBusqueda.Focused && !dgvBusqueda.Focused) panelBusqueda.Visible = false; };
         }
-
         private void CargarProductosCache()
         {
             // Puedes obtener los productos desde tu servicio o base de datos
@@ -922,9 +838,80 @@ namespace Ensumex.Views
             }
         }
 
-        private void lbl_Bases_Click(object sender, EventArgs e)
+        private void btn_Cancelarcotizacion_Click(object sender, EventArgs e)
         {
+            limpiaCampos();
+        }
 
+        private void Btn_guardarCotizacion_Click_1(object sender, EventArgs e)
+        {
+            // Si hay una o más de una tabla guardada y tambien una cotizacion en tabla
+            if (tablasGuardadas.Count > 0 && tbl_Cotizacion.Rows.Count > 1)
+            {
+                GuardarCotizacionTablas();
+            }
+            else if (tbl_Cotizacion.Rows.Count > 1 && tablasGuardadas.Count == 0)
+            {
+                GuardarCotizacion();
+            }
+        }
+
+        private void btn_AgregarProducto_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var formProducto = new ProdTemp())
+                {
+                    if (formProducto.ShowDialog() == DialogResult.OK)
+                    {
+                        // Validación de datos nulos o inconsistentes
+                        if (string.IsNullOrWhiteSpace(formProducto.Clave) || string.IsNullOrWhiteSpace(formProducto.Descripcion))
+                        {
+                            MessageBox.Show("El producto debe tener clave y descripción.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                        string clave = formProducto.Clave;
+                        string descripcion = formProducto.Descripcion;
+                        string unidad = formProducto.Unidentrada;
+                        decimal precioUnitario = formProducto.PrecioUnitarioTemp;
+                        int Cantidad = (int)formProducto.cantidad;
+                        decimal subtotal = (precioUnitario * Cantidad);
+                        // --- Fin del código para generar y mostrar el número de cotización automático ---
+                        //int cantidad = 1; // o el valor que corresponda, pero siempre int y dentro de 1-100
+                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioUnitario, precioUnitario * Cantidad,Cantidad);
+                        ActualizarNumeroCotizacionEnLabel();
+                        ActualizarTotales();
+                    }
+                    // Asegura que la columna de "Eliminar" solo se agregue una vez
+                    if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
+                    {
+                        DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn
+                        {
+                            Name = "Eliminar",
+                            HeaderText = "Acción",
+                            Text = "Eliminar",
+                            UseColumnTextForButtonValue = true
+                        };
+                        tbl_Cotizacion.Columns.Add(btnEliminar);
+                    }
+                }
+            }
+            //Manejo de excepciones para errores comunes
+            catch (FormatException fe)
+            {
+                MessageBox.Show("Error en el formato de los valores numéricos: " + fe.Message,
+                                "Formato incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (NullReferenceException ne)
+            {
+                MessageBox.Show("Uno de los valores requeridos no fue proporcionado: " + ne.Message,
+                                "Dato faltante", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al agregar el producto:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
