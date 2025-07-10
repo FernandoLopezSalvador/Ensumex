@@ -45,11 +45,11 @@
             txt_NumeroCliente = new MaterialSkin.Controls.MaterialTextBox2();
             materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
             lbl_NoCotiza = new Label();
-            Txt_Buscar = new TextBox();
-            Buscar = new Label();
-            btn_Cancelarcotizacion = new Button();
-            Btn_guardarCotizacion = new Button();
             btn_AgregarProducto = new Button();
+            Btn_guardarCotizacion = new Button();
+            btn_Cancelarcotizacion = new Button();
+            Buscar = new Label();
+            Txt_Buscar = new TextBox();
             lbl_costoDescuento = new MaterialSkin.Controls.MaterialLabel();
             lbl_TotalNeto = new MaterialSkin.Controls.MaterialLabel();
             lbl_Subtotal = new MaterialSkin.Controls.MaterialLabel();
@@ -96,11 +96,11 @@
             tableLayoutPanel1.Controls.Add(txt_NumeroCliente, 5, 1);
             tableLayoutPanel1.Controls.Add(materialLabel5, 4, 1);
             tableLayoutPanel1.Controls.Add(lbl_NoCotiza, 1, 0);
-            tableLayoutPanel1.Controls.Add(Txt_Buscar, 3, 4);
-            tableLayoutPanel1.Controls.Add(Buscar, 2, 4);
-            tableLayoutPanel1.Controls.Add(btn_Cancelarcotizacion, 3, 3);
-            tableLayoutPanel1.Controls.Add(Btn_guardarCotizacion, 4, 3);
             tableLayoutPanel1.Controls.Add(btn_AgregarProducto, 5, 3);
+            tableLayoutPanel1.Controls.Add(Btn_guardarCotizacion, 4, 3);
+            tableLayoutPanel1.Controls.Add(btn_Cancelarcotizacion, 3, 3);
+            tableLayoutPanel1.Controls.Add(Buscar, 0, 4);
+            tableLayoutPanel1.Controls.Add(Txt_Buscar, 1, 4);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
@@ -373,12 +373,12 @@
             materialLabel5.AutoSize = true;
             materialLabel5.Depth = 0;
             materialLabel5.Font = new Font("Roboto", 14F, FontStyle.Regular, GraphicsUnit.Pixel);
-            materialLabel5.Location = new Point(700, 55);
+            materialLabel5.Location = new Point(627, 55);
             materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
             materialLabel5.Name = "materialLabel5";
-            materialLabel5.Size = new Size(61, 19);
+            materialLabel5.Size = new Size(134, 19);
             materialLabel5.TabIndex = 7;
-            materialLabel5.Text = "Numero:";
+            materialLabel5.Text = "Celular/WhatsApp:";
             // 
             // lbl_NoCotiza
             // 
@@ -392,50 +392,6 @@
             lbl_NoCotiza.Text = "cotizacion";
             lbl_NoCotiza.Click += lbl_NoCotiza_Click;
             // 
-            // Txt_Buscar
-            // 
-            Txt_Buscar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            Txt_Buscar.Location = new Point(460, 191);
-            Txt_Buscar.Name = "Txt_Buscar";
-            Txt_Buscar.Size = new Size(148, 23);
-            Txt_Buscar.TabIndex = 30;
-            Txt_Buscar.TextChanged += textBox1_TextChanged;
-            // 
-            // Buscar
-            // 
-            Buscar.Anchor = AnchorStyles.Right;
-            Buscar.AutoSize = true;
-            Buscar.Location = new Point(409, 195);
-            Buscar.Name = "Buscar";
-            Buscar.Size = new Size(45, 15);
-            Buscar.TabIndex = 31;
-            Buscar.Text = "Buscar:";
-            Buscar.TextAlign = ContentAlignment.BottomLeft;
-            // 
-            // btn_Cancelarcotizacion
-            // 
-            btn_Cancelarcotizacion.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            btn_Cancelarcotizacion.BackColor = Color.Red;
-            btn_Cancelarcotizacion.Location = new Point(460, 146);
-            btn_Cancelarcotizacion.Name = "btn_Cancelarcotizacion";
-            btn_Cancelarcotizacion.Size = new Size(106, 33);
-            btn_Cancelarcotizacion.TabIndex = 32;
-            btn_Cancelarcotizacion.Text = "Cancelar";
-            btn_Cancelarcotizacion.UseVisualStyleBackColor = false;
-            btn_Cancelarcotizacion.Click += btn_Cancelarcotizacion_Click;
-            // 
-            // Btn_guardarCotizacion
-            // 
-            Btn_guardarCotizacion.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            Btn_guardarCotizacion.BackColor = Color.Green;
-            Btn_guardarCotizacion.Location = new Point(614, 146);
-            Btn_guardarCotizacion.Name = "Btn_guardarCotizacion";
-            Btn_guardarCotizacion.Size = new Size(116, 33);
-            Btn_guardarCotizacion.TabIndex = 33;
-            Btn_guardarCotizacion.Text = "GUARDAR";
-            Btn_guardarCotizacion.UseVisualStyleBackColor = false;
-            Btn_guardarCotizacion.Click += Btn_guardarCotizacion_Click_1;
-            // 
             // btn_AgregarProducto
             // 
             btn_AgregarProducto.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
@@ -447,6 +403,50 @@
             btn_AgregarProducto.Text = "Nuevo Prod.";
             btn_AgregarProducto.UseVisualStyleBackColor = false;
             btn_AgregarProducto.Click += btn_AgregarProducto_Click_1;
+            // 
+            // Btn_guardarCotizacion
+            // 
+            Btn_guardarCotizacion.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            Btn_guardarCotizacion.BackColor = Color.Green;
+            Btn_guardarCotizacion.Location = new Point(614, 146);
+            Btn_guardarCotizacion.Name = "Btn_guardarCotizacion";
+            Btn_guardarCotizacion.Size = new Size(102, 33);
+            Btn_guardarCotizacion.TabIndex = 33;
+            Btn_guardarCotizacion.Text = "GUARDAR";
+            Btn_guardarCotizacion.UseVisualStyleBackColor = false;
+            Btn_guardarCotizacion.Click += Btn_guardarCotizacion_Click_1;
+            // 
+            // btn_Cancelarcotizacion
+            // 
+            btn_Cancelarcotizacion.Anchor = AnchorStyles.Left;
+            btn_Cancelarcotizacion.BackColor = Color.Red;
+            btn_Cancelarcotizacion.Location = new Point(460, 146);
+            btn_Cancelarcotizacion.Name = "btn_Cancelarcotizacion";
+            btn_Cancelarcotizacion.Size = new Size(106, 33);
+            btn_Cancelarcotizacion.TabIndex = 32;
+            btn_Cancelarcotizacion.Text = "Cancelar";
+            btn_Cancelarcotizacion.UseVisualStyleBackColor = false;
+            btn_Cancelarcotizacion.Click += btn_Cancelarcotizacion_Click;
+            // 
+            // Buscar
+            // 
+            Buscar.Anchor = AnchorStyles.Right;
+            Buscar.AutoSize = true;
+            Buscar.Location = new Point(62, 195);
+            Buscar.Name = "Buscar";
+            Buscar.Size = new Size(45, 15);
+            Buscar.TabIndex = 31;
+            Buscar.Text = "Buscar:";
+            Buscar.TextAlign = ContentAlignment.BottomLeft;
+            // 
+            // Txt_Buscar
+            // 
+            Txt_Buscar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Txt_Buscar.Location = new Point(113, 191);
+            Txt_Buscar.Name = "Txt_Buscar";
+            Txt_Buscar.Size = new Size(247, 23);
+            Txt_Buscar.TabIndex = 30;
+            Txt_Buscar.TextChanged += textBox1_TextChanged;
             // 
             // lbl_costoDescuento
             // 
@@ -539,10 +539,10 @@
             // 
             label1.Anchor = AnchorStyles.Right;
             label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.Location = new Point(88, 12);
+            label1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label1.Location = new Point(105, 14);
             label1.Name = "label1";
-            label1.Size = new Size(93, 25);
+            label1.Size = new Size(76, 21);
             label1.TabIndex = 28;
             label1.Text = "Sub Total:";
             // 
@@ -550,11 +550,11 @@
             // 
             label2.Anchor = AnchorStyles.Right;
             label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.Red;
-            label2.Location = new Point(70, 62);
+            label2.Location = new Point(86, 64);
             label2.Name = "label2";
-            label2.Size = new Size(111, 25);
+            label2.Size = new Size(95, 21);
             label2.TabIndex = 29;
             label2.Text = "Descuento:";
             // 
@@ -584,7 +584,8 @@
             // 
             // Txt_observaciones
             // 
-            Txt_observaciones.Anchor = AnchorStyles.None;
+            Txt_observaciones.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Txt_observaciones.BackColor = SystemColors.ScrollBar;
             Txt_observaciones.Location = new Point(98, 34);
             Txt_observaciones.Multiline = true;
             Txt_observaciones.Name = "Txt_observaciones";
@@ -600,12 +601,12 @@
             materialButton1.Depth = 0;
             materialButton1.HighEmphasis = true;
             materialButton1.Icon = null;
-            materialButton1.Location = new Point(830, 55);
+            materialButton1.Location = new Point(829, 55);
             materialButton1.Margin = new Padding(4);
             materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
             materialButton1.Name = "materialButton1";
             materialButton1.NoAccentTextColor = Color.Empty;
-            materialButton1.Size = new Size(84, 36);
+            materialButton1.Size = new Size(85, 36);
             materialButton1.TabIndex = 31;
             materialButton1.Text = "Añadir Producto";
             materialButton1.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
@@ -617,11 +618,11 @@
             // 
             tbl_Cotizacion.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             tbl_Cotizacion.Dock = DockStyle.Fill;
-            tbl_Cotizacion.Location = new Point(110, 2);
+            tbl_Cotizacion.Location = new Point(94, 2);
             tbl_Cotizacion.Margin = new Padding(3, 2, 3, 2);
             tbl_Cotizacion.Name = "tbl_Cotizacion";
             tbl_Cotizacion.RowHeadersWidth = 51;
-            tbl_Cotizacion.Size = new Size(713, 142);
+            tbl_Cotizacion.Size = new Size(728, 142);
             tbl_Cotizacion.TabIndex = 8;
             tbl_Cotizacion.CellClick += tbl_Cotizacion_CellClick;
             tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
@@ -640,7 +641,7 @@
             AgregarTabla.MouseState = MaterialSkin.MouseState.HOVER;
             AgregarTabla.Name = "AgregarTabla";
             AgregarTabla.NoAccentTextColor = Color.Empty;
-            AgregarTabla.Size = new Size(99, 36);
+            AgregarTabla.Size = new Size(83, 36);
             AgregarTabla.TabIndex = 35;
             AgregarTabla.Text = "Agregar Nueva tabla";
             AgregarTabla.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
@@ -651,9 +652,9 @@
             // tableLayoutPanel4
             // 
             tableLayoutPanel4.ColumnCount = 3;
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.6557732F));
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 78.32244F));
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.0217867F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
             tableLayoutPanel4.Controls.Add(tbl_Cotizacion, 1, 0);
             tableLayoutPanel4.Controls.Add(materialButton1, 2, 0);
             tableLayoutPanel4.Controls.Add(AgregarTabla, 0, 0);

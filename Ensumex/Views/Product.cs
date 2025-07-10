@@ -43,15 +43,16 @@ namespace Ensumex.Views
             try
             {
                 var productoService = new ProductoServices1();
-                var productos = productoService.ObtenerProductos(null); // null para traer todos
+                var productos = productoService.ObtenerProductos(); // traer todos
+
                 productosCache = productos.Select(p => new
                 {
                     CLAVE = p.CVE_ART ?? "N/A",
                     DESCRIPCIÓN = p.DESCR ?? "N/A",
                     UNDMED = p.UNI_MED ?? "N/A",
                     COSTO_PROM = p.COSTO_PROM != 0 ? p.COSTO_PROM.ToString("C2") : "$0.00",
-                    ULT_COSTO = p.ULT_COSTO != 0 ? p.ULT_COSTO.ToString("C2") : "$0.00",
-                    EXIST = p.EXIST ?? "N/A"
+                    ULT_COSTO = p.PRECIO != 0 ? (p.PRECIO * 1.16m).ToString("C2") : "$0.00",
+                    EXIST = p.EXIST > 0 ? p.EXIST.ToString() : "0"
                 }).ToList<dynamic>();
 
                 tabla_productos.DataSource = productosCache;

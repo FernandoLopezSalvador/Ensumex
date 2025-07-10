@@ -22,7 +22,10 @@ namespace Ensumex.Forms
 {
     public partial class ENSUMEX : MaterialForm
     {
-        private string connFirebird = "User=SYSDBA;Password=masterkey;Database=localhost:C:\\Users\\PC\\Documents\\SAE\\Nueva carpeta\\SAE90EMPRE01.FDB;DataSource=192.168.1.100;Port=3050;Dialect=3;Charset=NONE;ServerType=0;";
+        private string connFirebird =
+        "User=SYSDBA;Password=masterkey;" +
+        "Database=192.168.1.232:C:\\Program Files (x86)\\Common Files\\Aspel\\Sistemas Aspel\\SAE9.00\\Empresa01\\Datos\\SAE90EMPRE01.FDB;" +
+        "Port=3050;Dialect=3;Charset=NONE;ServerType=0;"; 
         private string connSqlServer = "Server=localhost;Database=Ensumex;Trusted_Connection=True;";
 
         [Obsolete]
@@ -183,29 +186,38 @@ namespace Ensumex.Forms
         // Método para sincronizar productos y clientes desde Firebird a SQL Server
         private void SincronizarProductosYClientes()
         {
-            // 1. Traer productos de Firebird
+            // Leer datos de Firebird (una sola conexión)
             DataTable productosFB = new DataTable();
-            using (FbConnection connFb = new FbConnection(connFirebird))
-            {
-                connFb.Open();
-                string queryP = "SELECT CVE_ART, DESCR, UNI_MED, COSTO_PROM, ULT_COSTO, EXIST FROM INVE01";
-                FbCommand cmdP = new FbCommand(queryP, connFb);
-                FbDataAdapter adapterP = new FbDataAdapter(cmdP);
-                adapterP.Fill(productosFB);
-                connFb.Close();
-            }
-            // 2. Traer clientes de Firebird
             DataTable clientesFB = new DataTable();
+            DataTable precioFb = new DataTable();
+
             using (FbConnection connFb = new FbConnection(connFirebird))
             {
                 connFb.Open();
-                string queryC = "SELECT CLAVE, STATUS, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED FROM CLIE01";
-                FbCommand cmdC = new FbCommand(queryC, connFb);
-                FbDataAdapter adapterC = new FbDataAdapter(cmdC);
-                adapterC.Fill(clientesFB);
-                connFb.Close();
+
+                // Productos
+                using (FbCommand cmdP = new FbCommand("SELECT CVE_ART, DESCR, UNI_MED, COSTO_PROM, ULT_COSTO, EXIST FROM INVE01", connFb))
+                using (FbDataAdapter adapterP = new FbDataAdapter(cmdP))
+                {
+                    adapterP.Fill(productosFB);
+                }
+
+                // Clientes
+                using (FbCommand cmdC = new FbCommand("SELECT CLAVE, STATUS, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED FROM CLIE01", connFb))
+                using (FbDataAdapter adapterC = new FbDataAdapter(cmdC))
+                {
+                    adapterC.Fill(clientesFB);
+                }
+
+                // Precios
+                using (FbCommand cmdPrecios = new FbCommand("SELECT CVE_ART, CVE_PRECIO, PRECIO FROM PRECIO_X_PROD01", connFb))
+                using (FbDataAdapter adapterPrecios = new FbDataAdapter(cmdPrecios))
+                {
+                    adapterPrecios.Fill(precioFb);
+                }
             }
-            int totalRegistros = productosFB.Rows.Count + clientesFB.Rows.Count;
+
+            int totalRegistros = productosFB.Rows.Count + clientesFB.Rows.Count+ precioFb.Rows.Count;
             // Configurar progressBar en UI
             this.Invoke((Action)(() =>
             {
@@ -226,10 +238,14 @@ namespace Ensumex.Forms
                 {
                     deleteClientes.ExecuteNonQuery();
                 }
+                using (SqlCommand deleteClientes = new SqlCommand("DELETE FROM PRECIO_X_PROD01", connSql))
+                {
+                    deleteClientes.ExecuteNonQuery();
+                }
                 try
                 {
                     int progreso = 0;
-                    int total = productosFB.Rows.Count + clientesFB.Rows.Count;
+                    int total = productosFB.Rows.Count + clientesFB.Rows.Count+ precioFb.Rows.Count;
                     progressBar1.Maximum = total;
                     using (SqlTransaction transaction = connSql.BeginTransaction())
                     {
@@ -278,7 +294,25 @@ namespace Ensumex.Forms
                                     progressBar1.Value = progreso;
                                 }));
                             }
+                            // Insertar PRECIOS
+                            foreach (DataRow row in precioFb.Rows)
+                            {
+                                using (SqlCommand insertPrecio = new SqlCommand(
+                                    @"INSERT INTO PRECIO_X_PROD01 (CVE_ART, CVE_PRECIO, PRECIO)
+                                    VALUES (@CVE_ART, @CVE_PRECIO, @PRECIO)", connSql, transaction))
+                                {
+                                    insertPrecio.Parameters.AddWithValue("@CVE_ART", row["CVE_ART"] ?? DBNull.Value);
+                                    insertPrecio.Parameters.AddWithValue("@CVE_PRECIO", row["CVE_PRECIO"] ?? DBNull.Value);
+                                    insertPrecio.Parameters.AddWithValue("@PRECIO", row["PRECIO"] == DBNull.Value ? 0 : row["PRECIO"]);
+                                    insertPrecio.ExecuteNonQuery();
+                                }
 
+                                progreso++;
+                                this.Invoke((Action)(() =>
+                                {
+                                    progressBar1.Value = progreso;
+                                }));
+                            }
                             // Confirmar la transacción si todo salió bien
                             transaction.Commit();
                             MessageBox.Show("Datos importados correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);

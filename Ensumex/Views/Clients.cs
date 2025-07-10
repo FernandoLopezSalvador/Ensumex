@@ -15,73 +15,119 @@ namespace Ensumex.Views
 {
     public partial class Clients : UserControl
     {
+        private List<dynamic> clientesCache;
+
         public Clients()
         {
             InitializeComponent();
-            ConfigurarTablaClientes();
+            TablaFormat.AplicarEstilosTabla(tabla_clientes);
             InicializarComboClientes();
             CargarClientes();
         }
-        private void ConfigurarTablaClientes()
-        {
-            TablaFormat.AplicarEstilosTabla(tabla_clientes);
-            tabla_clientes.Columns.Add("CLAVE", "Clave");
-            tabla_clientes.Columns.Add("STATUS", "Status");
-            tabla_clientes.Columns.Add("NOMBRE", "Nombre");
-            tabla_clientes.Columns.Add("CALLE", "Calle");
-            tabla_clientes.Columns.Add("COLONIA", "Colonia");
-            tabla_clientes.Columns.Add("MUNICIPIO", "Municipio");
-            tabla_clientes.Columns.Add("EMAILPRED", "Email");
-            tabla_clientes.EnableHeadersVisualStyles = false;
-        }
+
         private void InicializarComboClientes()
         {
             var opciones = new object[] { "Todos", 5, 10, 20, 50, 100 };
             cmb_clientes.Items.AddRange(opciones);
             cmb_clientes.SelectedIndex = 0;
         }
+
         private void CargarClientes()
         {
-            var clienteService = new ClienteServices1();
-            var clientes = clienteService.ObtenerClientes();
-            tabla_clientes.Rows.Clear();
-            foreach (var cliente in clientes)
+            try
             {
-                tabla_clientes.Rows.Add(cliente.CLAVE, cliente.STATUS, cliente.NOMBRE, cliente.CALLE, cliente.COLONIA, cliente.MUNICIPIO, cliente.EMAILPRED);
+                var clienteService = new ClienteServices1();
+                var clientes = clienteService.ObtenerClientes(); // traer todos
+
+                // Guardar en cache
+                clientesCache = clientes.Select(c => new
+                {
+                    CLAVE = c.CLAVE ?? "N/A",
+                    STATUS = c.STATUS ?? "N/A",
+                    NOMBRE = c.NOMBRE ?? "N/A",
+                    CALLE = c.CALLE ?? "N/A",
+                    COLONIA = c.COLONIA ?? "N/A",
+                    MUNICIPIO = c.MUNICIPIO ?? "N/A",
+                    EMAIL = c.EMAILPRED ?? "N/A"
+                }).ToList<dynamic>();
+
+                // Mostrar todos en la tabla
+                tabla_clientes.DataSource = clientesCache;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar clientes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void cmb_clientes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Limpiar la tabla antes de cargar nuevos datos
-            var selectedValue = cmb_clientes.SelectedItem.ToString();
-            if (selectedValue == "Todos")
+            try
             {
-                CargarClientes();
-            }
-            else
-            {
-                // Convertir el valor seleccionado a entero y cargar los clientes correspondientes
-                int count = int.Parse(selectedValue);
-                var clienteService = new ClienteServices1();
-                var clientes = clienteService.ObtenerClientes().Take(count).ToList();
-                tabla_clientes.Rows.Clear();
-                foreach (var cliente in clientes)
+                var selectedValue = cmb_clientes.SelectedItem.ToString();
+
+                if (selectedValue == "Todos")
                 {
-                    tabla_clientes.Rows.Add(cliente.CLAVE, cliente.STATUS, cliente.NOMBRE, cliente.CALLE, cliente.COLONIA, cliente.MUNICIPIO, cliente.EMAILPRED);
+                    // Mostrar todos los clientes del cache
+                    tabla_clientes.DataSource = clientesCache;
+                }
+                else
+                {
+                    // Convertir el valor seleccionado a entero y filtrar
+                    int count = int.Parse(selectedValue);
+                    var clientesLimitados = clientesCache.Take(count).ToList();
+                    tabla_clientes.DataSource = clientesLimitados;
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al filtrar clientes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                var searchText = text_buscar.Text.Trim().ToLower();
+
+                if (string.IsNullOrWhiteSpace(searchText))
+                {
+                    // Mostrar todos si el campo de búsqueda está vacío
+                    tabla_clientes.DataSource = clientesCache;
+                }
+                else
+                {
+                    // Filtrar los clientes cacheados
+                    var clientesFiltrados = clientesCache
+                        .Where(c =>
+                            (c.NOMBRE != null && c.NOMBRE.ToLower().Contains(searchText)) ||
+                            (c.CLAVE != null && c.CLAVE.ToLower().Contains(searchText))
+                        )
+                        .ToList();
+
+                    tabla_clientes.DataSource = clientesFiltrados;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al buscar clientes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void materialButton1_Click(object sender, EventArgs e)
         {
             PDFClients.ExportarClientes(tabla_clientes, "Clientes.xlsx");
         }
+
         private void tabla_clientes_CellDoubleClick_1(object sender, DataGridViewCellEventArgs e)
         {
             // Evitar errores al hacer clic en encabezados
-            if (e.RowIndex >= 0)
+            if (e.RowIndex >= 0 && EsLlamadoDesdeCotiza)
             {
                 var row = tabla_clientes.Rows[e.RowIndex];
                 string nombre = row.Cells["NOMBRE"].Value?.ToString();
+
                 var result = MessageBox.Show(
                     $"¿Desea agregar el cliente '{nombre}'?",
                     "Agregar cliente",
@@ -100,22 +146,7 @@ namespace Ensumex.Views
                 }
             }
         }
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            // Filtrar la tabla de clientes según el texto ingresado
-            var searchText = text_buscar.Text.ToLower();
-            foreach (DataGridViewRow row in tabla_clientes.Rows)
-            {
-                if (!row.IsNewRow)
-                {
-                    var nombreCell = row.Cells["NOMBRE"].Value?.ToString().ToLower();
-                    var claveCell = row.Cells["CLAVE"].Value?.ToString().ToLower();
-                    row.Visible = (nombreCell?.Contains(searchText) ?? false) ||
-                                  (claveCell?.Contains(searchText) ?? false);
-                }
-            }
-
-        }
+        public bool EsLlamadoDesdeCotiza { get; set; } = false;
         public string ClienteSeleccionadoNombre { get; private set; }
         public string ClienteSeleccionadoCalle { get; private set; }
     }

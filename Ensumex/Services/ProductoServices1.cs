@@ -10,19 +10,21 @@ namespace Ensumex.Services
     internal class ProductoServices1
     {
         private readonly ProductosDao _productoDao = new();
-        
+
         [Obsolete]
-        public List <(string CVE_ART, string DESCR, string UNI_MED, decimal COSTO_PROM, decimal ULT_COSTO, string EXIST)> ObtenerProductos(int? limite = null)
+        public List<(string CVE_ART, string DESCR, string UNI_MED, decimal COSTO_PROM, decimal ULT_COSTO, decimal EXIST, decimal PRECIO)> ObtenerProductos(int listaPrecio = 1, int? limite = null)
         {
             try
             {
-                var productos = _productoDao.ObtenerProductoss();
-                
+                // Llama al DAO pasando la lista de precios
+                var productos = _productoDao.ObtenerProductoss(listaPrecio);
+
+                // Aplica el límite si se especifica
                 if (limite.HasValue && limite.Value > 0)
                 {
                     return productos.Take(limite.Value).ToList();
                 }
-                
+
                 return productos;
             }
             catch (Exception ex)

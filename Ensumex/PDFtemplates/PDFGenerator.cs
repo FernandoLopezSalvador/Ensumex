@@ -95,31 +95,31 @@ namespace Ensumex.PDFtemplates
                     if (descripcion.Contains("CALENT"))
                     {
                         if (clave.EndsWith("GA"))
-                            doc.Add(new Paragraph("-" + descripcion + " POR GRAVEDAD", fontNormal));
+                            doc.Add(new Paragraph("-" + descripcion + " POR GRAVEDAD", fontNegrita));
                         else if (clave.EndsWith("HP"))
-                            doc.Add(new Paragraph("-" + descripcion + " POR PRESIÓN", fontNormal));
+                            doc.Add(new Paragraph("-" + descripcion + " POR PRESIÓN", fontNegrita));
                         else
-                            doc.Add(new Paragraph("-" + descripcion, fontNormal));
+                            doc.Add(new Paragraph("-" + descripcion, fontNegrita));
                         break;
                     }
                     else if (descripcion.Contains("MOT.") || descripcion.Contains("MOTB"))
                     {
-                        doc.Add(new Paragraph("-" + descripcion, fontNormal));
+                        doc.Add(new Paragraph("-" + descripcion, fontNegrita));
                         break;
                     }
                     else if (descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO"))
                     {
-                        doc.Add(new Paragraph("-" + descripcion, fontNormal));
+                        doc.Add(new Paragraph("-" + descripcion, fontNegrita));
                         break;
                     }
                     else if (descripcion.Contains("AIRE"))
                     {
-                        doc.Add(new Paragraph("-" + descripcion, fontNormal));
+                        doc.Add(new Paragraph("-" + descripcion, fontNegrita));
                         break;
                     }
                     else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
                     {
-                        doc.Add(new Paragraph("-" + descripcion, fontNormal));
+                        doc.Add(new Paragraph("-" + descripcion, fontNegrita));
                         break;
                     }
                 }
@@ -172,7 +172,7 @@ namespace Ensumex.PDFtemplates
                     };
                     tabla.AddCell(celdaDescuento);
                     decimal importe = (precioUnitario * cantidad) - descuentoProd;
-                    tabla.AddCell(new PdfPCell(new Phrase(importe.ToString("0.00"), fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
+                    tabla.AddCell(new PdfPCell(new Phrase("$"+importe.ToString("0.00"), fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
                     pos++;
                 }
                 doc.Add(tabla);
@@ -295,8 +295,8 @@ namespace Ensumex.PDFtemplates
                     doc.Add(new Paragraph(
                         "-Garantía estándar: 1 año contra defectos de fabricación.\n-Precios sujetos a cambios sin previo aviso.\n", fontnotas));
                 }
-                doc.Add(new Paragraph("Sin otro particular, quedo a sus órdenes, agradecemos su preferencia.\n\n", fontnotas));
                 doc.Add(new Paragraph(notas, fontnotas));
+                doc.Add(new Paragraph("Sin otro particular, quedo a sus órdenes\n,- Agradecemos su preferencia.\n\n", fontnotas));
 
                 // Firma y pie
                 PdfPTable tablaFirma = new PdfPTable(1);

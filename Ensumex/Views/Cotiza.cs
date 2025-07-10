@@ -387,9 +387,10 @@ namespace Ensumex.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No existen productos a eliminar.");
 
             }
+
         }
         private void txt_Costoinstalacion_TextChanged(object sender, EventArgs e)
         {
@@ -420,7 +421,6 @@ namespace Ensumex.Views
                     }
                 }
                 lbl_Subtotal.Text = $"${subtotal:F2}";
-                // 2. Calcular Descuento solo en productos seleccionados
                 descuento = 0;
                 // Extraer el porcentaje del ComboBox
                 string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
@@ -472,32 +472,30 @@ namespace Ensumex.Views
             {
                 using (var clientesForm = new Form())
                 {
-                    var clientsControl = new Clients();
-                    clientsControl.Dock = DockStyle.Fill;
+                    var clientsControl = new Clients
+                    {
+                        Dock = DockStyle.Fill,
+                        EsLlamadoDesdeCotiza = true // 👈 Aquí indicas que viene de Cotiza
+                    };
+
                     clientesForm.Controls.Add(clientsControl);
                     clientesForm.StartPosition = FormStartPosition.CenterParent;
                     clientesForm.Size = new Size(800, 600);
 
                     if (clientesForm.ShowDialog() == DialogResult.OK)
                     {
-                        // Asegúrate de que no sean nulos antes de asignarlos
                         txt_Nombrecliente.Text = clientsControl.ClienteSeleccionadoNombre ?? "N/A";
                     }
                 }
             }
             catch (Exception ex)
             {
-                // Manejo de excepciones al abrir el formulario de clientes
                 MessageBox.Show("Ocurrió un error al abrir el formulario de clientes:\n" + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void materialLabel11_Click(object sender, EventArgs e)
-        {
-        }
         private void materialButton1_Click(object sender, EventArgs e)
         {
-
             // Abre el formulario de selección de productos
             using (var productosForm = new Form())
             {
@@ -507,7 +505,6 @@ namespace Ensumex.Views
                 };
                 productosForm.Controls.Add(productControl);
                 productosForm.StartPosition = FormStartPosition.CenterParent;
-                //pantalla completa del formulario
                 productosForm.WindowState = FormWindowState.Maximized;
                 productosForm.Text = "Seleccionar Producto";
                 productControl.ProductoSeleccionado += (clave, descripcion, unidad, precio, cantidad) =>
@@ -688,7 +685,7 @@ namespace Ensumex.Views
             if (tablaActual.Count > 0)
             {
                 tablasGuardadas.Add(tablaActual);
-                tbl_Cotizacion.Rows.Clear(); // Limpia la tabla para la siguiente
+                tbl_Cotizacion.Rows.Clear(); 
                 MessageBox.Show("Tabla guardada y lista para capturar una nueva.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
@@ -804,13 +801,13 @@ namespace Ensumex.Views
         {
             // Puedes obtener los productos desde tu servicio o base de datos
             var productoService = new ProductoServices1();
-            var productos = productoService.ObtenerProductos(null); // null para traer todos
+            var productos = productoService.ObtenerProductos(); // null para traer todos
             productosCache = productos.Select(p => new
             {
                 CLAVE = p.CVE_ART ?? "N/A",
                 DESCRIPCIÓN = p.DESCR ?? "N/A",
-                UNIDAD = p.UNI_MED ?? "N/A",
-                PRECIO = p.ULT_COSTO != 0 ? p.ULT_COSTO : 0m
+                UNIDAD = p.UNI_MED ?? "N/A" ,
+                PRECIO = p.PRECIO != 0 ? (p.PRECIO * 1.16m).ToString("C2") : "$0.00" 
             }).ToList<dynamic>();
         }
 
@@ -837,12 +834,10 @@ namespace Ensumex.Views
                 tbl_Cotizacion.BeginEdit(true);
             }
         }
-
         private void btn_Cancelarcotizacion_Click(object sender, EventArgs e)
         {
             limpiaCampos();
         }
-
         private void Btn_guardarCotizacion_Click_1(object sender, EventArgs e)
         {
             // Si hay una o más de una tabla guardada y tambien una cotizacion en tabla
@@ -855,44 +850,79 @@ namespace Ensumex.Views
                 GuardarCotizacion();
             }
         }
-
         private void btn_AgregarProducto_Click_1(object sender, EventArgs e)
         {
             try
             {
-                using (var formProducto = new ProdTemp())
+                // Crear el formulario contenedor
+                using (Form formWrapper = new Form())
                 {
-                    if (formProducto.ShowDialog() == DialogResult.OK)
+                    formWrapper.Text = "Agregar Producto";
+                    formWrapper.Size = new Size(400, 300); // Ajusta el tamaño según tu UserControl
+                    formWrapper.StartPosition = FormStartPosition.CenterParent;
+
+                    // Crear instancia del UserControl
+                    var prodControl = new ProdTemporal
                     {
-                        // Validación de datos nulos o inconsistentes
-                        if (string.IsNullOrWhiteSpace(formProducto.Clave) || string.IsNullOrWhiteSpace(formProducto.Descripcion))
+                        Dock = DockStyle.Fill
+                    };
+
+                    // Botón para aceptar
+                    Button btnAceptar = new Button
+                    {
+                        Text = "Aceptar",
+                        Dock = DockStyle.Bottom,
+                        DialogResult = DialogResult.OK
+                    };
+
+                    // Botón para cancelar
+                    Button btnCancelar = new Button
+                    {
+                        Text = "Cancelar",
+                        Dock = DockStyle.Bottom,
+                        DialogResult = DialogResult.Cancel
+                    };
+
+                    // Agregar controles al formulario
+                    formWrapper.Controls.Add(prodControl);
+                    formWrapper.Controls.Add(btnAceptar);
+                    formWrapper.Controls.Add(btnCancelar);
+                    formWrapper.AcceptButton = btnAceptar;
+                    formWrapper.CancelButton = btnCancelar;
+
+                    // Mostrar formulario como modal
+                    if (formWrapper.ShowDialog() == DialogResult.OK)
+                    {
+                        // Validación de datos
+                        if (string.IsNullOrWhiteSpace(prodControl.Clave) || string.IsNullOrWhiteSpace(prodControl.Descripcion))
                         {
                             MessageBox.Show("El producto debe tener clave y descripción.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
-                        string clave = formProducto.Clave;
-                        string descripcion = formProducto.Descripcion;
-                        string unidad = formProducto.Unidentrada;
-                        decimal precioUnitario = formProducto.PrecioUnitarioTemp;
-                        int Cantidad = (int)formProducto.cantidad;
-                        decimal subtotal = (precioUnitario * Cantidad);
-                        // --- Fin del código para generar y mostrar el número de cotización automático ---
-                        //int cantidad = 1; // o el valor que corresponda, pero siempre int y dentro de 1-100
-                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioUnitario, precioUnitario * Cantidad,Cantidad);
+
+                        string clave = prodControl.Clave;
+                        string descripcion = prodControl.Descripcion;
+                        string unidad = prodControl.Unidentrada;
+                        decimal precioUnitario = prodControl.PrecioUnitarioTemp;
+                        int cantidad = (int)prodControl.cantidad;
+                        decimal subtotal = precioUnitario * cantidad;
+
+                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioUnitario, subtotal, cantidad);
                         ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
-                    }
-                    // Asegura que la columna de "Eliminar" solo se agregue una vez
-                    if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
-                    {
-                        DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn
+
+                        // Asegura que la columna de "Eliminar" solo se agregue una vez
+                        if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
                         {
-                            Name = "Eliminar",
-                            HeaderText = "Acción",
-                            Text = "Eliminar",
-                            UseColumnTextForButtonValue = true
-                        };
-                        tbl_Cotizacion.Columns.Add(btnEliminar);
+                            DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn
+                            {
+                                Name = "Eliminar",
+                                HeaderText = "Acción",
+                                Text = "Eliminar",
+                                UseColumnTextForButtonValue = true
+                            };
+                            tbl_Cotizacion.Columns.Add(btnEliminar);
+                        }
                     }
                 }
             }
