@@ -30,6 +30,7 @@ namespace Ensumex.Views
             var opciones = new object[] { "Todos", 5, 10, 20, 50, 100 };
             cmb_clientes.Items.AddRange(opciones);
             cmb_clientes.SelectedIndex = 0;
+            tabla_clientes.ReadOnly=true; // Hacer la tabla de clientes de solo lectura
         }
 
         private void CargarClientes()

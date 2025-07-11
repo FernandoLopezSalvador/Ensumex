@@ -30,6 +30,7 @@ namespace Ensumex.Views
             TablaFormat.AplicarEstilosTabla(tabla_productos);
             InicializarComboProductos();
             tabla_productos.CellDoubleClick += tabla_productos_CellDoubleClick;
+            tabla_productos.ReadOnly = true; // Hacer la tabla de productos de solo lectura
         }
         private void InicializarComboProductos()
         {

@@ -170,8 +170,7 @@ namespace Ensumex.Forms
                 {
                     SincronizarProductosYClientes();
                 });
-
-                MessageBox.Show("Sincronización completa.");
+                //MessageBox.Show("Sincronización completa.");
             }
             catch (Exception ex)
             {
@@ -218,6 +217,7 @@ namespace Ensumex.Forms
             }
 
             int totalRegistros = productosFB.Rows.Count + clientesFB.Rows.Count+ precioFb.Rows.Count;
+
             // Configurar progressBar en UI
             this.Invoke((Action)(() =>
             {

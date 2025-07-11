@@ -302,10 +302,11 @@
             // 
             // lbl_UsuarioInicio
             // 
+            lbl_UsuarioInicio.Anchor = AnchorStyles.Left;
             lbl_UsuarioInicio.AutoSize = true;
             lbl_UsuarioInicio.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lbl_UsuarioInicio.ForeColor = SystemColors.ControlText;
-            lbl_UsuarioInicio.Location = new Point(0, 52);
+            lbl_UsuarioInicio.Location = new Point(0, 56);
             lbl_UsuarioInicio.Name = "lbl_UsuarioInicio";
             lbl_UsuarioInicio.Size = new Size(123, 21);
             lbl_UsuarioInicio.TabIndex = 5;
@@ -313,12 +314,13 @@
             // 
             // lbl_posicion
             // 
+            lbl_posicion.Anchor = AnchorStyles.None;
             lbl_posicion.AutoSize = true;
-            lbl_posicion.Font = new Font("Century Gothic", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lbl_posicion.Font = new Font("Century Gothic", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lbl_posicion.ForeColor = SystemColors.ControlText;
-            lbl_posicion.Location = new Point(52, 25);
+            lbl_posicion.Location = new Point(47, 25);
             lbl_posicion.Name = "lbl_posicion";
-            lbl_posicion.Size = new Size(75, 21);
+            lbl_posicion.Size = new Size(83, 23);
             lbl_posicion.TabIndex = 3;
             lbl_posicion.Text = "Cuenta:";
             lbl_posicion.Click += lbl_cuenta_Click;
@@ -349,7 +351,7 @@
             // nuevoToolStripMenuItem
             // 
             nuevoToolStripMenuItem.Name = "nuevoToolStripMenuItem";
-            nuevoToolStripMenuItem.Size = new Size(162, 22);
+            nuevoToolStripMenuItem.Size = new Size(180, 22);
             nuevoToolStripMenuItem.Text = "Nuevo Usuario";
             nuevoToolStripMenuItem.Click += nuevoToolStripMenuItem_Click;
             // 
@@ -357,7 +359,7 @@
             // 
             cargarDatosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { productosToolStripMenuItem, clientesToolStripMenuItem });
             cargarDatosToolStripMenuItem.Name = "cargarDatosToolStripMenuItem";
-            cargarDatosToolStripMenuItem.Size = new Size(162, 22);
+            cargarDatosToolStripMenuItem.Size = new Size(180, 22);
             cargarDatosToolStripMenuItem.Text = "Cargar Datos";
             // 
             // productosToolStripMenuItem

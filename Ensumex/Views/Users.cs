@@ -98,7 +98,7 @@ namespace Ensumex.Views
                     Usuario = textnewUsuario.Text.Trim(),
                     Contraseña = textNewContraseña.Text.Trim(),
                     Nombre = textNewNombre.Text.Trim(),
-                    Posicion = cmb_NewPosicion.SelectedItem?.ToString() ?? string.Empty, // Fix for CS8601
+                    Posicion = cmb_NewPosicion.SelectedItem?.ToString() ?? string.Empty, 
                     Correo = textNewCorreo.Text.Trim()
                 };
 
@@ -144,10 +144,11 @@ namespace Ensumex.Views
                 DataGridViewRow fila = Tabla_usuarios.Rows[e.RowIndex];
 
                 textnewUsuario.Text = fila.Cells["Usuario"]?.Value?.ToString() ?? "";
-                textNewContraseña.Text = fila.Cells["Contraseña"]?.Value?.ToString() ?? "";
                 textNewNombre.Text = fila.Cells["Nombre"]?.Value?.ToString() ?? "";
                 textNewCorreo.Text = fila.Cells["Correo"]?.Value?.ToString() ?? "";
                 cmb_NewPosicion.SelectedItem = fila.Cells["Posicion"]?.Value?.ToString();
+                textNewContraseña.Text ="";
+
                 usuarioOriginal = textnewUsuario.Text;
                 editando = true;
                 btn_GuardarUsuario.Text = "Actualizar";

@@ -30,7 +30,7 @@ namespace Ensumex.Views
         private List<List<object[]>> tablasGuardadas = new();
         private Panel panelBusqueda;
         private DataGridView dgvBusqueda;
-        private List<dynamic> productosCache = new(); // Cache de productos para búsqueda rápida
+        private List<dynamic> productosCache = new(); 
 
         public Cotiza(string usuario)
         {
@@ -43,6 +43,7 @@ namespace Ensumex.Views
         }
         private void InicializarFormulario()
         {
+            
             AplicarConfiguracionesGenerales();
             ConfigurarControles();
             ConfigurarEventos();
@@ -65,6 +66,7 @@ namespace Ensumex.Views
             tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
             tbl_Cotizacion.CurrentCellDirtyStateChanged += tbl_Cotizacion_CurrentCellDirtyStateChanged;
             tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit;
+            tbl_Cotizacion.ReadOnly = true;
         }
         private void AgregarDescuentos(string[] descuentos)
         {
@@ -98,7 +100,7 @@ namespace Ensumex.Views
                     {
                         Name = "CANTIDAD",
                         HeaderText = "Cantidad",
-                        DataSource = Enumerable.Range(1, 100).ToList(), // Puedes ajustar el rango
+                        DataSource = Enumerable.Range(1, 100).ToList(), 
                         ValueType = typeof(int),
                         FlatStyle = FlatStyle.Flat
                     };
@@ -390,7 +392,6 @@ namespace Ensumex.Views
                 MessageBox.Show("No existen productos a eliminar.");
 
             }
-
         }
         private void txt_Costoinstalacion_TextChanged(object sender, EventArgs e)
         {
@@ -464,6 +465,7 @@ namespace Ensumex.Views
             tbl_Cotizacion.Rows.Clear();
             cmb_Descuento.SelectedIndex = 0;
             Txt_observaciones.Text = string.Empty;
+            tbl_Cotizacion.ReadOnly = true;
         }
         // Evento para manejar la busqueda para seleccionar cliente
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -534,6 +536,8 @@ namespace Ensumex.Views
                         tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precio, precio * cantidadFinal, cantidadFinal);
                         ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
+                        HabilitarEdicionParcial();
+
                         productosForm.Close();
                     }
                     catch (Exception ex)
@@ -560,10 +564,8 @@ namespace Ensumex.Views
                 {
                     var row = tbl_Cotizacion.Rows[e.RowIndex];
                     decimal precio = 0, cantidad = 0;
-
                     decimal.TryParse(row.Cells[colPrecio].Value?.ToString(), out precio);
                     decimal.TryParse(row.Cells[colCantidad].Value?.ToString(), out cantidad);
-
                     row.Cells[colSubtotal].Value = precio * cantidad;
                 }
 
@@ -718,15 +720,15 @@ namespace Ensumex.Views
             string descripcion = ultimaFila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
             string prefijo = "";
             if (descripcion.Contains("CALENT"))
-                prefijo = "C";
+                prefijo = "CAL";
             else if (descripcion.Contains("AIRE"))
-                prefijo = "A";
+                prefijo = "AIE";
             else if ((descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO")) && !descripcion.Contains("MOT"))
-                prefijo = "B";
+                prefijo = "BOM";
             else if (descripcion.Contains("MOTOBOMBA") || descripcion.Contains("MOTB") || descripcion.Contains("MOT."))
-                prefijo = "MB";
+                prefijo = "MOTB";
             else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
-                prefijo = "M";
+                prefijo = "MAN";
             // Tomar la fecha del label lblFecha (formato dd/MM/yyyy)
             string fecha = lblFecha.Text.Replace("/", "");
             lbl_NoCotiza.Text = !string.IsNullOrWhiteSpace(prefijo) ? prefijo + fecha : fecha;
@@ -781,18 +783,13 @@ namespace Ensumex.Views
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 RowHeadersVisible = false
             };
-
             // Aplica el mismo estilo que a las otras tablas
             TablaFormat.AplicarEstilosTabla(dgvBusqueda);
-
             panelBusqueda.Controls.Add(dgvBusqueda);
             this.Controls.Add(panelBusqueda);
-
             // Posiciona el panel justo debajo del Txt_Buscar
             panelBusqueda.Location = new Point(Txt_Buscar.Left, Txt_Buscar.Bottom + 2);
-
             dgvBusqueda.CellDoubleClick += DgvBusqueda_CellDoubleClick;
-
             // Opcional: Oculta el panel si pierde el foco
             dgvBusqueda.LostFocus += (s, e) => panelBusqueda.Visible = false;
             Txt_Buscar.LostFocus += (s, e) => { if (!panelBusqueda.Focused && !dgvBusqueda.Focused) panelBusqueda.Visible = false; };
@@ -810,7 +807,7 @@ namespace Ensumex.Views
                 PRECIO = p.PRECIO != 0 ? (p.PRECIO * 1.16m).ToString("C2") : "$0.00" 
             }).ToList<dynamic>();
         }
-
+            
         private void DgvBusqueda_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -823,10 +820,9 @@ namespace Ensumex.Views
                 string unidad = row.Cells["UNIDAD"].Value?.ToString();
 
                 tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precio, precio * cantidad, cantidad);
-
                 ActualizarNumeroCotizacionEnLabel();
                 ActualizarTotales();
-
+                HabilitarEdicionParcial();
                 panelBusqueda.Visible = false;
                 Txt_Buscar.Clear();
                 int lastRow = tbl_Cotizacion.Rows.Count - 1;
@@ -834,6 +830,15 @@ namespace Ensumex.Views
                 tbl_Cotizacion.BeginEdit(true);
             }
         }
+        private void HabilitarEdicionParcial()
+        {
+            tbl_Cotizacion.ReadOnly = false;
+            foreach (DataGridViewColumn col in tbl_Cotizacion.Columns)
+            {
+                col.ReadOnly = !(col.Name == "PRECIO" || col.Name == "AplicarDescuento"|| col.Name== "CANTIDAD");
+            }
+        }
+
         private void btn_Cancelarcotizacion_Click(object sender, EventArgs e)
         {
             limpiaCampos();
@@ -910,6 +915,7 @@ namespace Ensumex.Views
                         tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioUnitario, subtotal, cantidad);
                         ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
+                        HabilitarEdicionParcial();
 
                         // Asegura que la columna de "Eliminar" solo se agregue una vez
                         if (!tbl_Cotizacion.Columns.Contains("Eliminar"))

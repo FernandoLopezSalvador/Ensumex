@@ -40,7 +40,6 @@ namespace Ensumex.Models
         public DataTable ObtenerUsuarios()
         {
             DataTable dt = new DataTable();
-
             try
             {
                 using (var connection = GetConnection())
@@ -58,6 +57,12 @@ namespace Ensumex.Models
                         }
                     }
                 }
+
+                // 🔥 Reemplaza las contraseñas por asteriscos
+                foreach (DataRow row in dt.Rows)
+                {
+                    row["Contraseña"] = "****";
+                }
             }
             catch (SqlException ex)
             {
@@ -69,6 +74,7 @@ namespace Ensumex.Models
                 MessageBox.Show("Ocurrió un error inesperado:\n" + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
             return dt;
         }
         public bool ActualizarUsuario(string usuarioOriginal, Usuarios usuarioEditado)
@@ -87,5 +93,6 @@ namespace Ensumex.Models
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
+
     }
 }
