@@ -243,6 +243,7 @@ namespace Ensumex.Views
         {
             try
             {
+                CotizacionRepository.GuardarSiNoExisteCliente(txt_NumeroCliente.Text, txt_Nombrecliente.Text);
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
                     if (tbl_Cotizacion.Rows.Count == 1)
@@ -256,7 +257,6 @@ namespace Ensumex.Views
                     {
                         // GUARDAR EN BASE DE DATOS
                         CotizacionRepository.GuardarCotizacion(
-                            //numeroCotizacion: txt_Nocotizacion.Text,
                             numeroCotizacion: lbl_NoCotiza.Text,
                             fecha: DateTime.Now,
                             nombreCliente: txt_Nombrecliente.Text,
@@ -269,13 +269,12 @@ namespace Ensumex.Views
                             notas: Txt_observaciones.Text,
                             tablaCotizacion: tbl_Cotizacion
                         );
-                        // Generar el PDF
+                        // GENERAR EL PDF
                         string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
                         decimal.TryParse(descuentoTexto, out decimal porcentajeDescuento);
 
                         PDFGenerator.GenerarPDFCotizacion(
                             rutaArchivo: sfd.FileName,
-                            //numeroCotizacion: txt_Nocotizacion.Text,
                             numeroCotizacion: lbl_NoCotiza.Text,
                             nombreCliente: txt_Nombrecliente.Text,
                             costoInstalacion: txt_Costoinstalacion.Text,
@@ -289,7 +288,7 @@ namespace Ensumex.Views
                             usuario: usuarioActual
                         );
 
-                        // Preguntar si desea enviar por WhatsApp
+                        // PREGUNTAR SI DESEA ENVIAR POR WHATSAPP
                         var enviarWhats = MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                         if (enviarWhats == DialogResult.Yes)
                         {
@@ -302,10 +301,9 @@ namespace Ensumex.Views
                             }
                             if (!string.IsNullOrWhiteSpace(numeroCliente))
                             {
-                                // Abre WhatsApp Web
                                 string mensaje = $"Hola, le comparto la cotización {lbl_NoCotiza.Text}. Adjunto el PDF.";
                                 EnviarCotizacionPorWhatsApp(numeroCliente, mensaje);
-                                // Abre la carpeta del PDF en modo ventana y selecciona el archivo
+
                                 string carpeta = System.IO.Path.GetDirectoryName(sfd.FileName);
                                 if (!string.IsNullOrEmpty(carpeta) && System.IO.Directory.Exists(carpeta))
                                 {
@@ -316,6 +314,7 @@ namespace Ensumex.Views
                                         WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal
                                     });
                                 }
+
                                 MessageBox.Show("Se abrió WhatsApp Web y la carpeta de la cotización. Adjunte el PDF manualmente en el chat.", "WhatsApp", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                             else
@@ -323,6 +322,7 @@ namespace Ensumex.Views
                                 MessageBox.Show("No se proporcionó un número válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
                         }
+
                         limpiaCampos();
                     }
                 }
@@ -871,7 +871,6 @@ namespace Ensumex.Views
                     {
                         Dock = DockStyle.Fill
                     };
-
                     // Botón para aceptar
                     Button btnAceptar = new Button
                     {
@@ -879,7 +878,6 @@ namespace Ensumex.Views
                         Dock = DockStyle.Bottom,
                         DialogResult = DialogResult.OK
                     };
-
                     // Botón para cancelar
                     Button btnCancelar = new Button
                     {
@@ -887,7 +885,6 @@ namespace Ensumex.Views
                         Dock = DockStyle.Bottom,
                         DialogResult = DialogResult.Cancel
                     };
-
                     // Agregar controles al formulario
                     formWrapper.Controls.Add(prodControl);
                     formWrapper.Controls.Add(btnAceptar);
@@ -904,7 +901,6 @@ namespace Ensumex.Views
                             MessageBox.Show("El producto debe tener clave y descripción.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
-
                         string clave = prodControl.Clave;
                         string descripcion = prodControl.Descripcion;
                         string unidad = prodControl.Unidentrada;

@@ -36,8 +36,9 @@ namespace Ensumex.PDFtemplates
                 Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
                 string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
-                string rutaFirma = Path.Combine(Application.StartupPath, "IMG", "nombre.jpg");
-                writer.PageEvent = new FondoPiePDF(rutaFondo, rutaFirma);
+                String rutaFondoPie = Path.Combine(Application.StartupPath, "IMG", "FondoPie.png");
+                string rutaFirma = Path.Combine(Application.StartupPath, "IMG", "Pie.jpg");
+                writer.PageEvent = new FondoPiePDF(rutaFondo, rutaFondoPie);
                 doc.Open();
                 var fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
                 var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
@@ -301,7 +302,7 @@ namespace Ensumex.PDFtemplates
                 // Firma y pie
                 PdfPTable tablaFirma = new PdfPTable(1);
                 tablaFirma.WidthPercentage = 100;
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("\n\n\n\nAtentamente,\n" + usuario + "\nRepresentante de la Cotización", fontCursiva));
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("\n\n\n\nAtentamente,\n" + usuario + "\nVendedor", fontCursiva));
                 celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;
                 celdaTexto.Border = Rectangle.NO_BORDER;
                 celdaTexto.PaddingBottom = 10f;

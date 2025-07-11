@@ -190,30 +190,49 @@ namespace Ensumex.Forms
             DataTable clientesFB = new DataTable();
             DataTable precioFb = new DataTable();
 
-            using (FbConnection connFb = new FbConnection(connFirebird))
+            try
             {
-                connFb.Open();
-
-                // Productos
-                using (FbCommand cmdP = new FbCommand("SELECT CVE_ART, DESCR, UNI_MED, COSTO_PROM, ULT_COSTO, EXIST FROM INVE01", connFb))
-                using (FbDataAdapter adapterP = new FbDataAdapter(cmdP))
+                using (FbConnection connFb = new FbConnection(connFirebird))
                 {
-                    adapterP.Fill(productosFB);
-                }
+                    connFb.Open();
 
-                // Clientes
-                using (FbCommand cmdC = new FbCommand("SELECT CLAVE, STATUS, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED FROM CLIE01", connFb))
-                using (FbDataAdapter adapterC = new FbDataAdapter(cmdC))
-                {
-                    adapterC.Fill(clientesFB);
-                }
+                    // Productos
+                    using (FbCommand cmdP = new FbCommand("SELECT CVE_ART, DESCR, UNI_MED, COSTO_PROM, ULT_COSTO, EXIST FROM INVE01", connFb))
+                    using (FbDataAdapter adapterP = new FbDataAdapter(cmdP))
+                    {
+                        adapterP.Fill(productosFB);
+                    }
 
-                // Precios
-                using (FbCommand cmdPrecios = new FbCommand("SELECT CVE_ART, CVE_PRECIO, PRECIO FROM PRECIO_X_PROD01", connFb))
-                using (FbDataAdapter adapterPrecios = new FbDataAdapter(cmdPrecios))
-                {
-                    adapterPrecios.Fill(precioFb);
+                    // Clientes
+                    using (FbCommand cmdC = new FbCommand("SELECT CLAVE, STATUS, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED FROM CLIE01", connFb))
+                    using (FbDataAdapter adapterC = new FbDataAdapter(cmdC))
+                    {
+                        adapterC.Fill(clientesFB);
+                    }
+
+                    // Precios
+                    using (FbCommand cmdPrecios = new FbCommand("SELECT CVE_ART, CVE_PRECIO, PRECIO FROM PRECIO_X_PROD01", connFb))
+                    using (FbDataAdapter adapterPrecios = new FbDataAdapter(cmdPrecios))
+                    {
+                        adapterPrecios.Fill(precioFb);
+                    }
                 }
+            }
+            catch (FbException ex)
+            {
+                // Error específico de Firebird
+                MessageBox.Show("Error al conectar con el servidor Firebird: " + ex.Message,
+                                "Servidor no disponible",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                // Otros errores inesperados
+                MessageBox.Show("Ocurrió un error inesperado: " + ex.Message,
+                                "Error",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
             }
 
             int totalRegistros = productosFB.Rows.Count + clientesFB.Rows.Count+ precioFb.Rows.Count;

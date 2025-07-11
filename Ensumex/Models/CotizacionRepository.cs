@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Ensumex.Models
 {
@@ -286,6 +287,25 @@ namespace Ensumex.Models
             }
 
             return dt;
+        }
+        public static void GuardarSiNoExisteCliente(string numeroCliente, string nombreCliente)
+        {
+            using (var conn = new SqlConnection(connSqlServer))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(@"
+                    IF NOT EXISTS (SELECT 1 FROM CLIE01 WHERE CLAVE = @NumeroCliente)
+                    BEGIN
+                        INSERT INTO CLIE01 (CLAVE,STATUS, NOMBRE)
+                        VALUES (@NumeroCliente,@Status, @NombreCliente);
+                    END", conn))
+                {
+                    cmd.Parameters.AddWithValue("@NumeroCliente", numeroCliente);
+                    cmd.Parameters.AddWithValue("@Status", "A");
+                    cmd.Parameters.AddWithValue("@NombreCliente", nombreCliente);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }
