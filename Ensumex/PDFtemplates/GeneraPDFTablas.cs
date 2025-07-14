@@ -129,6 +129,15 @@ namespace Ensumex.PDFtemplates
                 if (!string.IsNullOrWhiteSpace(notas))
                     doc.Add(new Paragraph("\n" + notas, fontNotas));
 
+                // Texto con usuario
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\n" + usuario + "\nVendedor", fontGris))
+                {
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    Border = Rectangle.NO_BORDER,
+                    PaddingTop = 15f, // Espacio superior
+                    PaddingBottom = 5f
+                };
+                doc.Add(celdaTexto);
                 doc.Close();
                 MessageBox.Show("📄 PDF generado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

@@ -13,7 +13,7 @@ namespace Ensumex.PDFtemplates
         private readonly string rutaFondo;
         private readonly string rutaFirma;
         private readonly string usuario;
-        private readonly iTextSharp.text.Font fontPie = FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.DARK_GRAY);
+        private readonly iTextSharp.text.Font fontPie = FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.DARK_GRAY);
 
         public FondoPiePDF(string rutaFondo, string rutaFirma, string usuario)
         {
@@ -37,8 +37,8 @@ namespace Ensumex.PDFtemplates
                     var under = writer.DirectContentUnder;
                     var gs = new PdfGState
                     {
-                        FillOpacity = 0.3f,
-                        StrokeOpacity = 0.3f
+                        FillOpacity = 0.2f,
+                        StrokeOpacity = 0.2f
                     };
                     under.SaveState();
                     under.SetGState(gs);
@@ -55,19 +55,6 @@ namespace Ensumex.PDFtemplates
             {
                 TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin
             };
-            pie.DefaultCell.Border = Rectangle.NO_BORDER;
-
-            // Texto con usuario
-            var fontCursiva = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 13, BaseColor.DARK_GRAY);
-            PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\n" + usuario + "\nVendedor", fontCursiva))
-            {
-                HorizontalAlignment = Element.ALIGN_CENTER,
-                Border = Rectangle.NO_BORDER,
-                PaddingTop = 15f, // Espacio superior
-                PaddingBottom = 5f
-            };
-            pie.AddCell(celdaTexto);
-
             // Firma (si existe)
             if (File.Exists(rutaFirma))
             {

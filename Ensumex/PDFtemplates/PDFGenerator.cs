@@ -68,63 +68,25 @@ namespace Ensumex.PDFtemplates
                 }
                 else
                 {
-                    doc.Add(new Paragraph("\nEstimado(a) Cliente:", fontNegrita));
+                    doc.Add(new Paragraph("\nEstimado(a) Cliente:\n", fontNegrita));
                 }
                 int totalProductos = tablaCotizacion.Rows.Cast<DataGridViewRow>().Count(r => !r.IsNewRow); // Excluye la fila vacía al final
 
                 if (totalProductos > 1)
                 {
                     // Mensaje para más de un producto
-                    doc.Add(new Paragraph("Presente\n", fontNegrita));
-                    doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización " +
+                    doc.Add(new Paragraph("\nPresente", fontNegrita));
+                    doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización " +
                         "para la venta de los siguientes productos:", fontNormal));
                 }
                 else if (totalProductos == 1)
                 {
                     // Mensaje para un solo producto
-                    doc.Add(new Paragraph("Presente\n", fontNegrita));
-                    doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización " +
+                    doc.Add(new Paragraph("\nPresente", fontNegrita));
+                    doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización " +
                         "para la venta del siguiente producto:", fontNormal));
                 }
-
-                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
-                {
-                    if (fila.IsNewRow) continue;
-                    string clave = fila.Cells["CLAVE"].Value?.ToString()?.ToUpper() ?? "";
-                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
-                    if (descripcion.Contains("CALENT"))
-                    {
-                        if (clave.EndsWith("GA"))
-                            doc.Add(new Paragraph("-" + descripcion + " POR GRAVEDAD", fontNegrita));
-                        else if (clave.EndsWith("HP"))
-                            doc.Add(new Paragraph("-" + descripcion + " POR PRESIÓN", fontNegrita));
-                        else
-                            doc.Add(new Paragraph("-" + descripcion, fontNegrita));
-                        break;
-                    }
-                    else if (descripcion.Contains("MOT.") || descripcion.Contains("MOTB"))
-                    {
-                        doc.Add(new Paragraph("-" + descripcion, fontNegrita));
-                        break;
-                    }
-                    else if (descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO"))
-                    {
-                        doc.Add(new Paragraph("-" + descripcion, fontNegrita));
-                        break;
-                    }
-                    else if (descripcion.Contains("AIRE"))
-                    {
-                        doc.Add(new Paragraph("-" + descripcion, fontNegrita));
-                        break;
-                    }
-                    else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
-                    {
-                        doc.Add(new Paragraph("-" + descripcion, fontNegrita));
-                        break;
-                    }
-                }
                 doc.Add(new Paragraph("\n", fontNormal));
-
                 // --- TABLA DE PRODUCTOS ---
                 PdfPTable tabla = new PdfPTable(6);
                 tabla.WidthPercentage = 100;
@@ -144,12 +106,18 @@ namespace Ensumex.PDFtemplates
                     if (row.IsNewRow) continue;
 
                     // # (posición)
-                    tabla.AddCell(new PdfPCell(new Phrase(pos.ToString(), fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
+                    tabla.AddCell(new PdfPCell(new Phrase(pos.ToString(), fontNormal))
+                    {
+                        HorizontalAlignment = Element.ALIGN_CENTER
+                    });
 
                     // Canti (cantidad)
                     string cantidadStr = row.Cells["CANTIDAD"].Value?.ToString() ?? "0";
                     decimal.TryParse(cantidadStr, out decimal cantidad);
-                    tabla.AddCell(new PdfPCell(new Phrase(cantidadStr, fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
+                    tabla.AddCell(new PdfPCell(new Phrase(cantidadStr, fontNormal))
+                    {
+                        HorizontalAlignment = Element.ALIGN_CENTER
+                    });
 
                     // Descripción
                     string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString() ?? "";
@@ -158,23 +126,40 @@ namespace Ensumex.PDFtemplates
                     // Precio
                     string precioStr = row.Cells["PRECIO"].Value?.ToString() ?? "0";
                     decimal.TryParse(precioStr, out decimal precioUnitario);
-                    tabla.AddCell(new PdfPCell(new Phrase("$" + precioStr, fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
-
-                    // Descuento (por producto)
-                    decimal descuentoProd = 0;
-                    if (row.Cells["AplicarDescuento"] != null && row.Cells["AplicarDescuento"].Value is bool aplicar && aplicar && porcentajeDescuento > 0)
-                    {
-                        descuentoProd = (precioUnitario * cantidad) * (porcentajeDescuento / 100m);
-                    }
-                    PdfPCell celdaDescuento = new PdfPCell(new Phrase("$" + descuentoProd.ToString("0.00"), fontrojo))
+                    string precioFormateado = precioUnitario.ToString("C2", new System.Globalization.CultureInfo("es-MX"));
+                    tabla.AddCell(new PdfPCell(new Phrase(precioFormateado, fontNormal))
                     {
                         HorizontalAlignment = Element.ALIGN_RIGHT
-                    };
-                    tabla.AddCell(celdaDescuento);
+                    });
+
+                    // Descuento ($)
+                    decimal descuentoProd = 0;
+                    int porcentajeDescuentoFila = 0;
+                    if (row.Cells["Descuento"]?.Value != null)
+                    {
+                        int.TryParse(row.Cells["Descuento"].Value.ToString(), out porcentajeDescuentoFila);
+                        if (porcentajeDescuentoFila > 0)
+                        {
+                            descuentoProd = (precioUnitario * cantidad) * (porcentajeDescuentoFila / 100m);
+                        }
+                    }
+                    string descuentoFormateado = descuentoProd.ToString("C2", new System.Globalization.CultureInfo("es-MX"));
+                    tabla.AddCell(new PdfPCell(new Phrase("-"+descuentoFormateado, fontrojo))
+                    {
+                        HorizontalAlignment = Element.ALIGN_RIGHT
+                    });
+
+                    // Importe (precio*cantidad - descuento)
                     decimal importe = (precioUnitario * cantidad) - descuentoProd;
-                    tabla.AddCell(new PdfPCell(new Phrase("$"+importe.ToString("0.00"), fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
+                    string importeFormateado = importe.ToString("C2", new System.Globalization.CultureInfo("es-MX"));
+                    tabla.AddCell(new PdfPCell(new Phrase(importeFormateado, fontNormal))
+                    {
+                        HorizontalAlignment = Element.ALIGN_RIGHT
+                    });
+
                     pos++;
                 }
+
                 doc.Add(tabla);
                 // --- TOTALES Y COSTOS ADICIONALES ---
                 doc.Add(new Paragraph("\n"));
@@ -233,7 +218,7 @@ namespace Ensumex.PDFtemplates
                     "\n-Precios sujetos a cambios sin previo aviso.\n",
 
 
-                    ["BOMBA"] = "-Garantía: 2 años en bomba motor y arrancador\n" +
+                    ["BOMBA DE"] = "-Garantía: 2 años en bomba motor y arrancador\n" +
                     "- Equipos sobre pedido. Es necesario un anticipo del 60%\n" +
                     "- Entrega de 3 a 5 dias hábiles\n" +
                     "-Precios sujetos a cambios sin previo aviso.\n",
@@ -293,13 +278,30 @@ namespace Ensumex.PDFtemplates
                     doc.Add(new Paragraph(
                         "-Garantía estándar.\n-Precios sujetos a cambios sin previo aviso.\n", fontnotas));
                 }
-                doc.Add(new Paragraph("-"+notas, fontnotas));
+                doc.Add(new Paragraph(""+notas, fontnotas));
                 doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n", fontnotas));
 
                 // Firma y pie
                 PdfPTable tablaFirma = new PdfPTable(1);
+
+                // Texto con usuario
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente.\n" + usuario + "\nVendedor.", fontCursiva))
+                {
+                    HorizontalAlignment = Element.ALIGN_CENTER,
+                    Border = Rectangle.NO_BORDER,
+                    PaddingTop = 15f, // Espacio superior
+                    PaddingBottom = 5f
+                };
+
+                // ⬅️ Agregar la celda a la tabla
+                tablaFirma.AddCell(celdaTexto);
+
+                // Configuración de la tabla
                 tablaFirma.WidthPercentage = 100;
+
+                // ⬅️ Ahora sí agregar la tabla al documento
                 doc.Add(tablaFirma);
+
                 doc.Close();
                 MessageBox.Show("📄 PDF generado correctamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

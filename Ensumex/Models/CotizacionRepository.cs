@@ -70,8 +70,7 @@ namespace Ensumex.Models
                             cmdDetalle.Parameters.AddWithValue("@PrecioUnitario", row.Cells["PRECIO"].Value ?? 0);
                             cmdDetalle.Parameters.AddWithValue("@Subtotal", row.Cells["Subtotal"].Value ?? 0);
                             cmdDetalle.Parameters.AddWithValue("@Cantidad", row.Cells["CANTIDAD"].Value ?? 0);
-                            cmdDetalle.Parameters.AddWithValue("@AplicaDescuento", row.Cells["AplicarDescuento"].Value ?? false);
-                            cmdDetalle.ExecuteNonQuery();
+                            cmdDetalle.Parameters.AddWithValue("@AplicaDescuento",int.TryParse(row.Cells["Descuento"]?.Value?.ToString(), out int desc) ? desc : 0); cmdDetalle.ExecuteNonQuery();
                         }
 
                         tran.Commit();
@@ -143,8 +142,7 @@ namespace Ensumex.Models
                                 cmdDetalle.Parameters.AddWithValue("@PrecioUnitario", row[4] ?? 0);
                                 cmdDetalle.Parameters.AddWithValue("@Cantidad", row[5] ?? 0);
                                 cmdDetalle.Parameters.AddWithValue("@Subtotal", row.Length > 6 ? row[6] ?? 0 : 0);
-                                cmdDetalle.Parameters.AddWithValue("@AplicaDescuento", row[0] ?? false);
-                                cmdDetalle.ExecuteNonQuery();
+                                cmdDetalle.Parameters.AddWithValue("@AplicaDescuento",int.TryParse(row[0]?.ToString(), out int desc) ? desc : 0); cmdDetalle.ExecuteNonQuery();
                             }
                         }
 

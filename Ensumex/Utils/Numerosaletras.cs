@@ -20,7 +20,11 @@ namespace Ensumex.Utils
             string textoEntero = ConvertirNumero(parteEntera);
             string textoCentavos = centavos.ToString("00") + "/100 M.N.";
 
-            return $"({textoEntero} pesos {textoCentavos})";
+            // Convierte la primera letra a mayúscula
+            string resultado = $"({textoEntero} pesos {textoCentavos})";
+            resultado = char.ToUpper(resultado[1]) + resultado.Substring(2); // Porque el [0] es '('
+
+            return resultado;
         }
         private static string ConvertirNumero(long numero)
         {

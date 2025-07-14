@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Globalization;
@@ -109,14 +110,20 @@ namespace Ensumex.Views
                     tbl_Cotizacion.Columns.Add(colCantidad);
                 }
 
-                if (!tbl_Cotizacion.Columns.Contains("AplicarDescuento"))
+                if (!tbl_Cotizacion.Columns.Contains("Descuento"))
                 {
-                    var colSeleccion = new DataGridViewCheckBoxColumn();
-                    colSeleccion.Name = "AplicarDescuento";
-                    colSeleccion.HeaderText = "Descuento";
-                    colSeleccion.Width = 70;
-                    tbl_Cotizacion.Columns.Insert(0, colSeleccion);
+                    var colDescuento = new DataGridViewComboBoxColumn
+                    {
+                        Name = "Descuento",
+                        HeaderText = "Descuento (%)",
+                        DataSource = Enumerable.Range(0, 51).ToList(), // Valores de 0 a 50
+                        ValueType = typeof(int),
+                        FlatStyle = FlatStyle.Flat,
+                        Width = 80
+                    };
+                    tbl_Cotizacion.Columns.Insert(0, colDescuento);
                 }
+
                 if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
                 {
                     DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn
@@ -245,19 +252,41 @@ namespace Ensumex.Views
         {
             try
             {
+                // Guardar cliente si no existe
                 CotizacionRepository.GuardarSiNoExisteCliente(txt_NumeroCliente.Text, txt_Nombrecliente.Text);
+
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
-                    if (tbl_Cotizacion.Rows.Count == 1)
+                    if (tbl_Cotizacion.Rows.Count <= 1)
                     {
                         MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
+
                     sfd.Filter = "Archivo PDF|*.pdf";
                     sfd.FileName = $"Cotizacion_{DateTime.Now:yyyyMMdd}.pdf";
+
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
-                        // GUARDAR EN BASE DE DATOS
+                        decimal totalDescuentoCalculado = 0m;
+
+                        // Calcular descuento total de la cotización
+                        foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
+                        {
+                            if (row.IsNewRow) continue;
+
+                            decimal precio = 0m, cantidad = 0m;
+                            int porcentajeDescuento = 0;
+
+                            decimal.TryParse(row.Cells["PRECIO"]?.Value?.ToString(), out precio);
+                            decimal.TryParse(row.Cells["CANTIDAD"]?.Value?.ToString(), out cantidad);
+                            int.TryParse(row.Cells["Descuento"]?.Value?.ToString(), out porcentajeDescuento);
+
+                            decimal descuentoFila = (precio * cantidad) * (porcentajeDescuento / 100m);
+                            totalDescuentoCalculado += descuentoFila;
+                        }
+
+                        // Guardar cotización en base de datos
                         CotizacionRepository.GuardarCotizacion(
                             numeroCotizacion: lbl_NoCotiza.Text,
                             fecha: DateTime.Now,
@@ -266,15 +295,13 @@ namespace Ensumex.Views
                             costoInstalacion: decimal.TryParse(txt_Costoinstalacion.Text, out var inst) ? inst : 0,
                             costoFlete: decimal.TryParse(txt_Costoflete.Text, out var flt) ? flt : 0,
                             subtotal: decimal.TryParse(lbl_Subtotal.Text.Replace("$", ""), out var sub) ? sub : 0,
-                            descuento: decimal.TryParse(lbl_costoDescuento.Text.Replace("$", "").Replace("-", ""), out var desc) ? desc : 0,
+                            descuento: totalDescuentoCalculado, // Descuento calculado
                             total: decimal.TryParse(lbl_TotalNeto.Text.Replace("$", ""), out var tot) ? tot : 0,
                             notas: Txt_observaciones.Text,
                             tablaCotizacion: tbl_Cotizacion
                         );
-                        // GENERAR EL PDF
-                        string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
-                        decimal.TryParse(descuentoTexto, out decimal porcentajeDescuento);
 
+                        // Generar PDF
                         PDFGenerator.GenerarPDFCotizacion(
                             rutaArchivo: sfd.FileName,
                             numeroCotizacion: lbl_NoCotiza.Text,
@@ -284,36 +311,36 @@ namespace Ensumex.Views
                             subtotal: lbl_Subtotal.Text,
                             total: lbl_TotalNeto.Text,
                             descuento: lbl_costoDescuento.Text,
-                            porcentajeDescuento: porcentajeDescuento,
+                            porcentajeDescuento: totalDescuentoCalculado,
                             notas: Txt_observaciones.Text,
                             tablaCotizacion: tbl_Cotizacion,
                             usuario: usuarioActual
                         );
 
-                        // PREGUNTAR SI DESEA ENVIAR POR WHATSAPP
-                        var enviarWhats = MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                        if (enviarWhats == DialogResult.Yes)
+                        // Preguntar si quiere enviar por WhatsApp
+                        if (MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
-                            string numeroCliente = txt_NumeroCliente.Text?.Trim();
-                            numeroCliente = NormalizarNumeroWhatsApp(numeroCliente);
+                            string numeroCliente = NormalizarNumeroWhatsApp(txt_NumeroCliente.Text);
                             if (string.IsNullOrWhiteSpace(numeroCliente))
                             {
                                 numeroCliente = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el número de WhatsApp del cliente (ejemplo: 9511234567):", "WhatsApp", "");
                                 numeroCliente = NormalizarNumeroWhatsApp(numeroCliente);
                             }
+
                             if (!string.IsNullOrWhiteSpace(numeroCliente))
                             {
                                 string mensaje = $"Hola, le comparto la cotización {lbl_NoCotiza.Text}. Adjunto el PDF.";
                                 EnviarCotizacionPorWhatsApp(numeroCliente, mensaje);
 
-                                string carpeta = System.IO.Path.GetDirectoryName(sfd.FileName);
-                                if (!string.IsNullOrEmpty(carpeta) && System.IO.Directory.Exists(carpeta))
+                                // Abrir carpeta donde se guardó el PDF
+                                string carpeta = Path.GetDirectoryName(sfd.FileName);
+                                if (!string.IsNullOrEmpty(carpeta) && Directory.Exists(carpeta))
                                 {
-                                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                                    Process.Start(new ProcessStartInfo
                                     {
                                         FileName = "explorer.exe",
                                         Arguments = $"/select,\"{sfd.FileName}\"",
-                                        WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal
+                                        WindowStyle = ProcessWindowStyle.Normal
                                     });
                                 }
 
@@ -324,6 +351,13 @@ namespace Ensumex.Views
                                 MessageBox.Show("No se proporcionó un número válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
                         }
+
+                        // Abrir el PDF generado
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = sfd.FileName,
+                            UseShellExecute = true
+                        });
 
                         limpiaCampos();
                     }
@@ -413,19 +447,11 @@ namespace Ensumex.Views
 
             try
             {
-                // 1️⃣ Extraer el porcentaje del ComboBox
-                decimal porcentajeDescuento = 0;
-                string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
-                decimal.TryParse(descuentoTexto, out porcentajeDescuento);
-                porcentajeDescuento /= 100m; // Convierte 10 -> 0.10
-
-                // 2️⃣ Recorre todas las filas para calcular subtotal y descuentos
                 foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                 {
                     if (row.IsNewRow) continue;
 
                     decimal precio = 0, cantidad = 0, subtotalOriginal = 0;
-                    bool aplicarDescuento = Convert.ToBoolean(row.Cells["AplicarDescuento"].Value ?? false);
 
                     // Obtener precio y cantidad
                     decimal.TryParse(row.Cells["PRECIO"].Value?.ToString(), out precio);
@@ -437,10 +463,13 @@ namespace Ensumex.Views
                     subtotalGeneral += subtotalOriginal;
                     row.Cells["Subtotal"].Value = subtotalOriginal;
 
-                    // Aplica descuento solo si la casilla está marcada
-                    if (aplicarDescuento && porcentajeDescuento > 0)
+                    // Obtener porcentaje de descuento del ComboBox
+                    int porcentajeDescuento = 0;
+                    int.TryParse(row.Cells["Descuento"].Value?.ToString(), out porcentajeDescuento);
+
+                    if (porcentajeDescuento > 0)
                     {
-                        decimal descuentoFila = subtotalOriginal * porcentajeDescuento;
+                        decimal descuentoFila = subtotalOriginal * (porcentajeDescuento / 100m);
                         totalDescuento += descuentoFila;
                         row.Cells["Total"].Value = subtotalOriginal - descuentoFila;
                     }
@@ -544,7 +573,7 @@ namespace Ensumex.Views
                             }
                         }
                         //tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioFinal, subtotal, cantidad);
-                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precio, precio * cantidadFinal, total, cantidadFinal);
+                        tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidadFinal, total, cantidadFinal);
                         ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
                         HabilitarEdicionParcial();
@@ -567,10 +596,10 @@ namespace Ensumex.Views
                 // Nombres de columna consistentes
                 string colPrecio = "PRECIO";
                 string colCantidad = "CANTIDAD";
-                string colSubtotal = "Subtotal";
-                string colAplicarDescuento = "AplicarDescuento"; // Tu columna de checkbox
-                // Siempre actualiza los totales si cambia algo relevante
-                if (colName == colAplicarDescuento || colName == colPrecio || colName == colCantidad || colName == colSubtotal)
+                string colSubtotal = "Subtotal"; 
+                string colDescuento = "Descuento"; // combo box
+
+                if (colName == colDescuento || colName == colPrecio || colName == colCantidad || colName == colSubtotal)
                 {
                     ActualizarTotales();
                 }
@@ -583,17 +612,16 @@ namespace Ensumex.Views
                 tbl_Cotizacion.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
             if (tbl_Cotizacion.IsCurrentCellDirty &&
-                tbl_Cotizacion.CurrentCell is DataGridViewCheckBoxCell &&
-                tbl_Cotizacion.CurrentCell.OwningColumn.Name == "AplicarDescuento")
+            tbl_Cotizacion.CurrentCell is DataGridViewComboBoxCell &&
+            tbl_Cotizacion.CurrentCell.OwningColumn.Name == "Descuento")
             {
                 tbl_Cotizacion.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
         }
         private void tbl_Cotizacion_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            if (tbl_Cotizacion.Columns[e.ColumnIndex].Name == "AplicarDescuento")
+            if (tbl_Cotizacion.Columns[e.ColumnIndex].Name == "Descuento")
             {
-                // Solo permitir si hay al menos un producto
                 int productos = tbl_Cotizacion.Rows.Cast<DataGridViewRow>().Count(r => !r.IsNewRow);
                 if (productos == 0)
                 {
@@ -831,7 +859,7 @@ namespace Ensumex.Views
                 int cantidad = 1;
                 string unidad = row.Cells["UNIDAD"].Value?.ToString();
                 decimal total = precio * cantidad;
-                tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precio, precio * cantidad,total, cantidad);
+                tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidad,total, cantidad);
                 ActualizarNumeroCotizacionEnLabel();
                 ActualizarTotales();
                 HabilitarEdicionParcial();
@@ -847,7 +875,7 @@ namespace Ensumex.Views
             tbl_Cotizacion.ReadOnly = false;
             foreach (DataGridViewColumn col in tbl_Cotizacion.Columns)
             {
-                col.ReadOnly = !(col.Name == "PRECIO" || col.Name == "AplicarDescuento"|| col.Name== "CANTIDAD");
+                col.ReadOnly = !(col.Name == "PRECIO" || col.Name == "Descuento"|| col.Name== "CANTIDAD");
             }
         }
 
@@ -883,36 +911,47 @@ namespace Ensumex.Views
                     {
                         Dock = DockStyle.Fill
                     };
+
                     // Botón para aceptar
                     Button btnAceptar = new Button
                     {
                         Text = "Aceptar",
-                        Dock = DockStyle.Bottom,
-                        DialogResult = DialogResult.OK
+                        Dock = DockStyle.Bottom
+                        // NO asignar DialogResult aquí
                     };
+
                     // Botón para cancelar
                     Button btnCancelar = new Button
                     {
                         Text = "Cancelar",
                         Dock = DockStyle.Bottom,
-                        DialogResult = DialogResult.Cancel
+                        DialogResult = DialogResult.Cancel // Solo el cancelar mantiene DialogResult
                     };
+
+                    // Evento Click para el botón Aceptar
+                    btnAceptar.Click += (s, e) =>
+                    {
+                        // Validar datos antes de cerrar el formulario
+                        if (string.IsNullOrWhiteSpace(prodControl.Descripcion))
+                        {
+                            MessageBox.Show("El producto debe tener descripción.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return; // NO cerrar el formulario
+                        }
+
+                        // Si los datos son válidos, cerrar el formulario con DialogResult.OK
+                        formWrapper.DialogResult = DialogResult.OK;
+                        formWrapper.Close();
+                    };
+
                     // Agregar controles al formulario
                     formWrapper.Controls.Add(prodControl);
                     formWrapper.Controls.Add(btnAceptar);
                     formWrapper.Controls.Add(btnCancelar);
-                    formWrapper.AcceptButton = btnAceptar;
                     formWrapper.CancelButton = btnCancelar;
 
                     // Mostrar formulario como modal
                     if (formWrapper.ShowDialog() == DialogResult.OK)
                     {
-                        // Validación de datos
-                        if (string.IsNullOrWhiteSpace(prodControl.Clave) || string.IsNullOrWhiteSpace(prodControl.Descripcion))
-                        {
-                            MessageBox.Show("El producto debe tener clave y descripción.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
                         string clave = prodControl.Clave;
                         string descripcion = prodControl.Descripcion;
                         string unidad = prodControl.Unidentrada;
@@ -921,7 +960,7 @@ namespace Ensumex.Views
                         decimal subtotal = precioUnitario * cantidad;
                         decimal total = subtotal; // Aquí puedes aplicar lógica de descuento si es necesario
 
-                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioUnitario, subtotal,total, cantidad);
+                        tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precioUnitario, subtotal, total, cantidad);
                         ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
                         HabilitarEdicionParcial();
