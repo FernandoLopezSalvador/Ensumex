@@ -307,5 +307,25 @@ namespace Ensumex.Models
                 }
             }
         }
+
+        public static int GetSiguienteIdCotizacion()
+        {
+            int siguienteId = 1; // Por defecto si no hay registros
+
+            using (var conn = new SqlConnection(connSqlServer))
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand("SELECT ISNULL(MAX(IdCotizacion), 0) + 1 FROM Cotizacion", conn))
+                {
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && int.TryParse(result.ToString(), out int id))
+                    {
+                        siguienteId = id;
+                    }
+                }
+            }
+
+            return siguienteId;
+        }
     }
 }

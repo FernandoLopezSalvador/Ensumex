@@ -35,10 +35,9 @@ namespace Ensumex.PDFtemplates
             {
                 Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
-                string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
-                String rutaFondoPie = Path.Combine(Application.StartupPath, "IMG", "FondoPie.png");
-                string rutaFirma = Path.Combine(Application.StartupPath, "IMG", "Pie.jpg");
-                writer.PageEvent = new FondoPiePDF(rutaFondo, rutaFondoPie);
+                string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Fondologo.png");
+                string rutaFondoPie = Path.Combine(Application.StartupPath, "IMG", "Pie.png");
+                writer.PageEvent = new FondoPiePDF(rutaFondo, rutaFondoPie, usuario);
                 doc.Open();
                 var fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
                 var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
@@ -217,8 +216,8 @@ namespace Ensumex.PDFtemplates
                 // Diccionario con claves y mensajes
                 var notasPorProducto = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
-                    ["CALENTADOR"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n-Precios sujetos a cambios sin previo aviso.\n",
-                    ["CALENT"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n-Precios sujetos a cambios sin previo aviso.\n",
+                    ["CALENTADOR"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque.\n-Precios sujetos a cambios sin previo aviso.\n",
+                    ["CALENT"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque.\n-Precios sujetos a cambios sin previo aviso.\n",
 
 
                     ["AIRE ACONDICIONADO"] = "-Garantía: 5 años contra defectos de fabricación.\n" +
@@ -247,8 +246,7 @@ namespace Ensumex.PDFtemplates
                     "\n Revisión y ajuste de terminales eléctricas del equipo. Revisión y ajuste de la carga de gas refrigerante.\n" +
                     "- Se requiere anticipo del 50% para comenzar el trabajo.\n" +
                     "- Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
-                    "- Precios sujetos a cambios sin previo aviso.\n" +
-                    "Sin otro particular quedo a sus órdenes.",
+                    "- Precios sujetos a cambios sin previo aviso.\n",
 
                     ["MANTEMIN"] = "- Mantenimiento correctivo de unidad tipo paquete incluye:\nLocalización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante\n" +
                     "Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
@@ -258,8 +256,7 @@ namespace Ensumex.PDFtemplates
                     "\n Revisión y ajuste de terminales eléctricas del equipo. Revisión y ajuste de la carga de gas refrigerante.\n" +
                     "- Se requiere anticipo del 50% para comenzar el trabajo.\n" +
                     "- Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
-                    "- Precios sujetos a cambios sin previo aviso.\n" +
-                    "Sin otro particular quedo a sus órdenes."
+                    "- Precios sujetos a cambios sin previo aviso.\n"
                 };
 
                 // Buscar el primer producto que coincida
@@ -294,19 +291,14 @@ namespace Ensumex.PDFtemplates
                 {
                     // Nota genérica si no coincide ningún producto
                     doc.Add(new Paragraph(
-                        "-Garantía estándar: 1 año contra defectos de fabricación.\n-Precios sujetos a cambios sin previo aviso.\n", fontnotas));
+                        "-Garantía estándar.\n-Precios sujetos a cambios sin previo aviso.\n", fontnotas));
                 }
-                doc.Add(new Paragraph(notas, fontnotas));
-                doc.Add(new Paragraph("Sin otro particular, quedo a sus órdenes\n,- Agradecemos su preferencia.\n\n", fontnotas));
+                doc.Add(new Paragraph("-"+notas, fontnotas));
+                doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n", fontnotas));
 
                 // Firma y pie
                 PdfPTable tablaFirma = new PdfPTable(1);
                 tablaFirma.WidthPercentage = 100;
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("\n\n\n\nAtentamente,\n" + usuario + "\nVendedor", fontCursiva));
-                celdaTexto.HorizontalAlignment = Element.ALIGN_CENTER;
-                celdaTexto.Border = Rectangle.NO_BORDER;
-                celdaTexto.PaddingBottom = 10f;
-                tablaFirma.AddCell(celdaTexto);
                 doc.Add(tablaFirma);
                 doc.Close();
                 MessageBox.Show("📄 PDF generado correctamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Globalization;
@@ -80,8 +81,9 @@ namespace Ensumex.Views
                     { "CLAVE", "Clave" },
                     { "DESCRIPCIÓN", "Descripción" },
                     { "UNIDAD", "Unidad" },
-                    { "PRECIO", "precio" },
-                    { "Subtotal", "Subtotal" }
+                    { "PRECIO", "Precio" },
+                    { "Subtotal", "Subtotal"},
+                    {"Total","Total - Descuento" },
                 };
 
                 for (int i = 0; i < columnas.GetLength(0); i++)
@@ -404,46 +406,54 @@ namespace Ensumex.Views
         // Método para actualizar los totales de la cotización
         private void ActualizarTotales()
         {
+            decimal subtotalGeneral = 0;
+            decimal totalDescuento = 0;
             decimal instalacion = 0;
             decimal flete = 0;
-            decimal subtotal = 0;
-            decimal descuento = 0;
+
             try
             {
-                // 1. Calcular Subtotal
-                subtotal = 0;
+                // 1️⃣ Extraer el porcentaje del ComboBox
+                decimal porcentajeDescuento = 0;
+                string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
+                decimal.TryParse(descuentoTexto, out porcentajeDescuento);
+                porcentajeDescuento /= 100m; // Convierte 10 -> 0.10
+
+                // 2️⃣ Recorre todas las filas para calcular subtotal y descuentos
                 foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                 {
                     if (row.IsNewRow) continue;
-                    if (row.Cells["Subtotal"].Value != null &&
-                        decimal.TryParse(row.Cells["Subtotal"].Value.ToString(), out decimal valor))
+
+                    decimal precio = 0, cantidad = 0, subtotalOriginal = 0;
+                    bool aplicarDescuento = Convert.ToBoolean(row.Cells["AplicarDescuento"].Value ?? false);
+
+                    // Obtener precio y cantidad
+                    decimal.TryParse(row.Cells["PRECIO"].Value?.ToString(), out precio);
+                    decimal.TryParse(row.Cells["CANTIDAD"].Value?.ToString(), out cantidad);
+
+                    subtotalOriginal = precio * cantidad;
+
+                    // Suma al subtotal general (total sin descuento)
+                    subtotalGeneral += subtotalOriginal;
+                    row.Cells["Subtotal"].Value = subtotalOriginal;
+
+                    // Aplica descuento solo si la casilla está marcada
+                    if (aplicarDescuento && porcentajeDescuento > 0)
                     {
-                        subtotal += valor;
+                        decimal descuentoFila = subtotalOriginal * porcentajeDescuento;
+                        totalDescuento += descuentoFila;
+                        row.Cells["Total"].Value = subtotalOriginal - descuentoFila;
+                    }
+                    else
+                    {
+                        row.Cells["Total"].Value = subtotalOriginal;
                     }
                 }
-                lbl_Subtotal.Text = $"${subtotal:F2}";
-                descuento = 0;
-                // Extraer el porcentaje del ComboBox
-                string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
-                decimal.TryParse(descuentoTexto, out decimal porcentajeDescuento);
-                if (porcentajeDescuento > 0)
-                {
-                    foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
-                    {
-                        if (row.IsNewRow) continue;
-                        bool aplicar = row.Cells["AplicarDescuento"].Value is bool b && b;
-                        if (aplicar && row.Cells["Subtotal"].Value != null &&
-                            decimal.TryParse(row.Cells["Subtotal"].Value.ToString(), out decimal valor))
-                        {
-                            descuento += valor * (porcentajeDescuento / 100m);
-                        }
-                    }
-                }
-                // 3. Actualizar etiquetas de totales
-                lbl_costoDescuento.Text = $"-${descuento:F2}";
-                instalacion = decimal.TryParse(txt_Costoinstalacion.Text, out var inst) ? inst : 0;
-                flete = decimal.TryParse(txt_Costoflete.Text, out var flt) ? flt : 0;
-                decimal totalNeto = (subtotal - descuento) + instalacion + flete;
+                lbl_Subtotal.Text = subtotalGeneral.ToString("C");                 
+                lbl_costoDescuento.Text = $"-{totalDescuento:C}";                 
+                decimal.TryParse(txt_Costoinstalacion.Text, out instalacion);
+                decimal.TryParse(txt_Costoflete.Text, out flete);
+                decimal totalNeto = (subtotalGeneral - totalDescuento) + instalacion + flete;
                 lbl_TotalNeto.Text = totalNeto.ToString("C");
             }
             catch (Exception ex)
@@ -518,26 +528,26 @@ namespace Ensumex.Views
                         int cantidadFinal = 1;
                         cantidad = cantidadFinal;
                         decimal subtotal = precioFinal * cantidad;
+                        decimal total = subtotal; 
                         // Verificar si el producto ya está en la tabla
                         foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                         {
                             if (row.Cells[0].Value?.ToString() == clave)
                             {
-                                decimal cantidadExistente = Convert.ToDecimal(row.Cells[6].Value);
+                                decimal cantidadExistente = Convert.ToDecimal(row.Cells[8].Value);
                                 cantidad += cantidadExistente;
-                                row.Cells[6].Value = cantidad;
-                                row.Cells[5].Value = precioFinal * cantidad;
+                                row.Cells[8].Value = cantidad;
+                                row.Cells[6].Value = precioFinal * cantidad;
                                 ActualizarTotales();
                                 productosForm.Close();
                                 return;
                             }
                         }
                         //tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioFinal, subtotal, cantidad);
-                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precio, precio * cantidadFinal, cantidadFinal);
+                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precio, precio * cantidadFinal, total, cantidadFinal);
                         ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
                         HabilitarEdicionParcial();
-
                         productosForm.Close();
                     }
                     catch (Exception ex)
@@ -558,19 +568,9 @@ namespace Ensumex.Views
                 string colPrecio = "PRECIO";
                 string colCantidad = "CANTIDAD";
                 string colSubtotal = "Subtotal";
-
-                // Si se modifica Precio, Cantidad, recalcula el Subtotal
-                if (colName == colPrecio || colName == colCantidad)
-                {
-                    var row = tbl_Cotizacion.Rows[e.RowIndex];
-                    decimal precio = 0, cantidad = 0;
-                    decimal.TryParse(row.Cells[colPrecio].Value?.ToString(), out precio);
-                    decimal.TryParse(row.Cells[colCantidad].Value?.ToString(), out cantidad);
-                    row.Cells[colSubtotal].Value = precio * cantidad;
-                }
-
+                string colAplicarDescuento = "AplicarDescuento"; // Tu columna de checkbox
                 // Siempre actualiza los totales si cambia algo relevante
-                if (colName == "AplicarDescuento" || colName == colPrecio || colName == colCantidad || colName == colSubtotal)
+                if (colName == colAplicarDescuento || colName == colPrecio || colName == colCantidad || colName == colSubtotal)
                 {
                     ActualizarTotales();
                 }
@@ -702,6 +702,7 @@ namespace Ensumex.Views
                 lbl_NoCotiza.Text = "";
                 return;
             }
+
             // Busca el último producto agregado (última fila no nueva)
             DataGridViewRow ultimaFila = null;
             for (int i = tbl_Cotizacion.Rows.Count - 1; i >= 0; i--)
@@ -717,8 +718,10 @@ namespace Ensumex.Views
                 lbl_NoCotiza.Text = "";
                 return;
             }
+
             string descripcion = ultimaFila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
             string prefijo = "";
+
             if (descripcion.Contains("CALENT"))
                 prefijo = "CAL";
             else if (descripcion.Contains("AIRE"))
@@ -729,9 +732,18 @@ namespace Ensumex.Views
                 prefijo = "MOTB";
             else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
                 prefijo = "MAN";
+
             // Tomar la fecha del label lblFecha (formato dd/MM/yyyy)
             string fecha = lblFecha.Text.Replace("/", "");
-            lbl_NoCotiza.Text = !string.IsNullOrWhiteSpace(prefijo) ? prefijo + fecha : fecha;
+
+            // Obtener siguiente IdCotizacion desde la base de datos
+            int siguienteIdCotizacion = CotizacionRepository.GetSiguienteIdCotizacion();
+
+            // Armar número de cotización
+            if (!string.IsNullOrWhiteSpace(prefijo))
+                lbl_NoCotiza.Text = $"{prefijo}{fecha}{siguienteIdCotizacion}";
+            else
+                lbl_NoCotiza.Text = $"{fecha}{siguienteIdCotizacion}";
         }
 
         private void lbl_NoCotiza_Click(object sender, EventArgs e)
@@ -818,8 +830,8 @@ namespace Ensumex.Views
                 decimal precio = Convert.ToDecimal(row.Cells["PRECIO"].Value?.ToString().Replace("$", "").Trim() ?? "0");
                 int cantidad = 1;
                 string unidad = row.Cells["UNIDAD"].Value?.ToString();
-
-                tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precio, precio * cantidad, cantidad);
+                decimal total = precio * cantidad;
+                tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precio, precio * cantidad,total, cantidad);
                 ActualizarNumeroCotizacionEnLabel();
                 ActualizarTotales();
                 HabilitarEdicionParcial();
@@ -907,8 +919,9 @@ namespace Ensumex.Views
                         decimal precioUnitario = prodControl.PrecioUnitarioTemp;
                         int cantidad = (int)prodControl.cantidad;
                         decimal subtotal = precioUnitario * cantidad;
+                        decimal total = subtotal; // Aquí puedes aplicar lógica de descuento si es necesario
 
-                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioUnitario, subtotal, cantidad);
+                        tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioUnitario, subtotal,total, cantidad);
                         ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
                         HabilitarEdicionParcial();
