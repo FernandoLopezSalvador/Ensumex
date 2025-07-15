@@ -70,7 +70,7 @@ namespace Ensumex
             }
             return true;
         }
-        [Obsolete]  
+        [Obsolete]
         private void materialButton1_Click(object sender, EventArgs e)
         {
             if (!ValidarEntrada(txt_Usuariologin.Text, txt_contraseñalogin.Text)) return;
@@ -96,13 +96,13 @@ namespace Ensumex
                         txt_contraseñalogin.Text = ""; // Limpia la contraseña sin usar propiedades inválidas
                         txt_contraseñalogin.PasswordChar = '*'; // Asegúrate de seguir ocultando
                         txt_Usuariologin.Focus();
-                    } 
+                    }
                 }
                 else msgError("Ingrese su contraseña");
-                    txt_contraseñalogin.Focus(); // Mueve el foco al campo de contraseña
+                txt_contraseñalogin.Focus(); // Mueve el foco al campo de contraseña
             }
             else msgError("Ingrese su usuario");
-                txt_contraseñalogin.Focus(); // Mueve el foco al campo de contraseña
+            txt_contraseñalogin.Focus(); // Mueve el foco al campo de contraseña
         }
         private void txt_Usuariologin_MouseEnter(object sender, EventArgs e)
         {
@@ -144,6 +144,48 @@ namespace Ensumex
         {
             if (string.IsNullOrWhiteSpace(txt_Usuariologin.Text))
                 txt_Usuariologin.Text = "Usuario";
+        }
+
+        private void txt_Usuariologin_KeyDown(object sender, KeyEventArgs e)
+        {
+            
+        }
+
+        private void txt_contraseñalogin_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (!ValidarEntrada(txt_Usuariologin.Text, txt_contraseñalogin.Text)) return;
+                if (txt_Usuariologin.Text != "Usuario")
+                {
+                    if (txt_contraseñalogin.Text != "Contraseña")
+                    {
+                        Models.UserModel userModel = new Models.UserModel();
+                        bool validar = userModel.LoginUser(txt_Usuariologin.Text, txt_contraseñalogin.Text);
+                        // Si la validación es correcta, se cargan los datos del usuario
+                        if (validar)
+                        {
+                            UsuarioLoginCache.Usuario = txt_Usuariologin.Text;
+                            ENSUMEX principal = new ENSUMEX();
+                            principal.Show();
+                            principal.FormClosed += logout;
+                            this.Hide();
+                        }
+                        // Si la validación falla, se muestra un mensaje de error
+                        else
+                        {
+                            msgError("Usuario o contraseña incorrectos");
+                            txt_contraseñalogin.Text = ""; // Limpia la contraseña sin usar propiedades inválidas
+                            txt_contraseñalogin.PasswordChar = '*'; // Asegúrate de seguir ocultando
+                            txt_Usuariologin.Focus();
+                        }
+                    }
+                    else msgError("Ingrese su contraseña");
+                    txt_contraseñalogin.Focus(); // Mueve el foco al campo de contraseña
+                }
+                else msgError("Ingrese su usuario");
+                txt_contraseñalogin.Focus(); // Mueve el foco al campo de contraseña
+            } 
         }
     }
 }

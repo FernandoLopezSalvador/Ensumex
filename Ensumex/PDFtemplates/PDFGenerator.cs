@@ -10,11 +10,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Image = iTextSharp.text.Image;
 using Rectangle = iTextSharp.text.Rectangle;
 
 namespace Ensumex.PDFtemplates
 {
-    internal class PDFGenerator
+    public static class PDFGenerator
     {
         public static void GenerarPDFCotizacion(
             string rutaArchivo,
@@ -25,10 +26,10 @@ namespace Ensumex.PDFtemplates
             string subtotal,
             string total,
             string descuento,
-            decimal porcentajeDescuento, 
+            decimal porcentajeDescuento,
             string notas,
             DataGridView tablaCotizacion,
-            string usuario // <--- Nuevo parámetro
+            string usuario
         )
         {
             try
@@ -36,67 +37,69 @@ namespace Ensumex.PDFtemplates
                 Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
                 string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Fondologo.png");
-                string rutaFondoPie = Path.Combine(Application.StartupPath, "IMG", "Pie.png");
-                writer.PageEvent = new FondoPiePDF(rutaFondo, rutaFondoPie, usuario);
+                string rutaPie = Path.Combine(Application.StartupPath, "IMG", "Pie.png");
+                writer.PageEvent = new FondoPiePDF(rutaFondo, rutaPie, usuario);
                 doc.Open();
-                var fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
-                var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
-                var fontnotas = FontFactory.GetFont(FontFactory.HELVETICA, 9);
-                var fontrojo = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED);
-                var fontgris = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.GRAY);
+
+                // Fuentes
                 var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+                var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+                var fontNotas = FontFactory.GetFont(FontFactory.HELVETICA, 9);
+                var fontRojo = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED);
                 var fontCursiva = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 10);
+                var fontGris = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.GRAY);
+
+                // Logo
                 string rutaLogo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
-                // Agregar logo
                 if (File.Exists(rutaLogo))
                 {
-                    iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(rutaLogo);
+                    Image logo = Image.GetInstance(rutaLogo);
                     logo.ScaleAbsolute(100f, 100f);
                     logo.SetAbsolutePosition(doc.LeftMargin, doc.PageSize.Height - doc.TopMargin - 70f);
                     doc.Add(logo);
                 }
-                Paragraph titulo = new Paragraph("Cotización: " + numeroCotizacion, fontNegrita);
-                titulo.Alignment = Element.ALIGN_RIGHT;
+
+                // Encabezado
+                Paragraph titulo = new Paragraph("Cotización: " + numeroCotizacion, fontNegrita)
+                {
+                    Alignment = Element.ALIGN_RIGHT
+                };
                 doc.Add(titulo);
-                Paragraph encabezado = new Paragraph("\nOaxaca de Juárez, Oaxaca a " + DateTime.Now.ToString("d 'de' MMMM 'de' yyyy") + "\n\n", fontgris);
-                encabezado.Alignment = Element.ALIGN_RIGHT;
-                doc.Add(encabezado);
+
+                Paragraph fecha = new Paragraph(
+                    "\nOaxaca de Juárez, Oaxaca a " + DateTime.Now.ToString("d 'de' MMMM 'de' yyyy") + "\n\n", fontGris)
+                {
+                    Alignment = Element.ALIGN_RIGHT
+                };
+                doc.Add(fecha);
 
                 if (!string.IsNullOrWhiteSpace(nombreCliente))
                 {
-                    doc.Add(new Paragraph("\n" + nombreCliente, fontNegrita));
+                    doc.Add(new Paragraph("\nEstimado(a): " + nombreCliente, fontNegrita));
                 }
                 else
                 {
-                    doc.Add(new Paragraph("\nEstimado(a) Cliente:\n", fontNegrita));
+                    doc.Add(new Paragraph("\nEstimado(a) Cliente:", fontNegrita));
                 }
-                int totalProductos = tablaCotizacion.Rows.Cast<DataGridViewRow>().Count(r => !r.IsNewRow); // Excluye la fila vacía al final
 
-                if (totalProductos > 1)
+                doc.Add(new Paragraph("\nPresente", fontNegrita));
+                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización para los siguientes productos:\n\n", fontNormal));
+
+                // Tabla de productos
+                PdfPTable tabla = new PdfPTable(6)
                 {
-                    // Mensaje para más de un producto
-                    doc.Add(new Paragraph("\nPresente", fontNegrita));
-                    doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización " +
-                        "para la venta de los siguientes productos:", fontNormal));
-                }
-                else if (totalProductos == 1)
-                {
-                    // Mensaje para un solo producto
-                    doc.Add(new Paragraph("\nPresente", fontNegrita));
-                    doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización " +
-                        "para la venta del siguiente producto:", fontNormal));
-                }
-                doc.Add(new Paragraph("\n", fontNormal));
-                // --- TABLA DE PRODUCTOS ---
-                PdfPTable tabla = new PdfPTable(6);
-                tabla.WidthPercentage = 100;
+                    WidthPercentage = 100
+                };
                 tabla.SetWidths(new float[] { 0.5f, 0.9f, 3f, 1f, 1f, 1.2f });
-                string[] headers = { "#", "Canti", "Descripción", "Precio", "Descuento", "Importe" };
+                string[] headers = { "#", "Canti", "Descripción", "Precio", "Descuento ($)", "Importe" };
+
                 foreach (string header in headers)
                 {
-                    PdfPCell celda = new PdfPCell(new Phrase(header, fontNegrita));
-                    celda.BackgroundColor = new BaseColor(144, 238, 144);
-                    celda.HorizontalAlignment = Element.ALIGN_CENTER;
+                    PdfPCell celda = new PdfPCell(new Phrase(header, fontNegrita))
+                    {
+                        BackgroundColor = new BaseColor(144, 238, 144),
+                        HorizontalAlignment = Element.ALIGN_CENTER
+                    };
                     tabla.AddCell(celda);
                 }
 
@@ -105,205 +108,92 @@ namespace Ensumex.PDFtemplates
                 {
                     if (row.IsNewRow) continue;
 
-                    // # (posición)
-                    tabla.AddCell(new PdfPCell(new Phrase(pos.ToString(), fontNormal))
-                    {
-                        HorizontalAlignment = Element.ALIGN_CENTER
-                    });
-
-                    // Canti (cantidad)
+                    // Datos
                     string cantidadStr = row.Cells["CANTIDAD"].Value?.ToString() ?? "0";
                     decimal.TryParse(cantidadStr, out decimal cantidad);
-                    tabla.AddCell(new PdfPCell(new Phrase(cantidadStr, fontNormal))
-                    {
-                        HorizontalAlignment = Element.ALIGN_CENTER
-                    });
 
-                    // Descripción
                     string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString() ?? "";
-                    tabla.AddCell(new PdfPCell(new Phrase(descripcion, fontNormal)));
 
-                    // Precio
                     string precioStr = row.Cells["PRECIO"].Value?.ToString() ?? "0";
                     decimal.TryParse(precioStr, out decimal precioUnitario);
-                    string precioFormateado = precioUnitario.ToString("C2", new System.Globalization.CultureInfo("es-MX"));
-                    tabla.AddCell(new PdfPCell(new Phrase(precioFormateado, fontNormal))
-                    {
-                        HorizontalAlignment = Element.ALIGN_RIGHT
-                    });
 
-                    // Descuento ($)
-                    decimal descuentoProd = 0;
-                    int porcentajeDescuentoFila = 0;
-                    if (row.Cells["Descuento"]?.Value != null)
-                    {
-                        int.TryParse(row.Cells["Descuento"].Value.ToString(), out porcentajeDescuentoFila);
-                        if (porcentajeDescuentoFila > 0)
-                        {
-                            descuentoProd = (precioUnitario * cantidad) * (porcentajeDescuentoFila / 100m);
-                        }
-                    }
-                    string descuentoFormateado = descuentoProd.ToString("C2", new System.Globalization.CultureInfo("es-MX"));
-                    tabla.AddCell(new PdfPCell(new Phrase("-"+descuentoFormateado, fontrojo))
-                    {
-                        HorizontalAlignment = Element.ALIGN_RIGHT
-                    });
+                    int.TryParse(row.Cells["Descuento"].Value?.ToString() ?? "0", out int porcentajeDescuentoFila);
+                    decimal descuentoProd = (precioUnitario * cantidad) * (porcentajeDescuentoFila / 100m);
 
-                    // Importe (precio*cantidad - descuento)
                     decimal importe = (precioUnitario * cantidad) - descuentoProd;
-                    string importeFormateado = importe.ToString("C2", new System.Globalization.CultureInfo("es-MX"));
-                    tabla.AddCell(new PdfPCell(new Phrase(importeFormateado, fontNormal))
-                    {
-                        HorizontalAlignment = Element.ALIGN_RIGHT
-                    });
+
+                    // Formatear
+                    string precioFormateado = precioUnitario.ToString("C2", new CultureInfo("es-MX"));
+                    string descuentoFormateado = descuentoProd.ToString("C2", new CultureInfo("es-MX"));
+                    string importeFormateado = importe.ToString("C2", new CultureInfo("es-MX"));
+
+                    // Añadir filas
+                    tabla.AddCell(new PdfPCell(new Phrase(pos.ToString(), fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
+                    tabla.AddCell(new PdfPCell(new Phrase(cantidadStr, fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
+                    tabla.AddCell(new PdfPCell(new Phrase(descripcion, fontNormal)));
+                    tabla.AddCell(new PdfPCell(new Phrase(precioFormateado, fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
+                    tabla.AddCell(new PdfPCell(new Phrase("-" + descuentoFormateado, fontRojo)) { HorizontalAlignment = Element.ALIGN_RIGHT });
+                    tabla.AddCell(new PdfPCell(new Phrase(importeFormateado, fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
 
                     pos++;
                 }
 
                 doc.Add(tabla);
-                // --- TOTALES Y COSTOS ADICIONALES ---
-                doc.Add(new Paragraph("\n"));
-                PdfPTable tablaTotales = new PdfPTable(2);
-                tablaTotales.WidthPercentage = 50;
-                tablaTotales.HorizontalAlignment = Element.ALIGN_RIGHT;
-                tablaTotales.SetWidths(new float[] { 2f, 1f });
 
+                // Totales
+                doc.Add(new Paragraph("\n"));
+                PdfPTable tablaTotales = new PdfPTable(2)
+                {
+                    WidthPercentage = 50,
+                    HorizontalAlignment = Element.ALIGN_RIGHT
+                };
+
+                tablaTotales.SetWidths(new float[] { 2f, 1f });
                 tablaTotales.AddCell(new PdfPCell(new Phrase("Mano de obra por instalación:", fontNormal)) { Border = 0 });
                 tablaTotales.AddCell(new PdfPCell(new Phrase("$" + costoInstalacion, fontNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
-
                 tablaTotales.AddCell(new PdfPCell(new Phrase("Costo por Envío/Flete:", fontNormal)) { Border = 0 });
                 tablaTotales.AddCell(new PdfPCell(new Phrase("$" + costoFlete, fontNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+                tablaTotales.AddCell(new PdfPCell(new Phrase("Total:", fontNegrita)) { Border = 0 });
+                tablaTotales.AddCell(new PdfPCell(new Phrase(Convert.ToDecimal(total).ToString("C", new CultureInfo("es-MX")), fontNegrita)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
 
+                // Convertir número a letras y agregar fila
                 decimal valorNumerico = decimal.Parse(total, System.Globalization.NumberStyles.Any);
-
-                // Agregar fila con monto en número
-                tablaTotales.AddCell(new PdfPCell(new Phrase("Total:", fontNegrita))
-                {
-                    Border = 0
-                });
-                tablaTotales.AddCell(new PdfPCell(new Phrase(valorNumerico.ToString("C", new CultureInfo("es-MX")), fontNegrita))
-                {
-                    Border = 0,
-                    HorizontalAlignment = Element.ALIGN_RIGHT
-                });
-
-                // Agregar fila vacía
                 tablaTotales.AddCell(new PdfPCell(new Phrase("")) { Border = 0, Colspan = 2 });
-
                 tablaTotales.AddCell(new PdfPCell(new Phrase(Numerosaletras.Convertir(valorNumerico), fontNormal))
                 {
                     Border = 0,
                     Colspan = 2,
                     HorizontalAlignment = Element.ALIGN_CENTER
                 });
+
+                // Ahora SÍ agregar la tabla al documento UNA sola vez
                 doc.Add(tablaTotales);
 
-                // Diccionario con claves y mensajes
-                var notasPorProducto = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                // Notas generales
+                doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
+                doc.Add(new Paragraph(notas, fontNotas));
+
+                doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n", fontNotas));
+
+                // Firma
+                PdfPTable tablaFirma = new PdfPTable(1)
                 {
-                    ["CALENTADOR"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque.\n-Precios sujetos a cambios sin previo aviso.\n",
-                    ["CALENT"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque.\n-Precios sujetos a cambios sin previo aviso.\n",
-
-
-                    ["AIRE ACONDICIONADO"] = "-Garantía: 5 años contra defectos de fabricación.\n" +
-                    "-El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
-                    "-Precios sujetos a cambios sin previo aviso.\n",
-                    
-                    ["MOTOBOMBA"] = "-Garantía: 1 año contra defectos de fabricación." +
-                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
-                    "\n-Precios sujetos a cambios sin previo aviso.\n",
-
-                    ["MOT:BOMB"] = "-Garantía: 1 año contra defectos de fabricación." +
-                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
-                    "\n-Precios sujetos a cambios sin previo aviso.\n",
-
-
-                    ["BOMBA DE"] = "-Garantía: 2 años en bomba motor y arrancador\n" +
-                    "- Equipos sobre pedido. Es necesario un anticipo del 60%\n" +
-                    "- Entrega de 3 a 5 dias hábiles\n" +
-                    "-Precios sujetos a cambios sin previo aviso.\n",
-                    
-                    ["MANTENIMIENTO"] = "- Mantenimiento correctivo de unidad tipo paquete incluye:\nLocalización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante\n" +
-                    "Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
-                    "Limpieza de serpentín evaporador y serpentín condensador, turbinas de la unidad y carcasas de" +
-                    "la misma. \n   Limpieza de la charola de condensados. \n   Limpieza y lavado de los filtros de aire del retorno" +
-                    "de la unidad evaporadora. \n   Ajuste de la banda de turbina del evaporador. \n    Engrasado de chumaceras." +
-                    "\n Revisión y ajuste de terminales eléctricas del equipo. Revisión y ajuste de la carga de gas refrigerante.\n" +
-                    "- Se requiere anticipo del 50% para comenzar el trabajo.\n" +
-                    "- Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
-                    "- Precios sujetos a cambios sin previo aviso.\n",
-
-                    ["MANTEMIN"] = "- Mantenimiento correctivo de unidad tipo paquete incluye:\nLocalización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante\n" +
-                    "Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
-                    "Limpieza de serpentín evaporador y serpentín condensador, turbinas de la unidad y carcasas de" +
-                    "la misma. \n   Limpieza de la charola de condensados. \n   Limpieza y lavado de los filtros de aire del retorno" +
-                    "de la unidad evaporadora. \n   Ajuste de la banda de turbina del evaporador. \n    Engrasado de chumaceras." +
-                    "\n Revisión y ajuste de terminales eléctricas del equipo. Revisión y ajuste de la carga de gas refrigerante.\n" +
-                    "- Se requiere anticipo del 50% para comenzar el trabajo.\n" +
-                    "- Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
-                    "- Precios sujetos a cambios sin previo aviso.\n"
+                    WidthPercentage = 100
                 };
 
-                // Buscar el primer producto que coincida
-                string notaSeleccionada = null;
-
-                foreach (DataGridViewRow fila in tablaCotizacion.Rows)
-                {
-                    if (fila.IsNewRow) continue;
-
-                    string descripcion = fila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
-
-                    foreach (var clave in notasPorProducto.Keys)
-                    {
-                        if (descripcion.Contains(clave))
-                        {
-                            notaSeleccionada = notasPorProducto[clave];
-                            break; // Encontró un producto, no sigue buscando
-                        }
-                    }
-
-                    if (notaSeleccionada != null) break;
-                }
-
-                // Agregar la nota al PDF
-                doc.Add(new Paragraph("NOTAS:\n", fontNegrita));
-
-                if (notaSeleccionada != null)
-                {
-                    doc.Add(new Paragraph(notaSeleccionada, fontnotas));
-                }
-                else
-                {
-                    // Nota genérica si no coincide ningún producto
-                    doc.Add(new Paragraph(
-                        "-Garantía estándar.\n-Precios sujetos a cambios sin previo aviso.\n", fontnotas));
-                }
-                doc.Add(new Paragraph(""+notas, fontnotas));
-                doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n", fontnotas));
-
-                // Firma y pie
-                PdfPTable tablaFirma = new PdfPTable(1);
-
-                // Texto con usuario
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente.\n" + usuario + "\nVendedor.", fontCursiva))
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\n" + usuario + "\nVendedor", fontCursiva))
                 {
                     HorizontalAlignment = Element.ALIGN_CENTER,
                     Border = Rectangle.NO_BORDER,
-                    PaddingTop = 15f, // Espacio superior
+                    PaddingTop = 15f,
                     PaddingBottom = 5f
                 };
 
-                // ⬅️ Agregar la celda a la tabla
                 tablaFirma.AddCell(celdaTexto);
-
-                // Configuración de la tabla
-                tablaFirma.WidthPercentage = 100;
-
-                // ⬅️ Ahora sí agregar la tabla al documento
                 doc.Add(tablaFirma);
 
                 doc.Close();
-                MessageBox.Show("📄 PDF generado correctamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("📄 PDF generado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (IOException)
             {

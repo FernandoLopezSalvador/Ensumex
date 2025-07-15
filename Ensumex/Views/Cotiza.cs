@@ -72,7 +72,7 @@ namespace Ensumex.Views
         }
         private void AgregarDescuentos(string[] descuentos)
         {
-            cmb_Descuento.Items.AddRange(descuentos);
+            //cmb_Descuento.Items.AddRange(descuentos);
         }
         private void AgregarColumnasCotizacion()
         {
@@ -173,9 +173,6 @@ namespace Ensumex.Views
                     foreach (DataGridViewColumn col in tbl_Cotizacion.Columns)
                         encabezados.Add(col.HeaderText);
 
-                    string descuentoTexto = cmb_Descuento.SelectedItem?.ToString()?.Replace("%", "").Trim() ?? "0";
-                    decimal.TryParse(descuentoTexto, out decimal porcentajeDescuento);
-
                     // --- GUARDAR EN BASE DE DATOS ---
                     CotizacionRepository.GuardarCotizacionTablas(
                         //numeroCotizacion: txt_Nocotizacion.Text,
@@ -204,7 +201,6 @@ namespace Ensumex.Views
                         subtotal: lbl_Subtotal.Text,
                         total: lbl_TotalNeto.Text,
                         descuento: lbl_costoDescuento.Text,
-                        porcentajeDescuento: porcentajeDescuento,
                         notas: Txt_observaciones.Text,
                         usuario: usuarioActual
                     );
@@ -308,9 +304,9 @@ namespace Ensumex.Views
                             nombreCliente: txt_Nombrecliente.Text,
                             costoInstalacion: txt_Costoinstalacion.Text,
                             costoFlete: txt_Costoflete.Text,
-                            subtotal: lbl_Subtotal.Text,
-                            total: lbl_TotalNeto.Text,
-                            descuento: lbl_costoDescuento.Text,
+                            subtotal: lbl_Subtotal.Text.Replace("$", "").Trim(),   // O mejor decimal
+                            total: lbl_TotalNeto.Text.Replace("$", "").Trim(),     // Igual aquí
+                            descuento: lbl_costoDescuento.Text.Replace("$", "").Trim(),
                             porcentajeDescuento: totalDescuentoCalculado,
                             notas: Txt_observaciones.Text,
                             tablaCotizacion: tbl_Cotizacion,
@@ -502,7 +498,7 @@ namespace Ensumex.Views
             lbl_costoDescuento.Text = "$0.00";
             lbl_TotalNeto.Text = "$0.00";
             tbl_Cotizacion.Rows.Clear();
-            cmb_Descuento.SelectedIndex = 0;
+            //cmb_Descuento.SelectedIndex = 0;
             Txt_observaciones.Text = string.Empty;
             tbl_Cotizacion.ReadOnly = true;
         }
@@ -761,17 +757,14 @@ namespace Ensumex.Views
             else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
                 prefijo = "MAN";
 
-            // Tomar la fecha del label lblFecha (formato dd/MM/yyyy)
-            string fecha = lblFecha.Text.Replace("/", "");
-
             // Obtener siguiente IdCotizacion desde la base de datos
             int siguienteIdCotizacion = CotizacionRepository.GetSiguienteIdCotizacion();
 
             // Armar número de cotización
             if (!string.IsNullOrWhiteSpace(prefijo))
-                lbl_NoCotiza.Text = $"{prefijo}{fecha}{siguienteIdCotizacion}";
+                lbl_NoCotiza.Text = $"{prefijo}{siguienteIdCotizacion}";
             else
-                lbl_NoCotiza.Text = $"{fecha}{siguienteIdCotizacion}";
+                lbl_NoCotiza.Text = $"{siguienteIdCotizacion}";
         }
 
         private void lbl_NoCotiza_Click(object sender, EventArgs e)

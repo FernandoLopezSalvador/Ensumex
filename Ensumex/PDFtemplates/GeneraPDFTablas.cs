@@ -24,7 +24,7 @@ namespace Ensumex.PDFtemplates
             string subtotal,
             string total,
             string descuento,
-            decimal porcentajeDescuento,
+            //decimal porcentajeDescuento,
             string notas,
             string usuario
         )
@@ -72,7 +72,7 @@ namespace Ensumex.PDFtemplates
                     doc.Add(new Paragraph("\nEstimado(a) Cliente:", fontNegrita));
 
                 doc.Add(new Paragraph("\nPresente"));
-                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para los siguientes productos:", fontNormal));
+                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para los siguientes productos:\n", fontNormal));
 
                 int tablaNum = 1;
                 foreach (var tabla in tablas)
@@ -105,10 +105,6 @@ namespace Ensumex.PDFtemplates
                         decimal precio = Convert.ToDecimal(row[4] ?? 0);
                         decimal cantidad = Convert.ToDecimal(row[7] ?? 0);
                         decimal descProd = 0;
-
-                        if (row[0] is bool aplicar && aplicar && porcentajeDescuento > 0)
-                            descProd = (precio * cantidad) * (porcentajeDescuento / 100m);
-
                         pdfTable.AddCell(new PdfPCell(new Phrase("$" + descProd.ToString("0.00"), fontRojo)) { HorizontalAlignment = Element.ALIGN_RIGHT });
                         decimal importe = (precio * cantidad) - descProd;
                         pdfTable.AddCell(new PdfPCell(new Phrase("$" + importe.ToString("0.00"), fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
@@ -117,7 +113,7 @@ namespace Ensumex.PDFtemplates
                     }
 
                     doc.Add(pdfTable);
-                    doc.Add(new Paragraph("\nOpción: "+tablaNum, fontGris));
+                    doc.Add(new Paragraph("\nOpción: " + tablaNum, fontGris));
                     tablaNum++;
                 }
 
@@ -212,5 +208,5 @@ namespace Ensumex.PDFtemplates
             }
             return "- Garantía estándar y precios sujetos a cambios.\n";
         }
-    } 
+    }
 }

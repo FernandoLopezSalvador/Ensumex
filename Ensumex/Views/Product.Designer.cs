@@ -149,6 +149,7 @@
             tabla_productos.RowHeadersWidth = 51;
             tabla_productos.Size = new Size(863, 241);
             tabla_productos.TabIndex = 18;
+            tabla_productos.KeyDown += tabla_productos_KeyDown;
             // 
             // Product
             // 

@@ -162,7 +162,7 @@ namespace Ensumex.Views
                 string clave = row.Cells["CLAVE"].Value?.ToString();
                 string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString();
                 string unidad = row.Cells["UNDMED"].Value?.ToString();
-                decimal precio = Convert.ToDecimal(row.Cells["ULT_COSTO"].Value?.ToString().Replace("$", "").Trim() ?? "0"); decimal cantidad = 1; 
+                decimal precio = Convert.ToDecimal(row.Cells["ULT_COSTO"].Value?.ToString().Replace("$", "").Trim() ?? "0"); decimal cantidad = 1;
                 ProductoSeleccionado?.Invoke(clave, descripcion, unidad, precio, cantidad);
             }
         }
@@ -203,6 +203,27 @@ namespace Ensumex.Views
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             BuscarEnProductos(text_buscar.Text.Trim());
-}
+        }
+        private void tabla_productos_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && tabla_productos.CurrentRow != null)
+            {
+                e.Handled = true; // Evita que el Enter haga sonar un beep
+                e.SuppressKeyPress = true; // No pase a la siguiente celda
+
+                // Obtener la fila seleccionada
+                var row = tabla_productos.CurrentRow;
+
+                string clave = row.Cells["CLAVE"].Value?.ToString();
+                string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString();
+                string unidad = row.Cells["UNDMED"].Value?.ToString();
+                decimal precio = Convert.ToDecimal(
+                    row.Cells["ULT_COSTO"].Value?.ToString().Replace("$", "").Trim() ?? "0"
+                );
+                decimal cantidad = 1;
+                // Invocar el evento para notificar al formulario padre
+                ProductoSeleccionado?.Invoke(clave, descripcion, unidad, precio, cantidad);
+            }
+        }
     }
 }
