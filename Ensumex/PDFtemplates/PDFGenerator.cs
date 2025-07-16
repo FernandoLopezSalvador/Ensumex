@@ -111,12 +111,9 @@ namespace Ensumex.PDFtemplates
                     // Datos
                     string cantidadStr = row.Cells["CANTIDAD"].Value?.ToString() ?? "0";
                     decimal.TryParse(cantidadStr, out decimal cantidad);
-
                     string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString() ?? "";
-
                     string precioStr = row.Cells["PRECIO"].Value?.ToString() ?? "0";
                     decimal.TryParse(precioStr, out decimal precioUnitario);
-
                     int.TryParse(row.Cells["Descuento"].Value?.ToString() ?? "0", out int porcentajeDescuentoFila);
                     decimal descuentoProd = (precioUnitario * cantidad) * (porcentajeDescuentoFila / 100m);
 
@@ -148,6 +145,7 @@ namespace Ensumex.PDFtemplates
                     HorizontalAlignment = Element.ALIGN_RIGHT
                 };
 
+                //añadir costo de instalación, flete y total
                 tablaTotales.SetWidths(new float[] { 2f, 1f });
                 tablaTotales.AddCell(new PdfPCell(new Phrase("Mano de obra por instalación:", fontNormal)) { Border = 0 });
                 tablaTotales.AddCell(new PdfPCell(new Phrase("$" + costoInstalacion, fontNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
@@ -172,7 +170,6 @@ namespace Ensumex.PDFtemplates
                 // Notas generales
                 doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
                 doc.Add(new Paragraph(notas, fontNotas));
-
                 doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n", fontNotas));
 
                 // Firma

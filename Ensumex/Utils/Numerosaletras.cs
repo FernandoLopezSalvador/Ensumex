@@ -22,7 +22,7 @@ namespace Ensumex.Utils
 
             // Convierte la primera letra a mayúscula
             string resultado = $"({textoEntero} pesos {textoCentavos})";
-            resultado = char.ToUpper(resultado[1]) + resultado.Substring(2); // Porque el [0] es '('
+            resultado = char.ToUpper(resultado[1]) + resultado.Substring(2); 
 
             return resultado;
         }

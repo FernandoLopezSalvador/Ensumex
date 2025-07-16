@@ -1,4 +1,4 @@
-using System.Data.SqlClient;
+Ôªøusing System.Data.SqlClient;
 using Ensumex.Clases;
 using Ensumex.Models;
 using Ensumex.Forms;
@@ -10,9 +10,14 @@ namespace Ensumex
 {
     public partial class Login : MaterialForm
     {
+        //private PictureBox pic_MostrarContrase√±a1;
+        private string pathOpen;
+        private string pathClosed;
+        private bool contrase√±aVisible = false;
         public Login()
         {
             InitializeComponent();
+            vercontrase√±a();
             ConfigurarMaterialSkin();
             ConfigurarTextosPorDefecto();
             ConfigurarVentana();
@@ -23,23 +28,42 @@ namespace Ensumex
             skinManager.AddFormToManage(this);
             skinManager.Theme = MaterialSkinManager.Themes.DARK;
             skinManager.ColorScheme = new ColorScheme(
-                Primary.Green600,       // Color principal Ensumex
-                Primary.Green700,       // Color oscuro
-                Primary.Green400,       // Color claro
-                Accent.LightGreen200,   // Color de acento
-                TextShade.WHITE         // Sombra del texto
+                Primary.BlueGrey800,       // Color principal elegante
+                Primary.BlueGrey900,       // Color oscuro m√°s profundo
+                Primary.BlueGrey500,       // Color claro (sutil)
+                Accent.LightBlue200,       // Acento atractivo para botones
+                TextShade.WHITE
+                );
+        }
+        private void vercontrase√±a()
+        {
+            pathOpen = Path.Combine(Application.StartupPath, "IMG", "eye_open.png");
+            pathClosed = Path.Combine(Application.StartupPath, "IMG", "eye_closed.png");
+
+            pic_MostrarContrase√±a = new PictureBox();
+            pic_MostrarContrase√±a.Image = Image.FromFile(pathClosed);
+            pic_MostrarContrase√±a.SizeMode = PictureBoxSizeMode.StretchImage;
+            pic_MostrarContrase√±a.Width = 40;  // Aumenta el tama√±o aqu√≠
+            pic_MostrarContrase√±a.Height = 40;
+            pic_MostrarContrase√±a.Cursor = Cursors.Hand;
+            pic_MostrarContrase√±a.Location = new Point(
+                txt_contrase√±alogin.Right + 3,
+                txt_contrase√±alogin.Top + (txt_contrase√±alogin.Height - pic_MostrarContrase√±a.Height)/2
             );
+            pic_MostrarContrase√±a.Click += pic_MostrarContrase√±a_Click;
+            this.Controls.Add(pic_MostrarContrase√±a);
         }
         private void ConfigurarTextosPorDefecto()
         {
             txt_Usuariologin.Text = "Usuario";
-            txt_contraseÒalogin.Text = "ContraseÒa";
-            txt_contraseÒalogin.PasswordChar = '\0'; // Mostrar texto como normal
+            txt_contrase√±alogin.Text = "Contrase√±a";
+            txt_contrase√±alogin.PasswordChar = '\0'; // Mostrar texto como normal
         }
         private void ConfigurarVentana()
         {
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
+            this.Size = new Size(644, 300);
         }
         private void msgError(string mensaje)
         {
@@ -49,23 +73,23 @@ namespace Ensumex
         // Funcion para cerrar la sesion
         private void logout(object? sender, FormClosedEventArgs e)
         {
-            txt_contraseÒalogin.Text = "ContraseÒa";
-            txt_contraseÒalogin.PasswordChar = '\0';
+            txt_contrase√±alogin.Text = "Contrase√±a";
+            txt_contrase√±alogin.PasswordChar = '\0';
             txt_Usuariologin.Text = "Usuario";
             lbl_error.Visible = false;
             this.Show();
         }
         // Funcion para validar los campos de inicio de sesion
-        private bool ValidarEntrada(string usuario, string contraseÒa)
+        private bool ValidarEntrada(string usuario, string contrase√±a)
         {
             if (string.IsNullOrWhiteSpace(usuario) || usuario.Length < 3)
             {
                 msgError("El usuario debe tener al menos 3 caracteres.");
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(contraseÒa) || contraseÒa.Length < 6)
+            if (string.IsNullOrWhiteSpace(contrase√±a) || contrase√±a.Length < 6)
             {
-                msgError("La contraseÒa debe tener al menos 6 caracteres.");
+                msgError("La contrase√±a debe tener al menos 6 caracteres.");
                 return false;
             }
             return true;
@@ -73,14 +97,14 @@ namespace Ensumex
         [Obsolete]
         private void materialButton1_Click(object sender, EventArgs e)
         {
-            if (!ValidarEntrada(txt_Usuariologin.Text, txt_contraseÒalogin.Text)) return;
+            if (!ValidarEntrada(txt_Usuariologin.Text, txt_contrase√±alogin.Text)) return;
             if (txt_Usuariologin.Text != "Usuario")
             {
-                if (txt_contraseÒalogin.Text != "ContraseÒa")
+                if (txt_contrase√±alogin.Text != "Contrase√±a")
                 {
                     Models.UserModel userModel = new Models.UserModel();
-                    bool validar = userModel.LoginUser(txt_Usuariologin.Text, txt_contraseÒalogin.Text);
-                    // Si la validaciÛn es correcta, se cargan los datos del usuario
+                    bool validar = userModel.LoginUser(txt_Usuariologin.Text, txt_contrase√±alogin.Text);
+                    // Si la validaci√≥n es correcta, se cargan los datos del usuario
                     if (validar)
                     {
                         UsuarioLoginCache.Usuario = txt_Usuariologin.Text;
@@ -89,20 +113,20 @@ namespace Ensumex
                         principal.FormClosed += logout;
                         this.Hide();
                     }
-                    // Si la validaciÛn falla, se muestra un mensaje de error
+                    // Si la validaci√≥n falla, se muestra un mensaje de error
                     else
                     {
-                        msgError("Usuario o contraseÒa incorrectos");
-                        txt_contraseÒalogin.Text = ""; // Limpia la contraseÒa sin usar propiedades inv·lidas
-                        txt_contraseÒalogin.PasswordChar = '*'; // Aseg˙rate de seguir ocultando
+                        msgError("Usuario o contrase√±a incorrectos");
+                        txt_contrase√±alogin.Text = ""; // Limpia la contrase√±a sin usar propiedades inv√°lidas
+                        txt_contrase√±alogin.PasswordChar = '*'; // Aseg√∫rate de seguir ocultando
                         txt_Usuariologin.Focus();
                     }
                 }
-                else msgError("Ingrese su contraseÒa");
-                txt_contraseÒalogin.Focus(); // Mueve el foco al campo de contraseÒa
+                else msgError("Ingrese su contrase√±a");
+                txt_contrase√±alogin.Focus(); // Mueve el foco al campo de contrase√±a
             }
             else msgError("Ingrese su usuario");
-            txt_contraseÒalogin.Focus(); // Mueve el foco al campo de contraseÒa
+            txt_contrase√±alogin.Focus(); // Mueve el foco al campo de contrase√±a
         }
         private void txt_Usuariologin_MouseEnter(object sender, EventArgs e)
         {
@@ -110,29 +134,29 @@ namespace Ensumex
         private void txt_Usuariologin_MouseLeave(object sender, EventArgs e)
         {
         }
-        private void txt_contraseÒalogin_MouseEnter(object sender, EventArgs e)
+        private void txt_contrase√±alogin_MouseEnter(object sender, EventArgs e)
         {
         }
-        private void txt_contraseÒalogin_MouseLeave(object sender, EventArgs e)
+        private void txt_contrase√±alogin_MouseLeave(object sender, EventArgs e)
         {
         }
         private void Login_FormClosing(object sender, FormClosingEventArgs e)
         {
         }
-        private void txt_contraseÒalogin_Enter(object sender, EventArgs e)
+        private void txt_contrase√±alogin_Enter(object sender, EventArgs e)
         {
-            if (txt_contraseÒalogin.Text == "ContraseÒa")
+            if (txt_contrase√±alogin.Text == "Contrase√±a")
             {
-                txt_contraseÒalogin.Text = "";
-                txt_contraseÒalogin.PasswordChar = '*'; // Activa ocultar
+                txt_contrase√±alogin.Text = "";
+                txt_contrase√±alogin.PasswordChar = '*'; // Activa ocultar
             }
         }
-        private void txt_contraseÒalogin_Leave(object sender, EventArgs e)
+        private void txt_contrase√±alogin_Leave(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txt_contraseÒalogin.Text))
+            if (string.IsNullOrWhiteSpace(txt_contrase√±alogin.Text))
             {
-                txt_contraseÒalogin.Text = "ContraseÒa";
-                txt_contraseÒalogin.PasswordChar = '\0'; // Muestra el texto plano
+                txt_contrase√±alogin.Text = "Contrase√±a";
+                txt_contrase√±alogin.PasswordChar = '\0'; // Muestra el texto plano
             }
         }
         private void txt_Usuariologin_Enter(object sender, EventArgs e)
@@ -148,21 +172,21 @@ namespace Ensumex
 
         private void txt_Usuariologin_KeyDown(object sender, KeyEventArgs e)
         {
-            
+
         }
 
-        private void txt_contraseÒalogin_KeyDown(object sender, KeyEventArgs e)
+        private void txt_contrase√±alogin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                if (!ValidarEntrada(txt_Usuariologin.Text, txt_contraseÒalogin.Text)) return;
+                if (!ValidarEntrada(txt_Usuariologin.Text, txt_contrase√±alogin.Text)) return;
                 if (txt_Usuariologin.Text != "Usuario")
                 {
-                    if (txt_contraseÒalogin.Text != "ContraseÒa")
+                    if (txt_contrase√±alogin.Text != "Contrase√±a")
                     {
                         Models.UserModel userModel = new Models.UserModel();
-                        bool validar = userModel.LoginUser(txt_Usuariologin.Text, txt_contraseÒalogin.Text);
-                        // Si la validaciÛn es correcta, se cargan los datos del usuario
+                        bool validar = userModel.LoginUser(txt_Usuariologin.Text, txt_contrase√±alogin.Text);
+                        // Si la validaci√≥n es correcta, se cargan los datos del usuario
                         if (validar)
                         {
                             UsuarioLoginCache.Usuario = txt_Usuariologin.Text;
@@ -171,21 +195,42 @@ namespace Ensumex
                             principal.FormClosed += logout;
                             this.Hide();
                         }
-                        // Si la validaciÛn falla, se muestra un mensaje de error
+                        // Si la validaci√≥n falla, se muestra un mensaje de error
                         else
                         {
-                            msgError("Usuario o contraseÒa incorrectos");
-                            txt_contraseÒalogin.Text = ""; // Limpia la contraseÒa sin usar propiedades inv·lidas
-                            txt_contraseÒalogin.PasswordChar = '*'; // Aseg˙rate de seguir ocultando
+                            msgError("Usuario o contrase√±a incorrectos");
+                            txt_contrase√±alogin.Text = ""; // Limpia la contrase√±a sin usar propiedades inv√°lidas
+                            txt_contrase√±alogin.PasswordChar = '*'; // Aseg√∫rate de seguir ocultando
                             txt_Usuariologin.Focus();
                         }
                     }
-                    else msgError("Ingrese su contraseÒa");
-                    txt_contraseÒalogin.Focus(); // Mueve el foco al campo de contraseÒa
+                    else msgError("Ingrese su contrase√±a");
+                    txt_contrase√±alogin.Focus(); // Mueve el foco al campo de contrase√±a
                 }
                 else msgError("Ingrese su usuario");
-                txt_contraseÒalogin.Focus(); // Mueve el foco al campo de contraseÒa
-            } 
+                txt_contrase√±alogin.Focus(); // Mueve el foco al campo de contrase√±a
+            }
+        }
+        private void txt_Usuariologin_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pic_MostrarContrase√±a_Click(object sender, EventArgs e)
+        {
+
+            if (contrase√±aVisible)
+            {
+                txt_contrase√±alogin.PasswordChar = '*';
+                pic_MostrarContrase√±a.Image = Image.FromFile(pathClosed);
+                contrase√±aVisible = false;
+            }
+            else
+            {
+                txt_contrase√±alogin.PasswordChar = '\0';
+                pic_MostrarContrase√±a.Image = Image.FromFile(pathOpen);
+                contrase√±aVisible = true;
+            }
         }
     }
 }

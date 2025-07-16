@@ -160,7 +160,7 @@
             txt_Costoflete.SelectionStart = 0;
             txt_Costoflete.ShortcutsEnabled = true;
             txt_Costoflete.Size = new Size(148, 48);
-            txt_Costoflete.TabIndex = 5;
+            txt_Costoflete.TabIndex = 3;
             txt_Costoflete.TabStop = false;
             txt_Costoflete.TextAlign = HorizontalAlignment.Left;
             txt_Costoflete.TrailingIcon = null;
@@ -193,7 +193,7 @@
             txt_Nombrecliente.SelectionStart = 0;
             txt_Nombrecliente.ShortcutsEnabled = true;
             txt_Nombrecliente.Size = new Size(247, 48);
-            txt_Nombrecliente.TabIndex = 2;
+            txt_Nombrecliente.TabIndex = 1;
             txt_Nombrecliente.TabStop = false;
             txt_Nombrecliente.TextAlign = HorizontalAlignment.Left;
             txt_Nombrecliente.TrailingIcon = null;
@@ -236,7 +236,7 @@
             txt_Costoinstalacion.SelectionStart = 0;
             txt_Costoinstalacion.ShortcutsEnabled = true;
             txt_Costoinstalacion.Size = new Size(247, 48);
-            txt_Costoinstalacion.TabIndex = 4;
+            txt_Costoinstalacion.TabIndex = 2;
             txt_Costoinstalacion.TabStop = false;
             txt_Costoinstalacion.TextAlign = HorizontalAlignment.Left;
             txt_Costoinstalacion.TrailingIcon = null;
@@ -275,9 +275,10 @@
             // 
             lblFecha.Anchor = AnchorStyles.None;
             lblFecha.AutoSize = true;
-            lblFecha.Location = new Point(510, 12);
+            lblFecha.Font = new Font("Segoe UI Semibold", 11.25F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            lblFecha.Location = new Point(503, 9);
             lblFecha.Name = "lblFecha";
-            lblFecha.Size = new Size(47, 15);
+            lblFecha.Size = new Size(62, 20);
             lblFecha.TabIndex = 25;
             lblFecha.Text = "Fecha...";
             // 
@@ -285,10 +286,10 @@
             // 
             Buscarcliente.Anchor = AnchorStyles.Left;
             Buscarcliente.Image = (Image)resources.GetObject("Buscarcliente.Image");
-            Buscarcliente.Location = new Point(366, 50);
+            Buscarcliente.Location = new Point(366, 45);
             Buscarcliente.Margin = new Padding(3, 2, 3, 2);
             Buscarcliente.Name = "Buscarcliente";
-            Buscarcliente.Size = new Size(39, 30);
+            Buscarcliente.Size = new Size(41, 39);
             Buscarcliente.SizeMode = PictureBoxSizeMode.Zoom;
             Buscarcliente.TabIndex = 11;
             Buscarcliente.TabStop = false;
@@ -318,7 +319,7 @@
             txt_NumeroCliente.SelectionStart = 0;
             txt_NumeroCliente.ShortcutsEnabled = true;
             txt_NumeroCliente.Size = new Size(148, 48);
-            txt_NumeroCliente.TabIndex = 3;
+            txt_NumeroCliente.TabIndex = 4;
             txt_NumeroCliente.TabStop = false;
             txt_NumeroCliente.TextAlign = HorizontalAlignment.Left;
             txt_NumeroCliente.TrailingIcon = null;
@@ -357,7 +358,7 @@
             btn_AgregarProducto.Location = new Point(767, 146);
             btn_AgregarProducto.Name = "btn_AgregarProducto";
             btn_AgregarProducto.Size = new Size(125, 33);
-            btn_AgregarProducto.TabIndex = 34;
+            btn_AgregarProducto.TabIndex = 6;
             btn_AgregarProducto.Text = "Nuevo Prod.";
             btn_AgregarProducto.UseVisualStyleBackColor = false;
             btn_AgregarProducto.Click += btn_AgregarProducto_Click_1;
@@ -369,7 +370,7 @@
             Btn_guardarCotizacion.Location = new Point(614, 146);
             Btn_guardarCotizacion.Name = "Btn_guardarCotizacion";
             Btn_guardarCotizacion.Size = new Size(102, 33);
-            Btn_guardarCotizacion.TabIndex = 33;
+            Btn_guardarCotizacion.TabIndex = 8;
             Btn_guardarCotizacion.Text = "GUARDAR";
             Btn_guardarCotizacion.UseVisualStyleBackColor = false;
             Btn_guardarCotizacion.Click += Btn_guardarCotizacion_Click_1;
@@ -381,7 +382,7 @@
             btn_Cancelarcotizacion.Location = new Point(460, 146);
             btn_Cancelarcotizacion.Name = "btn_Cancelarcotizacion";
             btn_Cancelarcotizacion.Size = new Size(106, 33);
-            btn_Cancelarcotizacion.TabIndex = 32;
+            btn_Cancelarcotizacion.TabIndex = 9;
             btn_Cancelarcotizacion.Text = "Cancelar";
             btn_Cancelarcotizacion.UseVisualStyleBackColor = false;
             btn_Cancelarcotizacion.Click += btn_Cancelarcotizacion_Click;
@@ -390,9 +391,10 @@
             // 
             Buscar.Anchor = AnchorStyles.Right;
             Buscar.AutoSize = true;
-            Buscar.Location = new Point(62, 195);
+            Buscar.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Buscar.Location = new Point(52, 192);
             Buscar.Name = "Buscar";
-            Buscar.Size = new Size(45, 15);
+            Buscar.Size = new Size(55, 20);
             Buscar.TabIndex = 31;
             Buscar.Text = "Buscar:";
             Buscar.TextAlign = ContentAlignment.BottomLeft;
@@ -403,7 +405,7 @@
             Txt_Buscar.Location = new Point(113, 191);
             Txt_Buscar.Name = "Txt_Buscar";
             Txt_Buscar.Size = new Size(247, 23);
-            Txt_Buscar.TabIndex = 30;
+            Txt_Buscar.TabIndex = 7;
             Txt_Buscar.TextChanged += textBox1_TextChanged;
             // 
             // lbl_costoDescuento
@@ -565,7 +567,7 @@
             materialButton1.Name = "materialButton1";
             materialButton1.NoAccentTextColor = Color.Empty;
             materialButton1.Size = new Size(85, 36);
-            materialButton1.TabIndex = 31;
+            materialButton1.TabIndex = 5;
             materialButton1.Text = "Añadir Producto";
             materialButton1.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
             materialButton1.UseAccentColor = false;

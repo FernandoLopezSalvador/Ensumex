@@ -498,7 +498,6 @@ namespace Ensumex.Views
             lbl_costoDescuento.Text = "$0.00";
             lbl_TotalNeto.Text = "$0.00";
             tbl_Cotizacion.Rows.Clear();
-            //cmb_Descuento.SelectedIndex = 0;
             Txt_observaciones.Text = string.Empty;
             tbl_Cotizacion.ReadOnly = true;
         }
@@ -512,7 +511,7 @@ namespace Ensumex.Views
                     var clientsControl = new Clients
                     {
                         Dock = DockStyle.Fill,
-                        EsLlamadoDesdeCotiza = true // 👈 Aquí indicas que viene de Cotiza
+                        EsLlamadoDesdeCotiza = true
                     };
 
                     clientesForm.Controls.Add(clientsControl);
@@ -593,7 +592,7 @@ namespace Ensumex.Views
                 string colPrecio = "PRECIO";
                 string colCantidad = "CANTIDAD";
                 string colSubtotal = "Subtotal"; 
-                string colDescuento = "Descuento"; // combo box
+                string colDescuento = "Descuento"; 
 
                 if (colName == colDescuento || colName == colPrecio || colName == colCantidad || colName == colSubtotal)
                 {
@@ -727,35 +726,41 @@ namespace Ensumex.Views
                 return;
             }
 
-            // Busca el último producto agregado (última fila no nueva)
-            DataGridViewRow ultimaFila = null;
+            // Busca desde la última fila hacia arriba una fila con prefijo válido
+            string prefijo = "";
             for (int i = tbl_Cotizacion.Rows.Count - 1; i >= 0; i--)
             {
-                if (!tbl_Cotizacion.Rows[i].IsNewRow)
+                if (tbl_Cotizacion.Rows[i].IsNewRow)
+                    continue;
+
+                string descripcion = tbl_Cotizacion.Rows[i].Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
+
+                if (descripcion.Contains("CALENT") || descripcion.Contains("CALENTADOR") || descripcion.Contains("CALENT."))
                 {
-                    ultimaFila = tbl_Cotizacion.Rows[i];
+                    prefijo = "CAL";
+                    break;
+                }
+                else if (descripcion.Contains("AIRE"))
+                {
+                    prefijo = "AIE";
+                    break;
+                }
+                else if ((descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO")) && !descripcion.Contains("MOT"))
+                {
+                    prefijo = "BOM";
+                    break;
+                }
+                else if (descripcion.Contains("MOTOBOMBA") || descripcion.Contains("MOTB") || descripcion.Contains("MOT."))
+                {
+                    prefijo = "MOTB";
+                    break;
+                }
+                else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
+                {
+                    prefijo = "MAN";
                     break;
                 }
             }
-            if (ultimaFila == null)
-            {
-                lbl_NoCotiza.Text = "";
-                return;
-            }
-
-            string descripcion = ultimaFila.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
-            string prefijo = "";
-
-            if (descripcion.Contains("CALENT"))
-                prefijo = "CAL";
-            else if (descripcion.Contains("AIRE"))
-                prefijo = "AIE";
-            else if ((descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO")) && !descripcion.Contains("MOT"))
-                prefijo = "BOM";
-            else if (descripcion.Contains("MOTOBOMBA") || descripcion.Contains("MOTB") || descripcion.Contains("MOT."))
-                prefijo = "MOTB";
-            else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
-                prefijo = "MAN";
 
             // Obtener siguiente IdCotizacion desde la base de datos
             int siguienteIdCotizacion = CotizacionRepository.GetSiguienteIdCotizacion();
@@ -831,7 +836,7 @@ namespace Ensumex.Views
         {
             // Puedes obtener los productos desde tu servicio o base de datos
             var productoService = new ProductoServices1();
-            var productos = productoService.ObtenerProductos(); // null para traer todos
+            var productos = productoService.ObtenerProductos(); 
             productosCache = productos.Select(p => new
             {
                 CLAVE = p.CVE_ART ?? "N/A",
@@ -941,7 +946,7 @@ namespace Ensumex.Views
                     formWrapper.Controls.Add(btnAceptar);
                     formWrapper.Controls.Add(btnCancelar);
                     formWrapper.CancelButton = btnCancelar;
-
+                        
                     // Mostrar formulario como modal
                     if (formWrapper.ShowDialog() == DialogResult.OK)
                     {
