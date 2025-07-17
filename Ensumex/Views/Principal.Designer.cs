@@ -346,7 +346,6 @@
             administrarUsuarioToolStripMenuItem.Name = "administrarUsuarioToolStripMenuItem";
             administrarUsuarioToolStripMenuItem.Size = new Size(78, 21);
             administrarUsuarioToolStripMenuItem.Text = "Gestionar";
-            administrarUsuarioToolStripMenuItem.Click += administrarUsuarioToolStripMenuItem_Click;
             // 
             // nuevoToolStripMenuItem
             // 
@@ -367,14 +366,12 @@
             productosToolStripMenuItem.Name = "productosToolStripMenuItem";
             productosToolStripMenuItem.Size = new Size(136, 22);
             productosToolStripMenuItem.Text = "Productos";
-            productosToolStripMenuItem.Click += productosToolStripMenuItem_Click;
             // 
             // clientesToolStripMenuItem
             // 
             clientesToolStripMenuItem.Name = "clientesToolStripMenuItem";
             clientesToolStripMenuItem.Size = new Size(136, 22);
             clientesToolStripMenuItem.Text = "Clientes";
-            clientesToolStripMenuItem.Click += clientesToolStripMenuItem_Click;
             // 
             // miniToolStrip
             // 

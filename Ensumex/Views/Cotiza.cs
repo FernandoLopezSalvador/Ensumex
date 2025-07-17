@@ -771,11 +771,6 @@ namespace Ensumex.Views
             else
                 lbl_NoCotiza.Text = $"{siguienteIdCotizacion}";
         }
-
-        private void lbl_NoCotiza_Click(object sender, EventArgs e)
-        {
-
-        }
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string texto = Txt_Buscar.Text.Trim().ToLower();
@@ -883,7 +878,19 @@ namespace Ensumex.Views
         }
         private void Btn_guardarCotizacion_Click_1(object sender, EventArgs e)
         {
-            // Si hay una o más de una tabla guardada y tambien una cotizacion en tabla
+            ClientesDao clientesDao = new ClientesDao();
+
+            string claveCliente = txt_NumeroCliente.Text;
+            string nombreCliente = txt_Nombrecliente.Text;
+
+            // Verificar si el cliente existe
+            if (!clientesDao.ClienteExiste(claveCliente))
+            {
+                // Si no existe, guardar cliente solo con clave y nombre
+                clientesDao.GuardarCliente(claveCliente, nombreCliente);
+            }
+
+            // Continuar con la lógica de guardar cotización
             if (tablasGuardadas.Count > 0 && tbl_Cotizacion.Rows.Count > 1)
             {
                 GuardarCotizacionTablas();

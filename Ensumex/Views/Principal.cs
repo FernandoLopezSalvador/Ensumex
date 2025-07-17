@@ -141,36 +141,77 @@ namespace Ensumex.Forms
             control.Dock = DockStyle.Fill;
             panelContenedor.Controls.Add(control);
         }
-        private void administrarUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
         private void materialButton3_Click(object sender, EventArgs e)
         {
             CargarUserControl(new Clients());
         }
-        private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
+        private bool ProbarConexion()
         {
-
+            try
+            {
+                using (var connFb = new FbConnection(connFirebird)) // Usa tu cadena de conexión aquí
+                {
+                    connFb.Open();
+                    connFb.Close();
+                }
+                return true; // Conexión exitosa
+            }
+            catch
+            {
+                return false; // No se pudo conectar
+            }
         }
-        private void productosToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
         // Evento para el botón de sincronización
         private async void btn_sincronizar_Click(object sender, EventArgs e)
         {
+            /*
+                    btn_sincronizar.Enabled = false;
+                    progressBar1.Value = 0;
+
+                    try
+                    {
+                        await Task.Run(() =>
+                        {
+                            SincronizacionService.SincronizarDatos((progreso, total) =>
+                            {
+                                this.Invoke((Action)(() =>
+                                {
+                                    progressBar1.Maximum = total;
+                                    progressBar1.Value = progreso;
+                                }));
+                            });
+                        });
+
+                        MessageBox.Show("Sincronización completada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error al sincronizar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        btn_sincronizar.Enabled = true;
+                    }
+             
+             
+             */
             btn_sincronizar.Enabled = false;
             progressBar1.Value = 0;
             progressBar1.Style = ProgressBarStyle.Blocks;
 
             try
             {
+                //Verificar conexión antes de sincronizar
+                if (!ProbarConexion())
+                {
+                    MessageBox.Show("No se pudo establecer conexión con la base de datos.\nRevisa el servidor o la red.", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return; // 🚨 Sale sin hacer nada
+                }
+
                 await Task.Run(() =>
                 {
                     SincronizarProductosYClientes();
                 });
-                //MessageBox.Show("Sincronización completa.");
             }
             catch (Exception ex)
             {

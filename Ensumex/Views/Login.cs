@@ -17,7 +17,7 @@ namespace Ensumex
         public Login()
         {
             InitializeComponent();
-            vercontraseña();
+            Vercontraseña();
             ConfigurarMaterialSkin();
             ConfigurarTextosPorDefecto();
             ConfigurarVentana();
@@ -28,14 +28,14 @@ namespace Ensumex
             skinManager.AddFormToManage(this);
             skinManager.Theme = MaterialSkinManager.Themes.DARK;
             skinManager.ColorScheme = new ColorScheme(
-                Primary.BlueGrey800,       // Color principal elegante
-                Primary.BlueGrey900,       // Color oscuro más profundo
-                Primary.BlueGrey500,       // Color claro (sutil)
-                Accent.LightBlue200,       // Acento atractivo para botones
+                Primary.BlueGrey800,      
+                Primary.BlueGrey900,      
+                Primary.BlueGrey500,       
+                Accent.LightBlue200,       
                 TextShade.WHITE
                 );
         }
-        private void vercontraseña()
+        private void Vercontraseña()
         {
             pathOpen = Path.Combine(Application.StartupPath, "IMG", "eye_open.png");
             pathClosed = Path.Combine(Application.StartupPath, "IMG", "eye_closed.png");
@@ -128,18 +128,6 @@ namespace Ensumex
             else msgError("Ingrese su usuario");
             txt_contraseñalogin.Focus(); // Mueve el foco al campo de contraseña
         }
-        private void txt_Usuariologin_MouseEnter(object sender, EventArgs e)
-        {
-        }
-        private void txt_Usuariologin_MouseLeave(object sender, EventArgs e)
-        {
-        }
-        private void txt_contraseñalogin_MouseEnter(object sender, EventArgs e)
-        {
-        }
-        private void txt_contraseñalogin_MouseLeave(object sender, EventArgs e)
-        {
-        }
         private void Login_FormClosing(object sender, FormClosingEventArgs e)
         {
         }
@@ -169,12 +157,6 @@ namespace Ensumex
             if (string.IsNullOrWhiteSpace(txt_Usuariologin.Text))
                 txt_Usuariologin.Text = "Usuario";
         }
-
-        private void txt_Usuariologin_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
         private void txt_contraseñalogin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -210,10 +192,6 @@ namespace Ensumex
                 else msgError("Ingrese su usuario");
                 txt_contraseñalogin.Focus(); // Mueve el foco al campo de contraseña
             }
-        }
-        private void txt_Usuariologin_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void pic_MostrarContraseña_Click(object sender, EventArgs e)

@@ -349,7 +349,6 @@
             lbl_NoCotiza.Size = new Size(247, 21);
             lbl_NoCotiza.TabIndex = 29;
             lbl_NoCotiza.Text = "cotizacion";
-            lbl_NoCotiza.Click += lbl_NoCotiza_Click;
             // 
             // btn_AgregarProducto
             // 

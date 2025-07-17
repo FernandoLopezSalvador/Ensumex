@@ -111,12 +111,8 @@
             txt_Usuariologin.TextAlign = HorizontalAlignment.Left;
             txt_Usuariologin.TrailingIcon = null;
             txt_Usuariologin.UseSystemPasswordChar = false;
-            txt_Usuariologin.Click += txt_Usuariologin_Click;
             txt_Usuariologin.Enter += txt_Usuariologin_Enter;
-            txt_Usuariologin.KeyDown += txt_Usuariologin_KeyDown;
             txt_Usuariologin.Leave += txt_Usuariologin_Leave;
-            txt_Usuariologin.MouseEnter += txt_Usuariologin_MouseEnter;
-            txt_Usuariologin.MouseLeave += txt_Usuariologin_MouseLeave;
             // 
             // txt_contraseñalogin
             // 
@@ -149,8 +145,6 @@
             txt_contraseñalogin.Enter += txt_contraseñalogin_Enter;
             txt_contraseñalogin.KeyDown += txt_contraseñalogin_KeyDown;
             txt_contraseñalogin.Leave += txt_contraseñalogin_Leave;
-            txt_contraseñalogin.MouseEnter += txt_contraseñalogin_MouseEnter;
-            txt_contraseñalogin.MouseLeave += txt_contraseñalogin_MouseLeave;
             // 
             // pic_MostrarContraseña
             // 

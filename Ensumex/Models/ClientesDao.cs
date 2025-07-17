@@ -41,5 +41,36 @@ namespace Ensumex.Models
             }
             return clientes;
         }
+        public bool ClienteExiste(string claveCliente)
+        {
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+                using (var command = new SqlCommand("SELECT COUNT(*) FROM CLIE01 WHERE CLAVE = @clave", connection))
+                {
+                    command.Parameters.AddWithValue("@clave", claveCliente);
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0;
+                }
+            }
+        }
+        public void GuardarCliente(string clave, string nombre)
+        {
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+                using (var command = new SqlCommand(@"
+            INSERT INTO CLIE01 
+            (CLAVE, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED, NOMBRECOMERCIAL, STATUS)
+            VALUES
+            (@clave, @nombre, '', '', '', '', '', 'A')", connection))
+                {
+                    command.Parameters.AddWithValue("@clave", clave);
+                    command.Parameters.AddWithValue("@nombre", nombre);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
