@@ -63,7 +63,8 @@ namespace Ensumex
         {
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Size = new Size(644, 300);
+            this.AutoSize = true;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         }
         private void msgError(string mensaje)
         {

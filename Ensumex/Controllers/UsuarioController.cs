@@ -64,11 +64,45 @@ namespace Ensumex.Controllers
                 return BitConverter.ToString(hash).Replace("-", "").ToLower();
             }
         }
-        public bool ActualizarUsuario(string usuarioOriginal, Usuarios usuarioEditado)
+        public bool ActualizarUsuario(string usuarioOriginal, Usuarios usuarioEditado, bool actualizarContraseña)
         {
-            // Cifrar la contraseña antes de actualizar
-            usuarioEditado.Contraseña = ObtenerHashSHA256(usuarioEditado.Contraseña);
-            return new UsuarioDao().ActualizarUsuario(usuarioOriginal, usuarioEditado);
+            // Solo cifrar la contraseña si se indicó que hay una nueva
+            if (actualizarContraseña)
+            {
+                usuarioEditado.Contraseña = ObtenerHashSHA256(usuarioEditado.Contraseña);
+            }
+
+            return new UsuarioDao().ActualizarUsuario(usuarioOriginal, usuarioEditado, actualizarContraseña);
+        }
+
+        public Usuarios ObtenerUsuarioPorNombre(string nombreUsuario)
+        {
+            using (var connection = GetConnection())
+            {
+                connection.Open();
+                using (var command = new SqlCommand("SELECT Usuario, Contraseña, Nombre, Posicion, Correo FROM Usuarios WHERE Usuario = @Usuario", connection))
+                {
+                    command.Parameters.AddWithValue("@Usuario", nombreUsuario);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Usuarios
+                            {
+                                Usuario = reader["Usuario"].ToString(),
+                                Contraseña = reader["Contraseña"].ToString(),
+                                Nombre = reader["Nombre"].ToString(),
+                                Posicion = reader["Posicion"].ToString(),
+                                Correo = reader["Correo"].ToString()
+                            };
+                        }
+                    }
+                }
+            }
+
+            // Si no encontró el usuario
+            return null;
         }
     }
 }

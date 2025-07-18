@@ -93,20 +93,43 @@ namespace Ensumex.Views
         {
             try
             {
+                UsuarioController controller = new UsuarioController();
+
+                // 1️⃣ Obtener la contraseña nueva (si la hay)
+                string nuevaContraseña = textNewContraseña.Text.Trim();
+                bool actualizarContraseña = !string.IsNullOrEmpty(nuevaContraseña);
+
+                // 2️⃣ Si no hay nueva contraseña y estamos editando, usamos la contraseña original
+                if (editando && !actualizarContraseña)
+                {
+                    // Traer el usuario completo de la DB para obtener la contraseña actual
+                    Usuarios usuarioDesdeDB = controller.ObtenerUsuarioPorNombre(usuarioOriginal);
+
+                    if (usuarioDesdeDB == null)
+                    {
+                        MessageBox.Show("No se pudo obtener el usuario original.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    nuevaContraseña = usuarioDesdeDB.Contraseña; // Mantener la contraseña actual
+                }
+
+                // 3️⃣ Crear el objeto usuario con los datos del formulario
                 Usuarios usuario = new Usuarios
                 {
                     Usuario = textnewUsuario.Text.Trim(),
-                    Contraseña = textNewContraseña.Text.Trim(),
+                    Contraseña = nuevaContraseña,
                     Nombre = textNewNombre.Text.Trim(),
-                    Posicion = cmb_NewPosicion.SelectedItem?.ToString() ?? string.Empty, 
+                    Posicion = cmb_NewPosicion.SelectedItem?.ToString() ?? string.Empty,
                     Correo = textNewCorreo.Text.Trim()
                 };
 
-                UsuarioController controller = new UsuarioController();
+                // 4️⃣ Guardar o actualizar según corresponda
                 bool resultado = editando
-                    ? controller.ActualizarUsuario(usuarioOriginal, usuario)
+                    ? controller.ActualizarUsuario(usuarioOriginal, usuario, actualizarContraseña)
                     : controller.GuardarUsuario(usuario);
 
+                // 5️⃣ Mensajes
                 string mensaje = editando ? "Usuario actualizado correctamente." : "Usuario guardado correctamente.";
 
                 if (resultado)
@@ -162,11 +185,16 @@ namespace Ensumex.Views
 
         private bool CamposCompletos()
         {
-            return !string.IsNullOrWhiteSpace(textnewUsuario.Text)
-                && !string.IsNullOrWhiteSpace(textNewContraseña.Text)
-                && !string.IsNullOrWhiteSpace(textNewNombre.Text)
-                && !string.IsNullOrWhiteSpace(textNewCorreo.Text)
-                && !string.IsNullOrWhiteSpace(cmb_NewPosicion.Text);
+            bool camposBasicosCompletos =
+            !string.IsNullOrWhiteSpace(textnewUsuario.Text) &&
+            !string.IsNullOrWhiteSpace(textNewNombre.Text) &&
+            !string.IsNullOrWhiteSpace(cmb_NewPosicion.Text) &&
+            !string.IsNullOrWhiteSpace(textNewCorreo.Text);
+            bool contraseñaRequerida = !editando // Solo si es nuevo usuario
+                ? !string.IsNullOrWhiteSpace(textNewContraseña.Text)
+                : true; // Si estamos editando no es obligatoria
+
+            return camposBasicosCompletos && contraseñaRequerida;
         }
 
         private bool ValidarCorreo(string correo)

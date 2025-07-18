@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ensumex.Clases;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -11,9 +12,6 @@ namespace Ensumex.Models
 {
     public static class CotizacionRepository
     {
-        // Usa tu cadena de conexión centralizada
-        private static readonly string connSqlServer = "Server=localhost;Database=Ensumex;Trusted_Connection=True;";
-
         public static void GuardarCotizacion(
             string numeroCotizacion,
             DateTime fecha,
@@ -27,7 +25,7 @@ namespace Ensumex.Models
             string notas,
             DataGridView tablaCotizacion)
         {
-            using (var conn = new SqlConnection(connSqlServer))
+            using (var conn = ConnectionToSql.GetConnection())
             {
                 conn.Open();
                 using (var tran = conn.BeginTransaction())
@@ -98,7 +96,7 @@ namespace Ensumex.Models
             List<List<object[]>> tablas
         )
         {
-            using (var conn = new SqlConnection(connSqlServer))
+            using (var conn = ConnectionToSql.GetConnection())
             {
                 conn.Open();
                 using (var tran = conn.BeginTransaction())
@@ -163,7 +161,7 @@ namespace Ensumex.Models
 
             try
             {
-                using (var conn = new SqlConnection(connSqlServer))
+                using (var conn = ConnectionToSql.GetConnection())
                 {
                     string query = @"
                 SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
@@ -192,7 +190,7 @@ namespace Ensumex.Models
 
             try
             {
-                using (var conn = new SqlConnection(connSqlServer))
+                using (var conn = ConnectionToSql.GetConnection())
                 {
                     string query = @"
                 SELECT ClaveProducto, Descripcion, Unidad, PrecioUnitario, 
@@ -225,7 +223,7 @@ namespace Ensumex.Models
 
             try
             {
-                using (var conn = new SqlConnection(connSqlServer))
+                using (var conn = ConnectionToSql.GetConnection())
                 {
                     string query = $@"
                 SELECT TOP {limite} IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
@@ -254,7 +252,7 @@ namespace Ensumex.Models
 
             try
             {
-                using (var conn = new SqlConnection(connSqlServer))
+                using (var conn = ConnectionToSql.GetConnection())
                 {
                     string query = @"
                 SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
@@ -288,7 +286,7 @@ namespace Ensumex.Models
         }
         public static void GuardarSiNoExisteCliente(string numeroCliente, string nombreCliente)
         {
-            using (var conn = new SqlConnection(connSqlServer))
+            using (var conn = ConnectionToSql.GetConnection())
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(@"
@@ -310,7 +308,7 @@ namespace Ensumex.Models
         {
             int siguienteId = 1; // Por defecto si no hay registros
 
-            using (var conn = new SqlConnection(connSqlServer))
+            using (var conn = ConnectionToSql.GetConnection())
             {
                 conn.Open();
                 using (var cmd = new SqlCommand("SELECT ISNULL(MAX(IdCotizacion), 0) + 1 FROM Cotizacion", conn))

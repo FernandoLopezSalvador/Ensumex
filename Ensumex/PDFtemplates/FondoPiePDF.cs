@@ -29,7 +29,7 @@ namespace Ensumex.PDFtemplates
                 try
                 {
                     var fondo = iTextSharp.text.Image.GetInstance(rutaFondo);
-                    fondo.ScaleAbsolute(300f, 270f);
+                    fondo.ScaleAbsolute(400f, 370f);
                     float x = document.PageSize.Width - document.RightMargin - fondo.ScaledWidth;
                     float y = document.BottomMargin;
                     fondo.SetAbsolutePosition(x, y);

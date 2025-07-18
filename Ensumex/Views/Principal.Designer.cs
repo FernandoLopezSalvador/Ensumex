@@ -323,7 +323,6 @@
             lbl_posicion.Size = new Size(83, 23);
             lbl_posicion.TabIndex = 3;
             lbl_posicion.Text = "Cuenta:";
-            lbl_posicion.Click += lbl_cuenta_Click;
             // 
             // menu_usuario
             // 

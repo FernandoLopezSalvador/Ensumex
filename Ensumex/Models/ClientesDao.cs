@@ -41,36 +41,52 @@ namespace Ensumex.Models
             }
             return clientes;
         }
-        public bool ClienteExiste(string claveCliente)
+        public bool ClienteExiste(string nombrecliente)
         {
             using (var connection = GetConnection())
             {
                 connection.Open();
-                using (var command = new SqlCommand("SELECT COUNT(*) FROM CLIE01 WHERE CLAVE = @clave", connection))
+                using (var command = new SqlCommand("SELECT COUNT(*) FROM CLIE01 WHERE NOMBRE = @nombre", connection))
                 {
-                    command.Parameters.AddWithValue("@clave", claveCliente);
+                    command.Parameters.AddWithValue("@nombre", nombrecliente);
                     int count = (int)command.ExecuteScalar();
                     return count > 0;
                 }
             }
         }
-        public void GuardarCliente(string clave, string nombre)
+        public void GuardarCliente(string nombre)
         {
             using (var connection = GetConnection())
             {
                 connection.Open();
-                using (var command = new SqlCommand(@"
-            INSERT INTO CLIE01 
-            (CLAVE, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED, NOMBRECOMERCIAL, STATUS)
-            VALUES
-            (@clave, @nombre, '', '', '', '', '', 'A')", connection))
-                {
-                    command.Parameters.AddWithValue("@clave", clave);
-                    command.Parameters.AddWithValue("@nombre", nombre);
 
+                using (var command = new SqlCommand(@"
+                    DECLARE @penultimaClave NVARCHAR(50);
+
+                    -- Obtener la penúltima clave numérica ordenada descendentemente
+                    SELECT @penultimaClave = MIN(CLAVE)
+                    FROM (
+                        SELECT TOP 2 CLAVE
+                        FROM CLIE01
+                        WHERE CLAVE NOT LIKE '%[^0-9]%' -- Solo claves 100% numéricas
+                        ORDER BY CAST(CLAVE AS INT) DESC
+                    ) AS subconsulta;
+
+                    -- Concatenar un dígito más al final (ejemplo: 105 -> 1051)
+                    SET @penultimaClave = ISNULL(@penultimaClave, '0') + 1;
+
+                    -- Insertar el nuevo cliente
+                    INSERT INTO CLIE01 
+                    (CLAVE, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED, NOMBRECOMERCIAL, STATUS)
+                    VALUES
+                    (@penultimaClave, @nombre, '', '', '', '', '', 'A');
+                ", connection))
+                {
+                    command.Parameters.AddWithValue("@nombre", nombre);
                     command.ExecuteNonQuery();
                 }
             }
+
         }
     }
 }

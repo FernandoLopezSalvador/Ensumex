@@ -37,6 +37,9 @@ namespace Ensumex.Views
         public Cotiza(string usuario)
         {
             InitializeComponent();
+            Txt_observaciones.Multiline = true;
+            Txt_observaciones.ScrollBars = ScrollBars.Vertical;
+            Txt_observaciones.WordWrap = true;
             usuarioActual = usuario;
             InicializarFormulario();
             InicializarPanelBusqueda();
@@ -68,7 +71,6 @@ namespace Ensumex.Views
             tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
             tbl_Cotizacion.CurrentCellDirtyStateChanged += tbl_Cotizacion_CurrentCellDirtyStateChanged;
             tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit;
-            tbl_Cotizacion.ReadOnly = true;
         }
         private void AgregarDescuentos(string[] descuentos)
         {
@@ -571,6 +573,7 @@ namespace Ensumex.Views
                         tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidadFinal, total, cantidadFinal);
                         ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
+                        ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
                         HabilitarEdicionParcial();
                         productosForm.Close();
                     }
@@ -582,6 +585,78 @@ namespace Ensumex.Views
                 productosForm.ShowDialog();
             }
         }
+        private void ActualizarObservacionesPorProducto(string descripcion, bool reemplazar = true)
+        {
+            var notas = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["CALENTADOR"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n" +
+                "-Precios sujetos a cambios sin previo aviso.\n",
+                ["CALENT"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n" +
+                "-Precios sujetos a cambios sin previo aviso.\n",
+
+                ["AIRE ACONDICIONADO"] = "-Garantía: 5 años contra defectos de fabricación.\n" +
+                    "-El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
+                    "-Precios sujetos a cambios sin previo aviso.\n",
+
+                ["MOTOBOMBA"] = "-Garantía: 1 año contra defectos de fabricación.\n" +
+                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
+                    "-Precios sujetos a cambios sin previo aviso.\n",
+
+                ["MOT:BOMB"] = "-Garantía: 1 año contra defectos de fabricación.\n" +
+                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
+                    "-Precios sujetos a cambios sin previo aviso.\n",
+
+                ["BOMBA"] = "-Garantía: 2 años en bomba motor y arrancador.\n" +
+                    "-Equipos sobre pedido. Es necesario un anticipo del 60%.\n" +
+                    "-Entrega de 3 a 5 días hábiles.\n" +
+                    "-Precios sujetos a cambios sin previo aviso.\n",
+
+                ["MANTENIMIENTO"] = "-Mantenimiento correctivo de unidad tipo paquete incluye:\nLocalización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante.\n" +
+                    "Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
+                    "Limpieza de serpentín evaporador y condensador, turbinas de la unidad y carcasas de la misma.\n" +
+                    "Limpieza de la charola de condensados.\n" +
+                    "Limpieza y lavado de filtros de aire del retorno de la unidad evaporadora.\n" +
+                    "Ajuste de banda de turbina del evaporador.\n" +
+                    "Engrasado de chumaceras.\n" +
+                    "Revisión y ajuste de terminales eléctricas.\n" +
+                    "Revisión y ajuste de la carga de gas refrigerante.\n" +
+                    "-Se requiere anticipo del 50% para comenzar el trabajo.\n" +
+                    "-Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
+                    "-Precios sujetos a cambios sin previo aviso.\n",
+
+                ["MANTEMIN"] = "-Mantenimiento correctivo de unidad tipo paquete incluye:\nLocalización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante.\n" +
+                    "Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
+                    "Limpieza de serpentín evaporador y condensador, turbinas de la unidad y carcasas de la misma.\n" +
+                    "Limpieza de la charola de condensados.\n" +
+                    "Limpieza y lavado de filtros de aire del retorno de la unidad evaporadora.\n" +
+                    "Ajuste de banda de turbina del evaporador.\n" +
+                    "Engrasado de chumaceras.\n" +
+                    "Revisión y ajuste de terminales eléctricas.\n" +
+                    "Revisión y ajuste de la carga de gas refrigerante.\n" +
+                    "-Se requiere anticipo del 50% para comenzar el trabajo.\n" +
+                    "-Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
+                    "-Precios sujetos a cambios sin previo aviso.\n"
+            };
+
+            foreach (var nota in notas)
+            {
+                if (descripcion.IndexOf(nota.Key, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    if (reemplazar)
+                    {
+                        // Reemplaza todo el texto anterior
+                        Txt_observaciones.Text = nota.Value;
+                    }
+                    else if (!Txt_observaciones.Text.Contains(nota.Value))
+                    {
+                        // Concatena solo si la nota aún no está
+                        Txt_observaciones.Text += "\n" + nota.Value;
+                    }
+                    return; // Termina en cuanto encuentra una coincidencia
+                }
+            }
+        }
+
         private void tbl_Cotizacion_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -879,15 +954,13 @@ namespace Ensumex.Views
         private void Btn_guardarCotizacion_Click_1(object sender, EventArgs e)
         {
             ClientesDao clientesDao = new ClientesDao();
-
-            string claveCliente = txt_NumeroCliente.Text;
             string nombreCliente = txt_Nombrecliente.Text;
 
             // Verificar si el cliente existe
-            if (!clientesDao.ClienteExiste(claveCliente))
+            if (!clientesDao.ClienteExiste(nombreCliente))
             {
                 // Si no existe, guardar cliente solo con clave y nombre
-                clientesDao.GuardarCliente(claveCliente, nombreCliente);
+                clientesDao.GuardarCliente(nombreCliente);
             }
 
             // Continuar con la lógica de guardar cotización

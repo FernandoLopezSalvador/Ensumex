@@ -93,6 +93,49 @@ namespace Ensumex.Models
                 return cmd.ExecuteNonQuery() > 0;
             }
         }
+        public bool ActualizarUsuario(string usuarioOriginal, Usuarios usuarioEditado, bool actualizarContraseña)
+        {
+            using (var connection = ConnectionToSql.GetConnection())
+            {
+                connection.Open();
+
+                string query;
+
+                if (actualizarContraseña)
+                {
+                    query = @"UPDATE Usuarios
+                      SET Usuario = @Usuario, 
+                          Contraseña = @Contraseña,
+                          Nombre = @Nombre,
+                          Posicion = @Posicion,
+                          Correo = @Correo
+                      WHERE Usuario = @UsuarioOriginal";
+                }
+                else
+                {
+                    query = @"UPDATE Usuarios
+                      SET Usuario = @Usuario,
+                          Nombre = @Nombre,
+                          Posicion = @Posicion,
+                          Correo = @Correo
+                      WHERE Usuario = @UsuarioOriginal";
+                }
+
+                using (var cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@Usuario", usuarioEditado.Usuario);
+                    if (actualizarContraseña)
+                        cmd.Parameters.AddWithValue("@Contraseña", usuarioEditado.Contraseña);
+                    cmd.Parameters.AddWithValue("@Nombre", usuarioEditado.Nombre);
+                    cmd.Parameters.AddWithValue("@Posicion", usuarioEditado.Posicion);
+                    cmd.Parameters.AddWithValue("@Correo", usuarioEditado.Correo);
+                    cmd.Parameters.AddWithValue("@UsuarioOriginal", usuarioOriginal);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    return rowsAffected > 0;
+                }
+            }
+        }
 
     }
 }
