@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
+using Font = iTextSharp.text.Font;
 using Image = iTextSharp.text.Image;
 using Rectangle = iTextSharp.text.Rectangle;
 
@@ -32,7 +33,7 @@ namespace Ensumex.PDFtemplates
             try
             {
                 Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
-                string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Fondologo.png");
+                string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
                 string rutaFirma = Path.Combine(Application.StartupPath, "IMG", "Pie.png");
 
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
@@ -42,6 +43,7 @@ namespace Ensumex.PDFtemplates
                 var fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
                 var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
                 var fontNotas = FontFactory.GetFont(FontFactory.HELVETICA, 9);
+                var fontCursiva = FontFactory.GetFont(FontFactory.HELVETICA, 10, Font.ITALIC);
                 var fontRojo = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED);
                 var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
                 var fontGris = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.GRAY);
@@ -67,73 +69,91 @@ namespace Ensumex.PDFtemplates
                 doc.Add(encabezado);
 
                 if (!string.IsNullOrWhiteSpace(nombreCliente))
-                    doc.Add(new Paragraph("\nEstimado(a): " + nombreCliente, fontNegrita));
+                    doc.Add(new Paragraph("\nEstimado(a): " + nombreCliente+".", fontNegrita));
                 else
                     doc.Add(new Paragraph("\nEstimado(a) Cliente:", fontNegrita));
 
                 doc.Add(new Paragraph("\nPresente"));
-                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para los siguientes productos:\n", fontNormal));
+                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para los siguientes productos:\n\n", fontNormal));
 
                 int tablaNum = 1;
                 foreach (var tabla in tablas)
                 {
-                    doc.Add(new Paragraph($"\nOpción #{tablaNum}", fontNegrita));
+                    PdfPTable pdfTable = new PdfPTable(8)
+                    {
+                        WidthPercentage = 100
+                    };
+                    pdfTable.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1.2f, 1.1f, 1.3f, 1.2f }); // Ajusta proporciones
 
-                    PdfPTable pdfTable = new PdfPTable(6);
-                    pdfTable.WidthPercentage = 100;
-                    pdfTable.SetWidths(new float[] { 0.5f, 0.8f, 3f, 1f, 1f, 1f });
-
-                    string[] headers = { "#", "Canti", "Descripción", "Precio", "Descuento", "Importe" };
+                    // Encabezados
+                    string[] headers = { "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "IMPORTE", "DESCUENTO($)", "TOTAL" };
                     foreach (string header in headers)
                     {
                         PdfPCell celda = new PdfPCell(new Phrase(header, fontNegrita))
                         {
-                            BackgroundColor = new BaseColor(144, 238, 144),
-                            HorizontalAlignment = Element.ALIGN_CENTER
+                            BackgroundColor = new BaseColor(141, 198, 63), // Verde #8DC63F
+                            HorizontalAlignment = Element.ALIGN_CENTER,
+                            Padding = 5f
                         };
                         pdfTable.AddCell(celda);
                     }
 
                     int pos = 1;
+                    BaseColor colorPar = BaseColor.WHITE;
+                    BaseColor colorImpar = new BaseColor(245, 245, 245);
+
                     foreach (var row in tabla)
                     {
-                        pdfTable.AddCell(new PdfPCell(new Phrase(pos.ToString(), fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
-                        pdfTable.AddCell(new PdfPCell(new Phrase(row[7]?.ToString() ?? "0", fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
-                        pdfTable.AddCell(new PdfPCell(new Phrase(row[2]?.ToString() ?? "", fontNormal)));
-                        pdfTable.AddCell(new PdfPCell(new Phrase("$" + row[4]?.ToString() ?? "0", fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
+                        BaseColor bgColor = (pos % 2 == 0) ? colorPar : colorImpar;
 
-                        decimal precio = Convert.ToDecimal(row[4] ?? 0);
+                        // Datos del producto
+                        string cantidadStr = row[7]?.ToString() ?? "0";
+                        string unidad = row[3]?.ToString() ?? "";
+                        string descripcion = row[2]?.ToString() ?? "";
+                        decimal precioUnitario = Convert.ToDecimal(row[4] ?? 0);
                         decimal cantidad = Convert.ToDecimal(row[7] ?? 0);
-                        decimal descProd = 0;
-                        pdfTable.AddCell(new PdfPCell(new Phrase("$" + descProd.ToString("0.00"), fontRojo)) { HorizontalAlignment = Element.ALIGN_RIGHT });
-                        decimal importe = (precio * cantidad) - descProd;
-                        pdfTable.AddCell(new PdfPCell(new Phrase("$" + importe.ToString("0.00"), fontNormal)) { HorizontalAlignment = Element.ALIGN_RIGHT });
+                        decimal importe = precioUnitario * cantidad;
 
+                        //Obtener porcentaje de descuento (ajusta el índice si viene en otra posición)
+                        decimal porcentajeDescuento = Convert.ToDecimal(row[0] ?? 0);
+                        decimal descuentoProd = importe * (porcentajeDescuento / 100m);
+                        decimal totalProd = importe - descuentoProd;
+
+                        pdfTable.AddCell(CeldaTexto(pos.ToString(), fontNormal, bgColor, Element.ALIGN_CENTER));
+                        pdfTable.AddCell(CeldaTexto(cantidadStr, fontNormal, bgColor, Element.ALIGN_CENTER));
+                        pdfTable.AddCell(CeldaTexto(unidad, fontNormal, bgColor, Element.ALIGN_CENTER));
+                        pdfTable.AddCell(CeldaTexto(descripcion, fontNormal, bgColor, Element.ALIGN_LEFT, wrap: true)); 
+                        pdfTable.AddCell(CeldaTexto(FormatMoneda(precioUnitario), fontNormal, bgColor, Element.ALIGN_RIGHT));
+                        pdfTable.AddCell(CeldaTexto(FormatMoneda(importe), fontNormal, bgColor, Element.ALIGN_RIGHT));
+                        pdfTable.AddCell(CeldaTexto("-" + FormatMoneda(descuentoProd), fontRojo, bgColor, Element.ALIGN_RIGHT));
+                        pdfTable.AddCell(CeldaTexto(FormatMoneda(totalProd), fontNormal, bgColor, Element.ALIGN_RIGHT));
                         pos++;
                     }
-
-                    doc.Add(pdfTable);
-                    doc.Add(new Paragraph("\nOpción: " + tablaNum, fontGris));
                     tablaNum++;
                 }
 
-                // 📌 NOTAS GENERALES
-                doc.Add(new Paragraph("\nNotas Generales:", fontNegrita));
-                doc.Add(new Paragraph("- Garantía  según producto.\n- Precios sujetos a cambios sin previo aviso.\n- Sin otro particular, quedo a sus órdenes.\n- Agradecemos su preferencia.", fontNotas));
+                // Notas generales
+                doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
+                doc.Add(new Paragraph(notas, fontNotas));
+                doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n", fontNotas));
+                
+                // Firma
+                PdfPTable tablaFirma = new PdfPTable(1)
+                {
+                    WidthPercentage = 100
+                };
 
-                // NOTAS LIBRES
-                if (!string.IsNullOrWhiteSpace(notas))
-                    doc.Add(new Paragraph("\n" + notas, fontNotas));
-
-                // Texto con usuario
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\n" + usuario + "\nVendedor", fontGris))
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\n" + usuario + "\nGerente de Ventas", fontCursiva))
                 {
                     HorizontalAlignment = Element.ALIGN_CENTER,
                     Border = Rectangle.NO_BORDER,
-                    PaddingTop = 15f, // Espacio superior
+                    PaddingTop = 15f,
                     PaddingBottom = 5f
                 };
-                doc.Add(celdaTexto);
+
+                tablaFirma.AddCell(celdaTexto);
+                doc.Add(tablaFirma);
+
                 doc.Close();
                 MessageBox.Show("📄 PDF generado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -150,63 +170,23 @@ namespace Ensumex.PDFtemplates
                 MessageBox.Show("Error al generar el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private static PdfPCell CeldaTexto(string texto, Font fuente, BaseColor fondo, int align, bool wrap = true)
+{
+    return new PdfPCell(new Phrase(texto, fuente))
+    {
+        BackgroundColor = fondo,
+        HorizontalAlignment = align,
+        NoWrap = !wrap,              // ✅ Permite salto de línea
+        MinimumHeight = 15f,         // ✅ Alto mínimo para evitar recorte
+        Padding = 4f
+    };
+}
 
-        private static string ObtenerNotasPorProductos(List<string> descripciones)
+        private static string FormatMoneda(object valor)
         {
-            var notas = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                ["CALENTADOR"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n-Precios sujetos a cambios sin previo aviso.\n",
-                ["CALENT"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n-Precios sujetos a cambios sin previo aviso.\n",
-
-
-                ["AIRE ACONDICIONADO"] = "-Garantía: 5 años contra defectos de fabricación.\n" +
-                    "-El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
-                    "-Precios sujetos a cambios sin previo aviso.\n",
-
-                ["MOTOBOMBA"] = "-Garantía: 1 año contra defectos de fabricación." +
-                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
-                    "\n-Precios sujetos a cambios sin previo aviso.\n",
-
-                ["MOT:BOMB"] = "-Garantía: 1 año contra defectos de fabricación." +
-                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
-                    "\n-Precios sujetos a cambios sin previo aviso.\n",
-
-
-                ["BOMBA"] = "-Garantía: 2 años en bomba motor y arrancador\n" +
-                    "- Equipos sobre pedido. Es necesario un anticipo del 60%\n" +
-                    "- Entrega de 3 a 5 dias hábiles\n" +
-                    "-Precios sujetos a cambios sin previo aviso.\n",
-
-                ["MANTENIMIENTO"] = "- Mantenimiento correctivo de unidad tipo paquete incluye:\nLocalización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante\n" +
-                    "Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
-                    "Limpieza de serpentín evaporador y serpentín condensador, turbinas de la unidad y carcasas de" +
-                    "la misma. \n   Limpieza de la charola de condensados. \n   Limpieza y lavado de los filtros de aire del retorno" +
-                    "de la unidad evaporadora. \n   Ajuste de la banda de turbina del evaporador. \n    Engrasado de chumaceras." +
-                    "\n Revisión y ajuste de terminales eléctricas del equipo. Revisión y ajuste de la carga de gas refrigerante.\n" +
-                    "- Se requiere anticipo del 50% para comenzar el trabajo.\n" +
-                    "- Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
-                    "- Precios sujetos a cambios sin previo aviso.\n",
-
-                ["MANTEMIN"] = "- Mantenimiento correctivo de unidad tipo paquete incluye:\nLocalización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante\n" +
-                    "Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
-                    "Limpieza de serpentín evaporador y serpentín condensador, turbinas de la unidad y carcasas de" +
-                    "la misma. \n   Limpieza de la charola de condensados. \n   Limpieza y lavado de los filtros de aire del retorno" +
-                    "de la unidad evaporadora. \n   Ajuste de la banda de turbina del evaporador. \n    Engrasado de chumaceras." +
-                    "\n Revisión y ajuste de terminales eléctricas del equipo. Revisión y ajuste de la carga de gas refrigerante.\n" +
-                    "- Se requiere anticipo del 50% para comenzar el trabajo.\n" +
-                    "- Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
-                    "- Precios sujetos a cambios sin previo aviso.\n"
-            };
-
-            foreach (var desc in descripciones)
-            {
-                foreach (var clave in notas.Keys)
-                {
-                    if (desc.ToUpper().Contains(clave))
-                        return notas[clave];
-                }
-            }
-            return "- Garantía estándar y precios sujetos a cambios.\n";
+            if (decimal.TryParse(valor?.ToString(), out decimal result))
+                return result.ToString("C2", new System.Globalization.CultureInfo("es-MX"));
+            return "$0.00";
         }
     }
 }

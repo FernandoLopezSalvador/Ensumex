@@ -1,10 +1,11 @@
-﻿using System.Data.SqlClient;
-using Ensumex.Clases;
-using Ensumex.Models;
+﻿using Ensumex.Clases;
 using Ensumex.Forms;
+using Ensumex.Models;
+using Ensumex.Utils;
+using Ensumex.Views;
 using MaterialSkin;
 using MaterialSkin.Controls;
-using Ensumex.Utils;
+using System.Data.SqlClient;
 
 namespace Ensumex
 {
@@ -108,11 +109,12 @@ namespace Ensumex
                     // Si la validación es correcta, se cargan los datos del usuario
                     if (validar)
                     {
-                        UsuarioLoginCache.Usuario = txt_Usuariologin.Text;
-                        ENSUMEX principal = new ENSUMEX();
-                        principal.Show();
-                        principal.FormClosed += logout;
-                        this.Hide();
+                        if (validar)
+                        {
+                            UsuarioLoginCache.Usuario = txt_Usuariologin.Text;
+                            this.DialogResult = DialogResult.OK; // Devuelve OK a Program.cs
+                            this.Close(); // Cierra el Login completamente
+                        }
                     }
                     // Si la validación falla, se muestra un mensaje de error
                     else
@@ -172,11 +174,12 @@ namespace Ensumex
                         // Si la validación es correcta, se cargan los datos del usuario
                         if (validar)
                         {
-                            UsuarioLoginCache.Usuario = txt_Usuariologin.Text;
-                            ENSUMEX principal = new ENSUMEX();
-                            principal.Show();
-                            principal.FormClosed += logout;
-                            this.Hide();
+                            if (validar)
+                            {
+                                UsuarioLoginCache.Usuario = txt_Usuariologin.Text;
+                                this.DialogResult = DialogResult.OK; // Devuelve OK a Program.cs
+                                this.Close(); // Cierra el Login completamente
+                            }
                         }
                         // Si la validación falla, se muestra un mensaje de error
                         else

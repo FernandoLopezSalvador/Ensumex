@@ -930,6 +930,7 @@ namespace Ensumex.Views
                 tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidad,total, cantidad);
                 ActualizarNumeroCotizacionEnLabel();
                 ActualizarTotales();
+                ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
                 HabilitarEdicionParcial();
                 panelBusqueda.Visible = false;
                 Txt_Buscar.Clear();
@@ -1041,6 +1042,7 @@ namespace Ensumex.Views
                         tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precioUnitario, subtotal, total, cantidad);
                         ActualizarNumeroCotizacionEnLabel();
                         ActualizarTotales();
+                        ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
                         HabilitarEdicionParcial();
 
                         // Asegura que la columna de "Eliminar" solo se agregue una vez

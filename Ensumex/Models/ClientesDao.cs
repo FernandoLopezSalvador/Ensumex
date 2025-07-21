@@ -61,32 +61,23 @@ namespace Ensumex.Models
                 connection.Open();
 
                 using (var command = new SqlCommand(@"
-                    DECLARE @penultimaClave NVARCHAR(50);
+            DECLARE @nuevaClave NVARCHAR(50);
 
-                    -- Obtener la penúltima clave numérica ordenada descendentemente
-                    SELECT @penultimaClave = MIN(CLAVE)
-                    FROM (
-                        SELECT TOP 2 CLAVE
-                        FROM CLIE01
-                        WHERE CLAVE NOT LIKE '%[^0-9]%' -- Solo claves 100% numéricas
-                        ORDER BY CAST(CLAVE AS INT) DESC
-                    ) AS subconsulta;
+            -- Contar todos los registros y sumar 1
+            SELECT @nuevaClave = CAST(COUNT(*) + 1 AS NVARCHAR)
+            FROM CLIE01;
 
-                    -- Concatenar un dígito más al final (ejemplo: 105 -> 1051)
-                    SET @penultimaClave = ISNULL(@penultimaClave, '0') + 1;
-
-                    -- Insertar el nuevo cliente
-                    INSERT INTO CLIE01 
-                    (CLAVE, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED, NOMBRECOMERCIAL, STATUS)
-                    VALUES
-                    (@penultimaClave, @nombre, '', '', '', '', '', 'A');
-                ", connection))
+            -- Insertar el nuevo cliente
+            INSERT INTO CLIE01 
+            (CLAVE, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED, NOMBRECOMERCIAL, STATUS)
+            VALUES
+            (@nuevaClave, @nombre, '', '', '', '', '', 'A');
+        ", connection))
                 {
                     command.Parameters.AddWithValue("@nombre", nombre);
                     command.ExecuteNonQuery();
                 }
             }
-
         }
     }
 }

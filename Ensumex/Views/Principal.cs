@@ -75,9 +75,17 @@ namespace Ensumex.Forms
         }
         private void btn_cerrarsesion_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("¿Cerrar sesion?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            var confirmResult = MessageBox.Show(
+                "¿Estás seguro de que quieres cerrar sesión?",
+                "Confirmar cierre de sesión",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirmResult == DialogResult.Yes)
             {
-                this.Close();
+                UsuarioLoginCache.Limpiar();
+                // Reinicia la aplicación completa (Login -> Cargando -> ENSUMEX)
+                Application.Restart();
             }
         }
         private void btn_cerrarsesion_MouseEnter(object sender, EventArgs e)
@@ -140,33 +148,33 @@ namespace Ensumex.Forms
         // Evento para el botón de sincronización
         private async void btn_sincronizar_Click(object sender, EventArgs e)
         {
-                    btn_sincronizar.Enabled = false;
-                    progressBar1.Value = 0;
+            btn_sincronizar.Enabled = false;
+            progressBar1.Value = 0;
 
-                    try
+            try
+            {
+                await Task.Run(() =>
+                {
+                    SincronizacionService.SincronizarDatos((progreso, total) =>
                     {
-                        await Task.Run(() =>
+                        this.Invoke((Action)(() =>
                         {
-                            SincronizacionService.SincronizarDatos((progreso, total) =>
-                            {
-                                this.Invoke((Action)(() =>
-                                {
-                                    progressBar1.Maximum = total;
-                                    progressBar1.Value = progreso;
-                                }));
-                            });
-                        });
+                            progressBar1.Maximum = total;
+                            progressBar1.Value = progreso;
+                        }));
+                    });
+                });
 
-                        MessageBox.Show("Sincronización completada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error al sincronizar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    finally
-                    {
-                        btn_sincronizar.Enabled = true;
-                    }
+                MessageBox.Show("Sincronización completada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al sincronizar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btn_sincronizar.Enabled = true;
+            }
         }
         private void Btn_Inicio_Click(object sender, EventArgs e)
         {

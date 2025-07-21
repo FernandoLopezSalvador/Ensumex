@@ -37,8 +37,8 @@ namespace Ensumex.PDFtemplates
                     var under = writer.DirectContentUnder;
                     var gs = new PdfGState
                     {
-                        FillOpacity = 0.2f,
-                        StrokeOpacity = 0.2f
+                        FillOpacity = 0.4f,
+                        StrokeOpacity = 0.4f
                     };
                     under.SaveState();
                     under.SetGState(gs);
@@ -56,7 +56,7 @@ namespace Ensumex.PDFtemplates
                 TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin
             };
             // Firma (si existe)
-            if (File.Exists(rutaFirma))
+            /*if (File.Exists(rutaFirma))
             {
                 try
                 {
@@ -73,10 +73,9 @@ namespace Ensumex.PDFtemplates
                 }
                 catch (Exception ex)
                 {
-                    // Puedes loggear el error
-                    // MessageBox.Show("Error cargando firma: " + ex.Message);
+                    
                 }
-            }
+            }*/
 
             // Dirección y teléfonos
             pie.AddCell(new PdfPCell(new Phrase("Av. Lázaro Cárdenas 104-B.", fontPie))
@@ -86,7 +85,7 @@ namespace Ensumex.PDFtemplates
                 PaddingTop = 2f,
                 PaddingBottom = 0f
             });
-            pie.AddCell(new PdfPCell(new Phrase("Sta. Lucía del Camino, Oaxaca. Tels: 951-206-6895 y 951-206-0293", fontPie))
+            pie.AddCell(new PdfPCell(new Phrase("Sta. Lucía del Camino, Oaxaca. Tels: 951-206-6895 y 951-399-7777", fontPie))
             {
                 Border = Rectangle.NO_BORDER,
                 HorizontalAlignment = Element.ALIGN_CENTER,
@@ -95,7 +94,7 @@ namespace Ensumex.PDFtemplates
             });
 
             // Dibuja el pie a 30 puntos del borde inferior
-            float yPie = document.BottomMargin + 100f; // Sube el pie más
+            float yPie = document.BottomMargin + 100f; 
             pie.WriteSelectedRows(0, -1, document.LeftMargin, yPie, writer.DirectContent);
         }
     }

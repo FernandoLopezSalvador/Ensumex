@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 namespace Ensumex.Controllers
 {
     public static class SqlServerRepository
-    {
-        //private static readonly string connSqlServer = "Server=localhost;Database=Ensumex;Trusted_Connection=True;";
-        //private static readonly string connSqlServer = "Server=192.168.1.206;Database=Ensumex;Trusted_Connection=True;";
+    { 
         private static readonly string connSqlServer = "Server=192.168.1.206;Database=Ensumex;User Id=appuser;Password=ensumex;";
 
 
