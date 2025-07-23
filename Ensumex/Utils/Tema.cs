@@ -10,17 +10,18 @@ namespace Ensumex.Utils
 {
     public static class Tema
     {
-        public static void ConfigurarTema(MaterialForm form)
+        public static void ConfigurarTema(MaterialForm form, MaterialSkinManager.Themes tema = MaterialSkinManager.Themes.LIGHT)
         {
             var skinManager = MaterialSkinManager.Instance;
             skinManager.AddFormToManage(form);
-            skinManager.Theme = MaterialSkinManager.Themes.DARK;
+            skinManager.Theme = tema;
             skinManager.ColorScheme = new ColorScheme(
                 Primary.BlueGrey800,
                 Primary.BlueGrey700,
                 Primary.BlueGrey400,
                 Accent.LightBlue100,
-                TextShade.WHITE);
+                tema == MaterialSkinManager.Themes.DARK ? TextShade.WHITE : TextShade.BLACK
+            );
         }
     }
 }

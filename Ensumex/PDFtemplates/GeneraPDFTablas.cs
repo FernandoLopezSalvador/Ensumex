@@ -47,6 +47,7 @@ namespace Ensumex.PDFtemplates
                 var fontRojo = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED);
                 var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
                 var fontGris = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.GRAY);
+                var fontheader = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
 
                 // LOGO
                 string rutaLogo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
@@ -79,17 +80,25 @@ namespace Ensumex.PDFtemplates
                 int tablaNum = 1;
                 foreach (var tabla in tablas)
                 {
+                    // 👉 Título de la tabla (Opción #1, Opción #2, etc.)
+                    Paragraph tituloTabla = new Paragraph($"Opción #{tablaNum}", fontGris)
+                    {
+                        Alignment = Element.ALIGN_LEFT,
+                        SpacingAfter = 10f // Espacio después del título
+                    };
+                    doc.Add(tituloTabla);
+
                     PdfPTable pdfTable = new PdfPTable(8)
                     {
                         WidthPercentage = 100
                     };
-                    pdfTable.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1.2f, 1.1f, 1.3f, 1.2f }); // Ajusta proporciones
+                    pdfTable.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1.2f, 1.1f, 1.3f, 1.2f });
 
                     // Encabezados
-                    string[] headers = { "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "IMPORTE", "DESCUENTO($)", "TOTAL" };
+                    string[] headers = { "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "IMPORTE", "DESCUENTO  ($)", "TOTAL" };
                     foreach (string header in headers)
                     {
-                        PdfPCell celda = new PdfPCell(new Phrase(header, fontNegrita))
+                        PdfPCell celda = new PdfPCell(new Phrase(header, fontheader))
                         {
                             BackgroundColor = new BaseColor(141, 198, 63), // Verde #8DC63F
                             HorizontalAlignment = Element.ALIGN_CENTER,
@@ -101,7 +110,7 @@ namespace Ensumex.PDFtemplates
                     int pos = 1;
                     BaseColor colorPar = BaseColor.WHITE;
                     BaseColor colorImpar = new BaseColor(245, 245, 245);
-
+                    decimal totalTabla = 0;
                     foreach (var row in tabla)
                     {
                         BaseColor bgColor = (pos % 2 == 0) ? colorPar : colorImpar;
@@ -114,28 +123,109 @@ namespace Ensumex.PDFtemplates
                         decimal cantidad = Convert.ToDecimal(row[7] ?? 0);
                         decimal importe = precioUnitario * cantidad;
 
-                        //Obtener porcentaje de descuento (ajusta el índice si viene en otra posición)
                         decimal porcentajeDescuento = Convert.ToDecimal(row[0] ?? 0);
                         decimal descuentoProd = importe * (porcentajeDescuento / 100m);
                         decimal totalProd = importe - descuentoProd;
+                        totalTabla += totalProd;
 
                         pdfTable.AddCell(CeldaTexto(pos.ToString(), fontNormal, bgColor, Element.ALIGN_CENTER));
                         pdfTable.AddCell(CeldaTexto(cantidadStr, fontNormal, bgColor, Element.ALIGN_CENTER));
                         pdfTable.AddCell(CeldaTexto(unidad, fontNormal, bgColor, Element.ALIGN_CENTER));
-                        pdfTable.AddCell(CeldaTexto(descripcion, fontNormal, bgColor, Element.ALIGN_LEFT, wrap: true)); 
+                        pdfTable.AddCell(CeldaTexto(descripcion, fontNormal, bgColor, Element.ALIGN_LEFT, wrap: true));
                         pdfTable.AddCell(CeldaTexto(FormatMoneda(precioUnitario), fontNormal, bgColor, Element.ALIGN_RIGHT));
                         pdfTable.AddCell(CeldaTexto(FormatMoneda(importe), fontNormal, bgColor, Element.ALIGN_RIGHT));
                         pdfTable.AddCell(CeldaTexto("-" + FormatMoneda(descuentoProd), fontRojo, bgColor, Element.ALIGN_RIGHT));
                         pdfTable.AddCell(CeldaTexto(FormatMoneda(totalProd), fontNormal, bgColor, Element.ALIGN_RIGHT));
                         pos++;
                     }
-                    tablaNum++;
+
+                    // 👉 Aquí se agrega la tabla al PDF
+                    doc.Add(pdfTable);
+
+                    // 👉 Totales: Mano de Obra, Flete y Total
+                    doc.Add(new Paragraph("\n"));
+                    PdfPTable tablaTotales = new PdfPTable(2)
+                    {
+                        WidthPercentage = 50,
+                        HorizontalAlignment = Element.ALIGN_RIGHT
+                    };
+
+                    // Establecer anchos de columnas
+                    tablaTotales.SetWidths(new float[] { 2f, 1f });
+
+                    // Colores de filas
+                    BaseColor colorFila = new BaseColor(223, 240, 216); // Verde claro
+                    BaseColor colorTotal = new BaseColor(169, 208, 142); // Verde más fuerte
+
+                    // Mano de obra
+                    PdfPCell celdaManoObra = new PdfPCell(new Phrase("Mano de obra por instalación:", fontNormal))
+                    {
+                        Border = 0,
+                        BackgroundColor = colorFila
+                    };
+                    PdfPCell celdaCostoInstalacion = new PdfPCell(new Phrase(FormatMoneda(costoInstalacion), fontNormal))
+                    {
+                        Border = 0,
+                        BackgroundColor = colorFila,
+                        HorizontalAlignment = Element.ALIGN_RIGHT
+                    };
+                    tablaTotales.AddCell(celdaManoObra);
+                    tablaTotales.AddCell(celdaCostoInstalacion);
+                    //tablaTotales.AddCell(total); // Completar fila para evitar problemas de alineación
+
+                    // Flete
+                    PdfPCell celdaFlete = new PdfPCell(new Phrase("Costo por Envío/Flete:", fontNormal))
+                    {
+                        Border = 0,
+                        BackgroundColor = colorFila
+                    };
+                    PdfPCell celdaCostoFlete = new PdfPCell(new Phrase(FormatMoneda(costoFlete), fontNormal))
+                    {
+                        Border = 0,
+                        BackgroundColor = colorFila,
+                        HorizontalAlignment = Element.ALIGN_RIGHT
+                    };
+                    tablaTotales.AddCell(celdaFlete);
+                    tablaTotales.AddCell(celdaCostoFlete);
+
+                    // Total
+                    PdfPCell celdaTotalLabel = new PdfPCell(new Phrase("Total:", fontNegrita))
+                    {
+                        Border = 0,
+                        BackgroundColor = colorTotal
+                    };
+                    PdfPCell celdaTotalValor = new PdfPCell(new Phrase(FormatMoneda(totalTabla + Convert.ToDecimal(costoInstalacion) + Convert.ToDecimal(costoFlete)), fontNegrita))
+                    {
+                        Border = 0,
+                        BackgroundColor = colorTotal,
+                        HorizontalAlignment = Element.ALIGN_RIGHT
+                    };
+                    tablaTotales.AddCell(celdaTotalLabel);
+                    tablaTotales.AddCell(celdaTotalValor);
+
+                    // Número a letras
+                    decimal valorNumerico = totalTabla + Convert.ToDecimal(costoInstalacion) + Convert.ToDecimal(costoFlete);
+                    PdfPCell celdaLetras = new PdfPCell(new Phrase(Numerosaletras.Convertir(valorNumerico), fontNormal))
+                    {
+                        Border = 0,
+                        Colspan = 2,
+                        HorizontalAlignment = Element.ALIGN_CENTER,
+                        PaddingTop = 5f
+                    };
+                    tablaTotales.AddCell(new PdfPCell(new Phrase("")) { Border = 0, Colspan = 2 }); // Espacio
+                    tablaTotales.AddCell(celdaLetras);
+
+                    // 👉 Agregar la tabla de totales al documento
+                    doc.Add(tablaTotales);
+                    doc.Add(new Paragraph("\n", fontNormal)); 
+                    tablaNum += 1;
                 }
+
 
                 // Notas generales
                 doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
                 doc.Add(new Paragraph(notas, fontNotas));
-                doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n", fontNotas));
+                doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n\n", fontNotas));
                 
                 // Firma
                 PdfPTable tablaFirma = new PdfPTable(1)
@@ -170,17 +260,28 @@ namespace Ensumex.PDFtemplates
                 MessageBox.Show("Error al generar el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private static PdfPCell CeldaResumen(string texto, Font fuente, int align, BaseColor? bgColor = null)
+        {
+            return new PdfPCell(new Phrase(texto, fuente))
+            {
+                BackgroundColor = bgColor ?? BaseColor.WHITE,
+                HorizontalAlignment = align,
+                Border = Rectangle.NO_BORDER,
+                Padding = 4f
+            };
+        }
+
         private static PdfPCell CeldaTexto(string texto, Font fuente, BaseColor fondo, int align, bool wrap = true)
-{
-    return new PdfPCell(new Phrase(texto, fuente))
-    {
-        BackgroundColor = fondo,
-        HorizontalAlignment = align,
-        NoWrap = !wrap,              // ✅ Permite salto de línea
-        MinimumHeight = 15f,         // ✅ Alto mínimo para evitar recorte
-        Padding = 4f
-    };
-}
+        {
+            return new PdfPCell(new Phrase(texto, fuente))
+            {
+                BackgroundColor = fondo,
+                HorizontalAlignment = align,
+                NoWrap = !wrap,              // ✅ Permite salto de línea
+                MinimumHeight = 15f,         // ✅ Alto mínimo para evitar recorte
+                Padding = 4f
+            };
+         }
 
         private static string FormatMoneda(object valor)
         {
@@ -189,4 +290,5 @@ namespace Ensumex.PDFtemplates
             return "$0.00";
         }
     }
+
 }

@@ -13,7 +13,7 @@ namespace Ensumex.PDFtemplates
         private readonly string rutaFondo;
         private readonly string rutaFirma;
         private readonly string usuario;
-        private readonly iTextSharp.text.Font fontPie = FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.DARK_GRAY);
+        private readonly iTextSharp.text.Font fontPie = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.DARK_GRAY);
 
         public FondoPiePDF(string rutaFondo, string rutaFirma, string usuario)
         {
@@ -94,7 +94,7 @@ namespace Ensumex.PDFtemplates
             });
 
             // Dibuja el pie a 30 puntos del borde inferior
-            float yPie = document.BottomMargin + 100f; 
+            float yPie = document.BottomMargin + 10f; 
             pie.WriteSelectedRows(0, -1, document.LeftMargin, yPie, writer.DirectContent);
         }
     }

@@ -11,14 +11,14 @@ namespace Ensumex
         [STAThread]
         static void Main()
         {
-            /*
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Login());*/
+            // Habilita soporte DPI para monitores de diferentes resoluciones
+            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+
+            // Estilos visuales modernos
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // Inicia la app con Login y splash screen
             using (Login login = new Login())
             {
                 if (login.ShowDialog() == DialogResult.OK)

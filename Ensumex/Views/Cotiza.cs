@@ -32,7 +32,7 @@ namespace Ensumex.Views
         private List<List<object[]>> tablasGuardadas = new();
         private Panel panelBusqueda;
         private DataGridView dgvBusqueda;
-        private List<dynamic> productosCache = new(); 
+        private List<dynamic> productosCache = new();
 
         public Cotiza(string usuario)
         {
@@ -48,7 +48,7 @@ namespace Ensumex.Views
         }
         private void InicializarFormulario()
         {
-            
+
             AplicarConfiguracionesGenerales();
             ConfigurarControles();
             ConfigurarEventos();
@@ -105,7 +105,7 @@ namespace Ensumex.Views
                     {
                         Name = "CANTIDAD",
                         HeaderText = "Cantidad",
-                        DataSource = Enumerable.Range(1, 100).ToList(), 
+                        DataSource = Enumerable.Range(1, 100).ToList(),
                         ValueType = typeof(int),
                         FlatStyle = FlatStyle.Flat
                     };
@@ -476,8 +476,8 @@ namespace Ensumex.Views
                         row.Cells["Total"].Value = subtotalOriginal;
                     }
                 }
-                lbl_Subtotal.Text = subtotalGeneral.ToString("C");                 
-                lbl_costoDescuento.Text = $"-{totalDescuento:C}";                 
+                lbl_Subtotal.Text = subtotalGeneral.ToString("C");
+                lbl_costoDescuento.Text = $"-{totalDescuento:C}";
                 decimal.TryParse(txt_Costoinstalacion.Text, out instalacion);
                 decimal.TryParse(txt_Costoflete.Text, out flete);
                 decimal totalNeto = (subtotalGeneral - totalDescuento) + instalacion + flete;
@@ -554,7 +554,7 @@ namespace Ensumex.Views
                         int cantidadFinal = 1;
                         cantidad = cantidadFinal;
                         decimal subtotal = precioFinal * cantidad;
-                        decimal total = subtotal; 
+                        decimal total = subtotal;
                         // Verificar si el producto ya está en la tabla
                         foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                         {
@@ -666,8 +666,8 @@ namespace Ensumex.Views
                 // Nombres de columna consistentes
                 string colPrecio = "PRECIO";
                 string colCantidad = "CANTIDAD";
-                string colSubtotal = "Subtotal"; 
-                string colDescuento = "Descuento"; 
+                string colSubtotal = "Subtotal";
+                string colDescuento = "Descuento";
 
                 if (colName == colDescuento || colName == colPrecio || colName == colCantidad || colName == colSubtotal)
                 {
@@ -785,7 +785,7 @@ namespace Ensumex.Views
             if (tablaActual.Count > 0)
             {
                 tablasGuardadas.Add(tablaActual);
-                tbl_Cotizacion.Rows.Clear(); 
+                tbl_Cotizacion.Rows.Clear();
                 MessageBox.Show("Tabla guardada y lista para capturar una nueva.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
@@ -906,16 +906,16 @@ namespace Ensumex.Views
         {
             // Puedes obtener los productos desde tu servicio o base de datos
             var productoService = new ProductoServices1();
-            var productos = productoService.ObtenerProductos(); 
+            var productos = productoService.ObtenerProductos();
             productosCache = productos.Select(p => new
             {
                 CLAVE = p.CVE_ART ?? "N/A",
                 DESCRIPCIÓN = p.DESCR ?? "N/A",
-                UNIDAD = p.UNI_MED ?? "N/A" ,
-                PRECIO = p.PRECIO != 0 ? (p.PRECIO * 1.16m).ToString("C2") : "$0.00" 
+                UNIDAD = p.UNI_MED ?? "N/A",
+                PRECIO = p.PRECIO != 0 ? (p.PRECIO * 1.16m).ToString("C2") : "$0.00"
             }).ToList<dynamic>();
         }
-            
+
         private void DgvBusqueda_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -927,7 +927,7 @@ namespace Ensumex.Views
                 int cantidad = 1;
                 string unidad = row.Cells["UNIDAD"].Value?.ToString();
                 decimal total = precio * cantidad;
-                tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidad,total, cantidad);
+                tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidad, total, cantidad);
                 ActualizarNumeroCotizacionEnLabel();
                 ActualizarTotales();
                 ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
@@ -944,7 +944,7 @@ namespace Ensumex.Views
             tbl_Cotizacion.ReadOnly = false;
             foreach (DataGridViewColumn col in tbl_Cotizacion.Columns)
             {
-                col.ReadOnly = !(col.Name == "PRECIO" || col.Name == "Descuento"|| col.Name== "CANTIDAD");
+                col.ReadOnly = !(col.Name == "PRECIO" || col.Name == "Descuento" || col.Name == "CANTIDAD");
             }
         }
 
@@ -965,7 +965,7 @@ namespace Ensumex.Views
             }
 
             // Continuar con la lógica de guardar cotización
-            if (tablasGuardadas.Count > 0 && tbl_Cotizacion.Rows.Count > 1)
+            if (tablasGuardadas.Count > 0 && tbl_Cotizacion.Rows.Count >= 1)
             {
                 GuardarCotizacionTablas();
             }
@@ -1027,7 +1027,7 @@ namespace Ensumex.Views
                     formWrapper.Controls.Add(btnAceptar);
                     formWrapper.Controls.Add(btnCancelar);
                     formWrapper.CancelButton = btnCancelar;
-                        
+
                     // Mostrar formulario como modal
                     if (formWrapper.ShowDialog() == DialogResult.OK)
                     {
@@ -1075,6 +1075,86 @@ namespace Ensumex.Views
             {
                 MessageBox.Show("Ocurrió un error al agregar el producto:\n" + ex.Message,
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            // Guarda toda la tabla actual
+            List<object[]> tablaActual = new();
+            foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    object[] valores = new object[row.Cells.Count];
+                    for (int i = 0; i < row.Cells.Count; i++)
+                        valores[i] = row.Cells[i].Value;
+                    tablaActual.Add(valores);
+                }
+            }
+            if (tablaActual.Count > 0)
+            {
+                tablasGuardadas.Add(tablaActual);
+                tbl_Cotizacion.Rows.Clear();
+                MessageBox.Show("Tabla guardada y lista para capturar una nueva.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("No hay productos para guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // Abre el formulario de selección de productos
+            using (var productosForm = new Form())
+            {
+                var productControl = new Product
+                {
+                    Dock = DockStyle.Fill
+                };
+                productosForm.Controls.Add(productControl);
+                productosForm.StartPosition = FormStartPosition.CenterParent;
+                productosForm.WindowState = FormWindowState.Maximized;
+                productosForm.Text = "Seleccionar Producto";
+                productControl.ProductoSeleccionado += (clave, descripcion, unidad, precio, cantidad) =>
+                {
+                    // Validar que los datos no sean nulos o vacíos
+                    try
+                    {
+                        decimal precioFinal = precio;
+                        int cantidadFinal = 1;
+                        cantidad = cantidadFinal;
+                        decimal subtotal = precioFinal * cantidad;
+                        decimal total = subtotal;
+                        // Verificar si el producto ya está en la tabla
+                        foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
+                        {
+                            if (row.Cells[0].Value?.ToString() == clave)
+                            {
+                                decimal cantidadExistente = Convert.ToDecimal(row.Cells[8].Value);
+                                cantidad += cantidadExistente;
+                                row.Cells[8].Value = cantidad;
+                                row.Cells[6].Value = precioFinal * cantidad;
+                                ActualizarTotales();
+                                productosForm.Close();
+                                return;
+                            }
+                        }
+                        //tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioFinal, subtotal, cantidad);
+                        tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidadFinal, total, cantidadFinal);
+                        ActualizarNumeroCotizacionEnLabel();
+                        ActualizarTotales();
+                        ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
+                        HabilitarEdicionParcial();
+                        productosForm.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error al agregar el producto:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                };
+                productosForm.ShowDialog();
             }
         }
     }

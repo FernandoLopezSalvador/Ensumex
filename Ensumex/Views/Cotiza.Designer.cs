@@ -56,12 +56,14 @@
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
+            button1 = new Button();
             lbl_observaciones = new MaterialSkin.Controls.MaterialLabel();
             Txt_observaciones = new TextBox();
             materialButton1 = new MaterialSkin.Controls.MaterialButton();
             tbl_Cotizacion = new DataGridView();
             AgregarTabla = new MaterialSkin.Controls.MaterialButton();
             tableLayoutPanel4 = new TableLayoutPanel();
+            button2 = new Button();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Buscarcliente).BeginInit();
             tableLayoutPanel3.SuspendLayout();
@@ -72,6 +74,7 @@
             // 
             // tableLayoutPanel1
             // 
+            tableLayoutPanel1.BackColor = SystemColors.Control;
             tableLayoutPanel1.ColumnCount = 6;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 11.99564F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 27.5899715F));
@@ -390,10 +393,10 @@
             // 
             Buscar.Anchor = AnchorStyles.Right;
             Buscar.AutoSize = true;
-            Buscar.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Buscar.Location = new Point(52, 192);
+            Buscar.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Buscar.Location = new Point(46, 192);
             Buscar.Name = "Buscar";
-            Buscar.Size = new Size(55, 20);
+            Buscar.Size = new Size(61, 20);
             Buscar.TabIndex = 31;
             Buscar.Text = "Buscar:";
             Buscar.TextAlign = ContentAlignment.BottomLeft;
@@ -454,6 +457,7 @@
             // 
             // tableLayoutPanel3
             // 
+            tableLayoutPanel3.BackColor = SystemColors.Control;
             tableLayoutPanel3.ColumnCount = 3;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10.40624F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 38.7799568F));
@@ -477,12 +481,14 @@
             tableLayoutPanel2.ColumnCount = 2;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
+            tableLayoutPanel2.Controls.Add(button2, 1, 3);
             tableLayoutPanel2.Controls.Add(lbl_Subtotal, 1, 0);
             tableLayoutPanel2.Controls.Add(lbl_costoDescuento, 1, 1);
             tableLayoutPanel2.Controls.Add(lbl_TotalNeto, 1, 2);
             tableLayoutPanel2.Controls.Add(label1, 0, 0);
             tableLayoutPanel2.Controls.Add(label2, 0, 1);
             tableLayoutPanel2.Controls.Add(label3, 0, 2);
+            tableLayoutPanel2.Controls.Add(button1, 0, 3);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(453, 3);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -528,6 +534,16 @@
             label3.TabIndex = 30;
             label3.Text = "Total Neto:";
             // 
+            // button1
+            // 
+            button1.Location = new Point(3, 153);
+            button1.Name = "button1";
+            button1.Size = new Size(137, 44);
+            button1.TabIndex = 31;
+            button1.Text = "Agregar Nueva Tabla";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // lbl_observaciones
             // 
             lbl_observaciones.Anchor = AnchorStyles.Right;
@@ -555,7 +571,7 @@
             // 
             materialButton1.Anchor = AnchorStyles.Left;
             materialButton1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            materialButton1.BackColor = Color.Cyan;
+            materialButton1.BackColor = SystemColors.Control;
             materialButton1.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
             materialButton1.Depth = 0;
             materialButton1.HighEmphasis = true;
@@ -590,7 +606,7 @@
             // 
             AgregarTabla.Anchor = AnchorStyles.Right;
             AgregarTabla.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            AgregarTabla.BackColor = Color.Green;
+            AgregarTabla.BackColor = SystemColors.Control;
             AgregarTabla.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
             AgregarTabla.Depth = 0;
             AgregarTabla.HighEmphasis = true;
@@ -624,6 +640,16 @@
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel4.Size = new Size(918, 146);
             tableLayoutPanel4.TabIndex = 11;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(187, 153);
+            button2.Name = "button2";
+            button2.Size = new Size(137, 44);
+            button2.TabIndex = 32;
+            button2.Text = "AÑADIR PRODUCT";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // Cotiza
             // 
@@ -683,5 +709,7 @@
         private Label label1;
         private Label label2;
         private Label label3;
+        private Button button1;
+        private Button button2;
     }
 }

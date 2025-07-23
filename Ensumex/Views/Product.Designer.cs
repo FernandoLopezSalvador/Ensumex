@@ -69,9 +69,10 @@
             // 
             label1.Anchor = AnchorStyles.Right;
             label1.AutoSize = true;
-            label1.Location = new Point(376, 24);
+            label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(353, 21);
             label1.Name = "label1";
-            label1.Size = new Size(51, 15);
+            label1.Size = new Size(74, 21);
             label1.TabIndex = 11;
             label1.Text = "Mostrar:";
             // 
@@ -111,9 +112,10 @@
             // 
             label2.Anchor = AnchorStyles.Right;
             label2.AutoSize = true;
-            label2.Location = new Point(372, 88);
+            label2.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label2.Location = new Point(347, 85);
             label2.Name = "label2";
-            label2.Size = new Size(55, 15);
+            label2.Size = new Size(80, 21);
             label2.TabIndex = 13;
             label2.Text = "Registros";
             // 
@@ -121,9 +123,10 @@
             // 
             btn_existencias.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             btn_existencias.AutoSize = true;
-            btn_existencias.Location = new Point(648, 86);
+            btn_existencias.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btn_existencias.Location = new Point(648, 84);
             btn_existencias.Name = "btn_existencias";
-            btn_existencias.Size = new Size(212, 19);
+            btn_existencias.Size = new Size(212, 24);
             btn_existencias.TabIndex = 18;
             btn_existencias.Text = "Mostrar solo en existencia";
             btn_existencias.UseVisualStyleBackColor = true;
