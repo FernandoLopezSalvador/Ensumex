@@ -32,7 +32,6 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
             label2 = new Label();
-            ImprimirClientes = new MaterialSkin.Controls.MaterialButton();
             cmb_filtrarcotiza = new ComboBox();
             text_buscar = new TextBox();
             ((System.ComponentModel.ISupportInitialize)tabla_cotizaciones).BeginInit();
@@ -62,7 +61,6 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.Controls.Add(label1, 1, 0);
             tableLayoutPanel1.Controls.Add(label2, 1, 1);
-            tableLayoutPanel1.Controls.Add(ImprimirClientes, 0, 1);
             tableLayoutPanel1.Controls.Add(cmb_filtrarcotiza, 2, 0);
             tableLayoutPanel1.Controls.Add(text_buscar, 2, 1);
             tableLayoutPanel1.Dock = DockStyle.Top;
@@ -99,26 +97,6 @@
             label2.Size = new Size(65, 21);
             label2.TabIndex = 13;
             label2.Text = "Buscar:";
-            // 
-            // ImprimirClientes
-            // 
-            ImprimirClientes.Anchor = AnchorStyles.None;
-            ImprimirClientes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ImprimirClientes.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            ImprimirClientes.Depth = 0;
-            ImprimirClientes.HighEmphasis = true;
-            ImprimirClientes.Icon = null;
-            ImprimirClientes.Location = new Point(41, 78);
-            ImprimirClientes.Margin = new Padding(4);
-            ImprimirClientes.MouseState = MaterialSkin.MouseState.HOVER;
-            ImprimirClientes.Name = "ImprimirClientes";
-            ImprimirClientes.NoAccentTextColor = Color.Empty;
-            ImprimirClientes.Size = new Size(87, 36);
-            ImprimirClientes.TabIndex = 16;
-            ImprimirClientes.Text = "Imprimir";
-            ImprimirClientes.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            ImprimirClientes.UseAccentColor = false;
-            ImprimirClientes.UseVisualStyleBackColor = true;
             // 
             // cmb_filtrarcotiza
             // 
@@ -160,7 +138,6 @@
         private TableLayoutPanel tableLayoutPanel1;
         private Label label1;
         private Label label2;
-        private MaterialSkin.Controls.MaterialButton ImprimirClientes;
         private ComboBox cmb_filtrarcotiza;
         private TextBox text_buscar;
     }

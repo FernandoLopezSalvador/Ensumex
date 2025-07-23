@@ -43,11 +43,11 @@
             txt_NumeroCliente = new MaterialSkin.Controls.MaterialTextBox2();
             materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
             lbl_NoCotiza = new Label();
-            btn_AgregarProducto = new Button();
-            Btn_guardarCotizacion = new Button();
-            btn_Cancelarcotizacion = new Button();
             Buscar = new Label();
             Txt_Buscar = new TextBox();
+            Btn_Cancelar = new FontAwesome.Sharp.IconButton();
+            Btn_Guardar = new FontAwesome.Sharp.IconButton();
+            Btn_NuevoProd = new FontAwesome.Sharp.IconButton();
             lbl_costoDescuento = new MaterialSkin.Controls.MaterialLabel();
             lbl_TotalNeto = new MaterialSkin.Controls.MaterialLabel();
             lbl_Subtotal = new MaterialSkin.Controls.MaterialLabel();
@@ -56,14 +56,12 @@
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
-            button1 = new Button();
             lbl_observaciones = new MaterialSkin.Controls.MaterialLabel();
             Txt_observaciones = new TextBox();
-            materialButton1 = new MaterialSkin.Controls.MaterialButton();
+            Btn_AñadirTabla = new FontAwesome.Sharp.IconButton();
+            Btn_Añadprod = new FontAwesome.Sharp.IconButton();
             tbl_Cotizacion = new DataGridView();
-            AgregarTabla = new MaterialSkin.Controls.MaterialButton();
             tableLayoutPanel4 = new TableLayoutPanel();
-            button2 = new Button();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Buscarcliente).BeginInit();
             tableLayoutPanel3.SuspendLayout();
@@ -95,11 +93,11 @@
             tableLayoutPanel1.Controls.Add(txt_NumeroCliente, 5, 1);
             tableLayoutPanel1.Controls.Add(materialLabel5, 4, 1);
             tableLayoutPanel1.Controls.Add(lbl_NoCotiza, 1, 0);
-            tableLayoutPanel1.Controls.Add(btn_AgregarProducto, 5, 3);
-            tableLayoutPanel1.Controls.Add(Btn_guardarCotizacion, 4, 3);
-            tableLayoutPanel1.Controls.Add(btn_Cancelarcotizacion, 3, 3);
             tableLayoutPanel1.Controls.Add(Buscar, 0, 4);
             tableLayoutPanel1.Controls.Add(Txt_Buscar, 1, 4);
+            tableLayoutPanel1.Controls.Add(Btn_Cancelar, 3, 3);
+            tableLayoutPanel1.Controls.Add(Btn_Guardar, 4, 3);
+            tableLayoutPanel1.Controls.Add(Btn_NuevoProd, 5, 3);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
@@ -353,42 +351,6 @@
             lbl_NoCotiza.TabIndex = 29;
             lbl_NoCotiza.Text = "cotizacion";
             // 
-            // btn_AgregarProducto
-            // 
-            btn_AgregarProducto.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            btn_AgregarProducto.BackColor = Color.SteelBlue;
-            btn_AgregarProducto.Location = new Point(767, 146);
-            btn_AgregarProducto.Name = "btn_AgregarProducto";
-            btn_AgregarProducto.Size = new Size(125, 33);
-            btn_AgregarProducto.TabIndex = 6;
-            btn_AgregarProducto.Text = "Nuevo Prod.";
-            btn_AgregarProducto.UseVisualStyleBackColor = false;
-            btn_AgregarProducto.Click += btn_AgregarProducto_Click_1;
-            // 
-            // Btn_guardarCotizacion
-            // 
-            Btn_guardarCotizacion.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            Btn_guardarCotizacion.BackColor = Color.Green;
-            Btn_guardarCotizacion.Location = new Point(614, 146);
-            Btn_guardarCotizacion.Name = "Btn_guardarCotizacion";
-            Btn_guardarCotizacion.Size = new Size(102, 33);
-            Btn_guardarCotizacion.TabIndex = 8;
-            Btn_guardarCotizacion.Text = "GUARDAR";
-            Btn_guardarCotizacion.UseVisualStyleBackColor = false;
-            Btn_guardarCotizacion.Click += Btn_guardarCotizacion_Click_1;
-            // 
-            // btn_Cancelarcotizacion
-            // 
-            btn_Cancelarcotizacion.Anchor = AnchorStyles.Left;
-            btn_Cancelarcotizacion.BackColor = Color.Red;
-            btn_Cancelarcotizacion.Location = new Point(460, 146);
-            btn_Cancelarcotizacion.Name = "btn_Cancelarcotizacion";
-            btn_Cancelarcotizacion.Size = new Size(106, 33);
-            btn_Cancelarcotizacion.TabIndex = 9;
-            btn_Cancelarcotizacion.Text = "Cancelar";
-            btn_Cancelarcotizacion.UseVisualStyleBackColor = false;
-            btn_Cancelarcotizacion.Click += btn_Cancelarcotizacion_Click;
-            // 
             // Buscar
             // 
             Buscar.Anchor = AnchorStyles.Right;
@@ -409,6 +371,48 @@
             Txt_Buscar.Size = new Size(247, 23);
             Txt_Buscar.TabIndex = 7;
             Txt_Buscar.TextChanged += textBox1_TextChanged;
+            // 
+            // Btn_Cancelar
+            // 
+            Btn_Cancelar.Dock = DockStyle.Fill;
+            Btn_Cancelar.IconChar = FontAwesome.Sharp.IconChar.None;
+            Btn_Cancelar.IconColor = Color.Black;
+            Btn_Cancelar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            Btn_Cancelar.Location = new Point(460, 146);
+            Btn_Cancelar.Name = "Btn_Cancelar";
+            Btn_Cancelar.Size = new Size(148, 33);
+            Btn_Cancelar.TabIndex = 32;
+            Btn_Cancelar.Text = "CANCELAR";
+            Btn_Cancelar.UseVisualStyleBackColor = true;
+            Btn_Cancelar.Click += Btn_Cancelar_Click;
+            // 
+            // Btn_Guardar
+            // 
+            Btn_Guardar.Dock = DockStyle.Fill;
+            Btn_Guardar.IconChar = FontAwesome.Sharp.IconChar.None;
+            Btn_Guardar.IconColor = Color.Black;
+            Btn_Guardar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            Btn_Guardar.Location = new Point(614, 146);
+            Btn_Guardar.Name = "Btn_Guardar";
+            Btn_Guardar.Size = new Size(147, 33);
+            Btn_Guardar.TabIndex = 33;
+            Btn_Guardar.Text = "GUARDAR";
+            Btn_Guardar.UseVisualStyleBackColor = true;
+            Btn_Guardar.Click += Btn_Guardar_Click;
+            // 
+            // Btn_NuevoProd
+            // 
+            Btn_NuevoProd.Dock = DockStyle.Fill;
+            Btn_NuevoProd.IconChar = FontAwesome.Sharp.IconChar.None;
+            Btn_NuevoProd.IconColor = Color.Black;
+            Btn_NuevoProd.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            Btn_NuevoProd.Location = new Point(767, 146);
+            Btn_NuevoProd.Name = "Btn_NuevoProd";
+            Btn_NuevoProd.Size = new Size(148, 33);
+            Btn_NuevoProd.TabIndex = 34;
+            Btn_NuevoProd.Text = "PRODUCTO";
+            Btn_NuevoProd.UseVisualStyleBackColor = true;
+            Btn_NuevoProd.Click += Btn_NuevoProd_Click;
             // 
             // lbl_costoDescuento
             // 
@@ -481,14 +485,12 @@
             tableLayoutPanel2.ColumnCount = 2;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
-            tableLayoutPanel2.Controls.Add(button2, 1, 3);
             tableLayoutPanel2.Controls.Add(lbl_Subtotal, 1, 0);
             tableLayoutPanel2.Controls.Add(lbl_costoDescuento, 1, 1);
             tableLayoutPanel2.Controls.Add(lbl_TotalNeto, 1, 2);
             tableLayoutPanel2.Controls.Add(label1, 0, 0);
             tableLayoutPanel2.Controls.Add(label2, 0, 1);
             tableLayoutPanel2.Controls.Add(label3, 0, 2);
-            tableLayoutPanel2.Controls.Add(button1, 0, 3);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(453, 3);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -534,16 +536,6 @@
             label3.TabIndex = 30;
             label3.Text = "Total Neto:";
             // 
-            // button1
-            // 
-            button1.Location = new Point(3, 153);
-            button1.Name = "button1";
-            button1.Size = new Size(137, 44);
-            button1.TabIndex = 31;
-            button1.Text = "Agregar Nueva Tabla";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
             // lbl_observaciones
             // 
             lbl_observaciones.Anchor = AnchorStyles.Right;
@@ -567,27 +559,33 @@
             Txt_observaciones.Size = new Size(349, 137);
             Txt_observaciones.TabIndex = 34;
             // 
-            // materialButton1
+            // Btn_AñadirTabla
             // 
-            materialButton1.Anchor = AnchorStyles.Left;
-            materialButton1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            materialButton1.BackColor = SystemColors.Control;
-            materialButton1.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            materialButton1.Depth = 0;
-            materialButton1.HighEmphasis = true;
-            materialButton1.Icon = null;
-            materialButton1.Location = new Point(829, 55);
-            materialButton1.Margin = new Padding(4);
-            materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
-            materialButton1.Name = "materialButton1";
-            materialButton1.NoAccentTextColor = Color.Empty;
-            materialButton1.Size = new Size(85, 36);
-            materialButton1.TabIndex = 5;
-            materialButton1.Text = "Añadir Producto";
-            materialButton1.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            materialButton1.UseAccentColor = false;
-            materialButton1.UseVisualStyleBackColor = false;
-            materialButton1.Click += materialButton1_Click;
+            Btn_AñadirTabla.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Btn_AñadirTabla.IconChar = FontAwesome.Sharp.IconChar.None;
+            Btn_AñadirTabla.IconColor = Color.Black;
+            Btn_AñadirTabla.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            Btn_AñadirTabla.Location = new Point(3, 48);
+            Btn_AñadirTabla.Name = "Btn_AñadirTabla";
+            Btn_AñadirTabla.Size = new Size(85, 49);
+            Btn_AñadirTabla.TabIndex = 31;
+            Btn_AñadirTabla.Text = "AGREGAR TABLA";
+            Btn_AñadirTabla.UseVisualStyleBackColor = true;
+            Btn_AñadirTabla.Click += iconButton1_Click;
+            // 
+            // Btn_Añadprod
+            // 
+            Btn_Añadprod.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Btn_Añadprod.IconChar = FontAwesome.Sharp.IconChar.None;
+            Btn_Añadprod.IconColor = Color.Black;
+            Btn_Añadprod.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            Btn_Añadprod.Location = new Point(828, 43);
+            Btn_Añadprod.Name = "Btn_Añadprod";
+            Btn_Añadprod.Size = new Size(87, 59);
+            Btn_Añadprod.TabIndex = 32;
+            Btn_Añadprod.Text = "AÑADIR PRODUCTO";
+            Btn_Añadprod.UseVisualStyleBackColor = true;
+            Btn_Añadprod.Click += Btn_Añadprod_Click;
             // 
             // tbl_Cotizacion
             // 
@@ -599,30 +597,9 @@
             tbl_Cotizacion.RowHeadersWidth = 51;
             tbl_Cotizacion.Size = new Size(728, 142);
             tbl_Cotizacion.TabIndex = 8;
+            tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit_1;
             tbl_Cotizacion.CellClick += tbl_Cotizacion_CellClick;
             tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
-            // 
-            // AgregarTabla
-            // 
-            AgregarTabla.Anchor = AnchorStyles.Right;
-            AgregarTabla.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            AgregarTabla.BackColor = SystemColors.Control;
-            AgregarTabla.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            AgregarTabla.Depth = 0;
-            AgregarTabla.HighEmphasis = true;
-            AgregarTabla.Icon = null;
-            AgregarTabla.Location = new Point(4, 55);
-            AgregarTabla.Margin = new Padding(4);
-            AgregarTabla.MouseState = MaterialSkin.MouseState.HOVER;
-            AgregarTabla.Name = "AgregarTabla";
-            AgregarTabla.NoAccentTextColor = Color.Empty;
-            AgregarTabla.Size = new Size(83, 36);
-            AgregarTabla.TabIndex = 35;
-            AgregarTabla.Text = "Agregar Nueva tabla";
-            AgregarTabla.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            AgregarTabla.UseAccentColor = false;
-            AgregarTabla.UseVisualStyleBackColor = false;
-            AgregarTabla.Click += AgrgarTabla_Click;
             // 
             // tableLayoutPanel4
             // 
@@ -631,8 +608,8 @@
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80F));
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
             tableLayoutPanel4.Controls.Add(tbl_Cotizacion, 1, 0);
-            tableLayoutPanel4.Controls.Add(materialButton1, 2, 0);
-            tableLayoutPanel4.Controls.Add(AgregarTabla, 0, 0);
+            tableLayoutPanel4.Controls.Add(Btn_AñadirTabla, 0, 0);
+            tableLayoutPanel4.Controls.Add(Btn_Añadprod, 2, 0);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(0, 223);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -640,16 +617,6 @@
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel4.Size = new Size(918, 146);
             tableLayoutPanel4.TabIndex = 11;
-            // 
-            // button2
-            // 
-            button2.Location = new Point(187, 153);
-            button2.Name = "button2";
-            button2.Size = new Size(137, 44);
-            button2.TabIndex = 32;
-            button2.Text = "AÑADIR PRODUCT";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
             // 
             // Cotiza
             // 
@@ -670,7 +637,6 @@
             tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)tbl_Cotizacion).EndInit();
             tableLayoutPanel4.ResumeLayout(false);
-            tableLayoutPanel4.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -696,20 +662,18 @@
         private MaterialSkin.Controls.MaterialLabel lbl_TotalNeto;
         private MaterialSkin.Controls.MaterialLabel lbl_observaciones;
         private TableLayoutPanel tableLayoutPanel2;
-        private MaterialSkin.Controls.MaterialButton materialButton1;
         private TextBox Txt_observaciones;
-        private MaterialSkin.Controls.MaterialButton AgregarTabla;
         private Label lbl_NoCotiza;
         private TextBox Txt_Buscar;
         private Label Buscar;
-        private Button btn_Cancelarcotizacion;
-        private Button Btn_guardarCotizacion;
-        private Button btn_AgregarProducto;
         private TableLayoutPanel tableLayoutPanel4;
         private Label label1;
         private Label label2;
         private Label label3;
-        private Button button1;
-        private Button button2;
+        private FontAwesome.Sharp.IconButton Btn_AñadirTabla;
+        private FontAwesome.Sharp.IconButton Btn_Añadprod;
+        private FontAwesome.Sharp.IconButton Btn_Cancelar;
+        private FontAwesome.Sharp.IconButton Btn_Guardar;
+        private FontAwesome.Sharp.IconButton Btn_NuevoProd;
     }
 }

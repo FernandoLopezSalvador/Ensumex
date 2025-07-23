@@ -6,8 +6,10 @@ using Ensumex.Models;
 using Ensumex.PDFtemplates;
 using Ensumex.Services;
 using Ensumex.Utils;
+using FontAwesome.Sharp;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using MaterialSkin;
 using Microsoft.VisualBasic;
 using OfficeOpenXml.Drawing.Chart;
 using System;
@@ -23,6 +25,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Color = System.Drawing.Color;
+using Font = System.Drawing.Font;
 
 namespace Ensumex.Views
 {
@@ -42,9 +46,16 @@ namespace Ensumex.Views
             Txt_observaciones.WordWrap = true;
             usuarioActual = usuario;
             InicializarFormulario();
+            InicializarTabla();
+            ConfigurarBotones();
             InicializarPanelBusqueda();
             CargarProductosCache();
             Txt_Buscar.TextChanged += textBox1_TextChanged;
+        }
+        private void InicializarTabla()
+        {
+            tbl_Cotizacion.AllowUserToAddRows = true; // o false si no quieres la fila nueva
+            tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit;
         }
         private void InicializarFormulario()
         {
@@ -241,6 +252,12 @@ namespace Ensumex.Views
                             MessageBox.Show("No se proporcionó un número válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
+                    // Abrir el PDF generado
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = sfd.FileName,
+                        UseShellExecute = true
+                    });
                     tablasGuardadas.Clear();
                     limpiaCampos();
                 }
@@ -252,7 +269,6 @@ namespace Ensumex.Views
             {
                 // Guardar cliente si no existe
                 CotizacionRepository.GuardarSiNoExisteCliente(txt_NumeroCliente.Text, txt_Nombrecliente.Text);
-
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
                     if (tbl_Cotizacion.Rows.Count <= 1)
@@ -272,14 +288,11 @@ namespace Ensumex.Views
                         foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                         {
                             if (row.IsNewRow) continue;
-
                             decimal precio = 0m, cantidad = 0m;
                             int porcentajeDescuento = 0;
-
                             decimal.TryParse(row.Cells["PRECIO"]?.Value?.ToString(), out precio);
                             decimal.TryParse(row.Cells["CANTIDAD"]?.Value?.ToString(), out cantidad);
                             int.TryParse(row.Cells["Descuento"]?.Value?.ToString(), out porcentajeDescuento);
-
                             decimal descuentoFila = (precio * cantidad) * (porcentajeDescuento / 100m);
                             totalDescuentoCalculado += descuentoFila;
                         }
@@ -324,7 +337,6 @@ namespace Ensumex.Views
                                 numeroCliente = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el número de WhatsApp del cliente (ejemplo: 9511234567):", "WhatsApp", "");
                                 numeroCliente = NormalizarNumeroWhatsApp(numeroCliente);
                             }
-
                             if (!string.IsNullOrWhiteSpace(numeroCliente))
                             {
                                 string mensaje = $"Hola, le comparto la cotización {lbl_NoCotiza.Text}. Adjunto el PDF.";
@@ -369,10 +381,6 @@ namespace Ensumex.Views
             {
                 MessageBox.Show($"Ocurrió un error al guardar la cotización.\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-        private void cmb_Descuento_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ActualizarTotales();
         }
         private void txt_Costoinstalacion_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -454,13 +462,10 @@ namespace Ensumex.Views
                     // Obtener precio y cantidad
                     decimal.TryParse(row.Cells["PRECIO"].Value?.ToString(), out precio);
                     decimal.TryParse(row.Cells["CANTIDAD"].Value?.ToString(), out cantidad);
-
                     subtotalOriginal = precio * cantidad;
-
                     // Suma al subtotal general (total sin descuento)
                     subtotalGeneral += subtotalOriginal;
                     row.Cells["Subtotal"].Value = subtotalOriginal;
-
                     // Obtener porcentaje de descuento del ComboBox
                     int porcentajeDescuento = 0;
                     int.TryParse(row.Cells["Descuento"].Value?.ToString(), out porcentajeDescuento);
@@ -532,59 +537,7 @@ namespace Ensumex.Views
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        private void materialButton1_Click(object sender, EventArgs e)
-        {
-            // Abre el formulario de selección de productos
-            using (var productosForm = new Form())
-            {
-                var productControl = new Product
-                {
-                    Dock = DockStyle.Fill
-                };
-                productosForm.Controls.Add(productControl);
-                productosForm.StartPosition = FormStartPosition.CenterParent;
-                productosForm.WindowState = FormWindowState.Maximized;
-                productosForm.Text = "Seleccionar Producto";
-                productControl.ProductoSeleccionado += (clave, descripcion, unidad, precio, cantidad) =>
-                {
-                    // Validar que los datos no sean nulos o vacíos
-                    try
-                    {
-                        decimal precioFinal = precio;
-                        int cantidadFinal = 1;
-                        cantidad = cantidadFinal;
-                        decimal subtotal = precioFinal * cantidad;
-                        decimal total = subtotal;
-                        // Verificar si el producto ya está en la tabla
-                        foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
-                        {
-                            if (row.Cells[0].Value?.ToString() == clave)
-                            {
-                                decimal cantidadExistente = Convert.ToDecimal(row.Cells[8].Value);
-                                cantidad += cantidadExistente;
-                                row.Cells[8].Value = cantidad;
-                                row.Cells[6].Value = precioFinal * cantidad;
-                                ActualizarTotales();
-                                productosForm.Close();
-                                return;
-                            }
-                        }
-                        //tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioFinal, subtotal, cantidad);
-                        tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidadFinal, total, cantidadFinal);
-                        ActualizarNumeroCotizacionEnLabel();
-                        ActualizarTotales();
-                        ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
-                        HabilitarEdicionParcial();
-                        productosForm.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error al agregar el producto:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                };
-                productosForm.ShowDialog();
-            }
-        }
+
         private void ActualizarObservacionesPorProducto(string descripcion, bool reemplazar = true)
         {
             var notas = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
@@ -637,7 +590,6 @@ namespace Ensumex.Views
                     "-Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
                     "-Precios sujetos a cambios sin previo aviso.\n"
             };
-
             foreach (var nota in notas)
             {
                 if (descripcion.IndexOf(nota.Key, StringComparison.OrdinalIgnoreCase) >= 0)
@@ -768,31 +720,6 @@ namespace Ensumex.Views
                 e.Handled = true;
             }
         }
-        private void AgrgarTabla_Click(object sender, EventArgs e)
-        {
-            // Guarda toda la tabla actual
-            List<object[]> tablaActual = new();
-            foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
-            {
-                if (!row.IsNewRow)
-                {
-                    object[] valores = new object[row.Cells.Count];
-                    for (int i = 0; i < row.Cells.Count; i++)
-                        valores[i] = row.Cells[i].Value;
-                    tablaActual.Add(valores);
-                }
-            }
-            if (tablaActual.Count > 0)
-            {
-                tablasGuardadas.Add(tablaActual);
-                tbl_Cotizacion.Rows.Clear();
-                MessageBox.Show("Tabla guardada y lista para capturar una nueva.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                MessageBox.Show("No hay productos para guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
         private void ActualizarNumeroCotizacionEnLabel()
         {
             if (tbl_Cotizacion.Rows.Count == 0)
@@ -915,7 +842,6 @@ namespace Ensumex.Views
                 PRECIO = p.PRECIO != 0 ? (p.PRECIO * 1.16m).ToString("C2") : "$0.00"
             }).ToList<dynamic>();
         }
-
         private void DgvBusqueda_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -947,12 +873,146 @@ namespace Ensumex.Views
                 col.ReadOnly = !(col.Name == "PRECIO" || col.Name == "Descuento" || col.Name == "CANTIDAD");
             }
         }
+        private void ConfigurarBotones()
+        {
 
-        private void btn_Cancelarcotizacion_Click(object sender, EventArgs e)
+            // ===== Btn_Cancelar =====
+            Btn_Cancelar.IconChar = IconChar.TimesCircle; // Ícono de cancelar (X)
+            Btn_Cancelar.IconColor = Color.FromArgb(244, 67, 54); // Rojo elegante
+            Btn_Cancelar.IconSize = 32;
+            Btn_Cancelar.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Btn_Cancelar.ImageAlign = ContentAlignment.MiddleLeft;
+            Btn_Cancelar.Padding = new Padding(10, 0, 20, 0);
+            Btn_Cancelar.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            Btn_Cancelar.ForeColor = Color.FromArgb(33, 33, 33);
+
+            // ===== Btn_Guardar =====
+            Btn_Guardar.IconChar = IconChar.Save; // Ícono de guardar
+            Btn_Guardar.IconColor = Color.FromArgb(76, 175, 80); // Verde Material
+            Btn_Guardar.IconSize = 32;
+            Btn_Guardar.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Btn_Guardar.ImageAlign = ContentAlignment.MiddleLeft;
+            Btn_Guardar.Padding = new Padding(10, 0, 20, 0);
+            Btn_Guardar.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            Btn_Guardar.ForeColor = Color.FromArgb(33, 33, 33);
+
+            // ===== Btn_NuevoProd =====
+            Btn_NuevoProd.IconChar = IconChar.Plus; // Ícono de agregar nuevo
+            Btn_NuevoProd.IconColor = Color.FromArgb(33, 150, 243); // Azul elegante
+            Btn_NuevoProd.IconSize = 32;
+            Btn_NuevoProd.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Btn_NuevoProd.ImageAlign = ContentAlignment.MiddleLeft;
+            Btn_NuevoProd.Padding = new Padding(10, 0, 20, 0);
+            Btn_NuevoProd.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            Btn_NuevoProd.ForeColor = Color.FromArgb(33, 33, 33);
+
+            // ===== Btn_NuevaTabla =====
+            Btn_AñadirTabla.IconChar = IconChar.Table; // ícono de tabla
+            Btn_AñadirTabla.IconColor = Color.FromArgb(0, 150, 136); // Verde azulado
+            Btn_AñadirTabla.IconSize = 32;
+            Btn_AñadirTabla.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Btn_AñadirTabla.ImageAlign = ContentAlignment.MiddleLeft;
+            Btn_AñadirTabla.Padding = new Padding(10, 0, 20, 0);
+            Btn_AñadirTabla.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            Btn_AñadirTabla.ForeColor = Color.FromArgb(33, 33, 33);
+
+            // ===== Btn_AgregaProd =====
+            Btn_Añadprod.IconChar = IconChar.PlusSquare; // ícono agregar producto
+            Btn_Añadprod.IconColor = Color.FromArgb(33, 150, 243); // Azul Material
+            Btn_Añadprod.IconSize = 32;
+            Btn_Añadprod.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Btn_Añadprod.ImageAlign = ContentAlignment.MiddleLeft;
+            Btn_Añadprod.Padding = new Padding(10, 0, 20, 0);
+            Btn_Añadprod.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            Btn_Añadprod.ForeColor = Color.FromArgb(33, 33, 33);
+        }
+
+        private void iconButton1_Click(object sender, EventArgs e)
+        {
+            // Guarda toda la tabla actual
+            List<object[]> tablaActual = new();
+            foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    object[] valores = new object[row.Cells.Count];
+                    for (int i = 0; i < row.Cells.Count; i++)
+                        valores[i] = row.Cells[i].Value;
+                    tablaActual.Add(valores);
+                }
+            }
+            if (tablaActual.Count > 0)
+            {
+                tablasGuardadas.Add(tablaActual);
+                tbl_Cotizacion.Rows.Clear();
+                MessageBox.Show("Tabla guardada y lista para capturar una nueva.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("No hay productos para guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void Btn_Añadprod_Click(object sender, EventArgs e)
+        {
+            // Abre el formulario de selección de productos
+            using (var productosForm = new Form())
+            {
+                var productControl = new Product
+                {
+                    Dock = DockStyle.Fill
+                };
+                productosForm.Controls.Add(productControl);
+                productosForm.StartPosition = FormStartPosition.CenterParent;
+                productosForm.WindowState = FormWindowState.Maximized;
+                productosForm.Text = "Seleccionar Producto";
+                productControl.ProductoSeleccionado += (clave, descripcion, unidad, precio, cantidad) =>
+                {
+                    // Validar que los datos no sean nulos o vacíos
+                    try
+                    {
+                        decimal precioFinal = precio;
+                        int cantidadFinal = 1;
+                        cantidad = cantidadFinal;
+                        decimal subtotal = precioFinal * cantidad;
+                        decimal total = subtotal;
+                        // Verificar si el producto ya está en la tabla
+                        foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
+                        {
+                            if (row.Cells[0].Value?.ToString() == clave)
+                            {
+                                decimal cantidadExistente = Convert.ToDecimal(row.Cells[8].Value);
+                                cantidad += cantidadExistente;
+                                row.Cells[8].Value = cantidad;
+                                row.Cells[6].Value = precioFinal * cantidad;
+                                ActualizarTotales();
+                                productosForm.Close();
+                                return;
+                            }
+                        }
+                        //tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioFinal, subtotal, cantidad);
+                        tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidadFinal, total, cantidadFinal);
+                        ActualizarNumeroCotizacionEnLabel();
+                        ActualizarTotales();
+                        ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
+                        HabilitarEdicionParcial();
+                        productosForm.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error al agregar el producto:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                };
+                productosForm.ShowDialog();
+            }
+        }
+
+        private void Btn_Cancelar_Click(object sender, EventArgs e)
         {
             limpiaCampos();
         }
-        private void Btn_guardarCotizacion_Click_1(object sender, EventArgs e)
+
+        private void Btn_Guardar_Click(object sender, EventArgs e)
         {
             ClientesDao clientesDao = new ClientesDao();
             string nombreCliente = txt_Nombrecliente.Text;
@@ -974,7 +1034,8 @@ namespace Ensumex.Views
                 GuardarCotizacion();
             }
         }
-        private void btn_AgregarProducto_Click_1(object sender, EventArgs e)
+
+        private void Btn_NuevoProd_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1077,84 +1138,13 @@ namespace Ensumex.Views
                                 "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void tbl_Cotizacion_CellBeginEdit_1(object sender, DataGridViewCellCancelEventArgs e)
         {
-            // Guarda toda la tabla actual
-            List<object[]> tablaActual = new();
-            foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
+            var row = tbl_Cotizacion.Rows[e.RowIndex];
+            // Evita edición en filas vacías
+            if (row.IsNewRow || string.IsNullOrWhiteSpace(row.Cells["CLAVE"].Value?.ToString()))
             {
-                if (!row.IsNewRow)
-                {
-                    object[] valores = new object[row.Cells.Count];
-                    for (int i = 0; i < row.Cells.Count; i++)
-                        valores[i] = row.Cells[i].Value;
-                    tablaActual.Add(valores);
-                }
-            }
-            if (tablaActual.Count > 0)
-            {
-                tablasGuardadas.Add(tablaActual);
-                tbl_Cotizacion.Rows.Clear();
-                MessageBox.Show("Tabla guardada y lista para capturar una nueva.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                MessageBox.Show("No hay productos para guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            // Abre el formulario de selección de productos
-            using (var productosForm = new Form())
-            {
-                var productControl = new Product
-                {
-                    Dock = DockStyle.Fill
-                };
-                productosForm.Controls.Add(productControl);
-                productosForm.StartPosition = FormStartPosition.CenterParent;
-                productosForm.WindowState = FormWindowState.Maximized;
-                productosForm.Text = "Seleccionar Producto";
-                productControl.ProductoSeleccionado += (clave, descripcion, unidad, precio, cantidad) =>
-                {
-                    // Validar que los datos no sean nulos o vacíos
-                    try
-                    {
-                        decimal precioFinal = precio;
-                        int cantidadFinal = 1;
-                        cantidad = cantidadFinal;
-                        decimal subtotal = precioFinal * cantidad;
-                        decimal total = subtotal;
-                        // Verificar si el producto ya está en la tabla
-                        foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
-                        {
-                            if (row.Cells[0].Value?.ToString() == clave)
-                            {
-                                decimal cantidadExistente = Convert.ToDecimal(row.Cells[8].Value);
-                                cantidad += cantidadExistente;
-                                row.Cells[8].Value = cantidad;
-                                row.Cells[6].Value = precioFinal * cantidad;
-                                ActualizarTotales();
-                                productosForm.Close();
-                                return;
-                            }
-                        }
-                        //tbl_Cotizacion.Rows.Add(false, clave, descripcion, unidad, precioFinal, subtotal, cantidad);
-                        tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidadFinal, total, cantidadFinal);
-                        ActualizarNumeroCotizacionEnLabel();
-                        ActualizarTotales();
-                        ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
-                        HabilitarEdicionParcial();
-                        productosForm.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error al agregar el producto:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                };
-                productosForm.ShowDialog();
+                e.Cancel = true;
             }
         }
     }

@@ -30,11 +30,11 @@
         {
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
-            ImprimirProd = new MaterialSkin.Controls.MaterialButton();
             cmb_productos = new ComboBox();
             label2 = new Label();
             btn_existencias = new CheckBox();
             text_buscar = new TextBox();
+            Btn_DescargarProd = new FontAwesome.Sharp.IconButton();
             tabla_productos = new DataGridView();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tabla_productos).BeginInit();
@@ -49,11 +49,11 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.Controls.Add(label1, 1, 0);
-            tableLayoutPanel1.Controls.Add(ImprimirProd, 0, 1);
             tableLayoutPanel1.Controls.Add(cmb_productos, 2, 0);
             tableLayoutPanel1.Controls.Add(label2, 1, 1);
             tableLayoutPanel1.Controls.Add(btn_existencias, 3, 1);
             tableLayoutPanel1.Controls.Add(text_buscar, 2, 1);
+            tableLayoutPanel1.Controls.Add(Btn_DescargarProd, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.ForeColor = SystemColors.ControlText;
             tableLayoutPanel1.Location = new Point(0, 0);
@@ -75,27 +75,6 @@
             label1.Size = new Size(74, 21);
             label1.TabIndex = 11;
             label1.Text = "Mostrar:";
-            // 
-            // ImprimirProd
-            // 
-            ImprimirProd.Anchor = AnchorStyles.None;
-            ImprimirProd.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ImprimirProd.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            ImprimirProd.Depth = 0;
-            ImprimirProd.HighEmphasis = true;
-            ImprimirProd.Icon = null;
-            ImprimirProd.Location = new Point(64, 78);
-            ImprimirProd.Margin = new Padding(4);
-            ImprimirProd.MouseState = MaterialSkin.MouseState.HOVER;
-            ImprimirProd.Name = "ImprimirProd";
-            ImprimirProd.NoAccentTextColor = Color.Empty;
-            ImprimirProd.Size = new Size(87, 36);
-            ImprimirProd.TabIndex = 16;
-            ImprimirProd.Text = "Imprimir";
-            ImprimirProd.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            ImprimirProd.UseAccentColor = false;
-            ImprimirProd.UseVisualStyleBackColor = true;
-            ImprimirProd.Click += ImprimirProd_Click;
             // 
             // cmb_productos
             // 
@@ -141,6 +120,20 @@
             text_buscar.TabIndex = 1;
             text_buscar.TextChanged += textBox1_TextChanged;
             // 
+            // Btn_DescargarProd
+            // 
+            Btn_DescargarProd.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            Btn_DescargarProd.IconChar = FontAwesome.Sharp.IconChar.None;
+            Btn_DescargarProd.IconColor = Color.Black;
+            Btn_DescargarProd.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            Btn_DescargarProd.Location = new Point(3, 67);
+            Btn_DescargarProd.Name = "Btn_DescargarProd";
+            Btn_DescargarProd.Size = new Size(209, 58);
+            Btn_DescargarProd.TabIndex = 19;
+            Btn_DescargarProd.Text = "Descargar.";
+            Btn_DescargarProd.UseVisualStyleBackColor = true;
+            Btn_DescargarProd.Click += Btn_DescargarProd_Click;
+            // 
             // tabla_productos
             // 
             tabla_productos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -176,8 +169,8 @@
         private Label label1;
         private ComboBox cmb_productos;
         private DataGridView tabla_productos;
-        private MaterialSkin.Controls.MaterialButton ImprimirProd;
         private CheckBox btn_existencias;
         private TextBox text_buscar;
+        private FontAwesome.Sharp.IconButton Btn_DescargarProd;
     }
 }

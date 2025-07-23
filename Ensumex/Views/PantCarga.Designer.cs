@@ -52,7 +52,7 @@
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.Location = new Point(0, 0);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(860, 400);
+            pictureBox1.Size = new Size(860, 403);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
@@ -129,7 +129,7 @@
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(258, 317);
+            progressBar1.Location = new Point(273, 311);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(328, 23);
             progressBar1.TabIndex = 3;
@@ -137,8 +137,9 @@
             // LblEstado
             // 
             LblEstado.AutoSize = true;
+            LblEstado.BackColor = Color.FromArgb(141, 198, 63);
             LblEstado.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            LblEstado.Location = new Point(370, 355);
+            LblEstado.Location = new Point(373, 346);
             LblEstado.Name = "LblEstado";
             LblEstado.Size = new Size(60, 20);
             LblEstado.TabIndex = 5;
@@ -149,7 +150,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(69, 90, 100);
-            ClientSize = new Size(860, 400);
+            ClientSize = new Size(860, 403);
             Controls.Add(LblEstado);
             Controls.Add(progressBar1);
             Controls.Add(panel1);

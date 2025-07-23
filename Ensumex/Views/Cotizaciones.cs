@@ -73,7 +73,8 @@ namespace Ensumex.Views
                 DataTable dt = CotizacionRepository.ObtenerCotizacionesFiltradas(searchText);
                 tabla_cotizaciones.DataSource = dt;
             }
-        }        private void tabla_cotizaciones_CellClick_1(object sender, DataGridViewCellEventArgs e)
+        }
+        private void tabla_cotizaciones_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
@@ -122,5 +123,6 @@ namespace Ensumex.Views
                 MessageBox.Show("Ocurrió un error al mostrar el detalle:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }

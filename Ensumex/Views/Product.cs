@@ -1,5 +1,6 @@
 ﻿using Ensumex.Services;
 using Ensumex.Utils;
+using FontAwesome.Sharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,6 +25,19 @@ namespace Ensumex.Views
             InitializeComponent();
             InicializarFormulario();
             CargarTodosLosProductos();
+            Configurarboton();
+        }
+        private void Configurarboton()
+        {
+            // BtnInve - Inventario
+            Btn_DescargarProd.IconChar = IconChar.Download; // cajas para inventario
+            Btn_DescargarProd.IconColor = Color.FromArgb(33, 150, 243); // azul
+            Btn_DescargarProd.IconSize = 32;
+            Btn_DescargarProd.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Btn_DescargarProd.ImageAlign = ContentAlignment.MiddleLeft;
+            Btn_DescargarProd.Padding = new Padding(10, 0, 20, 0);
+            Btn_DescargarProd.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            Btn_DescargarProd.ForeColor = Color.FromArgb(33, 33, 33);
         }
         private void InicializarFormulario()
         {
@@ -224,6 +238,11 @@ namespace Ensumex.Views
                 // Invocar el evento para notificar al formulario padre
                 ProductoSeleccionado?.Invoke(clave, descripcion, unidad, precio, cantidad);
             }
+        }
+
+        private void Btn_DescargarProd_Click(object sender, EventArgs e)
+        {
+            PDFClients.ExportarClientes(tabla_productos, "Productos.xlsx");
         }
     }
 }

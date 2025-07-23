@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
 using Ensumex.Services;
 using Ensumex.Utils;
+using FontAwesome.Sharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,14 +26,25 @@ namespace Ensumex.Views
             CargarClientes();
         }
 
+        private void Configurarboton()
+        {
+            // BtnInve - Inventario
+            Btn_DescargarClients.IconChar = IconChar.Download; // cajas para inventario
+            Btn_DescargarClients.IconColor = Color.FromArgb(33, 150, 243); // azul
+            Btn_DescargarClients.IconSize = 32;
+            Btn_DescargarClients.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Btn_DescargarClients.ImageAlign = ContentAlignment.MiddleLeft;
+            Btn_DescargarClients.Padding = new Padding(10, 0, 20, 0);
+            Btn_DescargarClients.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            Btn_DescargarClients.ForeColor = Color.FromArgb(33, 33, 33);
+        }
         private void InicializarComboClientes()
         {
             var opciones = new object[] { "Todos", 5, 10, 20, 50, 100 };
             cmb_clientes.Items.AddRange(opciones);
             cmb_clientes.SelectedIndex = 0;
-            tabla_clientes.ReadOnly=true; // Hacer la tabla de clientes de solo lectura
+            tabla_clientes.ReadOnly = true; // Hacer la tabla de clientes de solo lectura
         }
-
         private void CargarClientes()
         {
             try
@@ -147,6 +159,12 @@ namespace Ensumex.Views
                 }
             }
         }
+
+        private void Btn_DescargarClients_Click(object sender, EventArgs e)
+        {
+            PDFClients.ExportarClientes(tabla_clientes, "Clientes.xlsx");
+        }
+
         public bool EsLlamadoDesdeCotiza { get; set; } = false;
         public string ClienteSeleccionadoNombre { get; private set; }
         public string ClienteSeleccionadoCalle { get; private set; }

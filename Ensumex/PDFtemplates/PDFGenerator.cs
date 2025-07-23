@@ -92,10 +92,10 @@ namespace Ensumex.PDFtemplates
                     WidthPercentage = 100
                 };
 
-                tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1f, 1f, 1.2f, 1.2f });
+                tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1f, 1.2f, 1f, 1.2f });
 
                 // Encabezados de tabla
-                string[] headers = { "#","CANT","UNID","DESCRIPCIÓN","PRECIO UNIT","IMPORTE","DESCUENTO  ($)", "TOTAL"};
+                string[] headers = { "#","CANT","UNID","DESCRIPCIÓN","PRECIO UNIT","DESCUENTO  ($)", "IMPORTE", "TOTAL"};
 
                 // Añadir encabezados con fondo verde
                 foreach (string header in headers)
@@ -146,8 +146,8 @@ namespace Ensumex.PDFtemplates
                     tabla.AddCell(new PdfPCell(new Phrase(unidad, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });
                     tabla.AddCell(new PdfPCell(new Phrase(descripcion, fontNormal)) { BackgroundColor = fondoFila, NoWrap = false });
                     tabla.AddCell(new PdfPCell(new Phrase(precioFormateado, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_RIGHT });
-                    tabla.AddCell(new PdfPCell(new Phrase(importeFormateado, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_RIGHT });
                     tabla.AddCell(new PdfPCell(new Phrase("-" + descuentoFormateado, fontRojo)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_RIGHT });
+                    tabla.AddCell(new PdfPCell(new Phrase(importeFormateado, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_RIGHT });
                     tabla.AddCell(new PdfPCell(new Phrase(totalFormateado, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_RIGHT });
 
                     pos++;
@@ -171,18 +171,24 @@ namespace Ensumex.PDFtemplates
                     BaseColor colorFila = new BaseColor(223, 240, 216); // verde claro
                                                                         // Color de fondo para la fila de total
                     BaseColor colorTotal = new BaseColor(169, 208, 142); // verde más fuerte
-
-                    // Mano de obra
-                    PdfPCell celdaManoObra = new PdfPCell(new Phrase("Mano de obra por instalación:", fontNormal)) { Border = 0, BackgroundColor = colorFila };
-                    PdfPCell celdaCostoInstalacion = new PdfPCell(new Phrase("$" + costoInstalacion, fontNormal)) { Border = 0, BackgroundColor = colorFila, HorizontalAlignment = Element.ALIGN_RIGHT };
-                    tablaTotales.AddCell(celdaManoObra);
-                    tablaTotales.AddCell(celdaCostoInstalacion);
-
+                    decimal costoInst = decimal.TryParse(costoInstalacion, out var tmpInst) ? tmpInst : 0.00m;
+                    decimal costoFl = decimal.TryParse(costoFlete, out var tmpFl) ? tmpFl : 0.00m;
+                    if (costoInst > 0)
+                        {
+                            // Mano de obra
+                            PdfPCell celdaManoObra = new PdfPCell(new Phrase("Mano de obra por instalación:", fontNormal)) { Border = 0, BackgroundColor = colorFila };
+                            PdfPCell celdaCostoInstalacion = new PdfPCell(new Phrase("$" + costoInstalacion, fontNormal)) { Border = 0, BackgroundColor = colorFila, HorizontalAlignment = Element.ALIGN_RIGHT };
+                            tablaTotales.AddCell(celdaManoObra);
+                            tablaTotales.AddCell(celdaCostoInstalacion);
+                    }
+                    if (costoFl > 0)
+                    {
                     // Flete
                     PdfPCell celdaFlete = new PdfPCell(new Phrase("Costo por Envío/Flete:", fontNormal)) { Border = 0, BackgroundColor = colorFila };
                     PdfPCell celdaCostoFlete = new PdfPCell(new Phrase("$" + costoFlete, fontNormal)) { Border = 0, BackgroundColor = colorFila, HorizontalAlignment = Element.ALIGN_RIGHT };
                     tablaTotales.AddCell(celdaFlete);
                     tablaTotales.AddCell(celdaCostoFlete);
+                    }
 
                     // Total
                     PdfPCell celdaTotalLabel = new PdfPCell(new Phrase("Total:", fontNegrita)) { Border = 0, BackgroundColor = colorTotal };

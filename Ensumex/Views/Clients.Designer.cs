@@ -31,9 +31,9 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
             label2 = new Label();
-            ImprimirClientes = new MaterialSkin.Controls.MaterialButton();
             cmb_clientes = new ComboBox();
             text_buscar = new TextBox();
+            Btn_DescargarClients = new FontAwesome.Sharp.IconButton();
             tabla_clientes = new DataGridView();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tabla_clientes).BeginInit();
@@ -49,9 +49,9 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.Controls.Add(label1, 1, 0);
             tableLayoutPanel1.Controls.Add(label2, 1, 1);
-            tableLayoutPanel1.Controls.Add(ImprimirClientes, 0, 1);
             tableLayoutPanel1.Controls.Add(cmb_clientes, 2, 0);
             tableLayoutPanel1.Controls.Add(text_buscar, 2, 1);
+            tableLayoutPanel1.Controls.Add(Btn_DescargarClients, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.ForeColor = SystemColors.ControlText;
             tableLayoutPanel1.Location = new Point(0, 0);
@@ -87,27 +87,6 @@
             label2.TabIndex = 13;
             label2.Text = "Buscar:";
             // 
-            // ImprimirClientes
-            // 
-            ImprimirClientes.Anchor = AnchorStyles.None;
-            ImprimirClientes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ImprimirClientes.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            ImprimirClientes.Depth = 0;
-            ImprimirClientes.HighEmphasis = true;
-            ImprimirClientes.Icon = null;
-            ImprimirClientes.Location = new Point(64, 78);
-            ImprimirClientes.Margin = new Padding(4);
-            ImprimirClientes.MouseState = MaterialSkin.MouseState.HOVER;
-            ImprimirClientes.Name = "ImprimirClientes";
-            ImprimirClientes.NoAccentTextColor = Color.Empty;
-            ImprimirClientes.Size = new Size(87, 36);
-            ImprimirClientes.TabIndex = 16;
-            ImprimirClientes.Text = "Imprimir";
-            ImprimirClientes.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            ImprimirClientes.UseAccentColor = false;
-            ImprimirClientes.UseVisualStyleBackColor = true;
-            ImprimirClientes.Click += materialButton1_Click;
-            // 
             // cmb_clientes
             // 
             cmb_clientes.Anchor = AnchorStyles.None;
@@ -127,6 +106,20 @@
             text_buscar.Size = new Size(175, 23);
             text_buscar.TabIndex = 1;
             text_buscar.TextChanged += textBox1_TextChanged;
+            // 
+            // Btn_DescargarClients
+            // 
+            Btn_DescargarClients.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            Btn_DescargarClients.IconChar = FontAwesome.Sharp.IconChar.None;
+            Btn_DescargarClients.IconColor = Color.Black;
+            Btn_DescargarClients.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            Btn_DescargarClients.Location = new Point(137, 67);
+            Btn_DescargarClients.Name = "Btn_DescargarClients";
+            Btn_DescargarClients.Size = new Size(75, 58);
+            Btn_DescargarClients.TabIndex = 17;
+            Btn_DescargarClients.Text = "Descargar:";
+            Btn_DescargarClients.UseVisualStyleBackColor = true;
+            Btn_DescargarClients.Click += Btn_DescargarClients_Click;
             // 
             // tabla_clientes
             // 
@@ -161,8 +154,8 @@
         private Label label2;
         private Label label1;
         private ComboBox cmb_clientes;
-        private MaterialSkin.Controls.MaterialButton ImprimirClientes;
         private DataGridView tabla_clientes;
         private TextBox text_buscar;
+        private FontAwesome.Sharp.IconButton Btn_DescargarClients;
     }
 }
