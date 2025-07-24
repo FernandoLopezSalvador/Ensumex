@@ -323,5 +323,31 @@ namespace Ensumex.Models
 
             return siguienteId;
         }
+
+        public static string ObtenerUltimoFolioPorPrefijo(string prefijo)
+        {
+            string folio = "";
+
+            using (SqlConnection conn = ConnectionToSql.GetConnection())
+            {
+                conn.Open();
+                string query = @"
+            SELECT TOP 1 NumeroCotizacion 
+            FROM Cotizacion 
+            WHERE NumeroCotizacion LIKE @prefijo + '%' 
+            ORDER BY NumeroCotizacion DESC";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@prefijo", prefijo);
+
+                    var result = cmd.ExecuteScalar();
+                    if (result != null)
+                        folio = result.ToString();
+                }
+            }
+
+            return folio;
+        }
     }
 }

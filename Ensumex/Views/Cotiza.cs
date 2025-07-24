@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Office2013.Word;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Ensumex.Clases;
 using Ensumex.Forms;
 using Ensumex.Models;
 using Ensumex.PDFtemplates;
@@ -41,20 +42,16 @@ namespace Ensumex.Views
         public Cotiza(string usuario)
         {
             InitializeComponent();
-            Txt_observaciones.Multiline = true;
-            Txt_observaciones.ScrollBars = ScrollBars.Vertical;
-            Txt_observaciones.WordWrap = true;
             usuarioActual = usuario;
             InicializarFormulario();
             InicializarTabla();
             ConfigurarBotones();
             InicializarPanelBusqueda();
             CargarProductosCache();
-            Txt_Buscar.TextChanged += textBox1_TextChanged;
         }
         private void InicializarTabla()
         {
-            tbl_Cotizacion.AllowUserToAddRows = true; // o false si no quieres la fila nueva
+            tbl_Cotizacion.AllowUserToAddRows = true; 
             tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit;
         }
         private void InicializarFormulario()
@@ -67,13 +64,17 @@ namespace Ensumex.Views
 
         private void AplicarConfiguracionesGenerales()
         {
-            lblFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");
+
+            Txt_Buscar.TextChanged += textBox1_TextChanged;
+            Txt_observaciones.Multiline = true;
+            Txt_observaciones.ScrollBars = ScrollBars.Vertical;
+            Txt_observaciones.WordWrap = true;
+            lblFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");    
         }
 
         private void ConfigurarControles()
         {
             TablaFormat.AplicarEstilosTabla(tbl_Cotizacion);
-            AgregarDescuentos(Enumerable.Range(0, 51).Select(i => $"{i}%").ToArray());
             AgregarColumnasCotizacion();
         }
 
@@ -82,10 +83,6 @@ namespace Ensumex.Views
             tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
             tbl_Cotizacion.CurrentCellDirtyStateChanged += tbl_Cotizacion_CurrentCellDirtyStateChanged;
             tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit;
-        }
-        private void AgregarDescuentos(string[] descuentos)
-        {
-            //cmb_Descuento.Items.AddRange(descuentos);
         }
         private void AgregarColumnasCotizacion()
         {
@@ -728,8 +725,10 @@ namespace Ensumex.Views
                 return;
             }
 
-            // Busca desde la última fila hacia arriba una fila con prefijo válido
-            string prefijo = "";
+            string prefijo = "G"; // Valor por defecto
+            int prioridadActual = int.MaxValue;
+
+            // Detectar el prefijo en base a las descripciones
             for (int i = tbl_Cotizacion.Rows.Count - 1; i >= 0; i--)
             {
                 if (tbl_Cotizacion.Rows[i].IsNewRow)
@@ -737,41 +736,42 @@ namespace Ensumex.Views
 
                 string descripcion = tbl_Cotizacion.Rows[i].Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
 
-                if (descripcion.Contains("CALENT") || descripcion.Contains("CALENTADOR") || descripcion.Contains("CALENT."))
+                if ((descripcion.Contains("CALENT") || descripcion.Contains("CALENTADOR") || descripcion.Contains("CALENT.")) && prioridadActual > 1)
                 {
-                    prefijo = "CAL";
-                    break;
+                    prefijo = "E";
+                    prioridadActual = 1;
                 }
-                else if (descripcion.Contains("AIRE"))
+                else if (descripcion.Contains("AIRE") && prioridadActual > 2)
                 {
-                    prefijo = "AIE";
-                    break;
+                    prefijo = "D";
+                    prioridadActual = 2;
                 }
-                else if ((descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO")) && !descripcion.Contains("MOT"))
+                else if ((descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO") ||
+                          descripcion.Contains("MOTOBOMBA") || descripcion.Contains("MOTB") || descripcion.Contains("MOT.")) && prioridadActual > 3)
                 {
-                    prefijo = "BOM";
-                    break;
+                    prefijo = "C";
+                    prioridadActual = 3;
                 }
-                else if (descripcion.Contains("MOTOBOMBA") || descripcion.Contains("MOTB") || descripcion.Contains("MOT."))
+                else if ((descripcion.Contains("LUMINARIO") || descripcion.Contains("LUM SUM")) && prioridadActual > 4)
                 {
-                    prefijo = "MOTB";
-                    break;
-                }
-                else if (descripcion.Contains("MANTENIMIENTO") || descripcion.Contains("SERVICIO DE MANTENIM"))
-                {
-                    prefijo = "MAN";
-                    break;
+                    prefijo = "F";
+                    prioridadActual = 4;
                 }
             }
 
-            // Obtener siguiente IdCotizacion desde la base de datos
-            int siguienteIdCotizacion = CotizacionRepository.GetSiguienteIdCotizacion();
+            // Obtener el último folio con ese prefijo desde la base de datos
+            string ultimoFolio = CotizacionRepository.ObtenerUltimoFolioPorPrefijo("E");
+            int consecutivo = 1;
 
-            // Armar número de cotización
-            if (!string.IsNullOrWhiteSpace(prefijo))
-                lbl_NoCotiza.Text = $"{prefijo}{siguienteIdCotizacion}";
-            else
-                lbl_NoCotiza.Text = $"{siguienteIdCotizacion}";
+            if (!string.IsNullOrEmpty(ultimoFolio) && ultimoFolio.StartsWith(prefijo))
+            {
+                string numStr = ultimoFolio.Substring(prefijo.Length);
+                if (int.TryParse(numStr, out int ultimoNum))
+                    consecutivo = ultimoNum + 1;
+            }
+
+            string nuevoFolio = $"{prefijo}{consecutivo.ToString("D4")}";
+            lbl_NoCotiza.Text = nuevoFolio;
         }
         private void textBox1_TextChanged(object sender, EventArgs e)
         {

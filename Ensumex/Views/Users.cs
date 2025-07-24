@@ -1,6 +1,7 @@
 ﻿using Ensumex.Controllers;
 using Ensumex.Models;
 using Ensumex.Utils;
+using MaterialSkin;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -18,11 +19,40 @@ namespace Ensumex.Views
         {
             InitializeComponent();
             Panel_Nuevousuario.Visible = false;
+            ConfigurarLabelsConTema();
             TablaFormat.AplicarEstilosTabla(Tabla_usuarios);
             ConfigurarTablaUsuarios();
             CargarUsuariosEnTabla();
         }
+        private void ConfigurarLabelsConTema()
+        {
+            var manager = MaterialSkin.MaterialSkinManager.Instance;
+            bool isDark = manager.Theme == MaterialSkinManager.Themes.DARK;
 
+            // Color de texto
+            Color labelColor = isDark ? Color.WhiteSmoke : Color.FromArgb(33, 33, 33);
+
+            // Fuente
+            Font labelFont = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+
+            // Lista de labels
+            var labels = new List<Label>
+            {
+                lbl1_usuariocrear,
+                lblNombre,
+                lblPosicion,
+                LblContraseña,
+                LblCorreo
+            };
+
+            foreach (var lbl in labels)
+            {
+                lbl.ForeColor = labelColor;
+                lbl.Font = labelFont;
+                lbl.AutoSize = true;
+                lbl.BackColor = Color.Transparent;
+            }
+        }
         private void ConfigurarTablaUsuarios()
         {
             Tabla_usuarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;

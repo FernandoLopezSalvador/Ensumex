@@ -39,11 +39,11 @@
             btn_Cancelar = new Button();
             textnewUsuario = new TextBox();
             textNewContraseña = new TextBox();
-            label1 = new Label();
-            label2 = new Label();
+            LblContraseña = new Label();
+            lblNombre = new Label();
             textNewNombre = new TextBox();
-            label3 = new Label();
-            label4 = new Label();
+            lblPosicion = new Label();
+            LblCorreo = new Label();
             textNewCorreo = new TextBox();
             cmb_NewPosicion = new ComboBox();
             tableLayoutPanel1 = new TableLayoutPanel();
@@ -120,11 +120,11 @@
             Panel_Nuevousuario.Controls.Add(btn_Cancelar, 2, 2);
             Panel_Nuevousuario.Controls.Add(textnewUsuario, 1, 0);
             Panel_Nuevousuario.Controls.Add(textNewContraseña, 3, 0);
-            Panel_Nuevousuario.Controls.Add(label1, 2, 0);
-            Panel_Nuevousuario.Controls.Add(label2, 0, 1);
+            Panel_Nuevousuario.Controls.Add(LblContraseña, 2, 0);
+            Panel_Nuevousuario.Controls.Add(lblNombre, 0, 1);
             Panel_Nuevousuario.Controls.Add(textNewNombre, 1, 1);
-            Panel_Nuevousuario.Controls.Add(label3, 0, 2);
-            Panel_Nuevousuario.Controls.Add(label4, 2, 1);
+            Panel_Nuevousuario.Controls.Add(lblPosicion, 0, 2);
+            Panel_Nuevousuario.Controls.Add(LblCorreo, 2, 1);
             Panel_Nuevousuario.Controls.Add(textNewCorreo, 3, 1);
             Panel_Nuevousuario.Controls.Add(cmb_NewPosicion, 1, 2);
             Panel_Nuevousuario.Dock = DockStyle.Fill;
@@ -198,25 +198,25 @@
             textNewContraseña.Size = new Size(277, 23);
             textNewContraseña.TabIndex = 5;
             // 
-            // label1
+            // LblContraseña
             // 
-            label1.Anchor = AnchorStyles.None;
-            label1.AutoSize = true;
-            label1.Location = new Point(489, 41);
-            label1.Name = "label1";
-            label1.Size = new Size(70, 15);
-            label1.TabIndex = 9;
-            label1.Text = "Contraseña:";
+            LblContraseña.Anchor = AnchorStyles.None;
+            LblContraseña.AutoSize = true;
+            LblContraseña.Location = new Point(489, 41);
+            LblContraseña.Name = "LblContraseña";
+            LblContraseña.Size = new Size(70, 15);
+            LblContraseña.TabIndex = 9;
+            LblContraseña.Text = "Contraseña:";
             // 
-            // label2
+            // lblNombre
             // 
-            label2.Anchor = AnchorStyles.None;
-            label2.AutoSize = true;
-            label2.Location = new Point(61, 138);
-            label2.Name = "label2";
-            label2.Size = new Size(54, 15);
-            label2.TabIndex = 10;
-            label2.Text = "Nombre:";
+            lblNombre.Anchor = AnchorStyles.None;
+            lblNombre.AutoSize = true;
+            lblNombre.Location = new Point(61, 138);
+            lblNombre.Name = "lblNombre";
+            lblNombre.Size = new Size(54, 15);
+            lblNombre.TabIndex = 10;
+            lblNombre.Text = "Nombre:";
             // 
             // textNewNombre
             // 
@@ -228,25 +228,25 @@
             textNewNombre.Size = new Size(238, 23);
             textNewNombre.TabIndex = 6;
             // 
-            // label3
+            // lblPosicion
             // 
-            label3.Anchor = AnchorStyles.None;
-            label3.AutoSize = true;
-            label3.Location = new Point(61, 235);
-            label3.Name = "label3";
-            label3.Size = new Size(55, 15);
-            label3.TabIndex = 12;
-            label3.Text = "Posición:";
+            lblPosicion.Anchor = AnchorStyles.None;
+            lblPosicion.AutoSize = true;
+            lblPosicion.Location = new Point(61, 235);
+            lblPosicion.Name = "lblPosicion";
+            lblPosicion.Size = new Size(55, 15);
+            lblPosicion.TabIndex = 12;
+            lblPosicion.Text = "Posición:";
             // 
-            // label4
+            // LblCorreo
             // 
-            label4.Anchor = AnchorStyles.None;
-            label4.AutoSize = true;
-            label4.Location = new Point(501, 138);
-            label4.Name = "label4";
-            label4.Size = new Size(46, 15);
-            label4.TabIndex = 14;
-            label4.Text = "Correo:";
+            LblCorreo.Anchor = AnchorStyles.None;
+            LblCorreo.AutoSize = true;
+            LblCorreo.Location = new Point(501, 138);
+            LblCorreo.Name = "LblCorreo";
+            LblCorreo.Size = new Size(46, 15);
+            LblCorreo.TabIndex = 14;
+            LblCorreo.Text = "Correo:";
             // 
             // textNewCorreo
             // 
@@ -315,11 +315,11 @@
         private Button btn_Cancelar;
         private TextBox textnewUsuario;
         private TextBox textNewContraseña;
-        private Label label1;
-        private Label label2;
+        private Label LblContraseña;
+        private Label lblNombre;
         private TextBox textNewNombre;
-        private Label label3;
-        private Label label4;
+        private Label lblPosicion;
+        private Label LblCorreo;
         private TextBox textNewCorreo;
         private ComboBox cmb_NewPosicion;
         private TableLayoutPanel tableLayoutPanel1;
