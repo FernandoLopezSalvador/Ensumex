@@ -56,7 +56,7 @@ namespace Ensumex.Views
         }
         private void InicializarFormulario()
         {
-
+            AgregarColumnasCotizacion();
             AplicarConfiguracionesGenerales();
             ConfigurarControles();
             ConfigurarEventos();
@@ -70,12 +70,12 @@ namespace Ensumex.Views
             Txt_observaciones.ScrollBars = ScrollBars.Vertical;
             Txt_observaciones.WordWrap = true;
             lblFecha.Text = DateTime.Now.ToString("dd/MM/yyyy");    
+            
         }
 
         private void ConfigurarControles()
         {
             TablaFormat.AplicarEstilosTabla(tbl_Cotizacion);
-            AgregarColumnasCotizacion();
         }
 
         private void ConfigurarEventos()
@@ -158,7 +158,7 @@ namespace Ensumex.Views
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
                 sfd.Filter = "Archivo PDF|*.pdf";
-                sfd.FileName = $"CotizacionTablas_{DateTime.Now:yyyyMMdd}.pdf";
+                sfd.FileName = $"{lbl_NoCotiza.Text}_{DateTime.Now:yyyyMMdd}.pdf"; 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     // 1. Copia la lista de tablas guardadas
@@ -185,7 +185,6 @@ namespace Ensumex.Views
 
                     // --- GUARDAR EN BASE DE DATOS ---
                     CotizacionRepository.GuardarCotizacionTablas(
-                        //numeroCotizacion: txt_Nocotizacion.Text,
                         numeroCotizacion: lbl_NoCotiza.Text,
                         fecha: DateTime.Now,
                         nombreCliente: txt_Nombrecliente.Text,
@@ -255,8 +254,6 @@ namespace Ensumex.Views
                         FileName = sfd.FileName,
                         UseShellExecute = true
                     });
-                    tablasGuardadas.Clear();
-                    limpiaCampos();
                 }
             }
         }
@@ -275,7 +272,7 @@ namespace Ensumex.Views
                     }
 
                     sfd.Filter = "Archivo PDF|*.pdf";
-                    sfd.FileName = $"Cotizacion_{DateTime.Now:yyyyMMdd}.pdf";
+                    sfd.FileName = $"{lbl_NoCotiza.Text}_{DateTime.Now:yyyyMMdd}.pdf";
 
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
@@ -365,8 +362,6 @@ namespace Ensumex.Views
                             FileName = sfd.FileName,
                             UseShellExecute = true
                         });
-
-                        limpiaCampos();
                     }
                 }
             }
@@ -397,7 +392,7 @@ namespace Ensumex.Views
             }
             if (e.KeyChar == '.' && txt.Text.Contains('.'))
             {
-                e.Handled = true;
+                e.Handled = true;             
                 return;
             }
             if (e.KeyChar == '.' && txt.SelectionStart == 0)
@@ -504,6 +499,7 @@ namespace Ensumex.Views
             tbl_Cotizacion.Rows.Clear();
             Txt_observaciones.Text = string.Empty;
             tbl_Cotizacion.ReadOnly = true;
+            tablasGuardadas.Clear();
         }
         // Evento para manejar la busqueda para seleccionar cliente
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -605,7 +601,6 @@ namespace Ensumex.Views
                 }
             }
         }
-
         private void tbl_Cotizacion_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -786,7 +781,7 @@ namespace Ensumex.Views
                     p.CLAVE.ToLower().Contains(texto) ||
                     p.DESCRIPCIÓN.ToLower().Contains(texto))
                 .ToList();
-
+            
             if (resultados.Any())
             {
                 dgvBusqueda.DataSource = resultados;
@@ -1121,6 +1116,7 @@ namespace Ensumex.Views
                     }
                 }
             }
+
             //Manejo de excepciones para errores comunes
             catch (FormatException fe)
             {
@@ -1142,7 +1138,7 @@ namespace Ensumex.Views
         {
             var row = tbl_Cotizacion.Rows[e.RowIndex];
             // Evita edición en filas vacías
-            if (row.IsNewRow || string.IsNullOrWhiteSpace(row.Cells["CLAVE"].Value?.ToString()))
+            if (row.IsNewRow || string.IsNullOrWhiteSpace(row.Cells["Descripción"].Value?.ToString()))
             {
                 e.Cancel = true;
             }

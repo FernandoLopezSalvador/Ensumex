@@ -83,8 +83,8 @@ namespace Ensumex.PDFtemplates
                     doc.Add(new Paragraph("\nEstimado(a) Cliente:", fontNegrita));
                 }
 
-                doc.Add(new Paragraph("\nPresente", fontNegrita));
-                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización para los siguientes productos:\n\n", fontNormal));
+                doc.Add(new Paragraph("Presente", fontNegrita));
+                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización de los siguientes productos:\n\n", fontNormal));
 
                 // Tabla de productos
                 PdfPTable tabla = new PdfPTable(8)
@@ -128,8 +128,9 @@ namespace Ensumex.PDFtemplates
 
                     // Cálculos corregidos
                     decimal importe = precioUnitario * cantidad;
-                    decimal descuentoFila = importe * (porcentajeDescuentoFila / 100m);
-                    decimal total1 = importe - descuentoFila;
+                    decimal descuentoFila = precioUnitario * (porcentajeDescuentoFila / 100m);
+                    decimal descuentofinal = importe * (porcentajeDescuentoFila / 100m);
+                    decimal total1 = importe - descuentofinal;
 
                     // Formatear en moneda
                     string precioFormateado = precioUnitario.ToString("C2", new CultureInfo("es-MX"));
@@ -139,7 +140,6 @@ namespace Ensumex.PDFtemplates
 
                     // Alternar color de fondo
                     BaseColor fondoFila = (pos % 2 == 0) ? colorFilaPar : colorFilaImpar;
-
                     // Añadir celdas
                     tabla.AddCell(new PdfPCell(new Phrase(pos.ToString(), fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });
                     tabla.AddCell(new PdfPCell(new Phrase(cantidadStr, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });

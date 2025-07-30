@@ -382,7 +382,7 @@
             Btn_Cancelar.Name = "Btn_Cancelar";
             Btn_Cancelar.Size = new Size(148, 33);
             Btn_Cancelar.TabIndex = 32;
-            Btn_Cancelar.Text = "CANCELAR";
+            Btn_Cancelar.Text = "LIMPIAR";
             Btn_Cancelar.UseVisualStyleBackColor = true;
             Btn_Cancelar.Click += Btn_Cancelar_Click;
             // 

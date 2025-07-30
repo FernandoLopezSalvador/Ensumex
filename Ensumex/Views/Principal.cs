@@ -132,7 +132,7 @@ namespace Ensumex.Forms
                 menu_usuario.Visible = false;
             }
         }
-        private void  AnimateButtonBackColor(Button btn, Color targetColor, int duration = 200)
+        private void AnimateButtonBackColor(Button btn, Color targetColor, int duration = 200)
         {
             Color startColor = btn.BackColor;
             int steps = 20;
@@ -261,7 +261,7 @@ namespace Ensumex.Forms
 
             panelContenedor.Controls.Clear();
 
-            control.Dock = DockStyle.Fill; 
+            control.Dock = DockStyle.Fill;
             control.Margin = Padding.Empty;
             control.Padding = Padding.Empty;
 
@@ -307,7 +307,7 @@ namespace Ensumex.Forms
                         progressBar1.Value = progreso;
                     }));
                 }));
-                
+
                 progressBar1.Visible = false;
                 MessageBox.Show("Sincronización completada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -446,6 +446,11 @@ namespace Ensumex.Forms
 
                 await Task.Delay(delay);
             }
+        }
+
+        private void iconButton1_Click(object sender, EventArgs e)
+        {
+            CargarUserControl(new Autonomos(lbl_UsuarioInicio.Text));
         }
     }
 } 

@@ -74,8 +74,8 @@ namespace Ensumex.PDFtemplates
                 else
                     doc.Add(new Paragraph("\nEstimado(a) Cliente:", fontNegrita));
 
-                doc.Add(new Paragraph("\nPresente"));
-                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización para los siguientes productos:\n\n", fontNormal));
+                doc.Add(new Paragraph("Presente"));
+                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización de los siguientes productos:\n\n", fontNormal));
 
                 int tablaNum = 1;
                 foreach (var tabla in tablas)
