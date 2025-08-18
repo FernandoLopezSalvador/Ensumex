@@ -93,12 +93,12 @@ namespace Ensumex.PDFtemplates
                 // Encabezados de tabla
                 string[] headers = { "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "DESCUENTO  ($)", "IMPORTE", "TOTAL" };
 
-                // Añadir encabezados con fondo verde
+               
                 foreach (string header in headers)
                 {
                     PdfPCell celda = new PdfPCell(new Phrase(header, fontheader))
                     {
-                        BackgroundColor = new BaseColor(141, 198, 63), // Verde #8DC63F
+                        BackgroundColor = new BaseColor(141, 198, 63), 
                         HorizontalAlignment = Element.ALIGN_CENTER,
                         Padding = 5f
                     };
@@ -107,7 +107,7 @@ namespace Ensumex.PDFtemplates
                 //se muestra la tabla de conectados si hay datos
                 if (tablaConectados.Rows.Count > 0)
                 {
-                    doc.Add(new Paragraph("\nDispositivos que se pueden conectar:\n", fontNegrita));
+                    doc.Add(new Paragraph("\nDispositivos que se pueden conectar:\n\n", fontNegrita));
                     PdfPTable tablaConectadosPDF = new PdfPTable(4)
                     {
                         WidthPercentage = 100
@@ -117,7 +117,6 @@ namespace Ensumex.PDFtemplates
                     tablaConectadosPDF.AddCell(new PdfPCell(new Phrase("EQUIPOS", fontheader)) { BackgroundColor = new BaseColor(141, 198, 63), HorizontalAlignment = Element.ALIGN_CENTER });
                     tablaConectadosPDF.AddCell(new PdfPCell(new Phrase("POTENCIA", fontheader)) { BackgroundColor = new BaseColor(141, 198, 63), HorizontalAlignment = Element.ALIGN_CENTER });
                     tablaConectadosPDF.AddCell(new PdfPCell(new Phrase("HORAS DE USO", fontheader)) { BackgroundColor = new BaseColor(141, 198, 63), HorizontalAlignment = Element.ALIGN_CENTER });
-
 
                     foreach (DataGridViewRow row in tablaConectados.Rows)
                     {
@@ -134,15 +133,13 @@ namespace Ensumex.PDFtemplates
                     doc.Add(tablaConectadosPDF);
                 }
                 doc.Add(new Paragraph("\n:", fontNegrita));
-
                 int pos = 1;
                 BaseColor colorFilaPar = BaseColor.WHITE;
                 BaseColor colorFilaImpar = new BaseColor(245, 245, 245);
 
                 foreach (DataGridViewRow row in tablaCotizacion.Rows)
                 {
-                    if (row.IsNewRow) continue;
-
+                    if (row.IsNewRow) continue; 
                     // Datos de la fila
                     string cantidadStr = row.Cells["CANTIDAD"].Value?.ToString() ?? "0";
                     decimal.TryParse(cantidadStr, out decimal cantidad);
@@ -192,9 +189,7 @@ namespace Ensumex.PDFtemplates
 
                 // Color de fondo para las filas normales
                 BaseColor colorFila = new BaseColor(223, 240, 216); // verde claro
-                                                                    // Color de fondo para la fila de total
                 BaseColor colorTotal = new BaseColor(169, 208, 142); // verde más fuerte
-                // Total
                 PdfPCell celdaTotalLabel = new PdfPCell(new Phrase("Total:", fontNegrita)) { Border = 0, BackgroundColor = colorTotal };
                 PdfPCell celdaTotalValor = new PdfPCell(new Phrase(
                     Convert.ToDecimal(total).ToString("C", new CultureInfo("es-MX")), fontNegrita))
@@ -237,7 +232,6 @@ namespace Ensumex.PDFtemplates
 
                 tablaFirma.AddCell(celdaTexto);
                 doc.Add(tablaFirma);
-
                 doc.Close();
                 MessageBox.Show("📄 PDF generado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

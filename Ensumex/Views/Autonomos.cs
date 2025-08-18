@@ -75,7 +75,7 @@ namespace Ensumex.Views
                     {
                         Name = "Descuento",
                         HeaderText = "Descuento (%)",
-                        DataSource = Enumerable.Range(0, 51).ToList(), // Valores de 0 a 50
+                        DataSource = Enumerable.Range(0, 51).ToList(), 
                         ValueType = typeof(int),
                         FlatStyle = FlatStyle.Flat,
                         Width = 80
@@ -179,7 +179,6 @@ namespace Ensumex.Views
                         cantidad = cantidadFinal;
                         decimal subtotal = precioFinal * cantidad;
                         decimal total = subtotal;
-                        // Verificar si el producto ya está en la tabla
                         foreach (DataGridViewRow row in Tbl_Cotizacion.Rows)
                         {
                             if (row.Cells[0].Value?.ToString() == clave)
@@ -225,7 +224,6 @@ namespace Ensumex.Views
                     decimal.TryParse(row.Cells["PRECIO"].Value?.ToString(), out precio);
                     decimal.TryParse(row.Cells["CANTIDAD"].Value?.ToString(), out cantidad);
                     subtotalOriginal = precio * cantidad;
-                    // Suma al subtotal general (total sin descuento)
                     subtotalGeneral += subtotalOriginal;
                     row.Cells["Subtotal"].Value = subtotalOriginal;
                     // Obtener porcentaje de descuento del ComboBox
@@ -494,18 +492,14 @@ namespace Ensumex.Views
         {
             // Elimina espacios y guiones
             numero = numero.Replace(" ", "").Replace("-", "");
-            // Si ya tiene el prefijo internacional, lo deja igual
             if (numero.StartsWith("521") && numero.Length == 13)
                 return numero;
             if (numero.StartsWith("52") && numero.Length == 12)
                 return numero;
-            // Si es celular (10 dígitos), antepone 521
             if (numero.Length == 10 && numero.StartsWith("9"))
                 return "521" + numero;
-            // Si es fijo (10 dígitos), antepone 52
             if (numero.Length == 10)
                 return "52" + numero;
-            // Si no cumple, regresa vacío
             return "";
         }
         private void EnviarCotizacionPorWhatsApp(string numeroCliente, string mensaje)
@@ -580,42 +574,34 @@ namespace Ensumex.Views
                 using (Form formWrapper = new Form())
                 {
                     formWrapper.Text = "Agregar Producto";
-                    formWrapper.Size = new Size(400, 300); // Ajusta el tamaño según tu UserControl
+                    formWrapper.Size = new Size(400, 300); 
                     formWrapper.StartPosition = FormStartPosition.CenterParent;
 
-                    // Crear instancia del UserControl
                     var prodControl = new ProdTemporal
                     {
                         Dock = DockStyle.Fill
                     };
 
-                    // Botón para aceptar
                     Button btnAceptar = new Button
                     {
                         Text = "Aceptar",
                         Dock = DockStyle.Bottom
-                        // NO asignar DialogResult aquí
                     };
 
-                    // Botón para cancelar
                     Button btnCancelar = new Button
                     {
                         Text = "Cancelar",
                         Dock = DockStyle.Bottom,
-                        DialogResult = DialogResult.Cancel // Solo el cancelar mantiene DialogResult
+                        DialogResult = DialogResult.Cancel 
                     };
 
-                    // Evento Click para el botón Aceptar
                     btnAceptar.Click += (s, e) =>
                     {
-                        // Validar datos antes de cerrar el formulario
                         if (string.IsNullOrWhiteSpace(prodControl.Descripcion))
                         {
                             MessageBox.Show("El producto debe tener descripción.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return; // NO cerrar el formulario
+                            return;
                         }
-
-                        // Si los datos son válidos, cerrar el formulario con DialogResult.OK
                         formWrapper.DialogResult = DialogResult.OK;
                         formWrapper.Close();
                     };
@@ -684,10 +670,9 @@ namespace Ensumex.Views
                 return;
             }
 
-            string prefijo = "G"; // Valor por defecto
+            string prefijo = "G"; 
             int prioridadActual = int.MaxValue;
 
-            // Detectar el prefijo en base a las descripciones
             for (int i = Tbl_Cotizacion.Rows.Count - 1; i >= 0; i--)
             {
                 if (Tbl_Cotizacion.Rows[i].IsNewRow)
@@ -715,20 +700,16 @@ namespace Ensumex.Views
                 {
                     prefijo = "F";
                     prioridadActual = 4;
-                }
+                }   
             }
-
-            // Obtener el último folio con ese prefijo desde la base de datos
             string ultimoFolio = CotizacionRepository.ObtenerUltimoFolioPorPrefijo("E");
             int consecutivo = 1;
-
             if (!string.IsNullOrEmpty(ultimoFolio) && ultimoFolio.StartsWith(prefijo))
             {
                 string numStr = ultimoFolio.Substring(prefijo.Length);
                 if (int.TryParse(numStr, out int ultimoNum))
                     consecutivo = ultimoNum + 1;
             }
-
             string nuevoFolio = $"{prefijo}{consecutivo.ToString("D4")}";
             lbl_NoCotiza.Text = nuevoFolio;
         }
@@ -778,20 +759,16 @@ namespace Ensumex.Views
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 RowHeadersVisible = false
             };
-            // Aplica el mismo estilo que a las otras tablas
             TablaFormat.AplicarEstilosTabla(dgvBusqueda);
             panelBusqueda.Controls.Add(dgvBusqueda);
             this.Controls.Add(panelBusqueda);
-            // Posiciona el panel justo debajo del Txt_Buscar
             panelBusqueda.Location = new Point(Txt_Buscar.Left, Txt_Buscar.Bottom + 2);
             dgvBusqueda.CellDoubleClick += DgvBusqueda_CellDoubleClick;
-            // Opcional: Oculta el panel si pierde el foco
             dgvBusqueda.LostFocus += (s, e) => panelBusqueda.Visible = false;
             Txt_Buscar.LostFocus += (s, e) => { if (!panelBusqueda.Focused && !dgvBusqueda.Focused) panelBusqueda.Visible = false; };
         }
         private void CargarProductosCache()
         {
-            // Puedes obtener los productos desde tu servicio o base de datos
             var productoService = new ProductoServices1();
             var productos = productoService.ObtenerProductos();
             productosCache = productos.Select(p => new

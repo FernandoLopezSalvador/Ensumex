@@ -37,7 +37,7 @@ namespace Ensumex.Controllers
                 conn.Open();
                 using (FbCommand cmd = new FbCommand("SELECT CLAVE, STATUS, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED FROM CLIE01", conn))
                 using (FbDataAdapter adapter = new FbDataAdapter(cmd))
-                {
+                {       
                     adapter.Fill(clientes);
                 }
             }
@@ -57,6 +57,44 @@ namespace Ensumex.Controllers
                 }
             }
             return precios;
+        }
+        // Consulta para obtener los productos que tienen 1 año de antigüedad en el mes actual
+        public static DataTable GetCalentadoresParaMantenimiento()
+        {
+            var dt = new DataTable();
+
+            string query = @"
+        SELECT 
+            F.CVE_DOC AS FOLIO,
+            F.FECHA_DOC AS FECHA_VENTA,
+            C.NOMBRE AS CLIENTE,
+            C.TELEFONO,
+            P.DESCR AS PRODUCTO
+        FROM FACTF01 F
+        JOIN PAR_FACTF01 PF 
+            ON F.CVE_DOC = PF.CVE_DOC
+        JOIN INVE01 P 
+            ON PF.CVE_ART = P.CVE_ART
+        JOIN CLIE01 C 
+            ON F.CVE_CLPV = C.CLAVE
+        WHERE 
+            UPPER(P.DESCR) LIKE '%CALENT%'
+            AND EXTRACT(MONTH FROM F.FECHA_DOC) = EXTRACT(MONTH FROM CURRENT_DATE)
+            AND EXTRACT(YEAR FROM F.FECHA_DOC) = EXTRACT(YEAR FROM CURRENT_DATE) - 1
+        ORDER BY 
+            F.FECHA_DOC DESC;";
+
+            using (FbConnection conn = new FbConnection(connFirebird))
+            {
+                conn.Open();
+                using (FbCommand cmd = new FbCommand(query, conn))
+                using (FbDataAdapter adapter = new FbDataAdapter(cmd))
+                {
+                    adapter.Fill(dt);
+                }
+            }
+
+            return dt;
         }
     }
 }

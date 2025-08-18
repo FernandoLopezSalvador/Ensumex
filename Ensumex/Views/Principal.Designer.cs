@@ -42,7 +42,7 @@ namespace Ensumex.Forms
             BtnInicio = new FontAwesome.Sharp.IconButton();
             panel1 = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
-            iconButton1 = new FontAwesome.Sharp.IconButton();
+            Btn_Autonom = new FontAwesome.Sharp.IconButton();
             progressBar1 = new ProgressBar();
             panel2 = new Panel();
             lbl_UsuarioInicio = new Label();
@@ -226,7 +226,7 @@ namespace Ensumex.Forms
             tableLayoutPanel2.BackColor = SystemColors.Control;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.Controls.Add(iconButton1, 0, 3);
+            tableLayoutPanel2.Controls.Add(Btn_Autonom, 0, 3);
             tableLayoutPanel2.Controls.Add(BtnCotiza, 0, 2);
             tableLayoutPanel2.Controls.Add(BtnInve, 0, 1);
             tableLayoutPanel2.Controls.Add(BtnInicio, 0, 0);
@@ -250,19 +250,21 @@ namespace Ensumex.Forms
             tableLayoutPanel2.Size = new Size(198, 403);
             tableLayoutPanel2.TabIndex = 5;
             // 
-            // iconButton1
+            // Btn_Autonom
             // 
-            iconButton1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            iconButton1.IconChar = FontAwesome.Sharp.IconChar.None;
-            iconButton1.IconColor = Color.Black;
-            iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton1.Location = new Point(3, 153);
-            iconButton1.Name = "iconButton1";
-            iconButton1.Size = new Size(197, 44);
-            iconButton1.TabIndex = 13;
-            iconButton1.Text = "AUTONOMOS";
-            iconButton1.UseVisualStyleBackColor = true;
-            iconButton1.Click += iconButton1_Click;
+            Btn_Autonom.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Btn_Autonom.IconChar = FontAwesome.Sharp.IconChar.None;
+            Btn_Autonom.IconColor = Color.Black;
+            Btn_Autonom.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            Btn_Autonom.Location = new Point(3, 153);
+            Btn_Autonom.Name = "Btn_Autonom";
+            Btn_Autonom.Size = new Size(197, 44);
+            Btn_Autonom.TabIndex = 13;
+            Btn_Autonom.Text = "AUTONOMOS";
+            Btn_Autonom.UseVisualStyleBackColor = true;
+            Btn_Autonom.Click += iconButton1_Click;
+            Btn_Autonom.MouseEnter += Btn_Autonom_MouseEnter;
+            Btn_Autonom.MouseLeave += Btn_Autonom_MouseLeave;
             // 
             // progressBar1
             // 
@@ -440,6 +442,6 @@ namespace Ensumex.Forms
         private FontAwesome.Sharp.IconButton BtnInve;
         private FontAwesome.Sharp.IconButton BtnInicio;
         private FontAwesome.Sharp.IconButton BtnCerrar;
-        private FontAwesome.Sharp.IconButton iconButton1;
+        private FontAwesome.Sharp.IconButton Btn_Autonom;
     }
 }

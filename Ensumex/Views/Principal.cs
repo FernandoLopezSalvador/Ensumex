@@ -41,7 +41,7 @@ namespace Ensumex.Forms
         {
             // BtnInve - Inventario
             BtnInve.IconChar = IconChar.Boxes; // cajas para inventario
-            BtnInve.IconColor = Color.FromArgb(33, 150, 243); // azul
+            BtnInve.IconColor = Color.FromArgb(30, 136, 229); // azul más vivo
             BtnInve.IconSize = 32;
             BtnInve.TextImageRelation = TextImageRelation.ImageBeforeText;
             BtnInve.ImageAlign = ContentAlignment.MiddleLeft;
@@ -51,7 +51,7 @@ namespace Ensumex.Forms
 
             // BtnCotiza - Cotizaciones
             BtnCotiza.IconChar = IconChar.FileInvoiceDollar;
-            BtnCotiza.IconColor = Color.FromArgb(0, 150, 136); // verde azulado
+            BtnCotiza.IconColor = Color.FromArgb(0, 200, 165); // verde azulado más vibrante
             BtnCotiza.IconSize = 32;
             BtnCotiza.TextImageRelation = TextImageRelation.ImageBeforeText;
             BtnCotiza.ImageAlign = ContentAlignment.MiddleLeft;
@@ -59,9 +59,20 @@ namespace Ensumex.Forms
             BtnCotiza.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             BtnCotiza.ForeColor = Color.FromArgb(33, 33, 33);
 
+            //BtnAutonomos - Autónomos
+            Btn_Autonom.IconChar = IconChar.UsersCog; // o IconChar.UserTie para autónomos
+            Btn_Autonom.IconColor = Color.FromArgb(255, 112, 67); // naranja vibrante
+            Btn_Autonom.IconSize = 32;
+            Btn_Autonom.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Btn_Autonom.ImageAlign = ContentAlignment.MiddleLeft;
+            Btn_Autonom.Padding = new Padding(10, 0, 20, 0);
+            Btn_Autonom.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            Btn_Autonom.ForeColor = Color.FromArgb(33, 33, 33);
+
+
             // BtnClient - Clientes
             BtnClient.IconChar = IconChar.Users;
-            BtnClient.IconColor = Color.FromArgb(255, 152, 0); // naranja
+            BtnClient.IconColor = Color.FromArgb(255, 193, 7); // dorado más brillante
             BtnClient.IconSize = 32;
             BtnClient.TextImageRelation = TextImageRelation.ImageBeforeText;
             BtnClient.ImageAlign = ContentAlignment.MiddleLeft;
@@ -71,7 +82,7 @@ namespace Ensumex.Forms
 
             // BtnSincroniza - Sincronización
             BtnSincroniza.IconChar = IconChar.SyncAlt;
-            BtnSincroniza.IconColor = Color.FromArgb(156, 39, 176); // morado
+            BtnSincroniza.IconColor = Color.FromArgb(186, 104, 200); // morado más llamativo
             BtnSincroniza.IconSize = 32;
             BtnSincroniza.TextImageRelation = TextImageRelation.ImageBeforeText;
             BtnSincroniza.ImageAlign = ContentAlignment.MiddleLeft;
@@ -81,7 +92,7 @@ namespace Ensumex.Forms
 
             // BtnInicio - Inicio
             BtnInicio.IconChar = IconChar.Home;
-            BtnInicio.IconColor = Color.FromArgb(3, 169, 244); // azul claro
+            BtnInicio.IconColor = Color.FromArgb(41, 182, 246); // celeste más vivo
             BtnInicio.IconSize = 32;
             BtnInicio.TextImageRelation = TextImageRelation.ImageBeforeText;
             BtnInicio.ImageAlign = ContentAlignment.MiddleLeft;
@@ -91,7 +102,7 @@ namespace Ensumex.Forms
 
             // BtnCerrar - Cerrar Sesión o Salir
             BtnCerrar.IconChar = IconChar.SignOutAlt; // o prueba IconChar.DoorOpen
-            BtnCerrar.IconColor = Color.FromArgb(244, 67, 54); // rojo elegante
+            BtnCerrar.IconColor = Color.FromArgb(229, 57, 53); // rojo más intenso
             BtnCerrar.IconSize = 32;
             BtnCerrar.TextImageRelation = TextImageRelation.ImageBeforeText;
             BtnCerrar.ImageAlign = ContentAlignment.MiddleLeft;
@@ -252,7 +263,7 @@ namespace Ensumex.Forms
                     : Color.Transparent;
 
                 AnimateButtonBackColor(btn, baseColor, 300);
-                AnimateButtonScale(btn, 1.0f, 300); // Vuelve al tamaño original
+                AnimateButtonScale(btn, 1.0f, 300);
             }
         }
         private void CargarUserControl(UserControl control)
@@ -451,6 +462,63 @@ namespace Ensumex.Forms
         private void iconButton1_Click(object sender, EventArgs e)
         {
             CargarUserControl(new Autonomos(lbl_UsuarioInicio.Text));
+        }
+
+        private void Btn_Autonom_MouseLeave(object sender, EventArgs e)
+        {
+            var manager = MaterialSkin.MaterialSkinManager.Instance;
+            var isDark = manager.Theme == MaterialSkinManager.Themes.DARK;
+
+            if (sender is not Button btn) return;
+
+            // Cancela delay si el mouse salió antes de tiempo
+            if (hoverTimers.ContainsKey(btn))
+            {
+                hoverTimers[btn].Stop();
+                hoverTimers[btn].Dispose();
+                hoverTimers.Remove(btn);
+            }
+
+            Color baseColor = isDark
+                ? Color.FromArgb(45, 45, 48)
+                : Color.Transparent;
+
+            StartButtonAnimation(btn, baseColor, 1.0f); // Vuelve tamaño original
+        }
+
+        private void Btn_Autonom_MouseEnter(object sender, EventArgs e)
+        {
+            var manager = MaterialSkin.MaterialSkinManager.Instance;
+            var isDark = manager.Theme == MaterialSkinManager.Themes.DARK;
+
+            if (sender is not Button btn) return;
+
+            // Cancela el timer si ya existe
+            if (hoverTimers.ContainsKey(btn))
+            {
+                hoverTimers[btn].Stop();
+                hoverTimers[btn].Dispose();
+                hoverTimers.Remove(btn);
+            }
+
+            // Timer para retrasar el hover
+            Timer delayTimer = new Timer { Interval = 120 }; // Delay de 120ms
+            delayTimer.Tick += (s, args) =>
+            {
+                delayTimer.Stop();
+                delayTimer.Dispose();
+                hoverTimers.Remove(btn);
+
+                // Si el mouse sigue sobre el botón después del delay
+                if (btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position)))
+                {
+                    Color targetColor = GetHoverColor(btn, isDark);
+                    StartButtonAnimation(btn, targetColor, 1.1f); // Escala 110%
+                }
+            };
+
+            hoverTimers[btn] = delayTimer;
+            delayTimer.Start();
         }
     }
 } 

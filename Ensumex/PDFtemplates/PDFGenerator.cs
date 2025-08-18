@@ -169,7 +169,6 @@ namespace Ensumex.PDFtemplates
 
                     // Color de fondo para las filas normales
                     BaseColor colorFila = new BaseColor(223, 240, 216); // verde claro
-                                                                        // Color de fondo para la fila de total
                     BaseColor colorTotal = new BaseColor(169, 208, 142); // verde más fuerte
                     decimal costoInst = decimal.TryParse(costoInstalacion, out var tmpInst) ? tmpInst : 0.00m;
                     decimal costoFl = decimal.TryParse(costoFlete, out var tmpFl) ? tmpFl : 0.00m;
@@ -181,6 +180,7 @@ namespace Ensumex.PDFtemplates
                             tablaTotales.AddCell(celdaManoObra);
                             tablaTotales.AddCell(celdaCostoInstalacion);
                     }
+
                     if (costoFl > 0)
                     {
                     // Flete
@@ -202,7 +202,6 @@ namespace Ensumex.PDFtemplates
                     decimal valorNumerico = decimal.Parse(total, System.Globalization.NumberStyles.Any);
                     tablaTotales.AddCell(new PdfPCell(new Phrase("")) { Border = 0, Colspan = 2 });
                     tablaTotales.AddCell(new PdfPCell(new Phrase(Numerosaletras.Convertir(valorNumerico), fontNormal))
-
                     {
                         Border = 0,
                         Colspan = 2,

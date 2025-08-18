@@ -17,8 +17,7 @@ namespace Ensumex.Controllers
         [Obsolete]
         public bool GuardarUsuario(Usuarios usuario)
         {
-            // 1) Encriptamos la contraseña.
-            usuario.Contraseña = ObtenerHashSHA256(usuario.Contraseña);
+                usuario.Contraseña = ObtenerHashSHA256(usuario.Contraseña);
 
             using (var connection = GetConnection())
             {
@@ -37,7 +36,6 @@ namespace Ensumex.Controllers
                     }
                 }
 
-                // 3) Si no existe, insertamos con todos los parámetros correctamente:
                 using (var insertCmd = new SqlCommand(
                     @"INSERT INTO Usuarios 
                     (Usuario, Contraseña, Nombre, Posicion, Correo) 
@@ -55,6 +53,7 @@ namespace Ensumex.Controllers
                 }
             }
         }
+
         private string ObtenerHashSHA256(string texto)
         {
             using (SHA256 sha256 = SHA256.Create())
@@ -64,6 +63,7 @@ namespace Ensumex.Controllers
                 return BitConverter.ToString(hash).Replace("-", "").ToLower();
             }
         }
+
         public bool ActualizarUsuario(string usuarioOriginal, Usuarios usuarioEditado, bool actualizarContraseña)
         {
             // Solo cifrar la contraseña si se indicó que hay una nueva
@@ -100,8 +100,6 @@ namespace Ensumex.Controllers
                     }
                 }
             }
-
-            // Si no encontró el usuario
             return null;
         }
     }

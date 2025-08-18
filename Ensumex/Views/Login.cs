@@ -73,7 +73,6 @@ namespace Ensumex
             // Esperar 3 segundos
             await Task.Delay(3000);
 
-            // Fade out (de alpha 255 a 0)
             for (int alpha = 255; alpha >= 0; alpha -= 15)
             {
                 lbl_error.ForeColor = Color.FromArgb(alpha, baseColor.R, baseColor.G, baseColor.B);
@@ -174,7 +173,7 @@ namespace Ensumex
             }
             catch (Exception ex)
             {
-                msgError("Conexión al servidor no disponible.\nDetalles: " + ex.Message);
+                msgError("Conexión al servidor no disponible.");
                 return;
             }
 
