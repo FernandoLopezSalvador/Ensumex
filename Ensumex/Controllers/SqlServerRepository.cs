@@ -12,7 +12,6 @@ namespace Ensumex.Controllers
     { 
         private static readonly string connSqlServer = "Server=192.168.1.206;Database=Ensumex;User Id=appuser;Password=ensumex;";
 
-
         public static void LimpiarTablas(SqlConnection conn, SqlTransaction transaction)
         {
             using (SqlCommand cmd = new SqlCommand("DELETE FROM INVE01", conn, transaction))
@@ -68,6 +67,20 @@ namespace Ensumex.Controllers
                 cmd.ExecuteNonQuery();
             }
         }
+        public static void InsertarCalentador(DataRow row, SqlConnection conn, SqlTransaction transaction)
+        {
+            using (SqlCommand cmd = new SqlCommand(
+                @"INSERT INTO CALENTADORES (CVE_CALENTADOR, DESCRIPCION, ESTADO, FECHA_ULTIMO_MANTENIMIENTO)
+                  VALUES (@CVE_CALENTADOR, @DESCRIPCION, @ESTADO, @FECHA_ULTIMO_MANTENIMIENTO)", conn, transaction))
+            {
+                cmd.Parameters.AddWithValue("@CVE_CALENTADOR", row["CVE_CALENTADOR"] ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@DESCRIPCION", row["DESCRIPCION"] ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@ESTADO", row["ESTADO"] ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@FECHA_ULTIMO_MANTENIMIENTO", row["FECHA_ULTIMO_MANTENIMIENTO"] ?? DBNull.Value);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         public static SqlConnection GetConnection()
         {
             return new SqlConnection(connSqlServer);

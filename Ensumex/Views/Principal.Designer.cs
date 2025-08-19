@@ -55,6 +55,7 @@ namespace Ensumex.Forms
             clientesToolStripMenuItem = new ToolStripMenuItem();
             miniToolStrip = new MenuStrip();
             tableLayoutPanel4 = new TableLayoutPanel();
+            iconButton1 = new FontAwesome.Sharp.IconButton();
             tableLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -116,9 +117,9 @@ namespace Ensumex.Forms
             BtnCerrar.IconChar = FontAwesome.Sharp.IconChar.None;
             BtnCerrar.IconColor = Color.Black;
             BtnCerrar.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            BtnCerrar.Location = new Point(3, 353);
+            BtnCerrar.Location = new Point(3, 355);
             BtnCerrar.Name = "BtnCerrar";
-            BtnCerrar.Size = new Size(197, 47);
+            BtnCerrar.Size = new Size(197, 45);
             BtnCerrar.TabIndex = 6;
             BtnCerrar.Text = "Cerrar Sesión";
             BtnCerrar.UseVisualStyleBackColor = true;
@@ -132,9 +133,9 @@ namespace Ensumex.Forms
             BtnClient.IconChar = FontAwesome.Sharp.IconChar.None;
             BtnClient.IconColor = Color.Black;
             BtnClient.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            BtnClient.Location = new Point(3, 203);
+            BtnClient.Location = new Point(3, 179);
             BtnClient.Name = "BtnClient";
-            BtnClient.Size = new Size(197, 44);
+            BtnClient.Size = new Size(197, 38);
             BtnClient.TabIndex = 4;
             BtnClient.Text = "CLIENTES";
             BtnClient.UseVisualStyleBackColor = true;
@@ -148,9 +149,9 @@ namespace Ensumex.Forms
             BtnSincroniza.IconChar = FontAwesome.Sharp.IconChar.None;
             BtnSincroniza.IconColor = Color.Black;
             BtnSincroniza.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            BtnSincroniza.Location = new Point(3, 253);
+            BtnSincroniza.Location = new Point(3, 223);
             BtnSincroniza.Name = "BtnSincroniza";
-            BtnSincroniza.Size = new Size(197, 44);
+            BtnSincroniza.Size = new Size(197, 38);
             BtnSincroniza.TabIndex = 5;
             BtnSincroniza.Text = "SINCRONIZAR";
             BtnSincroniza.UseVisualStyleBackColor = true;
@@ -164,9 +165,9 @@ namespace Ensumex.Forms
             BtnCotiza.IconChar = FontAwesome.Sharp.IconChar.None;
             BtnCotiza.IconColor = Color.Black;
             BtnCotiza.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            BtnCotiza.Location = new Point(3, 103);
+            BtnCotiza.Location = new Point(3, 91);
             BtnCotiza.Name = "BtnCotiza";
-            BtnCotiza.Size = new Size(197, 44);
+            BtnCotiza.Size = new Size(197, 38);
             BtnCotiza.TabIndex = 3;
             BtnCotiza.Text = "COTIZACIÓN";
             BtnCotiza.UseVisualStyleBackColor = true;
@@ -180,9 +181,9 @@ namespace Ensumex.Forms
             BtnInve.IconChar = FontAwesome.Sharp.IconChar.None;
             BtnInve.IconColor = Color.Black;
             BtnInve.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            BtnInve.Location = new Point(3, 53);
+            BtnInve.Location = new Point(3, 47);
             BtnInve.Name = "BtnInve";
-            BtnInve.Size = new Size(197, 44);
+            BtnInve.Size = new Size(197, 38);
             BtnInve.TabIndex = 2;
             BtnInve.Text = "INVENTARIO";
             BtnInve.UseVisualStyleBackColor = true;
@@ -199,7 +200,7 @@ namespace Ensumex.Forms
             BtnInicio.IconFont = FontAwesome.Sharp.IconFont.Auto;
             BtnInicio.Location = new Point(3, 3);
             BtnInicio.Name = "BtnInicio";
-            BtnInicio.Size = new Size(197, 44);
+            BtnInicio.Size = new Size(197, 38);
             BtnInicio.TabIndex = 1;
             BtnInicio.Text = "INICIO";
             BtnInicio.UseVisualStyleBackColor = true;
@@ -226,27 +227,29 @@ namespace Ensumex.Forms
             tableLayoutPanel2.BackColor = SystemColors.Control;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.Controls.Add(iconButton1, 0, 7);
             tableLayoutPanel2.Controls.Add(Btn_Autonom, 0, 3);
             tableLayoutPanel2.Controls.Add(BtnCotiza, 0, 2);
             tableLayoutPanel2.Controls.Add(BtnInve, 0, 1);
             tableLayoutPanel2.Controls.Add(BtnInicio, 0, 0);
-            tableLayoutPanel2.Controls.Add(BtnCerrar, 0, 7);
             tableLayoutPanel2.Controls.Add(progressBar1, 0, 6);
             tableLayoutPanel2.Controls.Add(BtnSincroniza, 0, 5);
             tableLayoutPanel2.Controls.Add(BtnClient, 0, 4);
+            tableLayoutPanel2.Controls.Add(BtnCerrar, 0, 8);
             tableLayoutPanel2.Dock = DockStyle.Left;
             tableLayoutPanel2.Location = new Point(0, 100);
             tableLayoutPanel2.Margin = new Padding(3, 2, 3, 2);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 8;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 12.5F));
+            tableLayoutPanel2.RowCount = 9;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 11.1111107F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 11.1111107F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 11.1111107F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 11.1111107F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 11.1111107F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 11.1111107F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 11.1111107F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 11.1111107F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 11.1111107F));
             tableLayoutPanel2.Size = new Size(198, 403);
             tableLayoutPanel2.TabIndex = 5;
             // 
@@ -256,9 +259,9 @@ namespace Ensumex.Forms
             Btn_Autonom.IconChar = FontAwesome.Sharp.IconChar.None;
             Btn_Autonom.IconColor = Color.Black;
             Btn_Autonom.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            Btn_Autonom.Location = new Point(3, 153);
+            Btn_Autonom.Location = new Point(3, 135);
             Btn_Autonom.Name = "Btn_Autonom";
-            Btn_Autonom.Size = new Size(197, 44);
+            Btn_Autonom.Size = new Size(197, 38);
             Btn_Autonom.TabIndex = 13;
             Btn_Autonom.Text = "AUTONOMOS";
             Btn_Autonom.UseVisualStyleBackColor = true;
@@ -269,7 +272,7 @@ namespace Ensumex.Forms
             // progressBar1
             // 
             progressBar1.Dock = DockStyle.Top;
-            progressBar1.Location = new Point(3, 303);
+            progressBar1.Location = new Point(3, 267);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(197, 20);
             progressBar1.TabIndex = 12;
@@ -391,6 +394,20 @@ namespace Ensumex.Forms
             tableLayoutPanel4.Size = new Size(820, 503);
             tableLayoutPanel4.TabIndex = 10;
             // 
+            // iconButton1
+            // 
+            iconButton1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            iconButton1.IconChar = FontAwesome.Sharp.IconChar.None;
+            iconButton1.IconColor = Color.Black;
+            iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            iconButton1.Location = new Point(3, 311);
+            iconButton1.Name = "iconButton1";
+            iconButton1.Size = new Size(197, 38);
+            iconButton1.TabIndex = 14;
+            iconButton1.Text = "MANTENIMIENTOS";
+            iconButton1.UseVisualStyleBackColor = true;
+            iconButton1.Click += iconButton1_Click_1;
+            // 
             // ENSUMEX
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -443,5 +460,6 @@ namespace Ensumex.Forms
         private FontAwesome.Sharp.IconButton BtnInicio;
         private FontAwesome.Sharp.IconButton BtnCerrar;
         private FontAwesome.Sharp.IconButton Btn_Autonom;
+        private FontAwesome.Sharp.IconButton iconButton1;
     }
 }

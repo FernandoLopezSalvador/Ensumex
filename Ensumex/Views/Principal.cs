@@ -509,7 +509,6 @@ namespace Ensumex.Forms
                 delayTimer.Dispose();
                 hoverTimers.Remove(btn);
 
-                // Si el mouse sigue sobre el botón después del delay
                 if (btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position)))
                 {
                     Color targetColor = GetHoverColor(btn, isDark);
@@ -519,6 +518,11 @@ namespace Ensumex.Forms
 
             hoverTimers[btn] = delayTimer;
             delayTimer.Start();
+        }
+
+        private void iconButton1_Click_1(object sender, EventArgs e)
+        {
+            CargarUserControl(new Mantenimiento());
         }
     }
 } 
