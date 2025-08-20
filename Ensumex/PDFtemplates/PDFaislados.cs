@@ -132,11 +132,12 @@ namespace Ensumex.PDFtemplates
                     }
                     doc.Add(tablaConectadosPDF);
                 }
-                doc.Add(new Paragraph("\n:", fontNegrita));
+                //doc.Add(new Paragraph("\n", fontNegrita));
                 int pos = 1;
                 BaseColor colorFilaPar = BaseColor.WHITE;
                 BaseColor colorFilaImpar = new BaseColor(245, 245, 245);
 
+                doc.Add(new Paragraph("\nPropuesta:\n\n", fontNegrita));
                 foreach (DataGridViewRow row in tablaCotizacion.Rows)
                 {
                     if (row.IsNewRow) continue; 
@@ -188,8 +189,8 @@ namespace Ensumex.PDFtemplates
                 tablaTotales.HorizontalAlignment = Element.ALIGN_RIGHT;
 
                 // Color de fondo para las filas normales
-                BaseColor colorFila = new BaseColor(223, 240, 216); // verde claro
-                BaseColor colorTotal = new BaseColor(169, 208, 142); // verde más fuerte
+                BaseColor colorFila = new BaseColor(223, 240, 216); 
+                BaseColor colorTotal = new BaseColor(169, 208, 142); 
                 PdfPCell celdaTotalLabel = new PdfPCell(new Phrase("Total:", fontNegrita)) { Border = 0, BackgroundColor = colorTotal };
                 PdfPCell celdaTotalValor = new PdfPCell(new Phrase(
                     Convert.ToDecimal(total).ToString("C", new CultureInfo("es-MX")), fontNegrita))

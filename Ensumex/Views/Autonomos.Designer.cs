@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Autonomos));
             tableLayoutPanel1 = new TableLayoutPanel();
-            txt_Nombrecliente = new Label();
             materialLabel4 = new MaterialSkin.Controls.MaterialLabel();
             Buscarcliente = new PictureBox();
             lbl_NoCotiza = new Label();
@@ -59,6 +58,7 @@
             Lbl_tot = new Label();
             lbl_observaciones = new MaterialSkin.Controls.MaterialLabel();
             Txt_observaciones = new TextBox();
+            txt_Nombrecliente = new TextBox();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Buscarcliente).BeginInit();
             tableLayoutPanel2.SuspendLayout();
@@ -78,7 +78,6 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.7938919F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.68484F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.68484F));
-            tableLayoutPanel1.Controls.Add(txt_Nombrecliente, 1, 1);
             tableLayoutPanel1.Controls.Add(materialLabel4, 0, 1);
             tableLayoutPanel1.Controls.Add(Buscarcliente, 2, 1);
             tableLayoutPanel1.Controls.Add(lbl_NoCotiza, 1, 0);
@@ -94,6 +93,7 @@
             tableLayoutPanel1.Controls.Add(Txt_Buscar, 1, 2);
             tableLayoutPanel1.Controls.Add(Lbl_Cel, 4, 1);
             tableLayoutPanel1.Controls.Add(txt_NumeroCliente, 5, 1);
+            tableLayoutPanel1.Controls.Add(txt_Nombrecliente, 1, 1);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
@@ -105,15 +105,6 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.Size = new Size(902, 166);
             tableLayoutPanel1.TabIndex = 8;
-            // 
-            // txt_Nombrecliente
-            // 
-            txt_Nombrecliente.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            txt_Nombrecliente.AutoSize = true;
-            txt_Nombrecliente.Location = new Point(111, 54);
-            txt_Nombrecliente.Name = "txt_Nombrecliente";
-            txt_Nombrecliente.Size = new Size(242, 15);
-            txt_Nombrecliente.TabIndex = 1;
             // 
             // materialLabel4
             // 
@@ -473,6 +464,14 @@
             Txt_observaciones.Size = new Size(343, 134);
             Txt_observaciones.TabIndex = 34;
             // 
+            // txt_Nombrecliente
+            // 
+            txt_Nombrecliente.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            txt_Nombrecliente.Location = new Point(111, 50);
+            txt_Nombrecliente.Name = "txt_Nombrecliente";
+            txt_Nombrecliente.Size = new Size(242, 23);
+            txt_Nombrecliente.TabIndex = 40;
+            // 
             // Autonomos
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -507,7 +506,6 @@
         private FontAwesome.Sharp.IconButton Btn_Guardar;
         private FontAwesome.Sharp.IconButton Btn_NuevoProd;
         private Label txt_NumeroCliente;
-        private Label txt_Nombrecliente;
         private TableLayoutPanel tableLayoutPanel2;
         private DataGridView Tbl_conectados;
         private DataGridView Tbl_Cotizacion;
@@ -527,5 +525,6 @@
         private Label Lbl_Cotiza;
         private Label Lbl_Fechas;
         private Label Lbl_Cel;
+        private TextBox txt_Nombrecliente;
     }
 }
