@@ -500,6 +500,7 @@ namespace Ensumex.Views
             Txt_observaciones.Text = string.Empty;
             tbl_Cotizacion.ReadOnly = true;
             tablasGuardadas.Clear();
+            ActualizarNumeroCotizacionEnLabel(); // <-- Añade esta línea
         }
         // Evento para manejar la busqueda para seleccionar cliente
         private void pictureBox1_Click(object sender, EventArgs e)
@@ -607,7 +608,6 @@ namespace Ensumex.Views
             {
                 var colName = tbl_Cotizacion.Columns[e.ColumnIndex].Name;
 
-                // Nombres de columna consistentes
                 string colPrecio = "PRECIO";
                 string colCantidad = "CANTIDAD";
                 string colSubtotal = "Subtotal";
@@ -690,18 +690,14 @@ namespace Ensumex.Views
         {
             // Elimina espacios y guiones
             numero = numero.Replace(" ", "").Replace("-", "");
-            // Si ya tiene el prefijo internacional, lo deja igual
             if (numero.StartsWith("521") && numero.Length == 13)
                 return numero;
             if (numero.StartsWith("52") && numero.Length == 12)
                 return numero;
-            // Si es celular (10 dígitos), antepone 521
             if (numero.Length == 10 && numero.StartsWith("9"))
                 return "521" + numero;
-            // Si es fijo (10 dígitos), antepone 52
             if (numero.Length == 10)
                 return "52" + numero;
-            // Si no cumple, regresa vacío
             return "";
         }
         private void txt_NumeroCliente_KeyPress(object sender, KeyPressEventArgs e)
@@ -720,7 +716,7 @@ namespace Ensumex.Views
                 return;
             }
 
-            string prefijo = "G"; // Valor por defecto
+            string prefijo = "G"; 
             int prioridadActual = int.MaxValue;
 
             // Detectar el prefijo en base a las descripciones
@@ -753,9 +749,7 @@ namespace Ensumex.Views
                     prioridadActual = 4;
                 }
             }
-
-            // Obtener el último folio con ese prefijo desde la base de datos
-            string ultimoFolio = CotizacionRepository.ObtenerUltimoFolioPorPrefijo("E");
+            string ultimoFolio = CotizacionRepository.ObtenerUltimoFolioPorPrefijo(prefijo);
             int consecutivo = 1;
 
             if (!string.IsNullOrEmpty(ultimoFolio) && ultimoFolio.StartsWith(prefijo))
@@ -817,10 +811,9 @@ namespace Ensumex.Views
             TablaFormat.AplicarEstilosTabla(dgvBusqueda);
             panelBusqueda.Controls.Add(dgvBusqueda);
             this.Controls.Add(panelBusqueda);
-            // Posiciona el panel justo debajo del Txt_Buscar
             panelBusqueda.Location = new Point(Txt_Buscar.Left, Txt_Buscar.Bottom + 2);
             dgvBusqueda.CellDoubleClick += DgvBusqueda_CellDoubleClick;
-            // Opcional: Oculta el panel si pierde el foco
+
             dgvBusqueda.LostFocus += (s, e) => panelBusqueda.Visible = false;
             Txt_Buscar.LostFocus += (s, e) => { if (!panelBusqueda.Focused && !dgvBusqueda.Focused) panelBusqueda.Visible = false; };
         }

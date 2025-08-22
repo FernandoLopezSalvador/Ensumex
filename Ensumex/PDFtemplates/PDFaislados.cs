@@ -55,7 +55,6 @@ namespace Ensumex.PDFtemplates
                     logo.SetAbsolutePosition(doc.LeftMargin, doc.PageSize.Height - doc.TopMargin - 70f);
                     doc.Add(logo);
                 }
-
                 // Encabezado
                 Paragraph titulo = new Paragraph("Cotización: " + numeroCotizacion, fontNegrita)
                 {
@@ -76,6 +75,7 @@ namespace Ensumex.PDFtemplates
                 }
                 else
                 {
+                    
                     doc.Add(new Paragraph("\nEstimado(a) Cliente:", fontNegrita));
                 }
 
@@ -120,7 +120,7 @@ namespace Ensumex.PDFtemplates
 
                     foreach (DataGridViewRow row in tablaConectados.Rows)
                     {
-                        if (row.IsNewRow) continue;
+                        if (row.IsNewRow) continue; 
                         string cantidad = row.Cells["CANTIDAD"].Value?.ToString() ?? "0";
                         string eqiopos = row.Cells["EQUIPOS"].Value?.ToString() ?? "";
                         string potencia = row.Cells["POTENCIA"].Value?.ToString() ?? "0.0 kW";
@@ -139,7 +139,7 @@ namespace Ensumex.PDFtemplates
 
                 doc.Add(new Paragraph("\nPropuesta:\n\n", fontNegrita));
                 foreach (DataGridViewRow row in tablaCotizacion.Rows)
-                {
+                {   
                     if (row.IsNewRow) continue; 
                     // Datos de la fila
                     string cantidadStr = row.Cells["CANTIDAD"].Value?.ToString() ?? "0";
@@ -149,8 +149,6 @@ namespace Ensumex.PDFtemplates
                     string precioStr = row.Cells["PRECIO"].Value?.ToString() ?? "0";
                     decimal.TryParse(precioStr, out decimal precioUnitario);
                     int.TryParse(row.Cells["Descuento"].Value?.ToString() ?? "0", out int porcentajeDescuentoFila);
-
-                    // Cálculos corregidos
                     decimal importe = precioUnitario * cantidad;
                     decimal descuentoFila = importe * (porcentajeDescuentoFila / 100m);
                     decimal total1 = importe - descuentoFila;
@@ -177,15 +175,15 @@ namespace Ensumex.PDFtemplates
                 doc.Add(tabla);
 
                 // Totales
-                doc.Add(new Paragraph("\n"));
+                doc.Add(new Paragraph("\n"));   
                 PdfPTable tablaTotales = new PdfPTable(2)
                 {
                     WidthPercentage = 50,
                     HorizontalAlignment = Element.ALIGN_RIGHT
                 };
                 // añadir costo de instalación, flete y total
-                tablaTotales.SetWidths(new float[] { 2f, 1f });
-                tablaTotales.WidthPercentage = 50; // ancho de la tabla
+                tablaTotales.SetWidths(new float[] { 2f, 1f }); 
+                tablaTotales.WidthPercentage = 50;  
                 tablaTotales.HorizontalAlignment = Element.ALIGN_RIGHT;
 
                 // Color de fondo para las filas normales
@@ -193,7 +191,7 @@ namespace Ensumex.PDFtemplates
                 BaseColor colorTotal = new BaseColor(169, 208, 142); 
                 PdfPCell celdaTotalLabel = new PdfPCell(new Phrase("Total:", fontNegrita)) { Border = 0, BackgroundColor = colorTotal };
                 PdfPCell celdaTotalValor = new PdfPCell(new Phrase(
-                    Convert.ToDecimal(total).ToString("C", new CultureInfo("es-MX")), fontNegrita))
+                Convert.ToDecimal(total).ToString("C", new CultureInfo("es-MX")), fontNegrita))
                 { Border = 0, BackgroundColor = colorTotal, HorizontalAlignment = Element.ALIGN_RIGHT };
                 tablaTotales.AddCell(celdaTotalLabel);
                 tablaTotales.AddCell(celdaTotalValor);
@@ -211,8 +209,6 @@ namespace Ensumex.PDFtemplates
 
                 // Ahora SÍ agregar la tabla al documento
                 doc.Add(tablaTotales);
-
-                // Notas generales
                 doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
                 doc.Add(new Paragraph(notas, fontNotas));
                 doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n", fontNotas));
