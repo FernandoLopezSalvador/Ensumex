@@ -263,10 +263,8 @@ namespace Ensumex.Models
 
                     using (var cmd = new SqlCommand(query, conn))
                     {
-                        // Validar entrada
                         if (string.IsNullOrWhiteSpace(searchText))
-                            searchText = ""; // Si viene vacío, no filtra
-
+                            searchText = ""; 
                         cmd.Parameters.Add("@SearchText", SqlDbType.NVarChar).Value = $"%{searchText}%";
 
                         using (var adapter = new SqlDataAdapter(cmd))
@@ -306,7 +304,7 @@ namespace Ensumex.Models
 
         public static int GetSiguienteIdCotizacion()
         {
-            int siguienteId = 1; // Por defecto si no hay registros
+            int siguienteId = 1;
 
             using (var conn = ConnectionToSql.GetConnection())
             {
