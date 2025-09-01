@@ -42,6 +42,7 @@ namespace Ensumex.Forms
             BtnInicio = new FontAwesome.Sharp.IconButton();
             panel1 = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
+            Btn_Mantenimientos = new FontAwesome.Sharp.IconButton();
             Btn_Autonom = new FontAwesome.Sharp.IconButton();
             progressBar1 = new ProgressBar();
             panel2 = new Panel();
@@ -55,7 +56,6 @@ namespace Ensumex.Forms
             clientesToolStripMenuItem = new ToolStripMenuItem();
             miniToolStrip = new MenuStrip();
             tableLayoutPanel4 = new TableLayoutPanel();
-            iconButton1 = new FontAwesome.Sharp.IconButton();
             tableLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -149,7 +149,7 @@ namespace Ensumex.Forms
             BtnSincroniza.IconChar = FontAwesome.Sharp.IconChar.None;
             BtnSincroniza.IconColor = Color.Black;
             BtnSincroniza.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            BtnSincroniza.Location = new Point(3, 223);
+            BtnSincroniza.Location = new Point(3, 267);
             BtnSincroniza.Name = "BtnSincroniza";
             BtnSincroniza.Size = new Size(197, 38);
             BtnSincroniza.TabIndex = 5;
@@ -227,15 +227,15 @@ namespace Ensumex.Forms
             tableLayoutPanel2.BackColor = SystemColors.Control;
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.Controls.Add(iconButton1, 0, 7);
+            tableLayoutPanel2.Controls.Add(Btn_Mantenimientos, 0, 5);
             tableLayoutPanel2.Controls.Add(Btn_Autonom, 0, 3);
             tableLayoutPanel2.Controls.Add(BtnCotiza, 0, 2);
             tableLayoutPanel2.Controls.Add(BtnInve, 0, 1);
             tableLayoutPanel2.Controls.Add(BtnInicio, 0, 0);
-            tableLayoutPanel2.Controls.Add(progressBar1, 0, 6);
-            tableLayoutPanel2.Controls.Add(BtnSincroniza, 0, 5);
             tableLayoutPanel2.Controls.Add(BtnClient, 0, 4);
             tableLayoutPanel2.Controls.Add(BtnCerrar, 0, 8);
+            tableLayoutPanel2.Controls.Add(progressBar1, 0, 7);
+            tableLayoutPanel2.Controls.Add(BtnSincroniza, 0, 6);
             tableLayoutPanel2.Dock = DockStyle.Left;
             tableLayoutPanel2.Location = new Point(0, 100);
             tableLayoutPanel2.Margin = new Padding(3, 2, 3, 2);
@@ -252,6 +252,22 @@ namespace Ensumex.Forms
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 11.1111107F));
             tableLayoutPanel2.Size = new Size(198, 403);
             tableLayoutPanel2.TabIndex = 5;
+            // 
+            // Btn_Mantenimientos
+            // 
+            Btn_Mantenimientos.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Btn_Mantenimientos.IconChar = FontAwesome.Sharp.IconChar.None;
+            Btn_Mantenimientos.IconColor = Color.Black;
+            Btn_Mantenimientos.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            Btn_Mantenimientos.Location = new Point(3, 223);
+            Btn_Mantenimientos.Name = "Btn_Mantenimientos";
+            Btn_Mantenimientos.Size = new Size(197, 38);
+            Btn_Mantenimientos.TabIndex = 14;
+            Btn_Mantenimientos.Text = "MANTENIMIENTOS";
+            Btn_Mantenimientos.UseVisualStyleBackColor = true;
+            Btn_Mantenimientos.Click += iconButton1_Click_1;
+            Btn_Mantenimientos.MouseEnter += Btn_Mantenimientos_MouseEnter;
+            Btn_Mantenimientos.MouseLeave += Btn_Mantenimientos_MouseLeave;
             // 
             // Btn_Autonom
             // 
@@ -271,8 +287,8 @@ namespace Ensumex.Forms
             // 
             // progressBar1
             // 
-            progressBar1.Dock = DockStyle.Top;
-            progressBar1.Location = new Point(3, 267);
+            progressBar1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            progressBar1.Location = new Point(3, 311);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(197, 20);
             progressBar1.TabIndex = 12;
@@ -394,20 +410,6 @@ namespace Ensumex.Forms
             tableLayoutPanel4.Size = new Size(820, 503);
             tableLayoutPanel4.TabIndex = 10;
             // 
-            // iconButton1
-            // 
-            iconButton1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            iconButton1.IconChar = FontAwesome.Sharp.IconChar.None;
-            iconButton1.IconColor = Color.Black;
-            iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconButton1.Location = new Point(3, 311);
-            iconButton1.Name = "iconButton1";
-            iconButton1.Size = new Size(197, 38);
-            iconButton1.TabIndex = 14;
-            iconButton1.Text = "MANTENIMIENTOS";
-            iconButton1.UseVisualStyleBackColor = true;
-            iconButton1.Click += iconButton1_Click_1;
-            // 
             // ENSUMEX
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -460,6 +462,6 @@ namespace Ensumex.Forms
         private FontAwesome.Sharp.IconButton BtnInicio;
         private FontAwesome.Sharp.IconButton BtnCerrar;
         private FontAwesome.Sharp.IconButton Btn_Autonom;
-        private FontAwesome.Sharp.IconButton iconButton1;
+        private FontAwesome.Sharp.IconButton Btn_Mantenimientos;
     }
 }

@@ -785,7 +785,6 @@ namespace Ensumex.Views
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 RowHeadersVisible = false
             };
-            // Aplica el mismo estilo que a las otras tablas
             TablaFormat.AplicarEstilosTabla(dgvBusqueda);
             panelBusqueda.Controls.Add(dgvBusqueda);
             this.Controls.Add(panelBusqueda);
@@ -843,8 +842,9 @@ namespace Ensumex.Views
         {
 
             // ===== Btn_Cancelar =====
-            Btn_Cancelar.IconChar = IconChar.TimesCircle; // Ícono de cancelar (X)
-            Btn_Cancelar.IconColor = Color.FromArgb(244, 67, 54); // Rojo elegante
+            Btn_Cancelar.IconChar = IconChar.TimesCircle; 
+            Btn_Cancelar.IconColor = Color.FromArgb(244, 67, 54); 
+
             Btn_Cancelar.IconSize = 32;
             Btn_Cancelar.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_Cancelar.ImageAlign = ContentAlignment.MiddleLeft;
@@ -853,8 +853,8 @@ namespace Ensumex.Views
             Btn_Cancelar.ForeColor = Color.FromArgb(33, 33, 33);
 
             // ===== Btn_Guardar =====
-            Btn_Guardar.IconChar = IconChar.Save; // Ícono de guardar
-            Btn_Guardar.IconColor = Color.FromArgb(76, 175, 80); // Verde Material
+            Btn_Guardar.IconChar = IconChar.Save;  
+            Btn_Guardar.IconColor = Color.FromArgb(76, 175, 80); 
             Btn_Guardar.IconSize = 32;
             Btn_Guardar.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_Guardar.ImageAlign = ContentAlignment.MiddleLeft;
@@ -863,8 +863,8 @@ namespace Ensumex.Views
             Btn_Guardar.ForeColor = Color.FromArgb(33, 33, 33);
 
             // ===== Btn_NuevoProd =====
-            Btn_NuevoProd.IconChar = IconChar.Plus; // Ícono de agregar nuevo
-            Btn_NuevoProd.IconColor = Color.FromArgb(33, 150, 243); // Azul elegante
+            Btn_NuevoProd.IconChar = IconChar.Plus; 
+            Btn_NuevoProd.IconColor = Color.FromArgb(33, 150, 243); 
             Btn_NuevoProd.IconSize = 32;
             Btn_NuevoProd.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_NuevoProd.ImageAlign = ContentAlignment.MiddleLeft;
@@ -873,8 +873,8 @@ namespace Ensumex.Views
             Btn_NuevoProd.ForeColor = Color.FromArgb(33, 33, 33);
 
             // ===== Btn_NuevaTabla =====
-            Btn_AñadirTabla.IconChar = IconChar.Table; // ícono de tabla
-            Btn_AñadirTabla.IconColor = Color.FromArgb(0, 150, 136); // Verde azulado
+            Btn_AñadirTabla.IconChar = IconChar.Table; 
+            Btn_AñadirTabla.IconColor = Color.FromArgb(0, 150, 136); 
             Btn_AñadirTabla.IconSize = 32;
             Btn_AñadirTabla.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_AñadirTabla.ImageAlign = ContentAlignment.MiddleLeft;
@@ -883,8 +883,8 @@ namespace Ensumex.Views
             Btn_AñadirTabla.ForeColor = Color.FromArgb(33, 33, 33);
 
             // ===== Btn_AgregaProd =====
-            Btn_Añadprod.IconChar = IconChar.PlusSquare; // ícono agregar producto
-            Btn_Añadprod.IconColor = Color.FromArgb(33, 150, 243); // Azul Material
+            Btn_Añadprod.IconChar = IconChar.PlusSquare;
+            Btn_Añadprod.IconColor = Color.FromArgb(33, 150, 243); 
             Btn_Añadprod.IconSize = 32;
             Btn_Añadprod.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_Añadprod.ImageAlign = ContentAlignment.MiddleLeft;
@@ -918,7 +918,7 @@ namespace Ensumex.Views
                 MessageBox.Show("No hay productos para guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
+       
         private void Btn_Añadprod_Click(object sender, EventArgs e)
         {
             using (var productosForm = new Form())
@@ -933,7 +933,7 @@ namespace Ensumex.Views
                 productosForm.Text = "Seleccionar Producto";
                 productControl.ProductoSeleccionado += (clave, descripcion, unidad, precio, cantidad) =>
                 {
-                    // Validar que los datos no sean nulos o vacíos
+                        
                     try
                     {
                         decimal precioFinal = precio;
@@ -1088,7 +1088,6 @@ namespace Ensumex.Views
         private void tbl_Cotizacion_CellBeginEdit_1(object sender, DataGridViewCellCancelEventArgs e)
         {
             var row = tbl_Cotizacion.Rows[e.RowIndex];
-            // Evita edición en filas vacías
             if (row.IsNewRow || string.IsNullOrWhiteSpace(row.Cells["Descripción"].Value?.ToString()))
             {
                 e.Cancel = true;

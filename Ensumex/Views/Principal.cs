@@ -92,7 +92,7 @@ namespace Ensumex.Forms
 
             // BtnInicio - Inicio
             BtnInicio.IconChar = IconChar.Home;
-            BtnInicio.IconColor = Color.FromArgb(41, 182, 246); // celeste más vivo
+            BtnInicio.IconColor = Color.FromArgb(41, 182, 246); 
             BtnInicio.IconSize = 32;
             BtnInicio.TextImageRelation = TextImageRelation.ImageBeforeText;
             BtnInicio.ImageAlign = ContentAlignment.MiddleLeft;
@@ -100,9 +100,20 @@ namespace Ensumex.Forms
             BtnInicio.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             BtnInicio.ForeColor = Color.FromArgb(33, 33, 33);
 
+            //BtnMantenimiento - Mantenimiento
+            Btn_Mantenimientos.IconChar = IconChar.Tools; // o IconChar.UserTie para autónomos
+            Btn_Mantenimientos.IconColor = Color.FromArgb(0, 150, 136); 
+            Btn_Mantenimientos.IconSize = 32;
+            Btn_Mantenimientos.TextImageRelation = TextImageRelation.ImageBeforeText;
+            Btn_Mantenimientos.ImageAlign = ContentAlignment.MiddleLeft;
+            Btn_Mantenimientos.Padding = new Padding(10, 0, 20, 0);
+            Btn_Mantenimientos.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            Btn_Mantenimientos.ForeColor = Color.FromArgb(33, 33, 33);
+
+
             // BtnCerrar - Cerrar Sesión o Salir
             BtnCerrar.IconChar = IconChar.SignOutAlt; // o prueba IconChar.DoorOpen
-            BtnCerrar.IconColor = Color.FromArgb(229, 57, 53); // rojo más intenso
+            BtnCerrar.IconColor = Color.FromArgb(229, 57, 53); 
             BtnCerrar.IconSize = 32;
             BtnCerrar.TextImageRelation = TextImageRelation.ImageBeforeText;
             BtnCerrar.ImageAlign = ContentAlignment.MiddleLeft;
@@ -523,6 +534,62 @@ namespace Ensumex.Forms
         private void iconButton1_Click_1(object sender, EventArgs e)
         {
             CargarUserControl(new Mantenimiento());
+        }
+
+        private void Btn_Mantenimientos_MouseEnter(object sender, EventArgs e)
+        {
+            var manager = MaterialSkin.MaterialSkinManager.Instance;
+            var isDark = manager.Theme == MaterialSkinManager.Themes.DARK;
+
+            if (sender is not Button btn) return;
+
+            // Cancela el timer si ya existe
+            if (hoverTimers.ContainsKey(btn))
+            {
+                hoverTimers[btn].Stop();
+                hoverTimers[btn].Dispose();
+                hoverTimers.Remove(btn);
+            }
+
+            // Timer para retrasar el hover
+            Timer delayTimer = new Timer { Interval = 120 }; // Delay de 120ms
+            delayTimer.Tick += (s, args) =>
+            {
+                delayTimer.Stop();
+                delayTimer.Dispose();
+                hoverTimers.Remove(btn);
+
+                if (btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position)))
+                {
+                    Color targetColor = GetHoverColor(btn, isDark);
+                    StartButtonAnimation(btn, targetColor, 1.1f); // Escala 110%
+                }
+            };
+
+            hoverTimers[btn] = delayTimer;
+            delayTimer.Start();
+        }
+
+        private void Btn_Mantenimientos_MouseLeave(object sender, EventArgs e)
+        {
+            var manager = MaterialSkin.MaterialSkinManager.Instance;
+            var isDark = manager.Theme == MaterialSkinManager.Themes.DARK;
+
+            if (sender is not Button btn) return;
+
+            // Cancela delay si el mouse salió antes de tiempo
+            if (hoverTimers.ContainsKey(btn))
+            {
+                hoverTimers[btn].Stop();
+                hoverTimers[btn].Dispose();
+                hoverTimers.Remove(btn);
+            }
+
+            Color baseColor = isDark
+                ? Color.FromArgb(45, 45, 48)
+                : Color.Transparent;
+
+            StartButtonAnimation(btn, baseColor, 1.0f); // Vuelve tamaño original
         }
     }
 } 

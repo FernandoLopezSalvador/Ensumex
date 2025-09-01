@@ -155,6 +155,8 @@ namespace Ensumex.Models
             }
         }
 
+       
+
         public static DataTable ObtenerCotizaciones()
         {
             var dt = new DataTable();
@@ -321,7 +323,7 @@ namespace Ensumex.Models
 
             return siguienteId;
         }
-
+            
         public static string ObtenerUltimoFolioPorPrefijo(string prefijo)
         {
             string folio = "";
