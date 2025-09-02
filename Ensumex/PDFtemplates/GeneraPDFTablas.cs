@@ -25,7 +25,6 @@ namespace Ensumex.PDFtemplates
             string subtotal,
             string total,
             string descuento,
-            //decimal porcentajeDescuento,
             string notas,
             string usuario
         )
@@ -75,16 +74,15 @@ namespace Ensumex.PDFtemplates
                     doc.Add(new Paragraph("\nEstimado(a) Cliente:", fontNegrita));
 
                 doc.Add(new Paragraph("Presente"));
-                doc.Add(new Paragraph("En atención a su amable solicitud, me permito presentarle esta cotización de los siguientes productos:\n\n", fontNormal));
+                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización para el suministro y/o instalación de acuerdo a lo siguiente:\n\n", fontNormal));
 
                 int tablaNum = 1;
                 foreach (var tabla in tablas)
                 {
-                    // 👉 Título de la tabla (Opción #1, Opción #2, etc.)
                     Paragraph tituloTabla = new Paragraph($"Opción #{tablaNum}", fontGris)
                     {
                         Alignment = Element.ALIGN_LEFT,
-                        SpacingAfter = 10f // Espacio después del título
+                        SpacingAfter = 10f 
                     };
                     doc.Add(tituloTabla);
 
@@ -100,7 +98,7 @@ namespace Ensumex.PDFtemplates
                     {
                         PdfPCell celda = new PdfPCell(new Phrase(header, fontheader))
                         {
-                            BackgroundColor = new BaseColor(141, 198, 63), // Verde #8DC63F
+                            BackgroundColor = new BaseColor(141, 198, 63), 
                             HorizontalAlignment = Element.ALIGN_CENTER,
                             Padding = 5f
                         };
@@ -140,7 +138,6 @@ namespace Ensumex.PDFtemplates
                     }
                     doc.Add(pdfTable);
 
-                    // 👉 Totales: Mano de Obra, Flete y Total
                     doc.Add(new Paragraph("\n"));
                     PdfPTable tablaTotales = new PdfPTable(2)
                     {
@@ -148,19 +145,14 @@ namespace Ensumex.PDFtemplates
                         HorizontalAlignment = Element.ALIGN_RIGHT
                     };
 
-                    // Establecer anchos de columnas
                     tablaTotales.SetWidths(new float[] { 2f, 1f });
-
-                    // Colores de filas
-                    BaseColor colorFila = new BaseColor(223, 240, 216); // Verde claro
-                    BaseColor colorTotal = new BaseColor(169, 208, 142); // Verde más fuerte
+                    BaseColor colorFila = new BaseColor(223, 240, 216); 
+                    BaseColor colorTotal = new BaseColor(169, 208, 142); 
 
                     // 👉 CALCULAR INSTALACIÓN, FLETE Y TOTAL
                     decimal costoInst = decimal.TryParse(costoInstalacion, out var tmpInst) ? tmpInst : 0.00m;
                     decimal costoFl = decimal.TryParse(costoFlete, out var tmpFl) ? tmpFl : 0.00m;
                     decimal valorNumerico = totalTabla + costoInst + costoFl;
-
-                    // 👷‍♂️ Mano de obra (si aplica)
                     if (costoInst > 0)
                     {
                         PdfPCell celdaManoObra = new PdfPCell(new Phrase("Mano de obra por instalación:", fontNormal))
@@ -177,8 +169,6 @@ namespace Ensumex.PDFtemplates
                         tablaTotales.AddCell(celdaManoObra);
                         tablaTotales.AddCell(celdaCostoInstalacion);
                     }
-
-                    // 🚚 Flete (si aplica)
                     if (costoFl > 0)
                     {
                         PdfPCell celdaFlete = new PdfPCell(new Phrase("Costo por Envío/Flete:", fontNormal))
@@ -210,8 +200,6 @@ namespace Ensumex.PDFtemplates
                     };
                     tablaTotales.AddCell(celdaTotalLabel);
                     tablaTotales.AddCell(celdaTotalValor);
-
-                    // 🔠 Número a letras
                     PdfPCell celdaLetras = new PdfPCell(new Phrase(Numerosaletras.Convertir(valorNumerico), fontNormal))
                     {
                         Border = 0,
@@ -219,17 +207,13 @@ namespace Ensumex.PDFtemplates
                         HorizontalAlignment = Element.ALIGN_CENTER,
                         PaddingTop = 5f
                     };
-                    tablaTotales.AddCell(new PdfPCell(new Phrase("")) { Border = 0, Colspan = 2 }); // Espacio
+                    tablaTotales.AddCell(new PdfPCell(new Phrase("")) { Border = 0, Colspan = 2 }); 
                     tablaTotales.AddCell(celdaLetras);
-
-                    // 👉 Agregar la tabla al documento
                     doc.Add(tablaTotales);
                     doc.Add(new Paragraph("\n", fontNormal));
                     tablaNum += 1;
 
                 }
-
-
                 // Notas generales
                 doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
                 doc.Add(new Paragraph(notas, fontNotas));

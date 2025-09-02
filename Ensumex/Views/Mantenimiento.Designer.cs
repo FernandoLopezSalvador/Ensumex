@@ -111,9 +111,9 @@
             Btn_DescargarClients.IconChar = FontAwesome.Sharp.IconChar.None;
             Btn_DescargarClients.IconColor = Color.Black;
             Btn_DescargarClients.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            Btn_DescargarClients.Location = new Point(179, 67);
+            Btn_DescargarClients.Location = new Point(128, 67);
             Btn_DescargarClients.Name = "Btn_DescargarClients";
-            Btn_DescargarClients.Size = new Size(75, 58);
+            Btn_DescargarClients.Size = new Size(126, 58);
             Btn_DescargarClients.TabIndex = 17;
             Btn_DescargarClients.Text = "Descargar:";
             Btn_DescargarClients.UseVisualStyleBackColor = true;

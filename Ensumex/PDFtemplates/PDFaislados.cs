@@ -37,7 +37,6 @@ namespace Ensumex.PDFtemplates
                 writer.PageEvent = new FondoPiePDF(rutaFondo, rutaPie, usuario);
                 doc.Open();
 
-                // Fuentes
                 var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
                 var fontheader = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
                 var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
@@ -46,7 +45,6 @@ namespace Ensumex.PDFtemplates
                 var fontCursiva = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 10);
                 var fontGris = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.GRAY);
 
-                // Logo
                 string rutaLogo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
                 if (File.Exists(rutaLogo))
                 {
@@ -55,7 +53,6 @@ namespace Ensumex.PDFtemplates
                     logo.SetAbsolutePosition(doc.LeftMargin, doc.PageSize.Height - doc.TopMargin - 70f);
                     doc.Add(logo);
                 }
-                // Encabezado
                 Paragraph titulo = new Paragraph("Cotización: " + numeroCotizacion, fontNegrita)
                 {
                     Alignment = Element.ALIGN_RIGHT
@@ -80,9 +77,8 @@ namespace Ensumex.PDFtemplates
                 }
 
                 doc.Add(new Paragraph("Presente", fontNegrita));
-                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización de los siguientes productos:\n\n", fontNormal));
+                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización para el suministro y/o instalación de acuerdo a lo siguiente:\n\n", fontNormal));
 
-                // Tabla de productos
                 PdfPTable tabla = new PdfPTable(8)
                 {
                     WidthPercentage = 100
@@ -90,7 +86,6 @@ namespace Ensumex.PDFtemplates
 
                 tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1f, 1.2f, 1f, 1.2f });
 
-                // Encabezados de tabla
                 string[] headers = { "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "DESCUENTO  ($)", "IMPORTE", "TOTAL" };
 
                
@@ -132,7 +127,6 @@ namespace Ensumex.PDFtemplates
                     }
                     doc.Add(tablaConectadosPDF);
                 }
-                //doc.Add(new Paragraph("\n", fontNegrita));
                 int pos = 1;
                 BaseColor colorFilaPar = BaseColor.WHITE;
                 BaseColor colorFilaImpar = new BaseColor(245, 245, 245);
@@ -181,12 +175,9 @@ namespace Ensumex.PDFtemplates
                     WidthPercentage = 50,
                     HorizontalAlignment = Element.ALIGN_RIGHT
                 };
-                // añadir costo de instalación, flete y total
                 tablaTotales.SetWidths(new float[] { 2f, 1f }); 
                 tablaTotales.WidthPercentage = 50;  
                 tablaTotales.HorizontalAlignment = Element.ALIGN_RIGHT;
-
-                // Color de fondo para las filas normales
                 BaseColor colorFila = new BaseColor(223, 240, 216); 
                 BaseColor colorTotal = new BaseColor(169, 208, 142); 
                 PdfPCell celdaTotalLabel = new PdfPCell(new Phrase("Total:", fontNegrita)) { Border = 0, BackgroundColor = colorTotal };
@@ -195,8 +186,6 @@ namespace Ensumex.PDFtemplates
                 { Border = 0, BackgroundColor = colorTotal, HorizontalAlignment = Element.ALIGN_RIGHT };
                 tablaTotales.AddCell(celdaTotalLabel);
                 tablaTotales.AddCell(celdaTotalValor);
-
-                // Convertir número a letras y agregar fila
                 decimal valorNumerico = decimal.Parse(total, System.Globalization.NumberStyles.Any);
                 tablaTotales.AddCell(new PdfPCell(new Phrase("")) { Border = 0, Colspan = 2 });
                 tablaTotales.AddCell(new PdfPCell(new Phrase(Numerosaletras.Convertir(valorNumerico), fontNormal))
@@ -207,13 +196,11 @@ namespace Ensumex.PDFtemplates
                     HorizontalAlignment = Element.ALIGN_CENTER
                 });
 
-                // Ahora SÍ agregar la tabla al documento
                 doc.Add(tablaTotales);
                 doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
                 doc.Add(new Paragraph(notas, fontNotas));
                 doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n", fontNotas));
 
-                // Firma
                 PdfPTable tablaFirma = new PdfPTable(1)
                 {
                     WidthPercentage = 100
@@ -229,6 +216,7 @@ namespace Ensumex.PDFtemplates
 
                 tablaFirma.AddCell(celdaTexto);
                 doc.Add(tablaFirma);
+
                 doc.Close();
                 MessageBox.Show("📄 PDF generado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

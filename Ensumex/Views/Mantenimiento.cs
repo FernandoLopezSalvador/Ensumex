@@ -22,10 +22,7 @@ namespace Ensumex.Views
     
     private void CargarDatos()
         {
-            // Traemos los datos de Firebird
             var datos = FirebirdRepository.GetCalentadoresParaMantenimiento();
-
-            // Si tu método GetCalentadoresParaMantenimiento NO trae el campo "Estatus", lo agregamos aquí:
             if (!datos.Columns.Contains("Estatus"))
                 datos.Columns.Add("Estatus", typeof(string));
 
@@ -35,10 +32,7 @@ namespace Ensumex.Views
                 if (row["Estatus"] == DBNull.Value || string.IsNullOrEmpty(row["Estatus"].ToString()))
                     row["Estatus"] = "Pendiente";
             }
-
             dgvMantenimiento.DataSource = datos;
-
-            // Configurar columnas
             ConfigurarGrid();
         }
 
@@ -46,8 +40,6 @@ namespace Ensumex.Views
         {
             // Evitar duplicar columnas
             if (dgvMantenimiento.Columns["EstatusCombo"] != null) return;
-
-            // Crear ComboBox para el estatus
             DataGridViewComboBoxColumn comboEstatus = new DataGridViewComboBoxColumn();
             comboEstatus.HeaderText = "Estatus";
             comboEstatus.Name = "EstatusCombo";

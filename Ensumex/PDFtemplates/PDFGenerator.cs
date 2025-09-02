@@ -84,7 +84,7 @@ namespace Ensumex.PDFtemplates
                 }
 
                 doc.Add(new Paragraph("Presente", fontNegrita));
-                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización de los siguientes productos:\n\n", fontNormal));
+                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización para el suministro y/o instalación de acuerdo a lo siguiente:\n\n", fontNormal));
 
                 // Tabla de productos
                 PdfPTable tabla = new PdfPTable(8)
@@ -126,7 +126,7 @@ namespace Ensumex.PDFtemplates
                     decimal.TryParse(precioStr, out decimal precioUnitario);
                     int.TryParse(row.Cells["Descuento"].Value?.ToString() ?? "0", out int porcentajeDescuentoFila);
 
-                    // Cálculos corregidos
+                    // Cálculos 
                     decimal importe = precioUnitario * cantidad;
                     decimal descuentoFila = precioUnitario * (porcentajeDescuentoFila / 100m);
                     decimal descuentofinal = importe * (porcentajeDescuentoFila / 100m);
@@ -138,7 +138,6 @@ namespace Ensumex.PDFtemplates
                     string importeFormateado = importe.ToString("C2", new CultureInfo("es-MX"));
                     string totalFormateado = total1.ToString("C2", new CultureInfo("es-MX"));
 
-                    // Alternar color de fondo
                     BaseColor fondoFila = (pos % 2 == 0) ? colorFilaPar : colorFilaImpar;
                     // Añadir celdas
                     tabla.AddCell(new PdfPCell(new Phrase(pos.ToString(), fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });
@@ -168,8 +167,8 @@ namespace Ensumex.PDFtemplates
                     tablaTotales.HorizontalAlignment = Element.ALIGN_RIGHT; 
 
                     // Color de fondo para las filas normales
-                    BaseColor colorFila = new BaseColor(223, 240, 216); // verde claro
-                    BaseColor colorTotal = new BaseColor(169, 208, 142); // verde más fuerte
+                    BaseColor colorFila = new BaseColor(223, 240, 216); 
+                    BaseColor colorTotal = new BaseColor(169, 208, 142); 
                     decimal costoInst = decimal.TryParse(costoInstalacion, out var tmpInst) ? tmpInst : 0.00m;
                     decimal costoFl = decimal.TryParse(costoFlete, out var tmpFl) ? tmpFl : 0.00m;
                     if (costoInst > 0)
@@ -207,8 +206,6 @@ namespace Ensumex.PDFtemplates
                         Colspan = 2,
                         HorizontalAlignment = Element.ALIGN_CENTER
                     });
-
-                    // Ahora SÍ agregar la tabla al documento
                     doc.Add(tablaTotales);
 
                 // Notas generales

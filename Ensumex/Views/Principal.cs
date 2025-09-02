@@ -39,92 +39,27 @@ namespace Ensumex.Forms
         }
         private void ConfigurarBotones()
         {
-            // BtnInve - Inventario
-            BtnInve.IconChar = IconChar.Boxes; // cajas para inventario
-            BtnInve.IconColor = Color.FromArgb(30, 136, 229); // azul más vivo
-            BtnInve.IconSize = 32;
-            BtnInve.TextImageRelation = TextImageRelation.ImageBeforeText;
-            BtnInve.ImageAlign = ContentAlignment.MiddleLeft;
-            BtnInve.Padding = new Padding(10, 0, 20, 0);
-            BtnInve.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            BtnInve.ForeColor = Color.FromArgb(33, 33, 33);
+            ConfigurarBoton(BtnInve, IconChar.Boxes, Color.FromArgb(30, 136, 229), "Inventario", new Font("Segoe UI", 10, FontStyle.Bold), Color.FromArgb(33, 33, 33));
 
-            // BtnCotiza - Cotizaciones
-            BtnCotiza.IconChar = IconChar.FileInvoiceDollar;
-            BtnCotiza.IconColor = Color.FromArgb(0, 200, 165); // verde azulado más vibrante
-            BtnCotiza.IconSize = 32;
-            BtnCotiza.TextImageRelation = TextImageRelation.ImageBeforeText;
-            BtnCotiza.ImageAlign = ContentAlignment.MiddleLeft;
-            BtnCotiza.Padding = new Padding(10, 0, 20, 0);
-            BtnCotiza.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            BtnCotiza.ForeColor = Color.FromArgb(33, 33, 33);
+            ConfigurarBoton(BtnCotiza, IconChar.FileInvoiceDollar, Color.FromArgb(0, 200, 165), "Cotizaciones", new Font("Segoe UI", 10, FontStyle.Bold), Color.FromArgb(33, 33, 33));
 
-            //BtnAutonomos - Autónomos
-            Btn_Autonom.IconChar = IconChar.UsersCog; // o IconChar.UserTie para autónomos
-            Btn_Autonom.IconColor = Color.FromArgb(255, 112, 67); // naranja vibrante
-            Btn_Autonom.IconSize = 32;
-            Btn_Autonom.TextImageRelation = TextImageRelation.ImageBeforeText;
-            Btn_Autonom.ImageAlign = ContentAlignment.MiddleLeft;
-            Btn_Autonom.Padding = new Padding(10, 0, 20, 0);
-            Btn_Autonom.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            Btn_Autonom.ForeColor = Color.FromArgb(33, 33, 33);
+            ConfigurarBoton(Btn_Autonom, IconChar.UsersCog, Color.FromArgb(255, 112, 67), "Autónomos", new Font("Segoe UI", 10, FontStyle.Bold), Color.FromArgb(33, 33, 33));
 
+            ConfigurarBoton(BtnClient, IconChar.Users, Color.FromArgb(255, 193, 7), "Clientes", new Font("Segoe UI", 10, FontStyle.Bold), Color.FromArgb(33, 33, 33));
 
-            // BtnClient - Clientes
-            BtnClient.IconChar = IconChar.Users;
-            BtnClient.IconColor = Color.FromArgb(255, 193, 7); // dorado más brillante
-            BtnClient.IconSize = 32;
-            BtnClient.TextImageRelation = TextImageRelation.ImageBeforeText;
-            BtnClient.ImageAlign = ContentAlignment.MiddleLeft;
-            BtnClient.Padding = new Padding(10, 0, 20, 0);
-            BtnClient.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            BtnClient.ForeColor = Color.FromArgb(33, 33, 33);
+            ConfigurarBoton(BtnSincroniza, IconChar.SyncAlt, Color.FromArgb(186, 104, 200), "Sincronización", new Font("Segoe UI", 10, FontStyle.Bold), Color.FromArgb(33, 33, 33));
 
-            // BtnSincroniza - Sincronización
-            BtnSincroniza.IconChar = IconChar.SyncAlt;
-            BtnSincroniza.IconColor = Color.FromArgb(186, 104, 200); // morado más llamativo
-            BtnSincroniza.IconSize = 32;
-            BtnSincroniza.TextImageRelation = TextImageRelation.ImageBeforeText;
-            BtnSincroniza.ImageAlign = ContentAlignment.MiddleLeft;
-            BtnSincroniza.Padding = new Padding(10, 0, 20, 0);
-            BtnSincroniza.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            BtnSincroniza.ForeColor = Color.FromArgb(33, 33, 33);
+            ConfigurarBoton(BtnInicio, IconChar.Home, Color.FromArgb(41, 182, 246), "Inicio", new Font("Segoe UI", 10, FontStyle.Bold), Color.FromArgb(33, 33, 33));
 
-            // BtnInicio - Inicio
-            BtnInicio.IconChar = IconChar.Home;
-            BtnInicio.IconColor = Color.FromArgb(41, 182, 246); 
-            BtnInicio.IconSize = 32;
-            BtnInicio.TextImageRelation = TextImageRelation.ImageBeforeText;
-            BtnInicio.ImageAlign = ContentAlignment.MiddleLeft;
-            BtnInicio.Padding = new Padding(10, 0, 20, 0);
-            BtnInicio.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            BtnInicio.ForeColor = Color.FromArgb(33, 33, 33);
+            ConfigurarBoton(Btn_Mantenimientos, IconChar.Tools, Color.FromArgb(0, 150, 136), "Mantenimiento", new Font("Segoe UI", 10, FontStyle.Bold), Color.FromArgb(33, 33, 33));
 
-            //BtnMantenimiento - Mantenimiento
-            Btn_Mantenimientos.IconChar = IconChar.Tools; // o IconChar.UserTie para autónomos
-            Btn_Mantenimientos.IconColor = Color.FromArgb(0, 150, 136); 
-            Btn_Mantenimientos.IconSize = 32;
-            Btn_Mantenimientos.TextImageRelation = TextImageRelation.ImageBeforeText;
-            Btn_Mantenimientos.ImageAlign = ContentAlignment.MiddleLeft;
-            Btn_Mantenimientos.Padding = new Padding(10, 0, 20, 0);
-            Btn_Mantenimientos.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            Btn_Mantenimientos.ForeColor = Color.FromArgb(33, 33, 33);
-
-
-            // BtnCerrar - Cerrar Sesión o Salir
-            BtnCerrar.IconChar = IconChar.SignOutAlt; // o prueba IconChar.DoorOpen
-            BtnCerrar.IconColor = Color.FromArgb(229, 57, 53); 
-            BtnCerrar.IconSize = 32;
-            BtnCerrar.TextImageRelation = TextImageRelation.ImageBeforeText;
-            BtnCerrar.ImageAlign = ContentAlignment.MiddleLeft;
-            BtnCerrar.Padding = new Padding(10, 0, 20, 0);
-            BtnCerrar.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            BtnCerrar.ForeColor = Color.FromArgb(33, 33, 33);
+            ConfigurarBoton(BtnCerrar, IconChar.SignOutAlt, Color.FromArgb(229, 57, 53), "Cerrar Sesión", new Font("Segoe UI", 10, FontStyle.Bold), Color.FromArgb(33, 33, 33));
         }
+
         private void InicializarFormulario()
         {
 
-            progressBar1.Visible = false; // Oculta la barra de progreso
+            progressBar1.Visible = false; 
             this.WindowState = FormWindowState.Maximized;
             panel1.Cursor = Cursors.Hand;
             BtnInicio.MouseLeave += Button_MouseLeave;
@@ -137,22 +72,12 @@ namespace Ensumex.Forms
         private void CargarDatosUsuario()
         {
             CargaUsuario.CargarDatosUsuario(lbl_UsuarioInicio, lbl_posicion);
-
-            // Controlar visibilidad del menú principal según el rol
-            if (lbl_posicion.Text.Trim().Equals("Vendedor", StringComparison.OrdinalIgnoreCase))
-            {
-                menu_usuario.Visible = false; // Oculta el menú principal
-                BtnSincroniza.Visible = false; // Oculta el botón de sincronización
-            }
-            else if (lbl_posicion.Text.Trim().Equals("Administrador", StringComparison.OrdinalIgnoreCase))
-            {
-                menu_usuario.Visible = true; // Muestra el menú principal
-            }
-            else
-            {
-                // Puedes decidir si ocultar o mostrar por defecto para otros roles
-                menu_usuario.Visible = false;
-            }
+            ConfigurarVisibilidadPorRol(lbl_posicion.Text.Trim());
+        }
+        private void ConfigurarVisibilidadPorRol(string rol)
+        {
+            menu_usuario.Visible = rol == "Administrador";
+            BtnSincroniza.Visible = rol != "Vendedor";
         }
         private void AnimateButtonBackColor(Button btn, Color targetColor, int duration = 200)
         {
@@ -185,7 +110,6 @@ namespace Ensumex.Forms
         }
         private void AnimateButtonScale(Button btn, float scaleTo, int duration = 200)
         {
-            // Guarda tamaño original si no existe
             if (btn.Tag == null)
             {
                 btn.Tag = btn.Size;
@@ -254,8 +178,6 @@ namespace Ensumex.Forms
             manager.Theme = manager.Theme == MaterialSkinManager.Themes.LIGHT
                 ? MaterialSkinManager.Themes.DARK
                 : MaterialSkinManager.Themes.LIGHT;
-
-            // Animar todos los botones al nuevo fondo
             AnimateAllButtonsThemeChange();
         }
         private void AnimateAllButtonsThemeChange()
@@ -279,10 +201,8 @@ namespace Ensumex.Forms
         }
         private void CargarUserControl(UserControl control)
         {
-            panelContenedor.SuspendLayout(); // Evita flickering
-
+            panelContenedor.SuspendLayout(); 
             panelContenedor.Controls.Clear();
-
             control.Dock = DockStyle.Fill;
             control.Margin = Padding.Empty;
             control.Padding = Padding.Empty;
@@ -354,7 +274,6 @@ namespace Ensumex.Forms
             if (confirmResult == DialogResult.Yes)
             {
                 UsuarioLoginCache.Limpiar();
-                // Reinicia la aplicación completa (Login -> Cargando -> ENSUMEX)
                 Application.Restart();
             }
         }
@@ -384,12 +303,10 @@ namespace Ensumex.Forms
                 delayTimer.Stop();
                 delayTimer.Dispose();
                 hoverTimers.Remove(btn);
-
-                // Si el mouse sigue sobre el botón después del delay
                 if (btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position)))
                 {
                     Color targetColor = GetHoverColor(btn, isDark);
-                    StartButtonAnimation(btn, targetColor, 1.1f); // Escala 110%
+                    StartButtonAnimation(btn, targetColor, 1.1f); 
                 }
             };
 
@@ -404,8 +321,6 @@ namespace Ensumex.Forms
             var isDark = manager.Theme == MaterialSkinManager.Themes.DARK;
 
             if (sender is not Button btn) return;
-
-            // Cancela delay si el mouse salió antes de tiempo
             if (hoverTimers.ContainsKey(btn))
             {
                 hoverTimers[btn].Stop();
@@ -417,7 +332,7 @@ namespace Ensumex.Forms
                 ? Color.FromArgb(45, 45, 48)
                 : Color.Transparent;
 
-            StartButtonAnimation(btn, baseColor, 1.0f); // Vuelve tamaño original
+            StartButtonAnimation(btn, baseColor, 1.0f); 
         }
         private Color GetHoverColor(Button btn, bool isDark)
         {
@@ -429,7 +344,9 @@ namespace Ensumex.Forms
                 "BtnSincroniza" => isDark ? Color.FromArgb(41, 182, 246) : Color.FromArgb(187, 222, 251),
                 "BtnCerrar" => isDark ? Color.FromArgb(229, 57, 53) : Color.FromArgb(255, 205, 210),
                 "BtnInicio" => isDark ? Color.FromArgb(255, 193, 7) : Color.FromArgb(255, 241, 118),
-                _ => isDark ? Color.FromArgb(97, 97, 97) : Color.LightGray
+                "Btn_Autonom" => isDark ? Color.FromArgb(255, 112, 67) : Color.FromArgb(255, 204, 188),
+                "Btn_Mantenimientos" => isDark ? Color.FromArgb(0, 150, 136) : Color.FromArgb(178, 223, 219),
+                _=> isDark ? Color.FromArgb(97, 97, 97) : Color.LightGray
             };
         }
 
@@ -481,8 +398,6 @@ namespace Ensumex.Forms
             var isDark = manager.Theme == MaterialSkinManager.Themes.DARK;
 
             if (sender is not Button btn) return;
-
-            // Cancela delay si el mouse salió antes de tiempo
             if (hoverTimers.ContainsKey(btn))
             {
                 hoverTimers[btn].Stop();
@@ -494,7 +409,7 @@ namespace Ensumex.Forms
                 ? Color.FromArgb(45, 45, 48)
                 : Color.Transparent;
 
-            StartButtonAnimation(btn, baseColor, 1.0f); // Vuelve tamaño original
+            StartButtonAnimation(btn, baseColor, 1.0f); 
         }
 
         private void Btn_Autonom_MouseEnter(object sender, EventArgs e)
@@ -519,7 +434,7 @@ namespace Ensumex.Forms
                 delayTimer.Stop();
                 delayTimer.Dispose();
                 hoverTimers.Remove(btn);
-
+                    
                 if (btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position)))
                 {
                     Color targetColor = GetHoverColor(btn, isDark);
@@ -542,15 +457,12 @@ namespace Ensumex.Forms
             var isDark = manager.Theme == MaterialSkinManager.Themes.DARK;
 
             if (sender is not Button btn) return;
-
-            // Cancela el timer si ya existe
             if (hoverTimers.ContainsKey(btn))
             {
                 hoverTimers[btn].Stop();
                 hoverTimers[btn].Dispose();
                 hoverTimers.Remove(btn);
             }
-
             // Timer para retrasar el hover
             Timer delayTimer = new Timer { Interval = 120 }; // Delay de 120ms
             delayTimer.Tick += (s, args) =>
@@ -577,7 +489,6 @@ namespace Ensumex.Forms
 
             if (sender is not Button btn) return;
 
-            // Cancela delay si el mouse salió antes de tiempo
             if (hoverTimers.ContainsKey(btn))
             {
                 hoverTimers[btn].Stop();
@@ -590,6 +501,21 @@ namespace Ensumex.Forms
                 : Color.Transparent;
 
             StartButtonAnimation(btn, baseColor, 1.0f); // Vuelve tamaño original
+        }
+
+        private void ConfigurarBoton(Button btn, IconChar icon, Color iconColor, string texto, Font font, Color foreColor)
+        {
+            if (btn is IconButton iconBtn)
+            {
+                iconBtn.IconChar = icon;
+                iconBtn.IconColor = iconColor;
+                iconBtn.IconSize = 32;
+            }
+            btn.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btn.ImageAlign = ContentAlignment.MiddleLeft;
+            btn.Padding = new Padding(10, 0, 20, 0);
+            btn.Font = font;
+            btn.ForeColor = foreColor;
         }
     }
 } 
