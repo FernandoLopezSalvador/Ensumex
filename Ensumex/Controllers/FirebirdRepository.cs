@@ -1,9 +1,10 @@
 ﻿using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using System.Data;
 using System.Threading.Tasks;
 
 namespace Ensumex.Controllers
@@ -64,25 +65,31 @@ namespace Ensumex.Controllers
             var dt = new DataTable();
 
             string query = @"
-        SELECT 
-            F.CVE_DOC AS FOLIO,
-            F.FECHA_DOC AS FECHA_VENTA,
-            C.NOMBRE AS CLIENTE,
-            C.TELEFONO,
-            P.DESCR AS PRODUCTO
-        FROM FACTF01 F
-        JOIN PAR_FACTF01 PF 
-            ON F.CVE_DOC = PF.CVE_DOC
-        JOIN INVE01 P 
-            ON PF.CVE_ART = P.CVE_ART
-        JOIN CLIE01 C 
-            ON F.CVE_CLPV = C.CLAVE
-        WHERE 
-            UPPER(P.DESCR) LIKE '%CALENT%'
-            AND EXTRACT(MONTH FROM F.FECHA_DOC) = EXTRACT(MONTH FROM CURRENT_DATE)
-            AND EXTRACT(YEAR FROM F.FECHA_DOC) = EXTRACT(YEAR FROM CURRENT_DATE) - 1
-        ORDER BY 
-            F.FECHA_DOC DESC;";
+                SELECT 
+                F.CVE_DOC AS FOLIO,
+                F.FECHA_DOC AS FECHA_VENTA,
+                C.NOMBRE AS CLIENTE,
+                C.TELEFONO,
+                P.CVE_ART,
+                P.DESCR AS PRODUCTO
+            FROM FACTF01 F
+            JOIN PAR_FACTF01 PF 
+                ON F.CVE_DOC = PF.CVE_DOC
+            JOIN INVE01 P 
+                ON PF.CVE_ART = P.CVE_ART
+            JOIN CLIE01 C 
+                ON F.CVE_CLPV = C.CLAVE
+            WHERE 
+                (
+                    P.CVE_ART STARTING WITH 'SCCAL'
+                    OR P.CVE_ART STARTING WITH 'THCAL'
+                    OR P.CVE_ART STARTING WITH 'ESCAL'
+                )
+                AND F.FECHA_DOC <= DATEADD(YEAR, -1, CURRENT_DATE)
+            ORDER BY 
+                F.FECHA_DOC DESC;
+            ";
+
 
             using (FbConnection conn = new FbConnection(connFirebird))
             {
@@ -95,6 +102,47 @@ namespace Ensumex.Controllers
             }
 
             return dt;
+        }
+
+        public static void GuardarMantenimientosLocal(DataTable dt)
+        {
+            using (SqlConnection conn = new SqlConnection("Data Source=.;Initial Catalog=MiBDLocal;Integrated Security=True"))
+            {
+                conn.Open();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    string folio = row["FOLIO"].ToString();
+
+                    // Evita duplicados
+                    string checkQuery = "SELECT COUNT(*) FROM Mantenimientos WHERE FolioVenta = @folio";
+                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
+                    {
+                        checkCmd.Parameters.AddWithValue("@folio", folio);
+                        int count = (int)checkCmd.ExecuteScalar();
+
+                        if (count == 0)
+                        {
+                            string insertQuery = @"
+                            INSERT INTO Mantenimientos 
+                            (FolioVenta, Cliente, Telefono, Producto, FechaVenta, NumeroServicios, Estatus)
+                            VALUES (@folio, @cliente, @telefono, @producto, @fecha, @servicios, @estatus)";
+
+                            using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+                            {
+                                insertCmd.Parameters.AddWithValue("@folio", folio);
+                                insertCmd.Parameters.AddWithValue("@cliente", row["CLIENTE"].ToString());
+                                insertCmd.Parameters.AddWithValue("@telefono", row["TELEFONO"].ToString());
+                                insertCmd.Parameters.AddWithValue("@producto", row["PRODUCTO"].ToString());
+                                insertCmd.Parameters.AddWithValue("@fecha", Convert.ToDateTime(row["FECHA_VENTA"]));
+                                insertCmd.Parameters.AddWithValue("@servicios", 0); // siempre inicia en 0
+                                insertCmd.Parameters.AddWithValue("@estatus", "Pendiente");
+                                insertCmd.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

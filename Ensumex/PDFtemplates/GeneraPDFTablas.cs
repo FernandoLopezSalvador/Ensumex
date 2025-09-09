@@ -34,11 +34,9 @@ namespace Ensumex.PDFtemplates
                 Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
                 string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
                 string rutaFirma = Path.Combine(Application.StartupPath, "IMG", "Pie.png");
-
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
                 writer.PageEvent = new FondoPiePDF(rutaFondo, rutaFirma, usuario);
                 doc.Open();
-
                 var fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
                 var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
                 var fontNotas = FontFactory.GetFont(FontFactory.HELVETICA, 9);
@@ -112,7 +110,6 @@ namespace Ensumex.PDFtemplates
                     foreach (var row in tabla)
                     {
                         BaseColor bgColor = (pos % 2 == 0) ? colorPar : colorImpar;
-
                         // Datos del producto
                         string cantidadStr = row[7]?.ToString() ?? "0";
                         string unidad = row[3]?.ToString() ?? "";
@@ -149,7 +146,6 @@ namespace Ensumex.PDFtemplates
                     BaseColor colorFila = new BaseColor(223, 240, 216); 
                     BaseColor colorTotal = new BaseColor(169, 208, 142); 
 
-                    // 👉 CALCULAR INSTALACIÓN, FLETE Y TOTAL
                     decimal costoInst = decimal.TryParse(costoInstalacion, out var tmpInst) ? tmpInst : 0.00m;
                     decimal costoFl = decimal.TryParse(costoFlete, out var tmpFl) ? tmpFl : 0.00m;
                     decimal valorNumerico = totalTabla + costoInst + costoFl;
@@ -186,7 +182,6 @@ namespace Ensumex.PDFtemplates
                         tablaTotales.AddCell(celdaCostoFlete);
                     }
 
-                    // 💲 Total
                     PdfPCell celdaTotalLabel = new PdfPCell(new Phrase("Total:", fontNegrita))
                     {
                         Border = 0,
@@ -214,12 +209,10 @@ namespace Ensumex.PDFtemplates
                     tablaNum += 1;
 
                 }
-                // Notas generales
                 doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
                 doc.Add(new Paragraph(notas, fontNotas));
                 doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n\n", fontNotas));
                 
-                // Firma
                 PdfPTable tablaFirma = new PdfPTable(1)
                 {
                     WidthPercentage = 100

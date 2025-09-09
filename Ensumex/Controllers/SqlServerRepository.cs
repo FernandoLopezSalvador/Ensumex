@@ -20,6 +20,8 @@ namespace Ensumex.Controllers
                 cmd.ExecuteNonQuery();
             using (SqlCommand cmd = new SqlCommand("DELETE FROM PRECIO_X_PROD01", conn, transaction))
                 cmd.ExecuteNonQuery();
+            using (SqlCommand cmd = new SqlCommand("DELETE FROM Mantenimientos", conn, transaction))
+                cmd.ExecuteNonQuery();
         }
 
         public static void InsertarProducto(DataRow row, SqlConnection conn, SqlTransaction transaction)
@@ -67,25 +69,82 @@ namespace Ensumex.Controllers
                 cmd.Parameters.AddWithValue("@PRECIO", row["PRECIO"] ?? DBNull.Value);
                 cmd.ExecuteNonQuery();
             }
+        } 
+
+        // Obtiene todos los mantenimientos desde la BD local
+        public static DataTable GetMantenimientos()
+        {
+            var dt = new DataTable();
+            using (SqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "SELECT * FROM Mantenimientos";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                {
+                    adapter.Fill(dt);
+                }
+            }
+            return dt;
         }
-            
-        public static void InsertarCalentador(DataRow row, SqlConnection conn, SqlTransaction transaction)
+
+        // Inserta un nuevo mantenimiento
+        public static void InsertarMantenimiento(DataRow row, SqlConnection conn, SqlTransaction transaction)
         {
             using (SqlCommand cmd = new SqlCommand(
-                @"INSERT INTO CALENTADORES (CVE_CALENTADOR, DESCRIPCION, ESTADO, FECHA_ULTIMO_MANTENIMIENTO)
-                  VALUES (@CVE_CALENTADOR, @DESCRIPCION, @ESTADO, @FECHA_ULTIMO_MANTENIMIENTO)", conn, transaction))
+                @"INSERT INTO Mantenimientos 
+                    (FolioVenta, Cliente, Telefono, Producto, FechaVenta, NumeroServicios, Estatus)
+                    VALUES (@folio, @cliente, @telefono, @producto, @fecha, @servicios, @estatus)", conn, transaction))
             {
-                cmd.Parameters.AddWithValue("@CVE_CALENTADOR", row["CVE_CALENTADOR"] ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@DESCRIPCION", row["DESCRIPCION"] ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@ESTADO", row["ESTADO"] ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@FECHA_ULTIMO_MANTENIMIENTO", row["FECHA_ULTIMO_MANTENIMIENTO"] ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@folio", row["FOLIO"] ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@cliente", row["CLIENTE"] ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@telefono", row["TELEFONO"] ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@producto", row["PRODUCTO"] ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@fecha", row["FECHA_VENTA"] ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@servicios", 0); 
+                cmd.Parameters.AddWithValue("@estatus", "Pendiente");
                 cmd.ExecuteNonQuery();
             }
-        }   
+        }
+
+        // Actualiza estatus y número de servicios
+        public static void ActualizarMantenimiento(int id, string estatus, int numeroServicios, DateTime fechaServicio)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "UPDATE Mantenimientos SET Estatus = @estatus, NumeroServicios = @num WHERE Id = @id";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@estatus", estatus);
+                    cmd.Parameters.AddWithValue("@num", numeroServicios);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void InsertarDetalleMantenimiento(int idMantenimiento, DateTime fechaServicio, string estatus, string observaciones)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = @"INSERT INTO DetallesMantenimientos (IdMantenimiento, FechaServicio, Estatus, Observaciones)
+                                 VALUES (@idMantenimiento, @fechaServicio, @estatus, @observaciones)";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@idMantenimiento", idMantenimiento);
+                    cmd.Parameters.AddWithValue("@fechaServicio", fechaServicio);
+                    cmd.Parameters.AddWithValue("@estatus", estatus);
+                    cmd.Parameters.AddWithValue("@observaciones", observaciones ?? "");
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         public static SqlConnection GetConnection()
         {
             return new SqlConnection(connSqlServer);
         }
-    }
+    }   
 }

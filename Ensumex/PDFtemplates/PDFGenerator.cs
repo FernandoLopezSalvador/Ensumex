@@ -90,7 +90,7 @@ namespace Ensumex.PDFtemplates
                 PdfPTable tabla = new PdfPTable(8)
                 {
                     WidthPercentage = 100
-                };
+                };  
 
                 tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1f, 1.2f, 1f, 1.2f });
 

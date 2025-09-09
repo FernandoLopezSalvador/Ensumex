@@ -36,7 +36,7 @@ namespace Ensumex.PDFtemplates
                 string rutaPie = Path.Combine(Application.StartupPath, "IMG", "Pie.png");
                 writer.PageEvent = new FondoPiePDF(rutaFondo, rutaPie, usuario);
                 doc.Open();
-
+                //Definir fuentes
                 var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
                 var fontheader = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
                 var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
@@ -99,34 +99,33 @@ namespace Ensumex.PDFtemplates
                     };
                     tabla.AddCell(celda);
                 }
-                //se muestra la tabla de conectados si hay datos
-                if (tablaConectados.Rows.Count > 0)
-                {
-                    doc.Add(new Paragraph("\nDispositivos que se pueden conectar:\n\n", fontNegrita));
-                    PdfPTable tablaConectadosPDF = new PdfPTable(4)
+                    if (tablaConectados.Rows.Count > 0)
                     {
-                        WidthPercentage = 100
-                    };
-                    tablaConectadosPDF.SetWidths(new float[] { 1f, 2.5f,2f,2f });
-                    tablaConectadosPDF.AddCell(new PdfPCell(new Phrase("CANTIDAD", fontheader)) { BackgroundColor = new BaseColor(141, 198, 63), HorizontalAlignment = Element.ALIGN_CENTER });
-                    tablaConectadosPDF.AddCell(new PdfPCell(new Phrase("EQUIPOS", fontheader)) { BackgroundColor = new BaseColor(141, 198, 63), HorizontalAlignment = Element.ALIGN_CENTER });
-                    tablaConectadosPDF.AddCell(new PdfPCell(new Phrase("POTENCIA", fontheader)) { BackgroundColor = new BaseColor(141, 198, 63), HorizontalAlignment = Element.ALIGN_CENTER });
-                    tablaConectadosPDF.AddCell(new PdfPCell(new Phrase("HORAS DE USO", fontheader)) { BackgroundColor = new BaseColor(141, 198, 63), HorizontalAlignment = Element.ALIGN_CENTER });
+                        doc.Add(new Paragraph("\nDispositivos que se pueden conectar:\n\n", fontNegrita));
+                        PdfPTable tablaConectadosPDF = new PdfPTable(4)
+                        {
+                            WidthPercentage = 100
+                        };
+                        tablaConectadosPDF.SetWidths(new float[] { 1f, 2.5f,2f,2f });
+                        tablaConectadosPDF.AddCell(new PdfPCell(new Phrase("CANTIDAD", fontheader)) { BackgroundColor = new BaseColor(141, 198, 63), HorizontalAlignment = Element.ALIGN_CENTER });
+                        tablaConectadosPDF.AddCell(new PdfPCell(new Phrase("EQUIPOS", fontheader)) { BackgroundColor = new BaseColor(141, 198, 63), HorizontalAlignment = Element.ALIGN_CENTER });
+                        tablaConectadosPDF.AddCell(new PdfPCell(new Phrase("POTENCIA", fontheader)) { BackgroundColor = new BaseColor(141, 198, 63), HorizontalAlignment = Element.ALIGN_CENTER });
+                        tablaConectadosPDF.AddCell(new PdfPCell(new Phrase("HORAS DE USO", fontheader)) { BackgroundColor = new BaseColor(141, 198, 63), HorizontalAlignment = Element.ALIGN_CENTER });
 
-                    foreach (DataGridViewRow row in tablaConectados.Rows)
-                    {
-                        if (row.IsNewRow) continue; 
-                        string cantidad = row.Cells["CANTIDAD"].Value?.ToString() ?? "0";
-                        string eqiopos = row.Cells["EQUIPOS"].Value?.ToString() ?? "";
-                        string potencia = row.Cells["POTENCIA"].Value?.ToString() ?? "0.0 kW";
-                        string horasUso = row.Cells["HORAS DE USO"].Value?.ToString() ?? "0 horas";
-                        tablaConectadosPDF.AddCell(new PdfPCell(new Phrase(cantidad, fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
-                        tablaConectadosPDF.AddCell(new PdfPCell(new Phrase(eqiopos, fontNormal)) { NoWrap = false });
-                        tablaConectadosPDF.AddCell(new PdfPCell(new Phrase(potencia, fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
-                        tablaConectadosPDF.AddCell(new PdfPCell(new Phrase(horasUso, fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
+                        foreach (DataGridViewRow row in tablaConectados.Rows)
+                        {
+                            if (row.IsNewRow) continue; 
+                            string cantidad = row.Cells["CANTIDAD"].Value?.ToString() ?? "0";
+                            string eqiopos = row.Cells["EQUIPOS"].Value?.ToString() ?? "";
+                            string potencia = row.Cells["POTENCIA"].Value?.ToString() ?? "0.0 kW";
+                            string horasUso = row.Cells["HORAS DE USO"].Value?.ToString() ?? "0 horas";
+                            tablaConectadosPDF.AddCell(new PdfPCell(new Phrase(cantidad, fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
+                            tablaConectadosPDF.AddCell(new PdfPCell(new Phrase(eqiopos, fontNormal)) {  NoWrap = false });
+                            tablaConectadosPDF.AddCell(new PdfPCell(new Phrase(potencia, fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
+                            tablaConectadosPDF.AddCell(new PdfPCell(new Phrase(horasUso, fontNormal)) { HorizontalAlignment = Element.ALIGN_CENTER });
+                        }
+                        doc.Add(tablaConectadosPDF);
                     }
-                    doc.Add(tablaConectadosPDF);
-                }
                 int pos = 1;
                 BaseColor colorFilaPar = BaseColor.WHITE;
                 BaseColor colorFilaImpar = new BaseColor(245, 245, 245);
@@ -152,9 +151,8 @@ namespace Ensumex.PDFtemplates
                     string descuentoFormateado = descuentoFila.ToString("C2", new CultureInfo("es-MX"));
                     string importeFormateado = importe.ToString("C2", new CultureInfo("es-MX"));
                     string totalFormateado = total1.ToString("C2", new CultureInfo("es-MX"));
-
                     BaseColor fondoFila = (pos % 2 == 0) ? colorFilaPar : colorFilaImpar;
-                    // Añadir celdas
+
                     tabla.AddCell(new PdfPCell(new Phrase(pos.ToString(), fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });
                     tabla.AddCell(new PdfPCell(new Phrase(cantidadStr, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });
                     tabla.AddCell(new PdfPCell(new Phrase(unidad, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });

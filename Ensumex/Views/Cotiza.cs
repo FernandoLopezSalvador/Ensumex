@@ -293,7 +293,7 @@ namespace Ensumex.Views
                             costoInstalacion: decimal.TryParse(txt_Costoinstalacion.Text, out var inst) ? inst : 0,
                             costoFlete: decimal.TryParse(txt_Costoflete.Text, out var flt) ? flt : 0,
                             subtotal: decimal.TryParse(lbl_Subtotal.Text.Replace("$", ""), out var sub) ? sub : 0,
-                            descuento: totalDescuentoCalculado, // Descuento calculado
+                            descuento: totalDescuentoCalculado, 
                             total: decimal.TryParse(lbl_TotalNeto.Text.Replace("$", ""), out var tot) ? tot : 0,
                             notas: Txt_observaciones.Text,
                             tablaCotizacion: tbl_Cotizacion
@@ -306,8 +306,8 @@ namespace Ensumex.Views
                             nombreCliente: txt_Nombrecliente.Text,
                             costoInstalacion: txt_Costoinstalacion.Text,
                             costoFlete: txt_Costoflete.Text,
-                            subtotal: lbl_Subtotal.Text.Replace("$", "").Trim(),   // O mejor decimal
-                            total: lbl_TotalNeto.Text.Replace("$", "").Trim(),     // Igual aquí
+                            subtotal: lbl_Subtotal.Text.Replace("$", "").Trim(),  
+                            total: lbl_TotalNeto.Text.Replace("$", "").Trim(),    
                             descuento: lbl_costoDescuento.Text.Replace("$", "").Trim(),
                             porcentajeDescuento: totalDescuentoCalculado,
                             notas: Txt_observaciones.Text,

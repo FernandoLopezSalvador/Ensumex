@@ -55,7 +55,6 @@ namespace Ensumex.Forms
 
             ConfigurarBoton(BtnCerrar, IconChar.SignOutAlt, Color.FromArgb(229, 57, 53), "Cerrar Sesión", new Font("Segoe UI", 10, FontStyle.Bold), Color.FromArgb(33, 33, 33));
         }
-
         private void InicializarFormulario()
         {
 
