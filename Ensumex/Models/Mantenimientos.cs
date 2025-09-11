@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Ensumex.Models
 {
-    internal class Clientes
+    internal class Mantenimientos
     {
+
     }
 }

@@ -287,7 +287,6 @@ namespace Ensumex.Forms
 
             if (sender is not Button btn) return;
 
-            // Cancela el timer si ya existe
             if (hoverTimers.ContainsKey(btn))
             {
                 hoverTimers[btn].Stop();
@@ -295,8 +294,7 @@ namespace Ensumex.Forms
                 hoverTimers.Remove(btn);
             }
 
-            // Timer para retrasar el hover
-            Timer delayTimer = new Timer { Interval = 120 }; // Delay de 120ms
+            Timer delayTimer = new Timer { Interval = 120 };
             delayTimer.Tick += (s, args) =>
             {
                 delayTimer.Stop();
@@ -313,7 +311,6 @@ namespace Ensumex.Forms
             delayTimer.Start();
         }
 
-        // Método genérico para MouseLeave
         private void Button_MouseLeave(object sender, EventArgs e)
         {
             var manager = MaterialSkin.MaterialSkinManager.Instance;
@@ -351,7 +348,6 @@ namespace Ensumex.Forms
 
         private void StartButtonAnimation(Button btn, Color targetColor, float scaleTo)
         {
-            // Cancela animación previa si existe
             if (animationTokens.ContainsKey(btn))
             {
                 animationTokens[btn].Cancel();
@@ -362,7 +358,6 @@ namespace Ensumex.Forms
             var cts = new CancellationTokenSource();
             animationTokens[btn] = cts;
 
-            // Animación paralela para color y tamaño
             AnimateButtonBackColor(btn, targetColor, 200, cts.Token);
         }
         private async void AnimateButtonBackColor(Button btn, Color targetColor, int duration, CancellationToken token)
@@ -418,7 +413,6 @@ namespace Ensumex.Forms
 
             if (sender is not Button btn) return;
 
-            // Cancela el timer si ya existe
             if (hoverTimers.ContainsKey(btn))
             {
                 hoverTimers[btn].Stop();
@@ -426,8 +420,7 @@ namespace Ensumex.Forms
                 hoverTimers.Remove(btn);
             }
 
-            // Timer para retrasar el hover
-            Timer delayTimer = new Timer { Interval = 120 }; // Delay de 120ms
+            Timer delayTimer = new Timer { Interval = 120 }; 
             delayTimer.Tick += (s, args) =>
             {
                 delayTimer.Stop();
@@ -437,10 +430,9 @@ namespace Ensumex.Forms
                 if (btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position)))
                 {
                     Color targetColor = GetHoverColor(btn, isDark);
-                    StartButtonAnimation(btn, targetColor, 1.1f); // Escala 110%
+                    StartButtonAnimation(btn, targetColor, 1.1f); 
                 }
             };
-
             hoverTimers[btn] = delayTimer;
             delayTimer.Start();
         }
@@ -462,8 +454,8 @@ namespace Ensumex.Forms
                 hoverTimers[btn].Dispose();
                 hoverTimers.Remove(btn);
             }
-            // Timer para retrasar el hover
-            Timer delayTimer = new Timer { Interval = 120 }; // Delay de 120ms
+
+            Timer delayTimer = new Timer { Interval = 120 }; 
             delayTimer.Tick += (s, args) =>
             {
                 delayTimer.Stop();
@@ -473,7 +465,7 @@ namespace Ensumex.Forms
                 if (btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position)))
                 {
                     Color targetColor = GetHoverColor(btn, isDark);
-                    StartButtonAnimation(btn, targetColor, 1.1f); // Escala 110%
+                    StartButtonAnimation(btn, targetColor, 1.1f); 
                 }
             };
 
@@ -499,7 +491,7 @@ namespace Ensumex.Forms
                 ? Color.FromArgb(45, 45, 48)
                 : Color.Transparent;
 
-            StartButtonAnimation(btn, baseColor, 1.0f); // Vuelve tamaño original
+            StartButtonAnimation(btn, baseColor, 1.0f); 
         }
 
         private void ConfigurarBoton(Button btn, IconChar icon, Color iconColor, string texto, Font font, Color foreColor)

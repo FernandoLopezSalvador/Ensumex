@@ -71,7 +71,6 @@ namespace Ensumex.Controllers
             }
         } 
 
-        // Obtiene todos los mantenimientos desde la BD local
         public static DataTable GetMantenimientos()
         {
             var dt = new DataTable();
@@ -88,7 +87,6 @@ namespace Ensumex.Controllers
             return dt;
         }
 
-        // Inserta un nuevo mantenimiento
         public static void InsertarMantenimiento(DataRow row, SqlConnection conn, SqlTransaction transaction)
         {
             using (SqlCommand cmd = new SqlCommand(
@@ -107,7 +105,6 @@ namespace Ensumex.Controllers
             }
         }
 
-        // Actualiza estatus y número de servicios
         public static void ActualizarMantenimiento(int id, string estatus, int numeroServicios, DateTime fechaServicio)
         {
             using (SqlConnection conn = GetConnection())
@@ -141,7 +138,27 @@ namespace Ensumex.Controllers
                 }
             }
         }
+        public static DataTable GetDetallesMantenimiento(int mantenimientoId)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                string query = @"SELECT Id, MantenimientoId, FechaMantenimiento, RealizadoPor, Observaciones
+                         FROM DetallesMantenimientos
+                         WHERE MantenimientoId = @MantenimientoId";
 
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MantenimientoId", mantenimientoId);
+
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        return dt;
+                    }
+                }
+            }
+        }
         public static SqlConnection GetConnection()
         {
             return new SqlConnection(connSqlServer);

@@ -25,14 +25,6 @@ namespace Ensumex.Views
             var datos = SqlServerRepository.GetMantenimientos();
             dgvMantenimiento.DataSource = datos;
             ConfigurarGrid();
-
-            // Oculta todas las columnas excepto las necesarias
-            foreach (DataGridViewColumn col in dgvMantenimiento.Columns)
-            {
-                col.Visible = col.Name == "FolioVenta" || col.Name == "Cliente" || col.Name == "Producto" || col.Name =="Estatus";
-            }
-
-            // Agrega botón de detalles si no existe
             if (dgvMantenimiento.Columns["BtnDetalles"] == null)
             {
                 var btnDetalles = new DataGridViewButtonColumn
@@ -43,19 +35,6 @@ namespace Ensumex.Views
                     UseColumnTextForButtonValue = true
                 };
                 dgvMantenimiento.Columns.Add(btnDetalles);
-            }
-
-            // Agrega botón de estatus si no existe
-            if (dgvMantenimiento.Columns["BtnEstatus"] == null)
-            {
-                var btnEstatus = new DataGridViewButtonColumn
-                {
-                    Name = "BtnEstatus",
-                    HeaderText = "Estatus",
-                    Text = "Cambiar Estatus",
-                    UseColumnTextForButtonValue = true
-                };
-                dgvMantenimiento.Columns.Add(btnEstatus);
             }
         }
 
@@ -108,7 +87,6 @@ namespace Ensumex.Views
                 string nuevoEstatus = row.Cells["EstatusCombo"].Value?.ToString();
                 int numeroServicios = Convert.ToInt32(row.Cells["NumeroServicios"].Value);
 
-                // Solo guardar detalle si el estatus cambia a "Realizado"
                 if (nuevoEstatus == "Realizado")
                 {
                     var confirm = MessageBox.Show(
@@ -117,19 +95,19 @@ namespace Ensumex.Views
 
                     if (confirm == DialogResult.Yes)
                     {
-                        // Ventana de observaciones
                         using (var obsForm = new ObservacionesForm())
                         {
                             if (obsForm.ShowDialog() == DialogResult.OK)
                             {
                                 numeroServicios += 1;
                                 DateTime fechaServicio = DateTime.Now;
-                                // Actualiza el mantenimiento principal
+
                                 SqlServerRepository.ActualizarMantenimiento(id, "Pendiente", numeroServicios, fechaServicio);
-                                // Guarda el detalle
                                 SqlServerRepository.InsertarDetalleMantenimiento(id, fechaServicio, "Realizado", obsForm.Observaciones);
+
                                 row.Cells["NumeroServicios"].Value = numeroServicios;
                                 row.Cells["EstatusCombo"].Value = "Pendiente";
+                                row.Cells["Estatus"].Value = "Pendiente";
                             }
                             else
                             {
@@ -144,8 +122,9 @@ namespace Ensumex.Views
                 }
                 else
                 {
-                    DateTime fechaServicio = DateTime.MinValue; 
+                    DateTime fechaServicio = DateTime.MinValue;
                     SqlServerRepository.ActualizarMantenimiento(id, nuevoEstatus, numeroServicios, fechaServicio);
+                    row.Cells["Estatus"].Value = nuevoEstatus; 
                 }
             }
         }
@@ -159,25 +138,11 @@ namespace Ensumex.Views
             // Botón de detalles
             if (dgvMantenimiento.Columns[e.ColumnIndex].Name == "BtnDetalles")
             {
-                string folio = row.Cells["FolioVenta"].Value?.ToString();
-                string cliente = row.Cells["Cliente"].Value?.ToString();
-                string producto = row.Cells["Producto"].Value?.ToString();
-                string fechaUltimo = row.Cells["FechaUltimoServicio"]?.Value?.ToString() ?? "Sin registro";
-                string numServicios = row.Cells["NumeroServicios"]?.Value?.ToString() ?? "0";
-                string observaciones = row.Cells["Observaciones"]?.Value?.ToString() ?? "";
-
-                MessageBox.Show(
-                    $"Folio: {folio}\nCliente: {cliente}\nProducto: {producto}\n" +
-                    $"Fecha último mantenimiento: {fechaUltimo}\n" +
-                    $"Mantenimientos realizados: {numServicios}\n" +
-                    $"Observaciones: {observaciones}",
-                    "Detalles de Mantenimiento",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information
-                );
+                int mantenimientoId = Convert.ToInt32(row.Cells["MantenimientoId"].Value);
+                //var detalleForm = new DetalleMantenimientoForm(mantenimientoId);
+                //detalleForm.ShowDialog();
             }
 
-            // Botón de estatus
             if (dgvMantenimiento.Columns[e.ColumnIndex].Name == "BtnEstatus")
             {
                 var estatusActual = row.Cells["Estatus"].Value?.ToString();
@@ -189,7 +154,7 @@ namespace Ensumex.Views
                 {
                     int id = Convert.ToInt32(row.Cells["Id"].Value);
                     int numeroServicios = Convert.ToInt32(row.Cells["NumeroServicios"].Value);
-                    DateTime fechaServicio = DateTime.MinValue; // Proporciona un valor predeterminado para fechaServicio
+                    DateTime fechaServicio = DateTime.MinValue; 
                     SqlServerRepository.ActualizarMantenimiento(id, nuevoEstatus, numeroServicios, fechaServicio);
                     row.Cells["Estatus"].Value = nuevoEstatus;
                 }

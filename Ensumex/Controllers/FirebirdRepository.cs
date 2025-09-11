@@ -103,46 +103,5 @@ namespace Ensumex.Controllers
 
             return dt;
         }
-
-        public static void GuardarMantenimientosLocal(DataTable dt)
-        {
-            using (SqlConnection conn = new SqlConnection("Data Source=.;Initial Catalog=MiBDLocal;Integrated Security=True"))
-            {
-                conn.Open();
-
-                foreach (DataRow row in dt.Rows)
-                {
-                    string folio = row["FOLIO"].ToString();
-
-                    // Evita duplicados
-                    string checkQuery = "SELECT COUNT(*) FROM Mantenimientos WHERE FolioVenta = @folio";
-                    using (SqlCommand checkCmd = new SqlCommand(checkQuery, conn))
-                    {
-                        checkCmd.Parameters.AddWithValue("@folio", folio);
-                        int count = (int)checkCmd.ExecuteScalar();
-
-                        if (count == 0)
-                        {
-                            string insertQuery = @"
-                            INSERT INTO Mantenimientos 
-                            (FolioVenta, Cliente, Telefono, Producto, FechaVenta, NumeroServicios, Estatus)
-                            VALUES (@folio, @cliente, @telefono, @producto, @fecha, @servicios, @estatus)";
-
-                            using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
-                            {
-                                insertCmd.Parameters.AddWithValue("@folio", folio);
-                                insertCmd.Parameters.AddWithValue("@cliente", row["CLIENTE"].ToString());
-                                insertCmd.Parameters.AddWithValue("@telefono", row["TELEFONO"].ToString());
-                                insertCmd.Parameters.AddWithValue("@producto", row["PRODUCTO"].ToString());
-                                insertCmd.Parameters.AddWithValue("@fecha", Convert.ToDateTime(row["FECHA_VENTA"]));
-                                insertCmd.Parameters.AddWithValue("@servicios", 0); // siempre inicia en 0
-                                insertCmd.Parameters.AddWithValue("@estatus", "Pendiente");
-                                insertCmd.ExecuteNonQuery();
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }
