@@ -48,7 +48,6 @@ namespace Ensumex.Views
         }
         private void cmb_clientes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Limpiar la tabla antes de cargar nuevos datos
             var selectedValue = cmb_filtrarcotiza.SelectedItem.ToString();
             if (selectedValue == "Todos")
             {
@@ -79,9 +78,9 @@ namespace Ensumex.Views
         {
             try
             {
-                // Validación básica de clic válido
                 if (e.RowIndex < 0 || e.ColumnIndex < 0)
                     return;
+                
 
                 if (tabla_cotizaciones.Columns[e.ColumnIndex].Name == "Detalle")
                 {
@@ -92,7 +91,6 @@ namespace Ensumex.Views
                         MessageBox.Show("No se pudo obtener el ID de la cotización.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    // Obtener detalle
                     DataTable detalle = CotizacionRepository.ObtenerDetallePorId(idCotizacion);
 
                     if (detalle == null || detalle.Rows.Count == 0)
@@ -100,7 +98,6 @@ namespace Ensumex.Views
                         MessageBox.Show("No hay detalles disponibles para esta cotización.", "Sin datos", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return;
                     }
-                    // Mostrar formulario con detalle
                     using (var detalleForm = new Form())
                     {
                         detalleForm.Text = $"Detalle de Cotización #{idCotizacion}";

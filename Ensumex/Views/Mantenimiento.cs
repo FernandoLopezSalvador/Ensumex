@@ -135,7 +135,6 @@ namespace Ensumex.Views
 
             var row = dgvMantenimiento.Rows[e.RowIndex];
 
-            // Botón de detalles
             if (dgvMantenimiento.Columns[e.ColumnIndex].Name == "BtnDetalles")
             {
                 int mantenimientoId = Convert.ToInt32(row.Cells["MantenimientoId"].Value);
@@ -149,7 +148,6 @@ namespace Ensumex.Views
                 var nuevoEstatus = Microsoft.VisualBasic.Interaction.InputBox(
                     $"Estatus actual: {estatusActual}\nIngrese nuevo estatus (Pendiente, Enviado, Realizado):",
                     "Cambiar Estatus", estatusActual);
-
                 if (!string.IsNullOrWhiteSpace(nuevoEstatus))
                 {
                     int id = Convert.ToInt32(row.Cells["Id"].Value);
