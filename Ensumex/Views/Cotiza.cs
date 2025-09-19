@@ -193,7 +193,6 @@ namespace Ensumex.Views
                         notas: Txt_observaciones.Text,
                         tablas: tablasParaGuardar
                     );
-
                     // --- GENERAR PDF ---
                     GeneraPDFTablas.GenerarPDFConTablas(
                         rutaArchivo: sfd.FileName,
@@ -209,7 +208,6 @@ namespace Ensumex.Views
                         notas: Txt_observaciones.Text,
                         usuario: usuarioActual
                     );
-
                     // Preguntar si desea enviar por WhatsApp
                     var enviarWhats = MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (enviarWhats == DialogResult.Yes)
@@ -270,7 +268,6 @@ namespace Ensumex.Views
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         decimal totalDescuentoCalculado = 0m;
-
                         // Calcular descuento total de la cotización
                         foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                         {
@@ -283,7 +280,6 @@ namespace Ensumex.Views
                             decimal descuentoFila = (precio * cantidad) * (porcentajeDescuento / 100m);
                             totalDescuentoCalculado += descuentoFila;
                         }
-
                         // Guardar cotización en base de datos
                         CotizacionRepository.GuardarCotizacion(
                             numeroCotizacion: lbl_NoCotiza.Text,
@@ -298,7 +294,6 @@ namespace Ensumex.Views
                             notas: Txt_observaciones.Text,
                             tablaCotizacion: tbl_Cotizacion
                         );
-
                         // Generar PDF
                         PDFGenerator.GenerarPDFCotizacion(
                             rutaArchivo: sfd.FileName,
@@ -485,7 +480,6 @@ namespace Ensumex.Views
             tablasGuardadas.Clear();
             ActualizarNumeroCotizacionEnLabel(); 
         }
-        // Evento para manejar la busqueda para seleccionar cliente
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             try
@@ -519,12 +513,17 @@ namespace Ensumex.Views
         {
             var notas = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                ["CALENTADOR"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n" +
-                "-Precios sujetos a cambios sin previo aviso.\n",
-                ["CALENT"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n" +
+                ["CALENTADOR"] = "-Garantía contra defectos de fabricación en calentador solar: 5 años, la garantía aplica en termo tanque únicamente. No aplica la garantía por omisión en los cuidados que requiere el equipo de acuerdo al manual de instalación y póliza de garantía que se le entrega.\n" +
+                "--Se requiere un anticipo mínimo del 50% al confirmar el pedido.\n" +
+                "-No incluye material de plomería ni mano de obra para instalación."+
                 "-Precios sujetos a cambios sin previo aviso.\n",
 
-                ["AIRE ACONDICIONADO"] = "-Garantía: 5 años contra defectos de fabricación.\n" +
+                ["CALENT"] = "-Garantía contra defectos de fabricación en calentador solar: 5 años, la garantía aplica en termo tanque únicamente. No aplica la garantía por omisión en los cuidados que requiere el equipo de acuerdo al manual de instalación y póliza de garantía que se le entrega.\n" +
+                "--Se requiere un anticipo mínimo del 50% al confirmar el pedido.\n" +
+                "-No incluye material de plomería ni mano de obra para instalación." +
+                "-Precios sujetos a cambios sin previo aviso.\n",
+
+                ["AIRE ACONDICIONADO"] = "-Garantía: 3 años contra defectos de fabricación.\n" +
                     "-El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
                     "-Precios sujetos a cambios sin previo aviso.\n",
 

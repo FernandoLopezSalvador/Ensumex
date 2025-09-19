@@ -22,53 +22,23 @@ namespace Ensumex.Views
 
         private void CargarDatos()
         {
-            var datos = SqlServerRepository.GetMantenimientos();
+            DataTable datos = SqlServerRepository.GetMantenimientosConDetalles();
             dgvMantenimiento.DataSource = datos;
             ConfigurarGrid();
-            if (dgvMantenimiento.Columns["BtnDetalles"] == null)
-            {
-                var btnDetalles = new DataGridViewButtonColumn
-                {
-                    Name = "BtnDetalles",
-                    HeaderText = "Detalles",
-                    Text = "Ver Detalles",
-                    UseColumnTextForButtonValue = true
-                };
-                dgvMantenimiento.Columns.Add(btnDetalles);
-            }
         }
 
         private void ConfigurarGrid()
         {
-            if (dgvMantenimiento.Columns["EstatusCombo"] != null) return;
-
-            if (dgvMantenimiento.Columns["NumeroServicios"] == null)
-            {
-                dgvMantenimiento.Columns["NumeroServicios"].HeaderText = "Servicios Realizados";
-                dgvMantenimiento.Columns["NumeroServicios"].ReadOnly = true;
-            }
-
-            DataGridViewComboBoxColumn comboEstatus = new DataGridViewComboBoxColumn
-            {
-                HeaderText = "Estatus",
-                Name = "EstatusCombo",
-                DataPropertyName = "Estatus", 
-                Items = { "Pendiente", "Enviado", "Realizado" }
-            };
-
-            dgvMantenimiento.Columns.Add(comboEstatus);
             dgvMantenimiento.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvMantenimiento.CellFormatting += dgvMantenimiento_CellFormatting;
-            dgvMantenimiento.CellValueChanged += dgvMantenimiento_CellValueChanged;
-            dgvMantenimiento.CellClick += dgvMantenimiento_CellClick;
+            dgvMantenimiento.CellDoubleClick += dgvMantenimiento_CellDoubleClick;
         }
 
         private void dgvMantenimiento_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (dgvMantenimiento.Columns[e.ColumnIndex].Name == "EstatusCombo")
+            if (dgvMantenimiento.Columns[e.ColumnIndex].Name == "Estatus")
             {
-                var estatus = e.Value?.ToString();
-
+                string estatus = e.Value?.ToString();
                 if (estatus == "Pendiente")
                     dgvMantenimiento.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightYellow;
                 else if (estatus == "Enviado")
@@ -76,8 +46,32 @@ namespace Ensumex.Views
                 else if (estatus == "Realizado")
                     dgvMantenimiento.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
             }
-        }   
+        }
 
+        private void dgvMantenimiento_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            int id = Convert.ToInt32(dgvMantenimiento.Rows[e.RowIndex].Cells["Id"].Value);
+            string estatus = dgvMantenimiento.Rows[e.RowIndex].Cells["Estatus"].Value.ToString();
+
+            // Si ya está realizado, no abrir modal
+            if (estatus == "Realizado")
+            {
+                MessageBox.Show("Este mantenimiento ya fue realizado.");
+                return;
+            }
+
+            // Abrir modal para capturar detalle
+            using (var form = new DetalleMantenimientoForm(id))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    MessageBox.Show("Mantenimiento registrado correctamente.");
+                    CargarDatos(); 
+                }
+            }
+        }
         private void dgvMantenimiento_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (dgvMantenimiento.Columns[e.ColumnIndex].Name == "EstatusCombo")
@@ -101,10 +95,8 @@ namespace Ensumex.Views
                             {
                                 numeroServicios += 1;
                                 DateTime fechaServicio = DateTime.Now;
-
                                 SqlServerRepository.ActualizarMantenimiento(id, "Pendiente", numeroServicios, fechaServicio);
-                                SqlServerRepository.InsertarDetalleMantenimiento(id, fechaServicio, "Realizado", obsForm.Observaciones);
-
+                                SqlServerRepository.InsertarDetalleMantenimiento(id, "Usuario", obsForm.Observaciones);
                                 row.Cells["NumeroServicios"].Value = numeroServicios;
                                 row.Cells["EstatusCombo"].Value = "Pendiente";
                                 row.Cells["Estatus"].Value = "Pendiente";
@@ -127,38 +119,7 @@ namespace Ensumex.Views
                     row.Cells["Estatus"].Value = nuevoEstatus; 
                 }
             }
-        }
-
-        private void dgvMantenimiento_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0) return;
-
-            var row = dgvMantenimiento.Rows[e.RowIndex];
-
-            if (dgvMantenimiento.Columns[e.ColumnIndex].Name == "BtnDetalles")
-            {
-                int mantenimientoId = Convert.ToInt32(row.Cells["MantenimientoId"].Value);
-                //var detalleForm = new DetalleMantenimientoForm(mantenimientoId);
-                //detalleForm.ShowDialog();
-            }
-
-            if (dgvMantenimiento.Columns[e.ColumnIndex].Name == "BtnEstatus")
-            {
-                var estatusActual = row.Cells["Estatus"].Value?.ToString();
-                var nuevoEstatus = Microsoft.VisualBasic.Interaction.InputBox(
-                    $"Estatus actual: {estatusActual}\nIngrese nuevo estatus (Pendiente, Enviado, Realizado):",
-                    "Cambiar Estatus", estatusActual);
-                if (!string.IsNullOrWhiteSpace(nuevoEstatus))
-                {
-                    int id = Convert.ToInt32(row.Cells["Id"].Value);
-                    int numeroServicios = Convert.ToInt32(row.Cells["NumeroServicios"].Value);
-                    DateTime fechaServicio = DateTime.MinValue; 
-                    SqlServerRepository.ActualizarMantenimiento(id, nuevoEstatus, numeroServicios, fechaServicio);
-                    row.Cells["Estatus"].Value = nuevoEstatus;
-                }
-            }
-        }
-    }
+        }    }
 
     public class ObservacionesForm : Form
     {

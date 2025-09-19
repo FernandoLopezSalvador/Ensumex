@@ -64,6 +64,7 @@ namespace Ensumex.Controllers
                 @"INSERT INTO PRECIO_X_PROD01 (CVE_ART, CVE_PRECIO, PRECIO)
                   VALUES (@CVE_ART, @CVE_PRECIO, @PRECIO)", conn, transaction))
             {
+
                 cmd.Parameters.AddWithValue("@CVE_ART", row["CVE_ART"] ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@CVE_PRECIO", row["CVE_PRECIO"] ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@PRECIO", row["PRECIO"] ?? DBNull.Value);
@@ -121,43 +122,63 @@ namespace Ensumex.Controllers
             }
         }
 
-        public static void InsertarDetalleMantenimiento(int idMantenimiento, DateTime fechaServicio, string estatus, string observaciones)
+        public static void InsertarDetalleMantenimiento(int mantenimientoId, string realizadoPor, string observaciones)
         {
             using (SqlConnection conn = GetConnection())
             {
                 conn.Open();
-                string query = @"INSERT INTO DetallesMantenimientos (IdMantenimiento, FechaServicio, Estatus, Observaciones)
-                                 VALUES (@idMantenimiento, @fechaServicio, @estatus, @observaciones)";
+                string query = @"
+            INSERT INTO DetallesMantenimientos (MantenimientoId, FechaMantenimiento, RealizadoPor, Observaciones)
+            VALUES (@MantenimientoId, GETDATE(), @RealizadoPor, @Observaciones);";
+
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@idMantenimiento", idMantenimiento);
-                    cmd.Parameters.AddWithValue("@fechaServicio", fechaServicio);
-                    cmd.Parameters.AddWithValue("@estatus", estatus);
-                    cmd.Parameters.AddWithValue("@observaciones", observaciones ?? "");
+                    cmd.Parameters.AddWithValue("@MantenimientoId", mantenimientoId);
+                    cmd.Parameters.AddWithValue("@RealizadoPor", realizadoPor ?? "");
+                    cmd.Parameters.AddWithValue("@Observaciones", observaciones ?? "");
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Actualizar estatus en tabla principal
+                string update = @"UPDATE Mantenimientos SET Estatus = 'Realizado' WHERE Id = @MantenimientoId;";
+                using (SqlCommand cmd = new SqlCommand(update, conn))
+                {
+                    cmd.Parameters.AddWithValue("@MantenimientoId", mantenimientoId);
                     cmd.ExecuteNonQuery();
                 }
             }
         }
-        public static DataTable GetDetallesMantenimiento(int mantenimientoId)
+        public static DataTable GetMantenimientosConDetalles()
         {
+            var dt = new DataTable();
             using (SqlConnection conn = GetConnection())
             {
-                string query = @"SELECT Id, MantenimientoId, FechaMantenimiento, RealizadoPor, Observaciones
-                         FROM DetallesMantenimientos
-                         WHERE MantenimientoId = @MantenimientoId";
+                conn.Open();
+                string query = @"
+                SELECT 
+                    M.Id,
+                    C.NOMBRE AS Cliente,
+                    P.DESCR AS Producto,
+                    M.FechaVenta,
+                    M.FrecuenciaMeses AS Frecuencia,
+                    M.Estatus,
+                    ISNULL(MAX(D.FechaMantenimiento), M.FechaVenta) AS UltimoMantenimiento,
+                    DATEADD(MONTH, M.FrecuenciaMeses, ISNULL(MAX(D.FechaMantenimiento), M.FechaVenta)) AS ProximoMantenimiento,
+                    COUNT(D.Id) AS NumeroServicios
+                FROM Mantenimientos M
+                JOIN CLIE01 C ON M.ClienteId = C.CLAVE
+                JOIN INVE01 P ON M.ProductoId = P.CVE_ART
+                LEFT JOIN DetallesMantenimientos D ON M.Id = D.MantenimientoId
+                GROUP BY M.Id, C.NOMBRE, P.DESCR, M.FechaVenta, M.FrecuenciaMeses, M.Estatus
+                ORDER BY ProximoMantenimiento ASC;";
 
-                using (var cmd = new SqlCommand(query, conn))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                 {
-                    cmd.Parameters.AddWithValue("@MantenimientoId", mantenimientoId);
-
-                    using (var da = new SqlDataAdapter(cmd))
-                    {
-                        DataTable dt = new DataTable();
-                        da.Fill(dt);
-                        return dt;
-                    }
+                    adapter.Fill(dt);
                 }
             }
+            return dt;
         }
         public static SqlConnection GetConnection()
         {

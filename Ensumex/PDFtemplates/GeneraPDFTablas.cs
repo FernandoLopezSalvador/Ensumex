@@ -92,6 +92,7 @@ namespace Ensumex.PDFtemplates
 
                     // Encabezados
                     string[] headers = { "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "DESCUENTO  ($)", "IMPORTE", "TOTAL" };
+                    
                     foreach (string header in headers)
                     {
                         PdfPCell celda = new PdfPCell(new Phrase(header, fontheader))

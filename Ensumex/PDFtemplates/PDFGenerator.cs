@@ -219,7 +219,7 @@ namespace Ensumex.PDFtemplates
                     WidthPercentage = 100
                 };
 
-                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\n" + usuario + "\nGerente de Ventas", fontCursiva))
+                PdfPCell celdaTexto = new PdfPCell(new Phrase("Atentamente,\n" + usuario + "\n", fontCursiva))
                 {
                     HorizontalAlignment = Element.ALIGN_CENTER,
                     Border = Rectangle.NO_BORDER,
