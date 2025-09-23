@@ -129,7 +129,10 @@
             dgvMantenimiento.RowHeadersWidth = 51;
             dgvMantenimiento.Size = new Size(1029, 486);
             dgvMantenimiento.TabIndex = 20;
+            dgvMantenimiento.CellContentClick += dgvMantenimiento_CellContentClick;
+            dgvMantenimiento.CellDoubleClick += dgvMantenimiento_CellDoubleClick_2;
             dgvMantenimiento.CellValueChanged += dgvMantenimiento_CellValueChanged;
+            dgvMantenimiento.CurrentCellDirtyStateChanged += dgvMantenimiento_CurrentCellDirtyStateChanged;
             // 
             // Mantenimiento
             // 
