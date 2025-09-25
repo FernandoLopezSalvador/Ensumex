@@ -115,7 +115,6 @@ namespace Ensumex.Forms
             }
 
             Size originalSize = (Size)btn.Tag;
-
             Size startSize = btn.Size;
             Size targetSize = new Size(
                 (int)(originalSize.Width * scaleTo),
@@ -240,7 +239,7 @@ namespace Ensumex.Forms
 
             try
             {
-                await Task.Run(() => SincronizacionService.SincronizarDatos((progreso, total) =>
+                await Task.Run(() => SincronizacionService.SincronizarDatos ((progreso, total) =>
                 {
                     this.Invoke((Action)(() =>
                     {

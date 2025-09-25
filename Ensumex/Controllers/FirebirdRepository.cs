@@ -36,7 +36,7 @@ namespace Ensumex.Controllers
             using (FbConnection conn = new FbConnection(connFirebird))
             {
                 conn.Open();
-                using (FbCommand cmd = new FbCommand("SELECT CLAVE, STATUS, NOMBRE, CALLE, COLONIA, MUNICIPIO, EMAILPRED FROM CLIE01", conn))
+                using (FbCommand cmd = new FbCommand("SELECT CLAVE, STATUS, NOMBRE,TELEFONO, CALLE, COLONIA, MUNICIPIO, EMAILPRED FROM CLIE01", conn))
                 using (FbDataAdapter adapter = new FbDataAdapter(cmd))
                 {       
                     adapter.Fill(clientes);
@@ -59,7 +59,6 @@ namespace Ensumex.Controllers
             }
             return precios;
         }
-        // Consulta para obtener los productos que tienen 1 año de antigüedad en el mes actual
         public static DataTable GetCalentadoresParaMantenimiento()
         {
             var dt = new DataTable();
@@ -72,25 +71,23 @@ namespace Ensumex.Controllers
                 C.TELEFONO,
                 P.CVE_ART,
                 P.DESCR AS PRODUCTO
-            FROM FACTF01 F
-            JOIN PAR_FACTF01 PF 
-                ON F.CVE_DOC = PF.CVE_DOC
-            JOIN INVE01 P 
-                ON PF.CVE_ART = P.CVE_ART
-            JOIN CLIE01 C 
-                ON F.CVE_CLPV = C.CLAVE
-            WHERE 
-                (
-                    P.CVE_ART STARTING WITH 'SCCAL'
-                    OR P.CVE_ART STARTING WITH 'THCAL'
-                    OR P.CVE_ART STARTING WITH 'ESCAL'
-                )
-                AND F.FECHA_DOC <= DATEADD(YEAR, -1, CURRENT_DATE)
-            ORDER BY 
-                F.FECHA_DOC DESC;
-            ";
-
-
+                FROM FACTF01 F
+                JOIN PAR_FACTF01 PF 
+                    ON F.CVE_DOC = PF.CVE_DOC
+                JOIN INVE01 P 
+                    ON PF.CVE_ART = P.CVE_ART
+                JOIN CLIE01 C 
+                    ON F.CVE_CLPV = C.CLAVE
+                WHERE 
+                    (
+                        P.CVE_ART STARTING WITH 'SCCAL'
+                        OR P.CVE_ART STARTING WITH 'THCAL'
+                        OR P.CVE_ART STARTING WITH 'ESCAL'
+                    )
+                    AND F.FECHA_DOC <= DATEADD(YEAR, -1, CURRENT_DATE)
+                ORDER BY 
+                    F.FECHA_DOC DESC;
+                ";
             using (FbConnection conn = new FbConnection(connFirebird))
             {
                 conn.Open();
@@ -100,7 +97,6 @@ namespace Ensumex.Controllers
                     adapter.Fill(dt);
                 }
             }
-
             return dt;
         }
     }

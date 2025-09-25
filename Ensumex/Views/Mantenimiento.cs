@@ -75,7 +75,6 @@ namespace Ensumex.Views
                     dgvMantenimiento.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
             }
         }
-
         private void dgvMantenimiento_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -110,71 +109,7 @@ namespace Ensumex.Views
                 DateTime proximoMantenimiento = fechaVenta.AddMonths(nuevaFrecuencia);
                 row.Cells["ProximoMantenimiento"].Value = proximoMantenimiento;
             }
-
-            if (dgvMantenimiento.Columns[e.ColumnIndex].Name == "EstatusCombo")
-            {
-                var row = dgvMantenimiento.Rows[e.RowIndex];
-                int id = Convert.ToInt32(row.Cells["Id"].Value);
-                string nuevoEstatus = row.Cells["EstatusCombo"].Value?.ToString();
-                int numeroServicios = Convert.ToInt32(row.Cells["NumeroServicios"].Value);
-
-                if (nuevoEstatus == "Realizado")
-                {
-                    var confirm = MessageBox.Show(
-                        "¿Está seguro de marcar este mantenimiento como 'Realizado'? Se aumentará el número de servicios y se guardará la fecha.",
-                        "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                    if (confirm == DialogResult.Yes)
-                    {
-                        using (var obsForm = new ObservacionesForm())
-                        {
-                            if (obsForm.ShowDialog() == DialogResult.OK)
-                            {
-                                numeroServicios += 1;
-                                DateTime fechaServicio = DateTime.Now;
-                                SqlServerRepository.ActualizarMantenimiento(id, "Pendiente", numeroServicios, fechaServicio);
-                                SqlServerRepository.InsertarDetalleMantenimiento(id, "Usuario", obsForm.Observaciones);
-                                row.Cells["NumeroServicios"].Value = numeroServicios;
-                                row.Cells["EstatusCombo"].Value = "Pendiente";
-                                row.Cells["Estatus"].Value = "Pendiente";
-                            }
-                            else
-                            {
-                                row.Cells["EstatusCombo"].Value = "Pendiente";
-                            }
-                        }
-                    }
-                    else
-                    {
-                        row.Cells["EstatusCombo"].Value = "Pendiente";
-                    }
-                }
-                else
-                {
-                    DateTime fechaServicio = DateTime.MinValue;
-                    SqlServerRepository.ActualizarMantenimiento(id, nuevoEstatus, numeroServicios, fechaServicio);
-                    row.Cells["Estatus"].Value = nuevoEstatus;
-                }
-            }
         }
-
-
-        private void BtnVerDetalles_Click(object sender, EventArgs e)
-        {
-            if (dgvMantenimiento.CurrentRow == null)
-            {
-                MessageBox.Show("Selecciona un mantenimiento primero.");
-                return;
-            }
-
-            int id = Convert.ToInt32(dgvMantenimiento.CurrentRow.Cells["Id"].Value);
-
-            using (var detallesForm = new DetallesMantForm(id))
-            {
-                detallesForm.ShowDialog();
-            }
-        }
-
         private void dgvMantenimiento_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvMantenimiento.Columns[e.ColumnIndex].Name == "VerDetalles")
@@ -192,7 +127,6 @@ namespace Ensumex.Views
         {
             if (e.RowIndex < 0) return;
 
-            // Evita que el doble clic en el botón de detalles dispare el registro de mantenimiento
             if (dgvMantenimiento.Columns[e.ColumnIndex].Name == "VerDetalles")
                 return;
 
@@ -220,7 +154,7 @@ namespace Ensumex.Views
         dgvMantenimiento.CommitEdit(DataGridViewDataErrorContexts.Commit);
         }
     }
-
+    /*
     public class ObservacionesForm : Form
     {
         public string Observaciones { get; private set; }
@@ -237,5 +171,5 @@ namespace Ensumex.Views
             Text = "Observaciones de Mantenimiento";
             Size = new Size(300, 200);
         }
-    }
+    }*/
 }

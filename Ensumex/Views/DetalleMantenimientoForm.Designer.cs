@@ -70,7 +70,7 @@
             // 
             // btnGuardar
             // 
-            btnGuardar.Location = new Point(128, 248);
+            btnGuardar.Location = new Point(129, 248);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(75, 23);
             btnGuardar.TabIndex = 4;

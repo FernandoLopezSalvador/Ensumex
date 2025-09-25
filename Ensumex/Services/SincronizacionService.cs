@@ -30,7 +30,6 @@ namespace Ensumex.Services
                 {
                     try
                     {
-                        SqlServerRepository.LimpiarTablas(conn, transaction);
 
                         foreach (DataRow row in productos.Rows)
                         {

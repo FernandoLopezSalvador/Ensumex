@@ -81,12 +81,10 @@ namespace Ensumex.Views
 
                 if (selectedValue == "Todos")
                 {
-                    // Mostrar todos los clientes del cache
                     tabla_clientes.DataSource = clientesCache;
                 }
                 else
                 {
-                    // Convertir el valor seleccionado a entero y filtrar
                     int count = int.Parse(selectedValue);
                     var clientesLimitados = clientesCache.Take(count).ToList();
                     tabla_clientes.DataSource = clientesLimitados;
@@ -106,12 +104,10 @@ namespace Ensumex.Views
 
                 if (string.IsNullOrWhiteSpace(searchText))
                 {
-                    // Mostrar todos si el campo de búsqueda está vacío
                     tabla_clientes.DataSource = clientesCache;
                 }
                 else
                 {
-                    // Filtrar los clientes cacheados
                     var clientesFiltrados = clientesCache
                         .Where(c =>
                             (c.NOMBRE != null && c.NOMBRE.ToLower().Contains(searchText)) ||
@@ -135,7 +131,6 @@ namespace Ensumex.Views
 
         private void tabla_clientes_CellDoubleClick_1(object sender, DataGridViewCellEventArgs e)
         {
-            // Evitar errores al hacer clic en encabezados
             if (e.RowIndex >= 0 && EsLlamadoDesdeCotiza)
             {
                 var row = tabla_clientes.Rows[e.RowIndex];
