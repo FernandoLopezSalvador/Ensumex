@@ -29,8 +29,8 @@ namespace Ensumex.Views
         private void Configurarboton()
         {
             // BtnInve - Inventario
-            Btn_DescargarClients.IconChar = IconChar.Download; // cajas para inventario
-            Btn_DescargarClients.IconColor = Color.FromArgb(33, 150, 243); // azul
+            Btn_DescargarClients.IconChar = IconChar.Download; 
+            Btn_DescargarClients.IconColor = Color.FromArgb(33, 150, 243); 
             Btn_DescargarClients.IconSize = 32;
             Btn_DescargarClients.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_DescargarClients.ImageAlign = ContentAlignment.MiddleLeft;
@@ -43,16 +43,14 @@ namespace Ensumex.Views
             var opciones = new object[] { "Todos", 5, 10, 20, 50, 100 };
             cmb_clientes.Items.AddRange(opciones);
             cmb_clientes.SelectedIndex = 0;
-            tabla_clientes.ReadOnly = true; // Hacer la tabla de clientes de solo lectura
+            tabla_clientes.ReadOnly = true; 
         }
         private void CargarClientes()
         {
             try
             {
                 var clienteService = new ClienteServices1();
-                var clientes = clienteService.ObtenerClientes(); // traer todos
-
-                // Guardar en cache
+                var clientes = clienteService.ObtenerClientes(); 
                 clientesCache = clientes.Select(c => new
                 {
                     CLAVE = c.CLAVE ?? "N/A",
@@ -64,7 +62,6 @@ namespace Ensumex.Views
                     EMAIL = c.EMAILPRED ?? "N/A"
                 }).ToList<dynamic>();
 
-                // Mostrar todos en la tabla
                 tabla_clientes.DataSource = clientesCache;
             }
             catch (Exception ex)
@@ -162,6 +159,5 @@ namespace Ensumex.Views
 
         public bool EsLlamadoDesdeCotiza { get; set; } = false;
         public string ClienteSeleccionadoNombre { get; private set; }
-        public string ClienteSeleccionadoCalle { get; private set; }
     }
 }

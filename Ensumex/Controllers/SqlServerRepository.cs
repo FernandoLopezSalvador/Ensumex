@@ -27,17 +27,17 @@ namespace Ensumex.Controllers
                     {
                         using (SqlCommand updateCmd = new SqlCommand(
                             @"UPDATE INVE01
-                  SET DESCR = @DESCR,
-                      UNI_MED = @UNI_MED,
-                      COSTO_PROM = @COSTO_PROM,
-                      ULT_COSTO = @ULT_COSTO,
-                      EXIST = @EXIST
-                  WHERE CVE_ART = @clave
-                    AND (DESCR <> @DESCR
-                         OR UNI_MED <> @UNI_MED
-                         OR COSTO_PROM <> @COSTO_PROM
-                         OR ULT_COSTO <> @ULT_COSTO
-                         OR EXIST <> @EXIST)", conn, transaction))
+                              SET DESCR = @DESCR,
+                                  UNI_MED = @UNI_MED,
+                                  COSTO_PROM = @COSTO_PROM,
+                                  ULT_COSTO = @ULT_COSTO,
+                                  EXIST = @EXIST
+                              WHERE CVE_ART = @clave
+                                AND (DESCR <> @DESCR
+                                     OR UNI_MED <> @UNI_MED
+                                     OR COSTO_PROM <> @COSTO_PROM
+                                     OR ULT_COSTO <> @ULT_COSTO
+                                     OR EXIST <> @EXIST)", conn, transaction))
                         {
                             updateCmd.Parameters.AddWithValue("@clave", clave ?? DBNull.Value);
                             updateCmd.Parameters.AddWithValue("@DESCR", row["DESCR"] ?? DBNull.Value);
@@ -54,7 +54,7 @@ namespace Ensumex.Controllers
                 }
                 using (SqlCommand cmd = new SqlCommand(
                     @"INSERT INTO INVE01 (CVE_ART, DESCR, UNI_MED, COSTO_PROM, ULT_COSTO, EXIST)
-          VALUES (@CVE_ART, @DESCR, @UNI_MED, @COSTO_PROM, @ULT_COSTO, @EXIST)", conn, transaction))
+                        VALUES (@CVE_ART, @DESCR, @UNI_MED, @COSTO_PROM, @ULT_COSTO, @EXIST)", conn, transaction))
                 {
                     cmd.Parameters.AddWithValue("@CVE_ART", row["CVE_ART"] ?? DBNull.Value);
                     cmd.Parameters.AddWithValue("@DESCR", row["DESCR"] ?? DBNull.Value);
@@ -120,7 +120,6 @@ namespace Ensumex.Controllers
 
                         updateCmd.ExecuteNonQuery();
                     }
-
                     return; 
                 }
             }
@@ -182,14 +181,13 @@ namespace Ensumex.Controllers
 
                         updateCmd.ExecuteNonQuery();
                     }
-
                     return; 
                 }
             }
 
             using (SqlCommand cmd = new SqlCommand(
                 @"INSERT INTO PRECIO_X_PROD01 (CVE_ART, CVE_PRECIO, PRECIO)
-                 (@CVE_ART, @CVE_PRECIO, @PRECIO)", conn, transaction))
+      VALUES (@CVE_ART, @CVE_PRECIO, @PRECIO)", conn, transaction))
             {
                 cmd.Parameters.AddWithValue("@CVE_ART", claveProducto ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@CVE_PRECIO", clavePrecio ?? DBNull.Value);
@@ -210,43 +208,43 @@ namespace Ensumex.Controllers
             }
         } 
 
-        public static void InsertarMantenimiento(DataRow row, SqlConnection conn, SqlTransaction transaction)
-        {
+      public static void InsertarMantenimiento(DataRow row, SqlConnection conn, SqlTransaction transaction)
+      {
             try
             {
-            object folio = row.Table.Columns.Contains("FOLIO") ? row["FOLIO"] : null;
+                object folio = row.Table.Columns.Contains("FOLIO") ? row["FOLIO"] : null;
 
-            using (SqlCommand checkCmd = new SqlCommand(
-                "SELECT COUNT(1) FROM Mantenimientos WHERE FolioVenta = @folio", conn, transaction))
-            {
-                checkCmd.Parameters.AddWithValue("@folio", folio ?? DBNull.Value);
-                int existe = (int)checkCmd.ExecuteScalar();
-
-                if (existe > 0)
+                using (SqlCommand checkCmd = new SqlCommand(
+                    "SELECT COUNT(1) FROM Mantenimientos WHERE FolioVenta = @folio", conn, transaction))
                 {
-                    return;
+                    checkCmd.Parameters.AddWithValue("@folio", folio ?? DBNull.Value);
+                    int existe = (int)checkCmd.ExecuteScalar();
+
+                    if (existe > 0)
+                    {
+                        return;
+                    }
                 }
-            }
-            string clienteNombre = row.Table.Columns.Contains("CLIENTE") ? row["CLIENTE"]?.ToString() : null;
-            string productoNombre = row.Table.Columns.Contains("PRODUCTO") ? row["PRODUCTO"]?.ToString() : null;
-            string clienteId = ObtenerClaveClientePorNombre(clienteNombre, conn, transaction);
-            string productoId = ObtenerClaveProductoPorNombre(productoNombre, conn, transaction);
+                string clienteNombre = row.Table.Columns.Contains("CLIENTE") ? row["CLIENTE"]?.ToString() : null;
+                string productoNombre = row.Table.Columns.Contains("PRODUCTO") ? row["PRODUCTO"]?.ToString() : null;
+                string clienteId = !string.IsNullOrEmpty(clienteNombre) ? ObtenerClaveClientePorNombre(clienteNombre, conn, transaction) : null;
+                string productoId = !string.IsNullOrEmpty(productoNombre) ? ObtenerClaveProductoPorNombre(productoNombre, conn, transaction) : null;
 
-            using (SqlCommand cmd = new SqlCommand(
-                @"INSERT INTO Mantenimientos 
-                  (FolioVenta, ClienteId, ProductoId, FechaVenta, FrecuenciaMeses, Estatus)
-                  VALUES (@folio, @clienteId, @productoId, @fecha, @frecuencia, @estatus)", 
-                conn, transaction))
-            {
-                cmd.Parameters.AddWithValue("@folio", folio ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@clienteId", clienteId ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@productoId", productoId ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("@fecha", row.Table.Columns.Contains("FECHA_VENTA") ? row["FECHA_VENTA"] ?? DBNull.Value : DBNull.Value);
-                cmd.Parameters.AddWithValue("@frecuencia", row.Table.Columns.Contains("FRECUENCIA") ? row["FRECUENCIA"] ?? 12 : 12);
-                cmd.Parameters.AddWithValue("@estatus", "Pendiente");
+                using (SqlCommand cmd = new SqlCommand(
+                    @"INSERT INTO Mantenimientos 
+                      (FolioVenta, ClienteId, ProductoId, FechaVenta, FrecuenciaMeses, Estatus)
+                      VALUES (@folio, @clienteId, @productoId, @fecha, @frecuencia, @estatus)",
+                    conn, transaction))
+                {
+                    cmd.Parameters.AddWithValue("@folio", folio ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@clienteId", clienteId ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@productoId", productoId ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@fecha", row.Table.Columns.Contains("FECHA_VENTA") ? row["FECHA_VENTA"] ?? DBNull.Value : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@frecuencia", row.Table.Columns.Contains("FRECUENCIA") ? row["FRECUENCIA"] ?? 12 : 12);
+                    cmd.Parameters.AddWithValue("@estatus", "Pendiente");
 
-                cmd.ExecuteNonQuery();
-            }
+                    cmd.ExecuteNonQuery();
+                }
             }
             catch (SqlException ex)
             {
@@ -257,22 +255,6 @@ namespace Ensumex.Controllers
             {
                 Console.WriteLine("Error inesperado: " + ex.Message);
                 throw;
-            }
-        }
-
-        public static void ActualizarMantenimiento(int id, string estatus, int numeroServicios, DateTime fechaServicio)
-        {
-            using (SqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                string query = "UPDATE Mantenimientos SET Estatus = @estatus, NumeroServicios = @num WHERE Id = @id";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@estatus", estatus);
-                    cmd.Parameters.AddWithValue("@num", numeroServicios);
-                    cmd.Parameters.AddWithValue("@id", id);
-                    cmd.ExecuteNonQuery();
-                }
             }
         }
 
@@ -304,7 +286,6 @@ namespace Ensumex.Controllers
                         cmd.Parameters.AddWithValue("@Observaciones", observaciones ?? "");
                         cmd.ExecuteNonQuery();
                     }
-
                     string update = @"UPDATE Mantenimientos SET Estatus = 'Realizado' WHERE Id = @MantenimientoId;";
                     using (SqlCommand cmd = new SqlCommand(update, conn))
                     {
@@ -384,10 +365,19 @@ namespace Ensumex.Controllers
             using (SqlConnection conn = GetConnection())
             {
                 conn.Open();
-                string query = @"SELECT Id, MantenimientoId, FechaMantenimiento, RealizadoPor, Observaciones
-                                 FROM DetallesMantenimientos
-                                 WHERE MantenimientoId = @id
-                                 ORDER BY FechaMantenimiento DESC";
+                string query = @"
+            SELECT 
+                D.Id,
+                C.NOMBRE AS Cliente,
+                D.FechaMantenimiento,
+                D.RealizadoPor,
+                D.Observaciones
+                FROM DetallesMantenimientos D
+                INNER JOIN Mantenimientos M ON D.MantenimientoId = M.Id
+                INNER JOIN CLIE01 C ON M.ClienteId = C.CLAVE
+                WHERE D.MantenimientoId = @id
+                ORDER BY D.FechaMantenimiento DESC";
+
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id", mantenimientoId);
@@ -410,6 +400,31 @@ namespace Ensumex.Controllers
                     cmd.Parameters.AddWithValue("@frecuencia", nuevaFrecuencia);
                     cmd.Parameters.AddWithValue("@id", id);
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public static void ActualizarTelefonoCliente(int mantenimientoId, string nuevoTelefono)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                // Obtener la clave del cliente asociada al mantenimiento
+                string clienteId = null;
+                using (var cmd = new SqlCommand("SELECT ClienteId FROM Mantenimientos WHERE Id = @Id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", mantenimientoId);
+                    var result = cmd.ExecuteScalar();
+                    clienteId = result?.ToString();
+                }
+
+                if (!string.IsNullOrEmpty(clienteId))
+                {
+                    using (var cmd = new SqlCommand("UPDATE CLIE01 SET TELEFONO = @Telefono WHERE CLAVE = @ClienteId", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Telefono", nuevoTelefono ?? (object)DBNull.Value);
+                        cmd.Parameters.AddWithValue("@ClienteId", clienteId);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
         }

@@ -32,7 +32,7 @@ namespace Ensumex.Models
                 {
                     try
                     {
-                        // 1. Insertar encabezado
+
                         var cmdEncabezado = new SqlCommand(@"
                             INSERT INTO Cotizacion
                             (NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado)
@@ -51,7 +51,7 @@ namespace Ensumex.Models
                         cmdEncabezado.Parameters.AddWithValue("@Notas", notas ?? (object)DBNull.Value);
                         cmdEncabezado.Parameters.AddWithValue("@Estado", "Vigente");
                         int idCotizacion = Convert.ToInt32(cmdEncabezado.ExecuteScalar());
-                        // 2. Insertar detalle
+
                         foreach (DataGridViewRow row in tablaCotizacion.Rows)   
                         {
                             if (row.IsNewRow) continue;
@@ -103,7 +103,6 @@ namespace Ensumex.Models
                 {
                     try
                     {
-                        // 1. Insertar encabezado
                         var cmdEncabezado = new SqlCommand(@"
                             INSERT INTO Cotizacion
                             (NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado)
@@ -122,8 +121,6 @@ namespace Ensumex.Models
                         cmdEncabezado.Parameters.AddWithValue("@Notas", notas ?? (object)DBNull.Value);
                         cmdEncabezado.Parameters.AddWithValue("@Estado", "Vigente");
                         int idCotizacion = Convert.ToInt32(cmdEncabezado.ExecuteScalar());
-
-                        // 2. Insertar detalles de todas las tablas
                         foreach (var tabla in tablas)
                         {
                             foreach (var row in tabla)
@@ -143,7 +140,6 @@ namespace Ensumex.Models
                                 cmdDetalle.Parameters.AddWithValue("@AplicaDescuento",int.TryParse(row[0]?.ToString(), out int desc) ? desc : 0); cmdDetalle.ExecuteNonQuery();
                             }
                         }
-
                         tran.Commit();
                     }
                     catch
@@ -155,21 +151,18 @@ namespace Ensumex.Models
             }
         }
 
-       
-
         public static DataTable ObtenerCotizaciones()
         {
             var dt = new DataTable();
-
             try
             {
                 using (var conn = ConnectionToSql.GetConnection())
                 {
                     string query = @"
-                SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
-                       CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas
-                       FROM Cotizacion
-                       ORDER BY Fecha DESC";
+                    SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
+                    CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas
+                    FROM Cotizacion
+                    ORDER BY Fecha DESC";
 
                     using (var cmd = new SqlCommand(query, conn))
                     using (var adapter = new SqlDataAdapter(cmd))
@@ -183,23 +176,21 @@ namespace Ensumex.Models
             {
                 MessageBox.Show("Error al obtener cotizaciones: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
             return dt;
         }
+
         public static DataTable ObtenerDetallePorId(int idCotizacion)
         {
             var dt = new DataTable();
-
             try
             {
                 using (var conn = ConnectionToSql.GetConnection())
                 {
                     string query = @"
-                SELECT ClaveProducto, Descripcion, Unidad, PrecioUnitario, 
-                       Cantidad, Subtotal, AplicaDescuento
-                FROM CotizacionDetalle
-                WHERE IdCotizacion = @IdCotizacion";
-
+                    SELECT ClaveProducto, Descripcion, Unidad, PrecioUnitario, 
+                    Cantidad, Subtotal, AplicaDescuento
+                    FROM CotizacionDetalle
+                    WHERE IdCotizacion = @IdCotizacion";
                     using (var cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.Add("@IdCotizacion", SqlDbType.Int).Value = idCotizacion;
@@ -216,22 +207,20 @@ namespace Ensumex.Models
             {
                 MessageBox.Show("Error al obtener el detalle de cotización: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
             return dt;
         }
         public static DataTable ObtenerCotizacionesPorLimite(int limite)
         {
             var dt = new DataTable();
-
             try
             {
                 using (var conn = ConnectionToSql.GetConnection())
                 {
                     string query = $@"
-                SELECT TOP {limite} IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
-                       CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
-                FROM Cotizacion
-                ORDER BY Fecha DESC";
+                    SELECT TOP {limite} IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
+                    CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
+                    FROM Cotizacion
+                    ORDER BY Fecha DESC";
 
                     using (var cmd = new SqlCommand(query, conn))
                     using (var adapter = new SqlDataAdapter(cmd))
@@ -245,9 +234,9 @@ namespace Ensumex.Models
             {
                 MessageBox.Show("Error al obtener las cotizaciones: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
             return dt;
         }
+
         public static DataTable ObtenerCotizacionesFiltradas(string searchText)
         {
             var dt = new DataTable();
@@ -257,12 +246,11 @@ namespace Ensumex.Models
                 using (var conn = ConnectionToSql.GetConnection())
                 {
                     string query = @"
-                SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
-                       CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
-                FROM Cotizacion
-                WHERE NombreCliente LIKE @SearchText OR NumeroCliente LIKE @SearchText
-                ORDER BY Fecha DESC";
-
+                    SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente, 
+                    CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
+                    FROM Cotizacion
+                    WHERE NombreCliente LIKE @SearchText OR NumeroCliente LIKE @SearchText
+                    ORDER BY Fecha DESC";
                     using (var cmd = new SqlCommand(query, conn))
                     {
                         if (string.IsNullOrWhiteSpace(searchText))
@@ -281,9 +269,9 @@ namespace Ensumex.Models
             {
                 MessageBox.Show("Error al buscar cotizaciones: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
             return dt;
         }
+
         public static void GuardarSiNoExisteCliente(string numeroCliente, string nombreCliente)
         {
             using (var conn = ConnectionToSql.GetConnection())
@@ -292,50 +280,29 @@ namespace Ensumex.Models
                 using (var cmd = new SqlCommand(@"
                     IF NOT EXISTS (SELECT 1 FROM CLIE01 WHERE CLAVE = @NumeroCliente)
                     BEGIN
-                        INSERT INTO CLIE01 (CLAVE,STATUS, NOMBRE)
-                        VALUES (@NumeroCliente,@Status, @NombreCliente);
+                    INSERT INTO CLIE01 (CLAVE,STATUS, NOMBRE)
+                    VALUES (@NumeroCliente,@Status, @NombreCliente);
                     END", conn))
                 {
-                    cmd.Parameters.AddWithValue("@NumeroCliente", numeroCliente);
+                    cmd.Parameters.AddWithValue("@NumeroCliente", numeroCliente);   
                     cmd.Parameters.AddWithValue("@Status", "A");
                     cmd.Parameters.AddWithValue("@NombreCliente", nombreCliente);
                     cmd.ExecuteNonQuery();
                 }
             }
         }
-
-        public static int GetSiguienteIdCotizacion()
-        {
-            int siguienteId = 1;
-
-            using (var conn = ConnectionToSql.GetConnection())
-            {
-                conn.Open();
-                using (var cmd = new SqlCommand("SELECT ISNULL(MAX(IdCotizacion), 0) + 1 FROM Cotizacion", conn))
-                {
-                    object result = cmd.ExecuteScalar();
-                    if (result != null && int.TryParse(result.ToString(), out int id))
-                    {
-                        siguienteId = id;
-                    }
-                }
-            }
-
-            return siguienteId;
-        }
             
         public static string ObtenerUltimoFolioPorPrefijo(string prefijo)
         {
             string folio = "";
-
             using (SqlConnection conn = ConnectionToSql.GetConnection())
             {
                 conn.Open();
                 string query = @"
-            SELECT TOP 1 NumeroCotizacion 
-            FROM Cotizacion 
-            WHERE NumeroCotizacion LIKE @prefijo + '%' 
-            ORDER BY NumeroCotizacion DESC";
+                SELECT TOP 1 NumeroCotizacion 
+                FROM Cotizacion 
+                WHERE NumeroCotizacion LIKE @prefijo + '%' 
+                ORDER BY NumeroCotizacion DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -346,7 +313,6 @@ namespace Ensumex.Models
                         folio = result.ToString();
                 }
             }
-
             return folio;
         }
     }
