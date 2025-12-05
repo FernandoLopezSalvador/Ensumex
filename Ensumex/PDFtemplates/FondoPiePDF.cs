@@ -19,7 +19,6 @@ namespace Ensumex.PDFtemplates
         private readonly iTextSharp.text.Font fontNormalGrande = FontFactory.GetFont(FontFactory.HELVETICA, 9, BaseColor.DARK_GRAY);
         private readonly iTextSharp.text.Font fontBoldGrande = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
 
-
         public FondoPiePDF(string rutaFondo, string rutaFirma, string usuario)
         {
             this.rutaFondo = rutaFondo;
@@ -27,116 +26,148 @@ namespace Ensumex.PDFtemplates
             this.usuario = usuario;
         }
 
+        // No hacemos uso de OnEndPage para el pie cuando queremos solo en la última página.
         public override void OnEndPage(PdfWriter writer, Document document)
         {
-            if (File.Exists(rutaFondo))
-            {
-                try
-                {
-                    var fondo = iTextSharp.text.Image.GetInstance(rutaFondo);
-                    fondo.ScaleAbsolute(400f, 370f);
-                    float x = document.PageSize.Width - document.RightMargin - fondo.ScaledWidth;
-                    float y = document.BottomMargin;
-                    fondo.SetAbsolutePosition(x, y);
-
-                    var under = writer.DirectContentUnder;
-                    var gs = new PdfGState { FillOpacity = 0.4f, StrokeOpacity = 0.4f };
-                    under.SaveState();
-                    under.SetGState(gs);
-                    under.AddImage(fondo);
-                    under.RestoreState();
-                }
-                catch { }
-            }
-
-            PdfPTable tablaPie = new PdfPTable(2)
-            {
-                TotalWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin
-            };
-            tablaPie.SetWidths(new float[] { 1.35f, 1.35f });
-
-            PdfPTable tablaBanco = new PdfPTable(1);
-            tablaBanco.WidthPercentage = 100;
-
-            // Helper para filas horizontales
-            PdfPCell Fila(string label, string dato)
-            {
-                PdfPTable fila = new PdfPTable(2);
-                fila.WidthPercentage = 100;
-                fila.SetWidths(new float[] { 1.2f, 3.0f });
-
-                PdfPCell c1 = new PdfPCell(new Phrase(label, fontBold))
-                {
-                    Border = Rectangle.NO_BORDER,
-                    PaddingBottom = 2f,
-                    PaddingTop = 2f
-                };
-
-                PdfPCell c2 = new PdfPCell(new Phrase(dato, fontNormal))
-                {
-                    Border = Rectangle.NO_BORDER,
-                    PaddingBottom = 2f,
-                    PaddingTop = 2f
-                };
-
-                fila.AddCell(c1);
-                fila.AddCell(c2);
-
-                return new PdfPCell(fila)
-                {
-                    Border = Rectangle.NO_BORDER,
-                    PaddingBottom = 3f
-                };
-            }
-
-            PdfPCell tituloBanco = new PdfPCell(new Phrase("Datos Bancarios", fontBold))
-            {
-                Border = Rectangle.NO_BORDER,
-                PaddingBottom = 6f
-            };
-            tablaBanco.AddCell(tituloBanco);
-
-            // Datos
-            tablaBanco.AddCell(Fila("Nombre:", "HV Energías Sustentables de México, S.A. de C.V."));
-            tablaBanco.AddCell(Fila("RFC:", "HES150616639"));
-            tablaBanco.AddCell(Fila("Banco:", "BBVA Bancomer"));
-            tablaBanco.AddCell(Fila("Cuenta:", "0199948457"));
-            tablaBanco.AddCell(Fila("Clave:", "012610001999484570"));
-
-            // Cuadro exterior
-            PdfPCell celdaBanco = new PdfPCell(tablaBanco)
-            {
-                Border = Rectangle.BOX,
-                BorderWidth = 1.5f,
-                Padding = 8f
-            };
-            PdfPTable tablaDireccion = new PdfPTable(1);
-            tablaDireccion.WidthPercentage = 100;
-            tablaDireccion.DefaultCell.Border = Rectangle.NO_BORDER;
-
-            PdfPCell tituloDireccion = new PdfPCell(new Phrase("Datos de Contacto", fontBoldGrande))
-            {
-                Border = Rectangle.NO_BORDER,
-                PaddingBottom = 6f,
-                HorizontalAlignment = Element.ALIGN_RIGHT
-            };
-            tablaDireccion.AddCell(tituloDireccion);
-
-            tablaDireccion.AddCell(CeldaRightGrande("Av. Lázaro Cárdenas 104-B."));
-            tablaDireccion.AddCell(CeldaRightGrande("Sta. Lucía del Camino, Oaxaca."));
-            tablaDireccion.AddCell(CeldaRightGrande("Tels: 951-206-6895 y 951-399-7777"));
-
-            PdfPCell celdaDireccion = new PdfPCell(tablaDireccion)
-            {
-                Border = Rectangle.NO_BORDER,
-                Padding = 2f,
-                HorizontalAlignment = Element.ALIGN_RIGHT
-            };
-            tablaPie.AddCell(celdaBanco);
-            tablaPie.AddCell(celdaDireccion);
-            float yPie = document.BottomMargin + 105f; 
-            tablaPie.WriteSelectedRows(0, -1, document.LeftMargin, yPie, writer.DirectContent);
+            // Dejamos vacio si se usa la estrategia de "stampear" el pie solo en la última página.
         }
+
+        // Método público para estampar el pie en la última página de un PDF ya existente.
+        public static void StampFooterToLastPage(string pdfPath, string rutaFondo, string rutaFirma, string usuario)
+        {
+            if (!File.Exists(pdfPath)) return;
+
+            string tempPath = Path.GetTempFileName();
+            try
+            {
+                using (var reader = new PdfReader(pdfPath))
+                {
+                    int lastPage = reader.NumberOfPages;
+                    using (var fs = new FileStream(tempPath, FileMode.Create, FileAccess.Write))
+                    using (var stamper = new PdfStamper(reader, fs))
+                    {
+                        var pageSize = reader.GetPageSize(lastPage);
+                        float leftMargin = 40f;
+                        float rightMargin = 40f;
+                        // total width para la tabla del pie (igual márgenes que usas al crear el documento)
+                        float totalWidth = pageSize.Width - leftMargin - rightMargin;
+
+                        // Fuentes locales (compatibles con las usadas al crear el PDF)
+                        var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 9, BaseColor.DARK_GRAY);
+                        var fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                        var fontNormalGrande = FontFactory.GetFont(FontFactory.HELVETICA, 9, BaseColor.DARK_GRAY);
+                        var fontBoldGrande = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+
+                        // construir tablaPie similar a la que tenías
+                        PdfPTable tablaPie = new PdfPTable(2)
+                        {
+                            TotalWidth = totalWidth
+                        };
+                        tablaPie.SetWidths(new float[] { 1.35f, 1.35f });
+
+                        PdfPTable tablaBanco = new PdfPTable(1) { WidthPercentage = 100 };
+
+                        PdfPCell Fila(string label, string dato)
+                        {
+                            PdfPTable fila = new PdfPTable(2);
+                            fila.WidthPercentage = 100;
+                            fila.SetWidths(new float[] { 1.2f, 3.0f });
+
+                            PdfPCell c1 = new PdfPCell(new Phrase(label, fontBold))
+                            {
+                                Border = Rectangle.NO_BORDER,
+                                PaddingBottom = 2f,
+                                PaddingTop = 2f
+                            };
+
+                            PdfPCell c2 = new PdfPCell(new Phrase(dato, fontNormal))
+                            {
+                                Border = Rectangle.NO_BORDER,
+                                PaddingBottom = 2f,
+                                PaddingTop = 2f
+                            };
+
+                            fila.AddCell(c1);
+                            fila.AddCell(c2);
+
+                            return new PdfPCell(fila)
+                            {
+                                Border = Rectangle.NO_BORDER,
+                                PaddingBottom = 3f
+                            };
+                        }
+
+                        PdfPCell tituloBanco = new PdfPCell(new Phrase("Datos Bancarios", fontBold))
+                        {
+                            Border = Rectangle.NO_BORDER,
+                            PaddingBottom = 6f
+                        };
+                        tablaBanco.AddCell(tituloBanco);
+
+                        tablaBanco.AddCell(Fila("Nombre:", "HV Energías Sustentables de México, S.A. de C.V."));
+                        tablaBanco.AddCell(Fila("RFC:", "HES150616639"));
+                        tablaBanco.AddCell(Fila("Banco:", "BBVA Bancomer"));
+                        tablaBanco.AddCell(Fila("Cuenta:", "0199948457"));
+                        tablaBanco.AddCell(Fila("Clave:", "012610001999484570"));
+
+                        PdfPCell celdaBanco = new PdfPCell(tablaBanco)
+                        {
+                            Border = Rectangle.BOX,
+                            BorderWidth = 1.5f,
+                            Padding = 8f
+                        };
+
+                        PdfPTable tablaDireccion = new PdfPTable(1);
+                        tablaDireccion.WidthPercentage = 100;
+                        tablaDireccion.DefaultCell.Border = Rectangle.NO_BORDER;
+
+                        PdfPCell tituloDireccion = new PdfPCell(new Phrase("Datos de Contacto", fontBoldGrande))
+                        {
+                            Border = Rectangle.NO_BORDER,
+                            PaddingBottom = 6f,
+                            HorizontalAlignment = Element.ALIGN_RIGHT
+                        };
+                        tablaDireccion.AddCell(tituloDireccion);
+
+                        tablaDireccion.AddCell(new PdfPCell(new Phrase("Av. Lázaro Cárdenas 104-B.", FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.DARK_GRAY))) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingBottom = 3f, PaddingTop = 2f });
+                        tablaDireccion.AddCell(new PdfPCell(new Phrase("Sta. Lucía del Camino, Oaxaca.", FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.DARK_GRAY))) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingBottom = 3f, PaddingTop = 2f });
+                        tablaDireccion.AddCell(new PdfPCell(new Phrase("Tels: 951-206-6895 y 951-399-7777", FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.DARK_GRAY))) { Border = Rectangle.NO_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingBottom = 3f, PaddingTop = 2f });
+
+                        PdfPCell celdaDireccion = new PdfPCell(tablaDireccion)
+                        {
+                            Border = Rectangle.NO_BORDER,
+                            Padding = 2f,
+                            HorizontalAlignment = Element.ALIGN_RIGHT
+                        };
+
+                        tablaPie.AddCell(celdaBanco);
+                        tablaPie.AddCell(celdaDireccion);
+
+                        // posición vertical: usar el bottom margin + offset (mismos márgenes usados al crear el documento)
+                        float yPie = leftMargin + 105f; // leftMargin reused como bottom margin (en tu documento era 40)
+                        // WriteSelectedRows espera coordenadas en el sistema de la página (origen en bottom-left)
+                        PdfContentByte over = stamper.GetOverContent(lastPage);
+                        tablaPie.WriteSelectedRows(0, -1, leftMargin, yPie, over);
+
+                        stamper.Close();
+                    }
+                    reader.Close();
+                }
+
+                // Reemplazar el pdf original por el temporal
+                File.Copy(tempPath, pdfPath, true);
+            }
+            catch
+            {
+                // si hay fallo, no interrumpimos el flujo principal; limpiamos el temporal si existe
+            }
+            finally
+            {
+                if (File.Exists(tempPath))
+                    File.Delete(tempPath);
+            }
+        }
+
         private PdfPCell CeldaRightGrande(string texto)
         {
             return new PdfPCell(new Phrase(texto, FontFactory.GetFont(FontFactory.HELVETICA, 11, BaseColor.DARK_GRAY)))

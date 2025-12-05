@@ -12,6 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Image = iTextSharp.text.Image;
 using Rectangle = iTextSharp.text.Rectangle;
+using System.IO;
+using System.Windows.Forms;
+using Ensumex.PDFtemplates;
 
 namespace Ensumex.PDFtemplates
 {
@@ -38,7 +41,7 @@ namespace Ensumex.PDFtemplates
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
                 string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
                 string rutaPie = Path.Combine(Application.StartupPath, "IMG", "Pie.png");
-                writer.PageEvent = new FondoPiePDF(rutaFondo, rutaPie, usuario);
+                // No asignamos writer.PageEvent; estampamos el pie solo en la última página tras cerrar el documento.
                 doc.Open();
 
                 // Fuentes
@@ -76,7 +79,7 @@ namespace Ensumex.PDFtemplates
 
                 if (!string.IsNullOrWhiteSpace(nombreCliente))
                 {
-                    doc.Add(new Paragraph("\nEstimado(a): " + nombreCliente+".", fontNegrita));
+                    doc.Add(new Paragraph("\nEstimado(a): " + nombreCliente + ".", fontNegrita));
                 }
                 else
                 {
@@ -90,18 +93,18 @@ namespace Ensumex.PDFtemplates
                 PdfPTable tabla = new PdfPTable(8)
                 {
                     WidthPercentage = 100
-                };  
+                };
 
                 tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1f, 1.2f, 1f, 1.2f });
 
                 // Encabezados de tabla
-                string[] headers = { "#","CANT","UNID","DESCRIPCIÓN","PRECIO UNIT","DESCUENTO  ($)", "IMPORTE", "TOTAL"};
+                string[] headers = { "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "DESCUENTO  ($)", "IMPORTE", "TOTAL" };
 
                 foreach (string header in headers)
                 {
                     PdfPCell celda = new PdfPCell(new Phrase(header, fontheader))
                     {
-                        BackgroundColor = new BaseColor(141, 198, 63), 
+                        BackgroundColor = new BaseColor(141, 198, 63),
                         HorizontalAlignment = Element.ALIGN_CENTER,
                         Padding = 5f
                     };
@@ -109,8 +112,8 @@ namespace Ensumex.PDFtemplates
                 }
 
                 int pos = 1;
-                BaseColor colorFilaPar = BaseColor.WHITE;              
-                BaseColor colorFilaImpar = new BaseColor(245, 245, 245); 
+                BaseColor colorFilaPar = BaseColor.WHITE;
+                BaseColor colorFilaImpar = new BaseColor(245, 245, 245);
 
                 foreach (DataGridViewRow row in tablaCotizacion.Rows)
                 {
@@ -125,16 +128,16 @@ namespace Ensumex.PDFtemplates
                     decimal.TryParse(precioStr, out decimal precioUnitario);
                     int.TryParse(row.Cells["Descuento"].Value?.ToString() ?? "0", out int porcentajeDescuentoFila);
 
-                    // Cálculos 
+                    // Cálculos
                     decimal descuentoUnitario = precioUnitario * (porcentajeDescuentoFila / 100m);
-                    decimal importeUnitario = precioUnitario - descuentoUnitario; // Precio unitario menos descuento
-                    decimal total1 = importeUnitario * cantidad; // Importe por cantidad
+                    decimal importeUnitario = precioUnitario - descuentoUnitario; 
+                    decimal totalLinea = importeUnitario * cantidad; 
 
                     // Formatear en moneda
                     string precioFormateado = precioUnitario.ToString("C2", new CultureInfo("es-MX"));
                     string descuentoFormateado = descuentoUnitario.ToString("C2", new CultureInfo("es-MX"));
                     string importeFormateado = importeUnitario.ToString("C2", new CultureInfo("es-MX"));
-                    string totalFormateado = total1.ToString("C2", new CultureInfo("es-MX"));
+                    string totalFormateado = totalLinea.ToString("C2", new CultureInfo("es-MX"));
 
                     BaseColor fondoFila = (pos % 2 == 0) ? colorFilaPar : colorFilaImpar;
                     // Añadir celdas
@@ -152,59 +155,56 @@ namespace Ensumex.PDFtemplates
 
                 doc.Add(tabla);
 
-                    // Totales
-                    doc.Add(new Paragraph("\n"));
-                    PdfPTable tablaTotales = new PdfPTable(2)
-                    {
-                        WidthPercentage = 50,
-                        HorizontalAlignment = Element.ALIGN_RIGHT
-                    };
-                    // añadir costo de instalación, flete y total
-                    tablaTotales.SetWidths(new float[] { 2f, 1f });
-                    tablaTotales.WidthPercentage = 50; // ancho de la tabla
-                    tablaTotales.HorizontalAlignment = Element.ALIGN_RIGHT; 
+                // Totales (sin cambios relevantes)
+                doc.Add(new Paragraph("\n"));
+                PdfPTable tablaTotales = new PdfPTable(2)
+                {
+                    WidthPercentage = 50,
+                    HorizontalAlignment = Element.ALIGN_RIGHT
+                };
+                tablaTotales.SetWidths(new float[] { 2f, 1f });
+                tablaTotales.WidthPercentage = 50;
+                tablaTotales.HorizontalAlignment = Element.ALIGN_RIGHT;
 
-                    // Color de fondo para las filas normales
-                    BaseColor colorFila = new BaseColor(223, 240, 216); 
-                    BaseColor colorTotal = new BaseColor(169, 208, 142); 
-                    decimal costoInst = decimal.TryParse(costoInstalacion, out var tmpInst) ? tmpInst : 0.00m;
-                    decimal costoFl = decimal.TryParse(costoFlete, out var tmpFl) ? tmpFl : 0.00m;
-                    if (costoInst > 0)
-                        {
-                            // Mano de obra
-                            PdfPCell celdaManoObra = new PdfPCell(new Phrase("Mano de obra por instalación:", fontNormal)) { Border = 0, BackgroundColor = colorFila };
-                            PdfPCell celdaCostoInstalacion = new PdfPCell(new Phrase("$" + costoInstalacion, fontNormal)) { Border = 0, BackgroundColor = colorFila, HorizontalAlignment = Element.ALIGN_RIGHT };
-                            tablaTotales.AddCell(celdaManoObra);
-                            tablaTotales.AddCell(celdaCostoInstalacion);
-                    }
+                BaseColor colorFila = new BaseColor(223, 240, 216);
+                BaseColor colorTotal = new BaseColor(169, 208, 142);
+                decimal costoInst = decimal.TryParse(costoInstalacion, out var tmpInst) ? tmpInst : 0.00m;
+                decimal costoFl = decimal.TryParse(costoFlete, out var tmpFl) ? tmpFl : 0.00m;
+                if (costoInst > 0)
+                {
+                    PdfPCell celdaManoObra = new PdfPCell(new Phrase("Mano de obra por instalación:", fontNormal)) { Border = 0, BackgroundColor = colorFila };
+                    PdfPCell celdaCostoInstalacion = new PdfPCell(new Phrase("$" + costoInstalacion, fontNormal)) { Border = 0, BackgroundColor = colorFila, HorizontalAlignment = Element.ALIGN_RIGHT };
+                    tablaTotales.AddCell(celdaManoObra);
+                    tablaTotales.AddCell(celdaCostoInstalacion);
+                }
 
-                    if (costoFl > 0)
-                    {
-                    // Flete
+                if (costoFl > 0)
+                {
                     PdfPCell celdaFlete = new PdfPCell(new Phrase("Costo por Envío/Flete:", fontNormal)) { Border = 0, BackgroundColor = colorFila };
                     PdfPCell celdaCostoFlete = new PdfPCell(new Phrase("$" + costoFlete, fontNormal)) { Border = 0, BackgroundColor = colorFila, HorizontalAlignment = Element.ALIGN_RIGHT };
                     tablaTotales.AddCell(celdaFlete);
                     tablaTotales.AddCell(celdaCostoFlete);
-                    }
+                }
 
-                    // Total
-                    PdfPCell celdaTotalLabel = new PdfPCell(new Phrase("Total:", fontNegrita)) { Border = 0, BackgroundColor = colorTotal };
-                    PdfPCell celdaTotalValor = new PdfPCell(new Phrase(
-                        Convert.ToDecimal(total).ToString("C", new CultureInfo("es-MX")), fontNegrita))
-                    { Border = 0, BackgroundColor = colorTotal, HorizontalAlignment = Element.ALIGN_RIGHT };
-                    tablaTotales.AddCell(celdaTotalLabel);
-                    tablaTotales.AddCell(celdaTotalValor);
+                PdfPCell celdaTotalLabel = new PdfPCell(new Phrase("Total:", fontNegrita)) { Border = 0, BackgroundColor = colorTotal };
+                PdfPCell celdaTotalValor = new PdfPCell(new Phrase(
+                    Convert.ToDecimal(total).ToString("C", new CultureInfo("es-MX")), fontNegrita))
+                { Border = 0, BackgroundColor = colorTotal, HorizontalAlignment = Element.ALIGN_RIGHT };
+                tablaTotales.AddCell(celdaTotalLabel);
+                tablaTotales.AddCell(celdaTotalValor);
 
-                    // Convertir número a letras y agregar fila
-                    decimal valorNumerico = decimal.Parse(total, System.Globalization.NumberStyles.Any);
-                    tablaTotales.AddCell(new PdfPCell(new Phrase("")) { Border = 0, Colspan = 2 });
-                    tablaTotales.AddCell(new PdfPCell(new Phrase(Numerosaletras.Convertir(valorNumerico), fontNormal))
-                    {
-                        Border = 0,
-                        Colspan = 2,
-                        HorizontalAlignment = Element.ALIGN_CENTER
-                    });
-                    doc.Add(tablaTotales);
+                decimal valorNumerico = decimal.Parse(total, System.Globalization.NumberStyles.Any);
+                tablaTotales.AddCell(new PdfPCell(new Phrase("")) { Border = 0, Colspan = 2 });
+                tablaTotales.AddCell(new PdfPCell(new Phrase(Numerosaletras.Convertir(valorNumerico), fontNormal))
+                {
+                    Border = 0,
+                    Colspan = 2,
+                    HorizontalAlignment = Element.ALIGN_CENTER
+                });
+                doc.Add(tablaTotales);
+
+                float footerReserve = 140f;
+                EnsureSpaceForContent(doc, writer, notas, fontNotas, footerReserve);
 
                 // Notas generales
                 doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
@@ -229,6 +229,10 @@ namespace Ensumex.PDFtemplates
                 doc.Add(tablaFirma);
 
                 doc.Close();
+                writer.Close();
+
+                FondoPiePDF.StampFooterToLastPage(rutaArchivo, rutaFondo, rutaPie, usuario);
+
                 MessageBox.Show("📄 PDF generado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (IOException)
@@ -242,6 +246,36 @@ namespace Ensumex.PDFtemplates
             catch (Exception ex)
             {
                 MessageBox.Show("Error al generar el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private static void EnsureSpaceForContent(Document doc, PdfWriter writer, string texto, iTextSharp.text.Font fontNotas, float footerReserve)
+        {
+            if (string.IsNullOrEmpty(texto))
+                texto = "";
+
+            string[] lines = texto.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            int lineCount = Math.Max(1, lines.Length);
+
+            int avgCharsPerLine = 80; 
+            int extraLines = 0;
+            foreach (var line in lines)
+            {
+                extraLines += (int)Math.Floor((double)Math.Max(0, line.Length - avgCharsPerLine) / avgCharsPerLine);
+            }
+            lineCount += extraLines;
+
+            float lineHeight = fontNotas.Size * 1.25f; 
+            float notesHeight = (lineCount * lineHeight) + 24f; 
+
+            float requiredHeight = notesHeight + footerReserve;
+
+            float currentY = writer.GetVerticalPosition(true);
+            float available = currentY - doc.BottomMargin;
+
+            if (available < requiredHeight)
+            {
+                doc.NewPage();
             }
         }
     }

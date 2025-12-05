@@ -4,9 +4,11 @@ using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Image = iTextSharp.text.Image;
 using Rectangle = iTextSharp.text.Rectangle;
 
@@ -34,7 +36,7 @@ namespace Ensumex.PDFtemplates
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
                 string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
                 string rutaPie = Path.Combine(Application.StartupPath, "IMG", "Pie.png");
-                writer.PageEvent = new FondoPiePDF(rutaFondo, rutaPie, usuario);
+                // No asignamos writer.PageEvent; estamparemos el pie solo en la última página.
                 doc.Open();
                 //Definir fuentes
                 var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
@@ -195,6 +197,11 @@ namespace Ensumex.PDFtemplates
                 });
 
                 doc.Add(tablaTotales);
+
+                // Antes de añadir notas, aseguramos espacio para notas + pie
+                float footerReserve = 140f;
+                EnsureSpaceForContent(doc, writer, notas, fontNotas, footerReserve);
+
                 doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
                 doc.Add(new Paragraph(notas, fontNotas));
                 doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n", fontNotas));
@@ -216,6 +223,11 @@ namespace Ensumex.PDFtemplates
                 doc.Add(tablaFirma);
 
                 doc.Close();
+                writer.Close();
+
+                // Estampar pie solo en la última página
+                FondoPiePDF.StampFooterToLastPage(rutaArchivo, rutaFondo, rutaPie, usuario);
+
                 MessageBox.Show("📄 PDF generado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (IOException)
@@ -229,6 +241,37 @@ namespace Ensumex.PDFtemplates
             catch (Exception ex)
             {
                 MessageBox.Show("Error al generar el PDF: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Misma lógica de estimación que en PDFGenerator para evitar solapamiento de notas y pie
+        private static void EnsureSpaceForContent(Document doc, PdfWriter writer, string texto, iTextSharp.text.Font fontNotas, float footerReserve)
+        {
+            if (string.IsNullOrEmpty(texto))
+                texto = "";
+
+            string[] lines = texto.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            int lineCount = Math.Max(1, lines.Length);
+
+            int avgCharsPerLine = 80;
+            int extraLines = 0;
+            foreach (var line in lines)
+            {
+                extraLines += (int)Math.Floor((double)Math.Max(0, line.Length - avgCharsPerLine) / avgCharsPerLine);
+            }
+            lineCount += extraLines;
+
+            float lineHeight = fontNotas.Size * 1.25f;
+            float notesHeight = (lineCount * lineHeight) + 24f;
+
+            float requiredHeight = notesHeight + footerReserve;
+
+            float currentY = writer.GetVerticalPosition(true);
+            float available = currentY - doc.BottomMargin;
+
+            if (available < requiredHeight)
+            {
+                doc.NewPage();
             }
         }
     }
