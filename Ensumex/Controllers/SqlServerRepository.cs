@@ -10,13 +10,13 @@ namespace Ensumex.Controllers
 {
     public static class SqlServerRepository
     { 
-        private static readonly string connSqlServer = "Server=192.168.1.206;Database=Ensumex;User Id=appuser;Password=ensumex;";
+        private static readonly string connSqlServer = "Server=192.168.1.244;Database=Ensumex;User Id=appuser;Password=ensumex;";
 
         public static void InsertarProducto(DataRow row, SqlConnection conn, SqlTransaction transaction)
         {
             try
             {
-                object clave = row.Table.Columns.Contains("CVE_ART") ? row["CVE_ART"] : null;
+                object? clave = row.Table.Columns.Contains("CVE_ART") ? row["CVE_ART"] : null;
                 using (SqlCommand checkCmd = new SqlCommand(
                     "SELECT COUNT(1) FROM INVE01 WHERE CVE_ART = @clave", conn, transaction))
                 {
@@ -27,17 +27,13 @@ namespace Ensumex.Controllers
                     {
                         using (SqlCommand updateCmd = new SqlCommand(
                             @"UPDATE INVE01
-                              SET DESCR = @DESCR,
-                                  UNI_MED = @UNI_MED,
-                                  COSTO_PROM = @COSTO_PROM,
-                                  ULT_COSTO = @ULT_COSTO,
-                                  EXIST = @EXIST
-                              WHERE CVE_ART = @clave
-                                AND (DESCR <> @DESCR
-                                     OR UNI_MED <> @UNI_MED
-                                     OR COSTO_PROM <> @COSTO_PROM
-                                     OR ULT_COSTO <> @ULT_COSTO
-                                     OR EXIST <> @EXIST)", conn, transaction))
+                              SET DESCR = @DESCR,UNI_MED = @UNI_MED,COSTO_PROM = @COSTO_PROM,
+                              ULT_COSTO = @ULT_COSTO,EXIST = @EXIST WHERE CVE_ART = @clave
+                              AND (DESCR <> @DESCR
+                              OR UNI_MED <> @UNI_MED
+                              OR COSTO_PROM <> @COSTO_PROM
+                              OR ULT_COSTO <> @ULT_COSTO
+                              OR EXIST <> @EXIST)", conn, transaction))
                         {
                             updateCmd.Parameters.AddWithValue("@clave", clave ?? DBNull.Value);
                             updateCmd.Parameters.AddWithValue("@DESCR", row["DESCR"] ?? DBNull.Value);
@@ -45,7 +41,7 @@ namespace Ensumex.Controllers
                             updateCmd.Parameters.AddWithValue("@COSTO_PROM", row["COSTO_PROM"] ?? DBNull.Value);
                             updateCmd.Parameters.AddWithValue("@ULT_COSTO", row["ULT_COSTO"] ?? DBNull.Value);
                             updateCmd.Parameters.AddWithValue("@EXIST", row["EXIST"] ?? DBNull.Value);
-
+                           
                             updateCmd.ExecuteNonQuery();
                         }
 
@@ -72,7 +68,7 @@ namespace Ensumex.Controllers
                 throw; 
             }
             catch (Exception ex)
-            {
+            {   
                 Console.WriteLine("Error inesperado: " + ex.Message);
                 throw;
             }
@@ -82,7 +78,7 @@ namespace Ensumex.Controllers
         {
             try
             {
-                object clave = row.Table.Columns.Contains("CLAVE") ? row["CLAVE"] : null;
+                object? clave = row.Table.Columns.Contains("CLAVE") ? row["CLAVE"] : null;
 
             using (SqlCommand checkCmd = new SqlCommand(
                 "SELECT COUNT(1) FROM CLIE01 WHERE CLAVE = @clave", conn, transaction))
@@ -93,21 +89,15 @@ namespace Ensumex.Controllers
                 if (existe > 0)
                 {
                     using (SqlCommand updateCmd = new SqlCommand(
-                      @"UPDATE CLIE01
-                      SET STATUS = @STATUS,
-                      NOMBRE = @NOMBRE,
-                      TELEFONO=@TELEFONO,
-                      CALLE = @CALLE,
-                      COLONIA = @COLONIA,
-                      MUNICIPIO = @MUNICIPIO,
-                      EMAILPRED = @EMAILPRED
-                      WHERE CLAVE = @clave
-                        AND (STATUS <> @STATUS
-                         OR NOMBRE <> @NOMBRE
-                         OR CALLE <> @CALLE
-                         OR COLONIA <> @COLONIA
-                         OR MUNICIPIO <> @MUNICIPIO
-                         OR EMAILPRED <> @EMAILPRED)", conn, transaction))
+                      @"UPDATE CLIE01 SET STATUS = @STATUS,
+                      NOMBRE = @NOMBRE,TELEFONO = @TELEFONO, CALLE = @CALLE,
+                      COLONIA = @COLONIA, MUNICIPIO = @MUNICIPIO, EMAILPRED = @EMAILPRED
+                      WHERE CLAVE = @clave AND (STATUS <> @STATUS
+                      OR NOMBRE <> @NOMBRE
+                      OR CALLE <> @CALLE
+                      OR COLONIA <> @COLONIA
+                      OR MUNICIPIO <> @MUNICIPIO
+                      OR EMAILPRED <> @EMAILPRED)", conn, transaction))
                     {
                         updateCmd.Parameters.AddWithValue("@clave", clave ?? DBNull.Value);
                         updateCmd.Parameters.AddWithValue("@STATUS", row["STATUS"] ?? DBNull.Value);
@@ -117,7 +107,6 @@ namespace Ensumex.Controllers
                         updateCmd.Parameters.AddWithValue("@COLONIA", row["COLONIA"] ?? DBNull.Value);
                         updateCmd.Parameters.AddWithValue("@MUNICIPIO", row["MUNICIPIO"] ?? DBNull.Value);
                         updateCmd.Parameters.AddWithValue("@EMAILPRED", row["EMAILPRED"] ?? DBNull.Value);
-
                         updateCmd.ExecuteNonQuery();
                     }
                     return; 
@@ -155,39 +144,36 @@ namespace Ensumex.Controllers
         {
             try
             {
-            object claveProducto = row.Table.Columns.Contains("CVE_ART") ? row["CVE_ART"] : null;
-            object clavePrecio = row.Table.Columns.Contains("CVE_PRECIO") ? row["CVE_PRECIO"] : null;
-
-            using (SqlCommand checkCmd = new SqlCommand(
-                "SELECT COUNT(1) FROM PRECIO_X_PROD01 WHERE CVE_ART = @claveProducto AND CVE_PRECIO = @clavePrecio",
-                conn, transaction))
-            {
-                checkCmd.Parameters.AddWithValue("@claveProducto", claveProducto ?? DBNull.Value);
-                checkCmd.Parameters.AddWithValue("@clavePrecio", clavePrecio ?? DBNull.Value);
-                int existe = (int)checkCmd.ExecuteScalar();
-
-                if (existe > 0)
-                {
-                    using (SqlCommand updateCmd = new SqlCommand(
-                        @"UPDATE PRECIO_X_PROD01
-                  SET PRECIO = @PRECIO
-                  WHERE CVE_ART = @claveProducto
-                    AND CVE_PRECIO = @clavePrecio
-                    AND PRECIO <> @PRECIO", conn, transaction))
+                object? claveProducto = row.Table.Columns.Contains("CVE_ART") ? row["CVE_ART"] : null;
+                object? clavePrecio = row.Table.Columns.Contains("CVE_PRECIO") ? row["CVE_PRECIO"] : null;
+                using (SqlCommand checkCmd = new SqlCommand(
+                    "SELECT COUNT(1) FROM PRECIO_X_PROD01 WHERE CVE_ART = @claveProducto AND CVE_PRECIO = @clavePrecio",
+                    conn, transaction))
                     {
-                        updateCmd.Parameters.AddWithValue("@claveProducto", claveProducto ?? DBNull.Value);
-                        updateCmd.Parameters.AddWithValue("@clavePrecio", clavePrecio ?? DBNull.Value);
-                        updateCmd.Parameters.AddWithValue("@PRECIO", row["PRECIO"] ?? DBNull.Value);
-
-                        updateCmd.ExecuteNonQuery();
+                    checkCmd.Parameters.AddWithValue("@claveProducto", claveProducto ?? DBNull.Value);
+                    checkCmd.Parameters.AddWithValue("@clavePrecio", clavePrecio ?? DBNull.Value);
+                    int existe = (int)checkCmd.ExecuteScalar();
+                    if (existe > 0)
+                    {
+                        using (SqlCommand updateCmd = new SqlCommand(
+                            @"UPDATE PRECIO_X_PROD01 SET PRECIO = @PRECIO
+                            WHERE CVE_ART = @claveProducto
+                            AND CVE_PRECIO = @clavePrecio
+                            AND PRECIO <> @PRECIO", conn, transaction))
+                        {
+                            updateCmd.Parameters.AddWithValue("@claveProducto", claveProducto ?? DBNull.Value);
+                            updateCmd.Parameters.AddWithValue("@clavePrecio", clavePrecio ?? DBNull.Value);
+                            updateCmd.Parameters.AddWithValue("@PRECIO", row["PRECIO"] ?? DBNull.Value);
+                            updateCmd.ExecuteNonQuery();
+                        }
+                        return; 
                     }
-                    return; 
-                }
-            }
+                }   
+                
 
             using (SqlCommand cmd = new SqlCommand(
                 @"INSERT INTO PRECIO_X_PROD01 (CVE_ART, CVE_PRECIO, PRECIO)
-      VALUES (@CVE_ART, @CVE_PRECIO, @PRECIO)", conn, transaction))
+                VALUES (@CVE_ART, @CVE_PRECIO, @PRECIO)", conn, transaction))
             {
                 cmd.Parameters.AddWithValue("@CVE_ART", claveProducto ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@CVE_PRECIO", clavePrecio ?? DBNull.Value);
@@ -212,7 +198,7 @@ namespace Ensumex.Controllers
       {
             try
             {
-                object folio = row.Table.Columns.Contains("FOLIO") ? row["FOLIO"] : null;
+                object? folio = row.Table.Columns.Contains("FOLIO") ? row["FOLIO"] : null;
 
                 using (SqlCommand checkCmd = new SqlCommand(
                     "SELECT COUNT(1) FROM Mantenimientos WHERE FolioVenta = @folio", conn, transaction))
@@ -242,7 +228,6 @@ namespace Ensumex.Controllers
                     cmd.Parameters.AddWithValue("@fecha", row.Table.Columns.Contains("FECHA_VENTA") ? row["FECHA_VENTA"] ?? DBNull.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@frecuencia", row.Table.Columns.Contains("FRECUENCIA") ? row["FRECUENCIA"] ?? 12 : 12);
                     cmd.Parameters.AddWithValue("@estatus", "Pendiente");
-
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -266,7 +251,8 @@ namespace Ensumex.Controllers
                     conn.Open();
 
                     using (SqlCommand checkCmd = new SqlCommand(
-                        "SELECT COUNT(1) FROM DetallesMantenimientos WHERE MantenimientoId = @id AND RealizadoPor = @realizado AND Observaciones = @obs", conn))
+                        "SELECT COUNT(1) FROM DetallesMantenimientos WHERE MantenimientoId = @id AND RealizadoPor = @realizado " +
+                        "AND Observaciones = @obs", conn))
                     {
                         checkCmd.Parameters.AddWithValue("@id", mantenimientoId);
                         checkCmd.Parameters.AddWithValue("@realizado", realizadoPor ?? "");
@@ -313,17 +299,11 @@ namespace Ensumex.Controllers
                 conn.Open();
                 string query = @"
                 SELECT 
-                    M.Id,
-                    C.NOMBRE AS Cliente,    
-                    C.TELEFONO AS Telefono,
-                    P.DESCR AS Producto,
-                    M.FechaVenta,
-                    M.FrecuenciaMeses AS Frecuencia,
-                    M.Estatus,
+                    M.Id, C.NOMBRE AS Cliente, C.TELEFONO AS Telefono, P.DESCR AS Producto,
+                    M.FechaVenta, M.FrecuenciaMeses AS Frecuencia, M.Estatus,
                     ISNULL(MAX(D.FechaMantenimiento), M.FechaVenta) AS UltimoMantenimiento,
                     DATEADD(MONTH, M.FrecuenciaMeses, ISNULL(MAX(D.FechaMantenimiento), M.FechaVenta)) AS ProximoMantenimiento,
-                    COUNT(D.Id) AS NumeroServicios
-                    FROM Mantenimientos M
+                    COUNT(D.Id) AS NumeroServicios FROM Mantenimientos M
                     JOIN CLIE01 C ON M.ClienteId = C.CLAVE
                     JOIN INVE01 P ON M.ProductoId = P.CVE_ART
                     LEFT JOIN DetallesMantenimientos D ON M.Id = D.MantenimientoId
@@ -367,11 +347,8 @@ namespace Ensumex.Controllers
                 conn.Open();
                 string query = @"
             SELECT 
-                D.Id,
-                C.NOMBRE AS Cliente,
-                D.FechaMantenimiento,
-                D.RealizadoPor,
-                D.Observaciones
+                D.Id,C.NOMBRE AS Cliente,D.FechaMantenimiento,
+                D.RealizadoPor,D.Observaciones  
                 FROM DetallesMantenimientos D
                 INNER JOIN Mantenimientos M ON D.MantenimientoId = M.Id
                 INNER JOIN CLIE01 C ON M.ClienteId = C.CLAVE
@@ -408,7 +385,6 @@ namespace Ensumex.Controllers
             using (SqlConnection conn = GetConnection())
             {
                 conn.Open();
-                // Obtener la clave del cliente asociada al mantenimiento
                 string clienteId = null;
                 using (var cmd = new SqlCommand("SELECT ClienteId FROM Mantenimientos WHERE Id = @Id", conn))
                 {

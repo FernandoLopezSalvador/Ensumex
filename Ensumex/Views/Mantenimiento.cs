@@ -36,12 +36,12 @@ namespace Ensumex.Views
                 var btnModificarNumero = new DataGridViewButtonColumn
                 {
                     Name = "ModificarNumero",
-                    HeaderText = "Modificar Teléfono",
-                    Text = "Modificar Número",
+                    HeaderText = "Editar",
+                    Text = "Editar",
                     UseColumnTextForButtonValue = true,
                     Width = 120
                 };
-                dgvMantenimiento.Columns.Add(btnModificarNumero);
+                dgvMantenimiento.Columns.Insert(3, btnModificarNumero);
             }
 
             if (!dgvMantenimiento.Columns.Contains("FrecuenciaCombo"))
@@ -64,7 +64,7 @@ namespace Ensumex.Views
                 {
                     Name = "VerDetalles",
                     HeaderText = "Detalles",
-                    Text = "Ver Detalles",
+                    Text = "Detalles",
                     UseColumnTextForButtonValue = true,
                     Width = 100
                 };

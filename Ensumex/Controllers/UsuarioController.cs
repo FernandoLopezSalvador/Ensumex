@@ -23,7 +23,6 @@ namespace Ensumex.Controllers
             {
                 connection.Open();
 
-                // 2) Primero, verificamos si ya existe ese nombre de usuario:
                 using (var checkCmd = new SqlCommand(
                     "SELECT COUNT(*) FROM Usuarios WHERE Usuario = @Usuario", connection))
                 {
@@ -31,7 +30,6 @@ namespace Ensumex.Controllers
                     int existente = (int)checkCmd.ExecuteScalar();
                     if (existente > 0)
                     {
-                        // Ya existe ese usuario
                         return false;
                     }
                 }
@@ -66,7 +64,6 @@ namespace Ensumex.Controllers
 
         public bool ActualizarUsuario(string usuarioOriginal, Usuarios usuarioEditado, bool actualizarContraseña)
         {
-            // Solo cifrar la contraseña si se indicó que hay una nueva
             if (actualizarContraseña)
             {
                 usuarioEditado.Contraseña = ObtenerHashSHA256(usuarioEditado.Contraseña);

@@ -84,7 +84,7 @@ namespace Ensumex.PDFtemplates
                 }
 
                 doc.Add(new Paragraph("Presente", fontNegrita));
-                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización para el suministro y/o instalación de acuerdo a lo siguiente:\n\n", fontNormal));
+                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización para la venta y/o instalación de acuerdo a lo siguiente:\n\n", fontNormal));
 
                 // Tabla de productos
                 PdfPTable tabla = new PdfPTable(8)
@@ -97,12 +97,11 @@ namespace Ensumex.PDFtemplates
                 // Encabezados de tabla
                 string[] headers = { "#","CANT","UNID","DESCRIPCIÓN","PRECIO UNIT","DESCUENTO  ($)", "IMPORTE", "TOTAL"};
 
-                // Añadir encabezados con fondo verde
                 foreach (string header in headers)
                 {
                     PdfPCell celda = new PdfPCell(new Phrase(header, fontheader))
                     {
-                        BackgroundColor = new BaseColor(141, 198, 63), // Verde #8DC63F
+                        BackgroundColor = new BaseColor(141, 198, 63), 
                         HorizontalAlignment = Element.ALIGN_CENTER,
                         Padding = 5f
                     };
@@ -127,15 +126,14 @@ namespace Ensumex.PDFtemplates
                     int.TryParse(row.Cells["Descuento"].Value?.ToString() ?? "0", out int porcentajeDescuentoFila);
 
                     // Cálculos 
-                    decimal importe = precioUnitario * cantidad;
-                    decimal descuentoFila = precioUnitario * (porcentajeDescuentoFila / 100m);
-                    decimal descuentofinal = importe * (porcentajeDescuentoFila / 100m);
-                    decimal total1 = importe - descuentofinal;
+                    decimal descuentoUnitario = precioUnitario * (porcentajeDescuentoFila / 100m);
+                    decimal importeUnitario = precioUnitario - descuentoUnitario; // Precio unitario menos descuento
+                    decimal total1 = importeUnitario * cantidad; // Importe por cantidad
 
                     // Formatear en moneda
                     string precioFormateado = precioUnitario.ToString("C2", new CultureInfo("es-MX"));
-                    string descuentoFormateado = descuentoFila.ToString("C2", new CultureInfo("es-MX"));
-                    string importeFormateado = importe.ToString("C2", new CultureInfo("es-MX"));
+                    string descuentoFormateado = descuentoUnitario.ToString("C2", new CultureInfo("es-MX"));
+                    string importeFormateado = importeUnitario.ToString("C2", new CultureInfo("es-MX"));
                     string totalFormateado = total1.ToString("C2", new CultureInfo("es-MX"));
 
                     BaseColor fondoFila = (pos % 2 == 0) ? colorFilaPar : colorFilaImpar;
@@ -211,7 +209,7 @@ namespace Ensumex.PDFtemplates
                 // Notas generales
                 doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
                 doc.Add(new Paragraph(notas, fontNotas));
-                doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes\n- Agradecemos su preferencia.\n\n", fontNotas));
+                doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes.\n- Agradecemos su preferencia.\n\n", fontNotas));
 
                 // Firma
                 PdfPTable tablaFirma = new PdfPTable(1)

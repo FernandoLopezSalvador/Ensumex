@@ -12,7 +12,7 @@ namespace Ensumex.Controllers
     public static class FirebirdRepository
     {
         private static readonly string connFirebird = "User=SYSDBA;Password=masterkey;" +
-        "Database=192.168.1.206:C:\\Program Files (x86)\\Common Files\\Aspel\\Sistemas Aspel\\SAE9.00\\Empresa01\\Datos\\SAE90EMPRE01.FDB;" +
+        "Database=192.168.1.244:C:\\Program Files (x86)\\Common Files\\Aspel\\Sistemas Aspel\\SAE9.00\\Empresa01\\Datos\\SAE90EMPRE01.FDB;" +
         "Port=3050;Dialect=3;Charset=NONE;ServerType=0;";
 
         public static DataTable GetProductos()
@@ -64,20 +64,11 @@ namespace Ensumex.Controllers
             var dt = new DataTable();
 
             string query = @"
-                SELECT 
-                F.CVE_DOC AS FOLIO,
-                F.FECHA_DOC AS FECHA_VENTA,
-                C.NOMBRE AS CLIENTE,
-                C.TELEFONO,
-                P.CVE_ART,
-                P.DESCR AS PRODUCTO
-                FROM FACTF01 F
-                JOIN PAR_FACTF01 PF 
-                    ON F.CVE_DOC = PF.CVE_DOC
-                JOIN INVE01 P 
-                    ON PF.CVE_ART = P.CVE_ART
-                JOIN CLIE01 C 
-                    ON F.CVE_CLPV = C.CLAVE
+                SELECT F.CVE_DOC AS FOLIO, F.FECHA_DOC AS FECHA_VENTA,
+                C.NOMBRE AS CLIENTE, C.TELEFONO,P.CVE_ART, P.DESCR AS PRODUCTO
+                FROM FACTF01 F JOIN PAR_FACTF01 PF ON F.CVE_DOC = PF.CVE_DOC
+                JOIN INVE01 P  ON PF.CVE_ART = P.CVE_ART
+                JOIN CLIE01 C ON F.CVE_CLPV = C.CLAVE
                 WHERE 
                     (
                         P.CVE_ART STARTING WITH 'SCCAL'

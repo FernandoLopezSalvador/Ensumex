@@ -16,7 +16,6 @@ namespace Ensumex.Views
         private TextBox txtNumero;
         private Button btnAceptar;
 
-        // Evento para notificar cuando se guarda el número
         public event EventHandler NumeroGuardado;
 
         public ModificarNumeroForm(string numeroActual)

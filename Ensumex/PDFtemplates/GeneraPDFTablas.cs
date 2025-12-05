@@ -57,7 +57,7 @@ namespace Ensumex.PDFtemplates
                 }
 
                 // ENCABEZADO
-                Paragraph titulo = new Paragraph("Cotización: " + numeroCotizacion, fontNegrita);
+                Paragraph titulo = new Paragraph("Cotización:" + numeroCotizacion, fontNegrita);
                 titulo.Alignment = Element.ALIGN_RIGHT;
                 doc.Add(titulo);
 
@@ -118,12 +118,10 @@ namespace Ensumex.PDFtemplates
                         decimal precioUnitario = decimal.TryParse(row[4]?.ToString(), out var tmpPrecio) ? tmpPrecio : 0;
                         decimal cantidad = decimal.TryParse(row[7]?.ToString(), out var tmpCant) ? tmpCant : 0;
                         decimal importe = precioUnitario * cantidad;
-
                         decimal porcentajeDescuento = decimal.TryParse(row[0]?.ToString(), out var tmpDesc) ? tmpDesc : 0;
                         decimal descuentoProd = importe * (porcentajeDescuento / 100m);
                         decimal totalProd = importe - descuentoProd;
                         totalTabla += totalProd;
-
                         pdfTable.AddCell(CeldaTexto(pos.ToString(), fontNormal, bgColor, Element.ALIGN_CENTER));
                         pdfTable.AddCell(CeldaTexto(cantidadStr, fontNormal, bgColor, Element.ALIGN_CENTER));
                         pdfTable.AddCell(CeldaTexto(unidad, fontNormal, bgColor, Element.ALIGN_CENTER));

@@ -157,7 +157,7 @@ namespace Ensumex.Views
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
                 sfd.Filter = "Archivo PDF|*.pdf";
-                sfd.FileName = $"{lbl_NoCotiza.Text}_{DateTime.Now:yyyyMMdd}.pdf"; 
+                sfd.FileName = $"{lbl_NoCotiza.Text}.pdf"; 
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     var tablasParaGuardar = new List<List<object[]>>(tablasGuardadas);
@@ -263,7 +263,7 @@ namespace Ensumex.Views
                     }
 
                     sfd.Filter = "Archivo PDF|*.pdf";
-                    sfd.FileName = $"{lbl_NoCotiza.Text}_{DateTime.Now:yyyyMMdd}.pdf";
+                    sfd.FileName = $"{lbl_NoCotiza.Text}.pdf";
 
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
@@ -514,13 +514,13 @@ namespace Ensumex.Views
             var notas = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 ["CALENTADOR"] = "-Garantía contra defectos de fabricación en calentador solar: 5 años, la garantía aplica en termo tanque únicamente. No aplica la garantía por omisión en los cuidados que requiere el equipo de acuerdo al manual de instalación y póliza de garantía que se le entrega.\n" +
-                "--Se requiere un anticipo mínimo del 50% al confirmar el pedido.\n" +
-                "-No incluye material de plomería ni mano de obra para instalación."+
+                "-Se requiere un anticipo mínimo del 50% al confirmar el pedido.\n" +
+                "-No incluye material de plomería ni mano de obra para instalación.\n"+
                 "-Precios sujetos a cambios sin previo aviso.\n",
 
                 ["CALENT"] = "-Garantía contra defectos de fabricación en calentador solar: 5 años, la garantía aplica en termo tanque únicamente. No aplica la garantía por omisión en los cuidados que requiere el equipo de acuerdo al manual de instalación y póliza de garantía que se le entrega.\n" +
-                "--Se requiere un anticipo mínimo del 50% al confirmar el pedido.\n" +
-                "-No incluye material de plomería ni mano de obra para instalación." +
+                "-Se requiere un anticipo mínimo del 50% al confirmar el pedido.\n" +
+                "-No incluye material de plomería ni mano de obra para instalación.\n" +
                 "-Precios sujetos a cambios sin previo aviso.\n",
 
                 ["AIRE ACONDICIONADO"] = "-Garantía: 3 años contra defectos de fabricación.\n" +
@@ -667,7 +667,7 @@ namespace Ensumex.Views
         }
         private string NormalizarNumeroWhatsApp(string numero)
         {
-            // Elimina espacios y guiones
+            
             numero = numero.Replace(" ", "").Replace("-", "");
             if (numero.StartsWith("521") && numero.Length == 13)
                 return numero;

@@ -256,12 +256,17 @@ namespace Ensumex.Views
         {
             var notas = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                ["CALENTADOR"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n" +
-                "-Precios sujetos a cambios sin previo aviso.\n",
-                ["CALENT"] = "-Garantía: 5 años contra defectos de fabricación. Solo para el termo tanque...\n" +
+                ["CALENTADOR"] = "-Garantía contra defectos de fabricación en calentador solar: 5 años, la garantía aplica en termo tanque únicamente. No aplica la garantía por omisión en los cuidados que requiere el equipo de acuerdo al manual de instalación y póliza de garantía que se le entrega.\n" +
+                "-Se requiere un anticipo mínimo del 50% al confirmar el pedido.\n" +
+                "-No incluye material de plomería ni mano de obra para instalación.\n" +
                 "-Precios sujetos a cambios sin previo aviso.\n",
 
-                ["AIRE ACONDICIONADO"] = "-Garantía: 5 años contra defectos de fabricación.\n" +
+                ["CALENT"] = "-Garantía contra defectos de fabricación en calentador solar: 5 años, la garantía aplica en termo tanque únicamente. No aplica la garantía por omisión en los cuidados que requiere el equipo de acuerdo al manual de instalación y póliza de garantía que se le entrega.\n" +
+                "-Se requiere un anticipo mínimo del 50% al confirmar el pedido.\n" +
+                "-No incluye material de plomería ni mano de obra para instalación.\n" +
+                "-Precios sujetos a cambios sin previo aviso.\n",
+
+                ["AIRE ACONDICIONADO"] = "-Garantía: 3 años contra defectos de fabricación.\n" +
                     "-El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
                     "-Precios sujetos a cambios sin previo aviso.\n",
 
@@ -310,15 +315,13 @@ namespace Ensumex.Views
                 {
                     if (reemplazar)
                     {
-                        // Reemplaza todo el texto anterior
                         Txt_observaciones.Text = nota.Value;
                     }
                     else if (!Txt_observaciones.Text.Contains(nota.Value))
                     {
-                        // Concatena solo si la nota aún no está
                         Txt_observaciones.Text += "\n" + nota.Value;
                     }
-                    return; // Termina en cuanto encuentra una coincidencia
+                    return; 
                 }
             }
         }
