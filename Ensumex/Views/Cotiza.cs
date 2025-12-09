@@ -41,7 +41,9 @@ namespace Ensumex.Views
 
         public Cotiza(string usuario)
         {
+
             InitializeComponent();
+            Txt_Notaprincipal.Text = "En atención a su amable solicitud, me permito presentarle esta cotización para la venta y/o instalación de acuerdo a\r\nlo siguiente:";
             usuarioActual = usuario;
             InicializarFormulario();
             InicializarTabla();
@@ -51,7 +53,7 @@ namespace Ensumex.Views
         }
         private void InicializarTabla()
         {
-            tbl_Cotizacion.AllowUserToAddRows = true; 
+            tbl_Cotizacion.AllowUserToAddRows = true;
             tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit;
         }
         private void InicializarFormulario()
@@ -157,7 +159,7 @@ namespace Ensumex.Views
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
                 sfd.Filter = "Archivo PDF|*.pdf";
-                sfd.FileName = $"{lbl_NoCotiza.Text}.pdf"; 
+                sfd.FileName = $"{lbl_NoCotiza.Text}.pdf";
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     var tablasParaGuardar = new List<List<object[]>>(tablasGuardadas);
@@ -252,7 +254,6 @@ namespace Ensumex.Views
         {
             try
             {
-                // Guardar cliente si no existe
                 CotizacionRepository.GuardarSiNoExisteCliente(txt_NumeroCliente.Text, txt_Nombrecliente.Text);
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
@@ -289,9 +290,10 @@ namespace Ensumex.Views
                             costoInstalacion: decimal.TryParse(txt_Costoinstalacion.Text, out var inst) ? inst : 0,
                             costoFlete: decimal.TryParse(txt_Costoflete.Text, out var flt) ? flt : 0,
                             subtotal: decimal.TryParse(lbl_Subtotal.Text.Replace("$", ""), out var sub) ? sub : 0,
-                            descuento: totalDescuentoCalculado, 
+                            descuento: totalDescuentoCalculado,
                             total: decimal.TryParse(lbl_TotalNeto.Text.Replace("$", ""), out var tot) ? tot : 0,
                             notas: Txt_observaciones.Text,
+                            //notaprincipal: Txt_Notaprincipal.Text,
                             tablaCotizacion: tbl_Cotizacion
                         );
                         // Generar PDF
@@ -301,11 +303,12 @@ namespace Ensumex.Views
                             nombreCliente: txt_Nombrecliente.Text,
                             costoInstalacion: txt_Costoinstalacion.Text,
                             costoFlete: txt_Costoflete.Text,
-                            subtotal: lbl_Subtotal.Text.Replace("$", "").Trim(),  
-                            total: lbl_TotalNeto.Text.Replace("$", "").Trim(),    
+                            subtotal: lbl_Subtotal.Text.Replace("$", "").Trim(),
+                            total: lbl_TotalNeto.Text.Replace("$", "").Trim(),
                             descuento: lbl_costoDescuento.Text.Replace("$", "").Trim(),
                             porcentajeDescuento: totalDescuentoCalculado,
                             notas: Txt_observaciones.Text,
+                            notaprincipal:Txt_Notaprincipal.Text,
                             tablaCotizacion: tbl_Cotizacion,
                             usuario: usuarioActual
                         );
@@ -376,7 +379,7 @@ namespace Ensumex.Views
             }
             if (e.KeyChar == '.' && txt.Text.Contains('.'))
             {
-                e.Handled = true;             
+                e.Handled = true;
                 return;
             }
             if (e.KeyChar == '.' && txt.SelectionStart == 0)
@@ -478,7 +481,7 @@ namespace Ensumex.Views
             Txt_observaciones.Text = string.Empty;
             tbl_Cotizacion.ReadOnly = true;
             tablasGuardadas.Clear();
-            ActualizarNumeroCotizacionEnLabel(); 
+            ActualizarNumeroCotizacionEnLabel();
         }
         private void pictureBox1_Click(object sender, EventArgs e)
         {
@@ -515,7 +518,7 @@ namespace Ensumex.Views
             {
                 ["CALENTADOR"] = "-Garantía contra defectos de fabricación en calentador solar: 5 años, la garantía aplica en termo tanque únicamente. No aplica la garantía por omisión en los cuidados que requiere el equipo de acuerdo al manual de instalación y póliza de garantía que se le entrega.\n" +
                 "-Se requiere un anticipo mínimo del 50% al confirmar el pedido.\n" +
-                "-No incluye material de plomería ni mano de obra para instalación.\n"+
+                "-No incluye material de plomería ni mano de obra para instalación.\n" +
                 "-Precios sujetos a cambios sin previo aviso.\n",
 
                 ["CALENT"] = "-Garantía contra defectos de fabricación en calentador solar: 5 años, la garantía aplica en termo tanque únicamente. No aplica la garantía por omisión en los cuidados que requiere el equipo de acuerdo al manual de instalación y póliza de garantía que se le entrega.\n" +
@@ -578,7 +581,7 @@ namespace Ensumex.Views
                     {
                         Txt_observaciones.Text += "\n" + nota.Value;
                     }
-                    return; 
+                    return;
                 }
             }
         }
@@ -667,7 +670,7 @@ namespace Ensumex.Views
         }
         private string NormalizarNumeroWhatsApp(string numero)
         {
-            
+
             numero = numero.Replace(" ", "").Replace("-", "");
             if (numero.StartsWith("521") && numero.Length == 13)
                 return numero;
@@ -694,7 +697,7 @@ namespace Ensumex.Views
                 return;
             }
 
-            string prefijo = "G"; 
+            string prefijo = "G";
             int prioridadActual = int.MaxValue;
 
             // Detectar el prefijo en base a las descripciones
@@ -752,7 +755,7 @@ namespace Ensumex.Views
                     p.CLAVE.ToLower().Contains(texto) ||
                     p.DESCRIPCIÓN.ToLower().Contains(texto))
                 .ToList();
-            
+
             if (resultados.Any())
             {
                 dgvBusqueda.DataSource = resultados;
@@ -841,8 +844,8 @@ namespace Ensumex.Views
         {
 
             // ===== Btn_Cancelar =====
-            Btn_Cancelar.IconChar = IconChar.TimesCircle; 
-            Btn_Cancelar.IconColor = Color.FromArgb(244, 67, 54); 
+            Btn_Cancelar.IconChar = IconChar.TimesCircle;
+            Btn_Cancelar.IconColor = Color.FromArgb(244, 67, 54);
 
             Btn_Cancelar.IconSize = 32;
             Btn_Cancelar.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -852,8 +855,8 @@ namespace Ensumex.Views
             Btn_Cancelar.ForeColor = Color.FromArgb(33, 33, 33);
 
             // ===== Btn_Guardar =====
-            Btn_Guardar.IconChar = IconChar.Save;  
-            Btn_Guardar.IconColor = Color.FromArgb(76, 175, 80); 
+            Btn_Guardar.IconChar = IconChar.Save;
+            Btn_Guardar.IconColor = Color.FromArgb(76, 175, 80);
             Btn_Guardar.IconSize = 32;
             Btn_Guardar.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_Guardar.ImageAlign = ContentAlignment.MiddleLeft;
@@ -862,8 +865,8 @@ namespace Ensumex.Views
             Btn_Guardar.ForeColor = Color.FromArgb(33, 33, 33);
 
             // ===== Btn_NuevoProd =====
-            Btn_NuevoProd.IconChar = IconChar.Plus; 
-            Btn_NuevoProd.IconColor = Color.FromArgb(33, 150, 243); 
+            Btn_NuevoProd.IconChar = IconChar.Plus;
+            Btn_NuevoProd.IconColor = Color.FromArgb(33, 150, 243);
             Btn_NuevoProd.IconSize = 32;
             Btn_NuevoProd.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_NuevoProd.ImageAlign = ContentAlignment.MiddleLeft;
@@ -872,8 +875,8 @@ namespace Ensumex.Views
             Btn_NuevoProd.ForeColor = Color.FromArgb(33, 33, 33);
 
             // ===== Btn_NuevaTabla =====
-            Btn_AñadirTabla.IconChar = IconChar.Table; 
-            Btn_AñadirTabla.IconColor = Color.FromArgb(0, 150, 136); 
+            Btn_AñadirTabla.IconChar = IconChar.Table;
+            Btn_AñadirTabla.IconColor = Color.FromArgb(0, 150, 136);
             Btn_AñadirTabla.IconSize = 32;
             Btn_AñadirTabla.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_AñadirTabla.ImageAlign = ContentAlignment.MiddleLeft;
@@ -883,7 +886,7 @@ namespace Ensumex.Views
 
             // ===== Btn_AgregaProd =====
             Btn_Añadprod.IconChar = IconChar.PlusSquare;
-            Btn_Añadprod.IconColor = Color.FromArgb(33, 150, 243); 
+            Btn_Añadprod.IconColor = Color.FromArgb(33, 150, 243);
             Btn_Añadprod.IconSize = 32;
             Btn_Añadprod.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_Añadprod.ImageAlign = ContentAlignment.MiddleLeft;
@@ -917,7 +920,7 @@ namespace Ensumex.Views
                 MessageBox.Show("No hay productos para guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-       
+
         private void Btn_Añadprod_Click(object sender, EventArgs e)
         {
             using (var productosForm = new Form())
@@ -932,7 +935,7 @@ namespace Ensumex.Views
                 productosForm.Text = "Seleccionar Producto";
                 productControl.ProductoSeleccionado += (clave, descripcion, unidad, precio, cantidad) =>
                 {
-                        
+
                     try
                     {
                         decimal precioFinal = precio;
@@ -1000,10 +1003,10 @@ namespace Ensumex.Views
             {
                 // Crear el formulario contenedor
                 using (Form formWrapper = new Form())
-                        
+
                 {
                     formWrapper.Text = "Agregar Producto";
-                    formWrapper.Size = new Size(400, 300); 
+                    formWrapper.Size = new Size(400, 300);
                     formWrapper.StartPosition = FormStartPosition.CenterParent;
                     var prodControl = new ProdTemporal
                     {
@@ -1026,7 +1029,7 @@ namespace Ensumex.Views
                         if (string.IsNullOrWhiteSpace(prodControl.Descripcion))
                         {
                             MessageBox.Show("El producto debe tener descripción.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return; 
+                            return;
                         }
                         formWrapper.DialogResult = DialogResult.OK;
                         formWrapper.Close();
@@ -1045,7 +1048,7 @@ namespace Ensumex.Views
                         decimal precioUnitario = prodControl.PrecioUnitarioTemp;
                         int cantidad = (int)prodControl.cantidad;
                         decimal subtotal = precioUnitario * cantidad;
-                        decimal total = subtotal; 
+                        decimal total = subtotal;
 
                         tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precioUnitario, subtotal, total, cantidad);
                         ActualizarNumeroCotizacionEnLabel();
@@ -1091,6 +1094,11 @@ namespace Ensumex.Views
             {
                 e.Cancel = true;
             }
+        }
+
+        private void Txt_Notaprincipal_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

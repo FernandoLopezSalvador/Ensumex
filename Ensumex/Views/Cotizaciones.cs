@@ -37,6 +37,18 @@ namespace Ensumex.Views
                 };
                 tabla_cotizaciones.Columns.Add(btnDetalle);
             }
+            // Agregar botón Editar
+            if (!tabla_cotizaciones.Columns.Contains("Editar"))
+            {
+                var btnEditar = new DataGridViewButtonColumn
+                {
+                    Name = "Editar",
+                    HeaderText = "Editar",
+                    Text = "Editar",
+                    UseColumnTextForButtonValue = true
+                };
+                tabla_cotizaciones.Columns.Add(btnEditar);
+            }
         }
         private void Tabla_cotizaciones_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
@@ -80,9 +92,10 @@ namespace Ensumex.Views
             {
                 if (e.RowIndex < 0 || e.ColumnIndex < 0)
                     return;
-                
 
-                if (tabla_cotizaciones.Columns[e.ColumnIndex].Name == "Detalle")
+                var colName = tabla_cotizaciones.Columns[e.ColumnIndex].Name;
+
+                if (colName == "Detalle")
                 {
                     var idValor = tabla_cotizaciones.Rows[e.RowIndex].Cells["IdCotizacion"].Value;
 
@@ -113,6 +126,37 @@ namespace Ensumex.Views
                         };
                         detalleForm.Controls.Add(dgvDetalle);
                         detalleForm.ShowDialog();
+                    }
+                }
+                else if (colName == "Editar")
+                {
+                    var idValor = tabla_cotizaciones.Rows[e.RowIndex].Cells["IdCotizacion"].Value;
+                    if (idValor == null || !int.TryParse(idValor.ToString(), out int idCotizacion))
+                    {
+                        MessageBox.Show("No se pudo obtener el ID de la cotización.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Crear UserControl EditCotiza, cargar desde repositorio por Id y mostrar en Form modal
+                    var editCtrl = new EditCotiza();
+                    try
+                    {
+                        editCtrl.LoadFromId(idCotizacion); // método que implementaremos en EditCotiza
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error al cargar cotización: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    using (var frm = new Form())
+                    {
+                        frm.Text = "Editar Cotización";
+                        frm.Size = new Size(900, 700);
+                        frm.StartPosition = FormStartPosition.CenterParent;
+                        editCtrl.Dock = DockStyle.Fill;
+                        frm.Controls.Add(editCtrl);
+                        frm.ShowDialog();
                     }
                 }
             }

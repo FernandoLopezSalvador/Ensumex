@@ -198,7 +198,6 @@ namespace Ensumex.PDFtemplates
 
                 doc.Add(tablaTotales);
 
-                // Antes de añadir notas, aseguramos espacio para notas + pie
                 float footerReserve = 140f;
                 EnsureSpaceForContent(doc, writer, notas, fontNotas, footerReserve);
 

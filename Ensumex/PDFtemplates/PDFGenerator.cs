@@ -31,6 +31,7 @@ namespace Ensumex.PDFtemplates
             string descuento,
             decimal porcentajeDescuento,
             string notas,
+            string notaprincipal,
             DataGridView tablaCotizacion,
             string usuario
         )
@@ -87,18 +88,62 @@ namespace Ensumex.PDFtemplates
                 }
 
                 doc.Add(new Paragraph("Presente", fontNegrita));
-                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización para la venta y/o instalación de acuerdo a lo siguiente:\n\n", fontNormal));
+                if (!string.IsNullOrWhiteSpace(notaprincipal))
+                {
+                    doc.Add(new Paragraph(notaprincipal, fontNormal));
+                    doc.Add(new Paragraph("\n"));
+                }
+
+                bool hayDescuentos = false;
+
+                foreach (DataGridViewRow row in tablaCotizacion.Rows)
+                {
+                    if (row.IsNewRow) continue;
+
+                    int.TryParse(row.Cells["Descuento"].Value?.ToString() ?? "0", out int desc);
+                    if (desc > 0)
+                    {
+                        hayDescuentos = true;
+                        break;
+                    }
+                }
+
 
                 // Tabla de productos
-                PdfPTable tabla = new PdfPTable(8)
-                {
-                    WidthPercentage = 100
-                };
+                PdfPTable tabla;
 
-                tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1f, 1.2f, 1f, 1.2f });
+                string[] headers;
+
+                if (hayDescuentos)
+                {
+                    // Con la columna descuento
+                    tabla = new PdfPTable(8);
+                    tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1f, 1.2f, 1f, 1.2f });
+
+                    headers = new string[]
+                    {
+                    "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "DESCUENTO ($)", "IMPORTE", "TOTAL"
+                    };
+                }
+                else
+                {
+                    // Sin columna descuento
+                    tabla = new PdfPTable(7);
+                    tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 3f, 1f, 1f, 1.2f });
+
+                    headers = new string[]
+                    {
+                    "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "IMPORTE", "TOTAL"
+                    };
+                }
+
+                tabla.WidthPercentage = 100;
+
+
+                //tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1f, 1.2f, 1f, 1.2f });
 
                 // Encabezados de tabla
-                string[] headers = { "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "DESCUENTO  ($)", "IMPORTE", "TOTAL" };
+                //string[] headers = { "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "DESCUENTO  ($)", "IMPORTE", "TOTAL" };
 
                 foreach (string header in headers)
                 {
@@ -141,14 +186,38 @@ namespace Ensumex.PDFtemplates
 
                     BaseColor fondoFila = (pos % 2 == 0) ? colorFilaPar : colorFilaImpar;
                     // Añadir celdas
+                    // #, CANT, UNID, DESCRIPCIÓN
                     tabla.AddCell(new PdfPCell(new Phrase(pos.ToString(), fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });
                     tabla.AddCell(new PdfPCell(new Phrase(cantidadStr, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });
                     tabla.AddCell(new PdfPCell(new Phrase(unidad, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });
-                    tabla.AddCell(new PdfPCell(new Phrase(descripcion, fontNormal)) { BackgroundColor = fondoFila, NoWrap = false });
+                    tabla.AddCell(new PdfPCell(new Phrase(descripcion, fontNormal)) { BackgroundColor = fondoFila });
+
+                    // PRECIO UNIT
                     tabla.AddCell(new PdfPCell(new Phrase(precioFormateado, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_RIGHT });
-                    tabla.AddCell(new PdfPCell(new Phrase("-" + descuentoFormateado, fontRojo)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_RIGHT });
-                    tabla.AddCell(new PdfPCell(new Phrase(importeFormateado, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_RIGHT });
-                    tabla.AddCell(new PdfPCell(new Phrase(totalFormateado, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_RIGHT });
+
+                    // Si hay descuentos, agrega la columna
+                    if (hayDescuentos)
+                    {
+                        tabla.AddCell(new PdfPCell(new Phrase("-" + descuentoFormateado, fontRojo))
+                        {
+                            BackgroundColor = fondoFila,
+                            HorizontalAlignment = Element.ALIGN_RIGHT
+                        });
+                    }
+
+                    // IMPORTE
+                    tabla.AddCell(new PdfPCell(new Phrase(importeFormateado, fontNormal))
+                    {
+                        BackgroundColor = fondoFila,
+                        HorizontalAlignment = Element.ALIGN_RIGHT
+                    });
+
+                    // TOTAL
+                    tabla.AddCell(new PdfPCell(new Phrase(totalFormateado, fontNormal))
+                    {
+                        BackgroundColor = fondoFila,
+                        HorizontalAlignment = Element.ALIGN_RIGHT
+                    });
 
                     pos++;
                 }

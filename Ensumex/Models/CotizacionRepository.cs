@@ -23,6 +23,7 @@ namespace Ensumex.Models
             decimal descuento,
             decimal total,
             string notas,
+            //string notaprincipal,
             DataGridView tablaCotizacion)
         {
             using (var conn = ConnectionToSql.GetConnection())
@@ -274,20 +275,47 @@ namespace Ensumex.Models
 
         public static void GuardarSiNoExisteCliente(string numeroCliente, string nombreCliente)
         {
+            if (string.IsNullOrWhiteSpace(nombreCliente))
+                return;
+
             using (var conn = ConnectionToSql.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SqlCommand(@"
-                    IF NOT EXISTS (SELECT 1 FROM CLIE01 WHERE CLAVE = @NumeroCliente)
-                    BEGIN
-                    INSERT INTO CLIE01 (CLAVE,STATUS, NOMBRE)
-                    VALUES (@NumeroCliente,@Status, @NombreCliente);
-                    END", conn))
+
+                // Verificar si ya existe por CLAVE o por NOMBRE
+                using (var cmdCheck = new SqlCommand(@"
+                    SELECT COUNT(*) 
+                    FROM CLIE01 
+                    WHERE (CLAVE = @NumeroCliente AND @NumeroCliente <> '') OR (NOMBRE = @NombreCliente)", conn))
                 {
-                    cmd.Parameters.AddWithValue("@NumeroCliente", numeroCliente);   
-                    cmd.Parameters.AddWithValue("@Status", "A");
-                    cmd.Parameters.AddWithValue("@NombreCliente", nombreCliente);
-                    cmd.ExecuteNonQuery();
+                    cmdCheck.Parameters.AddWithValue("@NumeroCliente", (object)numeroCliente ?? DBNull.Value);
+                    cmdCheck.Parameters.AddWithValue("@NombreCliente", nombreCliente);
+                    int exists = Convert.ToInt32(cmdCheck.ExecuteScalar() ?? 0);
+                    if (exists > 0)
+                        return; // ya existe, nada que hacer
+                }
+
+                // Si no se proporcionó numeroCliente, generar uno nuevo numérico seguro
+                if (string.IsNullOrWhiteSpace(numeroCliente))
+                {
+                    using (var cmdNewKey = new SqlCommand(@"
+                        SELECT ISNULL(MAX(TRY_CAST(CLAVE AS INT)), 0) + 1 
+                        FROM CLIE01", conn))
+                    {
+                        var newKeyObj = cmdNewKey.ExecuteScalar();
+                        numeroCliente = (newKeyObj != null) ? newKeyObj.ToString() : "1";
+                    }
+                }
+
+                // Insertar
+                using (var cmdInsert = new SqlCommand(@"
+                    INSERT INTO CLIE01 (CLAVE, STATUS, NOMBRE)
+                    VALUES (@NumeroCliente, @Status, @NombreCliente);", conn))
+                {
+                    cmdInsert.Parameters.AddWithValue("@NumeroCliente", numeroCliente);
+                    cmdInsert.Parameters.AddWithValue("@Status", "A");
+                    cmdInsert.Parameters.AddWithValue("@NombreCliente", nombreCliente);
+                    cmdInsert.ExecuteNonQuery();
                 }
             }
         }
@@ -314,6 +342,214 @@ namespace Ensumex.Models
                 }
             }
             return folio;
+        }
+
+        public static DataRow ObtenerCotizacionPorId(int idCotizacion)
+        {
+            var dt = new DataTable();
+            using (var conn = ConnectionToSql.GetConnection())
+            {
+                string query = @"
+                    SELECT IdCotizacion, NumeroCotizacion, Fecha, NombreCliente, NumeroCliente,
+                           CostoInstalacion, CostoFlete, Subtotal, Descuento, Total, Notas, Estado
+                    FROM Cotizacion
+                    WHERE IdCotizacion = @IdCotizacion";
+                using (var cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
+                    using (var adapter = new SqlDataAdapter(cmd))
+                    {
+                        conn.Open();
+                        adapter.Fill(dt);
+                    }
+                }
+            }
+            return dt.Rows.Count > 0 ? dt.Rows[0] : null;
+        }
+
+        public static void ActualizarCotizacion(
+            int idCotizacion,
+            string numeroCotizacion,
+            DateTime fecha,
+            string nombreCliente,
+            string numeroCliente,
+            decimal costoInstalacion,
+            decimal costoFlete,
+            decimal subtotal,
+            decimal descuento,
+            decimal total,
+            string notas,
+            DataGridView tablaCotizacion)
+        {
+            using (var conn = ConnectionToSql.GetConnection())
+            {
+                conn.Open();
+                using (var tran = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        // Actualizar encabezado
+                        using (var cmdUpd = new SqlCommand(@"
+                            UPDATE Cotizacion
+                            SET NumeroCotizacion = @NumeroCotizacion,
+                                Fecha = @Fecha,
+                                NombreCliente = @NombreCliente,
+                                NumeroCliente = @NumeroCliente,
+                                CostoInstalacion = @CostoInstalacion,
+                                CostoFlete = @CostoFlete,
+                                Subtotal = @Subtotal,
+                                Descuento = @Descuento,
+                                Total = @Total,
+                                Notas = @Notas
+                            WHERE IdCotizacion = @IdCotizacion;", conn, tran))
+                        {
+                            cmdUpd.Parameters.AddWithValue("@NumeroCotizacion", numeroCotizacion);
+                            cmdUpd.Parameters.AddWithValue("@Fecha", fecha);
+                            cmdUpd.Parameters.AddWithValue("@NombreCliente", nombreCliente ?? (object)DBNull.Value);
+                            cmdUpd.Parameters.AddWithValue("@NumeroCliente", numeroCliente ?? (object)DBNull.Value);
+                            cmdUpd.Parameters.AddWithValue("@CostoInstalacion", costoInstalacion);
+                            cmdUpd.Parameters.AddWithValue("@CostoFlete", costoFlete);
+                            cmdUpd.Parameters.AddWithValue("@Subtotal", subtotal);
+                            cmdUpd.Parameters.AddWithValue("@Descuento", descuento);
+                            cmdUpd.Parameters.AddWithValue("@Total", total);
+                            cmdUpd.Parameters.AddWithValue("@Notas", notas ?? (object)DBNull.Value);
+                            cmdUpd.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
+                            int affected = cmdUpd.ExecuteNonQuery();
+                            if (affected == 0)
+                                throw new InvalidOperationException("No se encontró la cotización a actualizar.");
+                        }
+
+                        // Borrar detalles anteriores
+                        using (var cmdDel = new SqlCommand("DELETE FROM CotizacionDetalle WHERE IdCotizacion = @IdCotizacion;", conn, tran))
+                        {
+                            cmdDel.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
+                            cmdDel.ExecuteNonQuery();
+                        }
+
+                        // Insertar nuevos detalles
+                        foreach (DataGridViewRow row in tablaCotizacion.Rows)
+                        {
+                            if (row.IsNewRow) continue;
+
+                            using (var cmdDetalle = new SqlCommand(@"
+                                INSERT INTO CotizacionDetalle
+                                (IdCotizacion, ClaveProducto, Descripcion, Unidad, PrecioUnitario, Cantidad, Subtotal, AplicaDescuento)
+                                VALUES (@IdCotizacion, @ClaveProducto, @Descripcion, @Unidad, @PrecioUnitario, @Cantidad, @Subtotal, @AplicaDescuento);", conn, tran))
+                            {
+                                cmdDetalle.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
+                                cmdDetalle.Parameters.AddWithValue("@ClaveProducto", row.Cells["CLAVE"].Value ?? "");
+                                cmdDetalle.Parameters.AddWithValue("@Descripcion", row.Cells["DESCRIPCIÓN"].Value ?? "");
+                                cmdDetalle.Parameters.AddWithValue("@Unidad", row.Cells["UNIDAD"].Value ?? "");
+                                cmdDetalle.Parameters.AddWithValue("@PrecioUnitario", row.Cells["PRECIO"].Value ?? 0);
+                                cmdDetalle.Parameters.AddWithValue("@Subtotal", row.Cells["Subtotal"].Value ?? 0);
+                                cmdDetalle.Parameters.AddWithValue("@Cantidad", row.Cells["CANTIDAD"].Value ?? 0);
+                                cmdDetalle.Parameters.AddWithValue("@AplicaDescuento", int.TryParse(row.Cells["Descuento"]?.Value?.ToString(), out int d) ? d : 0);
+                                cmdDetalle.ExecuteNonQuery();
+                            }
+                        }
+
+                        tran.Commit();
+                    }
+                    catch
+                    {
+                        tran.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
+        public static void ActualizarCotizacionTablas(
+            int idCotizacion,
+            string numeroCotizacion,
+            DateTime fecha,
+            string nombreCliente,
+            string numeroCliente,
+            decimal costoInstalacion,
+            decimal costoFlete,
+            decimal subtotal,
+            decimal descuento,
+            decimal total,
+            string notas,
+            List<List<object[]>> tablas)
+        {
+            using (var conn = ConnectionToSql.GetConnection())
+            {
+                conn.Open();
+                using (var tran = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        // Actualizar encabezado
+                        using (var cmdUpd = new SqlCommand(@"
+                            UPDATE Cotizacion
+                            SET NumeroCotizacion = @NumeroCotizacion,
+                                Fecha = @Fecha,
+                                NombreCliente = @NombreCliente,
+                                NumeroCliente = @NumeroCliente,
+                                CostoInstalacion = @CostoInstalacion,
+                                CostoFlete = @CostoFlete,
+                                Subtotal = @Subtotal,
+                                Descuento = @Descuento,
+                                Total = @Total,
+                                Notas = @Notas
+                            WHERE IdCotizacion = @IdCotizacion;", conn, tran))
+                        {
+                            cmdUpd.Parameters.AddWithValue("@NumeroCotizacion", numeroCotizacion);
+                            cmdUpd.Parameters.AddWithValue("@Fecha", fecha);
+                            cmdUpd.Parameters.AddWithValue("@NombreCliente", nombreCliente ?? (object)DBNull.Value);
+                            cmdUpd.Parameters.AddWithValue("@NumeroCliente", numeroCliente ?? (object)DBNull.Value);
+                            cmdUpd.Parameters.AddWithValue("@CostoInstalacion", costoInstalacion);
+                            cmdUpd.Parameters.AddWithValue("@CostoFlete", costoFlete);
+                            cmdUpd.Parameters.AddWithValue("@Subtotal", subtotal);
+                            cmdUpd.Parameters.AddWithValue("@Descuento", descuento);
+                            cmdUpd.Parameters.AddWithValue("@Total", total);
+                            cmdUpd.Parameters.AddWithValue("@Notas", notas ?? (object)DBNull.Value);
+                            cmdUpd.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
+                            int affected = cmdUpd.ExecuteNonQuery();
+                            if (affected == 0)
+                                throw new InvalidOperationException("No se encontró la cotización a actualizar.");
+                        }
+
+                        // Borrar detalles anteriores
+                        using (var cmdDel = new SqlCommand("DELETE FROM CotizacionDetalle WHERE IdCotizacion = @IdCotizacion;", conn, tran))
+                        {
+                            cmdDel.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
+                            cmdDel.ExecuteNonQuery();
+                        }
+
+                        // Insertar nuevos detalles desde las tablas
+                        foreach (var tabla in tablas)
+                        {
+                            foreach (var row in tabla)
+                            {
+                                using (var cmdDetalle = new SqlCommand(@"
+                                    INSERT INTO CotizacionDetalle
+                                    (IdCotizacion, ClaveProducto, Descripcion, Unidad, PrecioUnitario, Cantidad, Subtotal, AplicaDescuento)
+                                    VALUES (@IdCotizacion, @ClaveProducto, @Descripcion, @Unidad, @PrecioUnitario, @Cantidad, @Subtotal, @AplicaDescuento);", conn, tran))
+                                {
+                                    cmdDetalle.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
+                                    cmdDetalle.Parameters.AddWithValue("@ClaveProducto", row.Length > 1 ? row[1] ?? "" : "");
+                                    cmdDetalle.Parameters.AddWithValue("@Descripcion", row.Length > 2 ? row[2] ?? "" : "");
+                                    cmdDetalle.Parameters.AddWithValue("@Unidad", row.Length > 3 ? row[3] ?? "" : "");
+                                    cmdDetalle.Parameters.AddWithValue("@PrecioUnitario", row.Length > 4 ? row[4] ?? 0 : 0);
+                                    cmdDetalle.Parameters.AddWithValue("@Cantidad", row.Length > 5 ? row[5] ?? 0 : 0);
+                                    cmdDetalle.Parameters.AddWithValue("@Subtotal", row.Length > 6 ? row[6] ?? 0 : 0);
+                                    cmdDetalle.Parameters.AddWithValue("@AplicaDescuento", int.TryParse(row.Length > 0 ? row[0]?.ToString() : "0", out int d) ? d : 0);
+                                    cmdDetalle.ExecuteNonQuery();
+                                }
+                            }
+                        }
+
+                        tran.Commit();
+                    }
+                    catch
+                    {
+                        tran.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
     }
 }

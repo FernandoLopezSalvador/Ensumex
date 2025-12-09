@@ -146,6 +146,40 @@ namespace Ensumex.PDFtemplates
                         // posición vertical: usar el bottom margin + offset (mismos márgenes usados al crear el documento)
                         float yPie = leftMargin + 105f; // leftMargin reused como bottom margin (en tu documento era 40)
                         // WriteSelectedRows espera coordenadas en el sistema de la página (origen en bottom-left)
+                        if (File.Exists(rutaFondo))
+                        {
+                            PdfContentByte fondo = stamper.GetUnderContent(lastPage);
+                            iTextSharp.text.Image imgFondo = iTextSharp.text.Image.GetInstance(rutaFondo);
+
+                            float pageWidth = pageSize.Width;
+                            float pageHeight = pageSize.Height;
+
+                            // --- Escalar la imagen para que ocupe el 30% de la altura ---
+                            float desiredHeight = pageHeight * 0.40f;
+
+                            // Mantener proporción
+                            float proportion = desiredHeight / imgFondo.Height;
+                            float newWidth = imgFondo.Width * proportion;
+
+                            imgFondo.ScaleAbsolute(newWidth, desiredHeight);
+
+                            // --- Centrar imagen en la parte inferior ---
+                            float xPos = (pageWidth - newWidth) / 2;
+                            float yPos = 0; // parte inferior
+
+                            imgFondo.SetAbsolutePosition(xPos, yPos);
+
+                            // Opacidad 50%
+                            PdfGState transparencia = new PdfGState();
+                            transparencia.FillOpacity = 0.50f;
+                            transparencia.StrokeOpacity = 0.50f;
+
+                            fondo.SaveState();
+                            fondo.SetGState(transparencia);
+                            fondo.AddImage(imgFondo);
+                            fondo.RestoreState();
+                        }
+
                         PdfContentByte over = stamper.GetOverContent(lastPage);
                         tablaPie.WriteSelectedRows(0, -1, leftMargin, yPie, over);
 
