@@ -14,12 +14,16 @@ using Ensumex.Utils;
 namespace Ensumex.Views
 {
     public partial class Cotizaciones : UserControl
+
     {
-        public Cotizaciones()
+        private readonly string usuarioActual;
+
+        public Cotizaciones(string usuarioActual)
         {
             InitializeComponent();
             InicializarTabla();
             CargarCotizaciones();
+            this.usuarioActual = usuarioActual;
         }
         private void InicializarTabla()
         {
@@ -136,12 +140,10 @@ namespace Ensumex.Views
                         MessageBox.Show("No se pudo obtener el ID de la cotización.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-
-                    // Crear UserControl EditCotiza, cargar desde repositorio por Id y mostrar en Form modal
-                    var editCtrl = new EditCotiza();
+                    var editCtrl = new EditCotiza(usuarioActual);
                     try
                     {
-                        editCtrl.LoadFromId(idCotizacion); // método que implementaremos en EditCotiza
+                        editCtrl.LoadFromId(idCotizacion); 
                     }
                     catch (Exception ex)
                     {

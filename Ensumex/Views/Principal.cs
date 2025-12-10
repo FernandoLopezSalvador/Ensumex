@@ -35,7 +35,7 @@ namespace Ensumex.Forms
             ConfigurarBotones();
             ConfigurarMenu();
             CargarDatosUsuario();
-            CargarUserControl(new Cotizaciones());
+            CargarUserControl(new Cotizaciones(lbl_UsuarioInicio.Text));
         }
         private void ConfigurarBotones()
         {
@@ -213,7 +213,7 @@ namespace Ensumex.Forms
 
         private void BtnInicio_Click(object sender, EventArgs e)
         {
-            CargarUserControl(new Cotizaciones());
+            CargarUserControl(new Cotizaciones(lbl_UsuarioInicio.Text));
         }
 
         private void BtnInve_Click(object sender, EventArgs e)

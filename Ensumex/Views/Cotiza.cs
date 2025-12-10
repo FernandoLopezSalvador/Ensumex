@@ -41,7 +41,6 @@ namespace Ensumex.Views
 
         public Cotiza(string usuario)
         {
-
             InitializeComponent();
             Txt_Notaprincipal.Text = "En atención a su amable solicitud, me permito presentarle esta cotización para la venta y/o instalación de acuerdo a\r\nlo siguiente:";
             usuarioActual = usuario;
@@ -252,6 +251,7 @@ namespace Ensumex.Views
         }
         private void GuardarCotizacion()
         {
+            ActualizarNumeroCotizacionEnLabel();
             try
             {
                 CotizacionRepository.GuardarSiNoExisteCliente(txt_NumeroCliente.Text, txt_Nombrecliente.Text);
@@ -698,38 +698,41 @@ namespace Ensumex.Views
             }
 
             string prefijo = "G";
-            int prioridadActual = int.MaxValue;
+            int prioridad = 999;
 
-            // Detectar el prefijo en base a las descripciones
-            for (int i = tbl_Cotizacion.Rows.Count - 1; i >= 0; i--)
+            foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
             {
-                if (tbl_Cotizacion.Rows[i].IsNewRow)
-                    continue;
+                if (row.IsNewRow) continue;
 
-                string descripcion = tbl_Cotizacion.Rows[i].Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
+                string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
 
-                if ((descripcion.Contains("CALENT") || descripcion.Contains("CALENTADOR") || descripcion.Contains("CALENT.")) && prioridadActual > 1)
+                // E = Calentadores (PRIORIDAD 1)
+                if ((descripcion.Contains("CALENT") || descripcion.Contains("CALENTADOR") || descripcion.Contains("CALENT.")) && prioridad > 1)
                 {
                     prefijo = "E";
-                    prioridadActual = 1;
+                    prioridad = 1;
                 }
-                else if (descripcion.Contains("AIRE") && prioridadActual > 2)
+                // D = Aires acondicionados (PRIORIDAD 2)
+                else if (descripcion.Contains("AIRE") && prioridad > 2)
                 {
                     prefijo = "D";
-                    prioridadActual = 2;
+                    prioridad = 2;
                 }
-                else if ((descripcion.Contains("BOMBA DE") || descripcion.Contains("BOMBA TIPO") ||
-                          descripcion.Contains("MOTOBOMBA") || descripcion.Contains("MOTB") || descripcion.Contains("MOT.")) && prioridadActual > 3)
+                // C = Bombas (PRIORIDAD 3)
+                else if ((descripcion.Contains("BOMBA") || descripcion.Contains("MOTOBOMBA") || descripcion.Contains("MOTB")) && prioridad > 3)
                 {
                     prefijo = "C";
-                    prioridadActual = 3;
+                    prioridad = 3;
                 }
-                else if ((descripcion.Contains("LUMINARIO") || descripcion.Contains("LUM SUM")) && prioridadActual > 4)
+                // F = Luminarias (PRIORIDAD 4)
+                else if ((descripcion.Contains("LUMINARIO") || descripcion.Contains("LUM SUM")) && prioridad > 4)
                 {
                     prefijo = "F";
-                    prioridadActual = 4;
+                    prioridad = 4;
                 }
             }
+
+            // Obtener último folio
             string ultimoFolio = CotizacionRepository.ObtenerUltimoFolioPorPrefijo(prefijo);
             int consecutivo = 1;
 
@@ -739,8 +742,8 @@ namespace Ensumex.Views
                 if (int.TryParse(numStr, out int ultimoNum))
                     consecutivo = ultimoNum + 1;
             }
-            string nuevoFolio = $"{prefijo}{consecutivo.ToString("D4")}";
-            lbl_NoCotiza.Text = nuevoFolio;
+
+            lbl_NoCotiza.Text = $"{prefijo}{consecutivo:D4}";
         }
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -753,7 +756,8 @@ namespace Ensumex.Views
             var resultados = productosCache
                 .Where(p =>
                     p.CLAVE.ToLower().Contains(texto) ||
-                    p.DESCRIPCIÓN.ToLower().Contains(texto))
+                    p.DESCRIPCIÓN.ToLower().Contains(texto)||
+                    p.EXIST.ToLower().Contains(texto))
                 .ToList();
 
             if (resultados.Any())
@@ -805,7 +809,8 @@ namespace Ensumex.Views
                 CLAVE = p.CVE_ART ?? "N/A",
                 DESCRIPCIÓN = p.DESCR ?? "N/A",
                 UNIDAD = p.UNI_MED ?? "N/A",
-                PRECIO = p.PRECIO != 0 ? (p.PRECIO * 1.16m).ToString("C2") : "$0.00"
+                PRECIO = p.PRECIO != 0 ? (p.PRECIO * 1.16m).ToString("C2") : "$0.00",
+                EXIST = p.EXIST != 0 ? p.EXIST.ToString() : "0"
             }).ToList<dynamic>();
         }
 
@@ -971,6 +976,7 @@ namespace Ensumex.Views
                 };
                 productosForm.ShowDialog();
             }
+            ActualizarNumeroCotizacionEnLabel();
         }
 
         private void Btn_Cancelar_Click(object sender, EventArgs e)
@@ -980,6 +986,7 @@ namespace Ensumex.Views
 
         private void Btn_Guardar_Click(object sender, EventArgs e)
         {
+            ActualizarNumeroCotizacionEnLabel();
             ClientesDao clientesDao = new ClientesDao();
             string nombreCliente = txt_Nombrecliente.Text;
             if (!clientesDao.ClienteExiste(nombreCliente))

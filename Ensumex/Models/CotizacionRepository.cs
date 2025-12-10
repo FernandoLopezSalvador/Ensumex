@@ -319,29 +319,32 @@ namespace Ensumex.Models
                 }
             }
         }
-            
+
         public static string ObtenerUltimoFolioPorPrefijo(string prefijo)
         {
-            string folio = "";
-            using (SqlConnection conn = ConnectionToSql.GetConnection())
             {
-                conn.Open();
-                string query = @"
-                SELECT TOP 1 NumeroCotizacion 
-                FROM Cotizacion 
-                WHERE NumeroCotizacion LIKE @prefijo + '%' 
-                ORDER BY NumeroCotizacion DESC";
-
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                string folio = "";
+                using (SqlConnection conn = ConnectionToSql.GetConnection())
                 {
-                    cmd.Parameters.AddWithValue("@prefijo", prefijo);
+                    conn.Open();
+                    string query = @"
+            SELECT TOP 1 NumeroCotizacion
+            FROM Cotizacion
+            WHERE NumeroCotizacion LIKE @prefijo + '%'
+            ORDER BY
+                TRY_CAST(SUBSTRING(NumeroCotizacion, LEN(@prefijo) + 1, 10) AS INT) DESC";
 
-                    var result = cmd.ExecuteScalar();
-                    if (result != null)
-                        folio = result.ToString();
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@prefijo", prefijo);
+
+                        var result = cmd.ExecuteScalar();
+                        if (result != null)
+                            folio = result.ToString();
+                    }
                 }
+                return folio;
             }
-            return folio;
         }
 
         public static DataRow ObtenerCotizacionPorId(int idCotizacion)

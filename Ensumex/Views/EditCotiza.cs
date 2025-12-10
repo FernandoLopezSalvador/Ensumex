@@ -1,6 +1,8 @@
-﻿using Ensumex.Models;
+﻿using Ensumex.Clases;
+using Ensumex.Models;
 using Ensumex.PDFtemplates;
-using Ensumex.Clases;
+using Ensumex.Services;
+using Ensumex.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,13 +23,13 @@ namespace Ensumex.Views
         private DataGridView dgvBusqueda;
         private List<dynamic> productosCache = new();
 
-        //public string UsuarioActual { get; set; } = Environment.UserName;
-
         public EditCotiza(string usuario)
         {
             InitializeComponent();
             usuarioActual = usuario;
-            InicializarTabla();         // crea columnas si hacen falta
+            InicializarTabla();         
+            CargarProductosCache();
+            InicializarPanelBusqueda();
             HookCotizaBehavior();
         }
 
@@ -158,6 +160,70 @@ namespace Ensumex.Views
         }
 
         // ---- Comportamiento de Cotiza ----
+        private void CargarProductosCache()
+        {
+            var productoService = new ProductoServices1();
+            var productos = productoService.ObtenerProductos();
+            productosCache = productos.Select(p => new
+            {
+                CLAVE = p.CVE_ART ?? "N/A",
+                DESCRIPCIÓN = p.DESCR ?? "N/A",
+                UNIDAD = p.UNI_MED ?? "N/A",
+                PRECIO = p.PRECIO != 0 ? (p.PRECIO * 1.16m).ToString("C2") : "$0.00",
+                EXIST= p.EXIST > 0 ? p.EXIST.ToString() : "0"
+            }).ToList<dynamic>();
+        }
+        private void InicializarPanelBusqueda()
+        {
+            panelBusqueda = new Panel
+            {
+                Visible = false,
+                BorderStyle = BorderStyle.FixedSingle,
+                Width = 600,
+                Height = 280
+            };
+
+            dgvBusqueda = new DataGridView
+            {
+                Dock = DockStyle.Fill,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                RowHeadersVisible = false
+            };
+            TablaFormat.AplicarEstilosTabla(dgvBusqueda);
+            panelBusqueda.Controls.Add(dgvBusqueda);
+            this.Controls.Add(panelBusqueda);
+            panelBusqueda.Location = new Point(Txt_Buscar.Left, Txt_Buscar.Bottom + 2);
+            dgvBusqueda.CellDoubleClick += DgvBusqueda_CellDoubleClick;
+            dgvBusqueda.LostFocus += (s, e) => panelBusqueda.Visible = false;
+            Txt_Buscar.LostFocus += (s, e) => { if (!panelBusqueda.Focused && !dgvBusqueda.Focused) panelBusqueda.Visible = false; };
+        }
+        private void DgvBusqueda_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                var row = dgvBusqueda.Rows[e.RowIndex];
+                string clave = row.Cells["CLAVE"].Value?.ToString();
+                string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString();
+                decimal precio = Convert.ToDecimal(row.Cells["PRECIO"].Value?.ToString().Replace("$", "").Trim() ?? "0");
+                int cantidad = 1;
+                string unidad = row.Cells["UNIDAD"].Value?.ToString();
+                decimal total = precio * cantidad;
+                tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidad, total, cantidad);
+                ActualizarNumeroCotizacionEnLabel();
+                ActualizarTotales();
+                ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
+                HabilitarEdicionParcial();
+                panelBusqueda.Visible = false;
+                Txt_Buscar.Clear();
+                int lastRow = tbl_Cotizacion.Rows.Count - 1;
+                tbl_Cotizacion.CurrentCell = tbl_Cotizacion.Rows[lastRow].Cells["CANTIDAD"];
+                tbl_Cotizacion.BeginEdit(true);
+            }
+        }
 
         private void HookCotizaBehavior()
         {
@@ -291,7 +357,6 @@ namespace Ensumex.Views
             SetTextIfExists("lbl_TotalNeto", totalNeto.ToString("C"));
         }
 
-        // Guardar cotización (ahora con estructura similar a Cotiza.cs, incluye generación de PDF y opción WhatsApp)
         private void Btn_Guardar_Click(object? sender, EventArgs e)
         {
             try
@@ -328,7 +393,7 @@ namespace Ensumex.Views
                 string notas = FindControlByName<TextBox>("Txt_observaciones", "txtNotas")?.Text ?? "";
 
                 // Si hay tablas guardadas -> tablas múltiples
-                if (tablasGuardadas.Count > 0 && tbl.Rows.Count >= 1)
+                if (tablasGuardadas.Count > 0 && tbl.Rows.Count >=1)
                 {
                     var tablasParaGuardar = new List<List<object[]>>(tablasGuardadas);
                     List<object[]> tablaActual = new();
@@ -347,7 +412,6 @@ namespace Ensumex.Views
 
                     if (this.IdCotizacion > 0)
                     {
-                        // Actualizar existente (y opcionalmente generar PDF)
                         using (SaveFileDialog sfd = new SaveFileDialog())
                         {
                             sfd.Filter = "Archivo PDF|*.pdf";
@@ -441,7 +505,7 @@ namespace Ensumex.Views
                 }
 
                 // Caso: una sola tabla (detalle)
-                if (tbl.Rows.Count > 1 && tablasGuardadas.Count == 0)
+                if (tbl.Rows.Count >= 1 && tablasGuardadas.Count == 0)
                 {
                     CotizacionRepository.GuardarSiNoExisteCliente(numeroCliente, nombreCliente);
 
@@ -570,7 +634,6 @@ namespace Ensumex.Views
             }
         }
 
-        // Guardado completo (creación) con PDF para cotización simple
         private void GuardarCotizacion()
         {
             try
@@ -590,7 +653,6 @@ namespace Ensumex.Views
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         decimal totalDescuentoCalculado = 0m;
-                        // Calcular descuento total de la cotización
                         foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                         {
                             if (row.IsNewRow) continue;
@@ -602,7 +664,6 @@ namespace Ensumex.Views
                             decimal descuentoFila = (precio * cantidad) * (porcentajeDescuento / 100m);
                             totalDescuentoCalculado += descuentoFila;
                         }
-                        // Guardar cotización en base de datos
                         CotizacionRepository.GuardarCotizacion(
                             numeroCotizacion: lbl_NoCotiza.Text,
                             fecha: DateTime.Now,
@@ -614,10 +675,8 @@ namespace Ensumex.Views
                             descuento: totalDescuentoCalculado,
                             total: decimal.TryParse(lbl_TotalNeto.Text.Replace("$", ""), out var tot) ? tot : 0,
                             notas: Txt_observaciones.Text,
-                            //notaprincipal: Txt_Notaprincipal.Text,
                             tablaCotizacion: tbl_Cotizacion
                         );
-                        // Generar PDF
                         PDFGenerator.GenerarPDFCotizacion(
                             rutaArchivo: sfd.FileName,
                             numeroCotizacion: lbl_NoCotiza.Text,
@@ -634,7 +693,6 @@ namespace Ensumex.Views
                             usuario: usuarioActual
                         );
 
-                        // Preguntar si quiere enviar por WhatsApp
                         if (MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             string numeroCliente = NormalizarNumeroWhatsApp(txt_NumeroCliente.Text);
@@ -683,7 +741,6 @@ namespace Ensumex.Views
             }
         }
 
-        // Guardado completo (creación) con PDF para tablas múltiples
         private void GuardarCotizacionTablas()
         {
             using (SaveFileDialog sfd = new SaveFileDialog())
@@ -711,7 +768,6 @@ namespace Ensumex.Views
                     foreach (DataGridViewColumn col in tbl_Cotizacion.Columns)
                         encabezados.Add(col.HeaderText);
 
-                    // --- GUARDAR EN BASE DE DATOS ---
                     CotizacionRepository.GuardarCotizacionTablas(
                         numeroCotizacion: lbl_NoCotiza.Text,
                         fecha: DateTime.Now,
@@ -725,7 +781,6 @@ namespace Ensumex.Views
                         notas: Txt_observaciones.Text,
                         tablas: tablasParaGuardar
                     );
-                    // --- GENERAR PDF ---
                     GeneraPDFTablas.GenerarPDFConTablas(
                         rutaArchivo: sfd.FileName,
                         tablas: tablasParaGuardar,
@@ -740,7 +795,6 @@ namespace Ensumex.Views
                         notas: Txt_observaciones.Text,
                         usuario: usuarioActual
                     );
-                    // Preguntar si desea enviar por WhatsApp
                     var enviarWhats = MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (enviarWhats == DialogResult.Yes)
                     {
@@ -796,7 +850,6 @@ namespace Ensumex.Views
             tbl?.Rows.Clear();
         }
 
-        // Asegura que la tabla tenga las columnas en el esquema esperado
         private void EnsureCotizacionTableSchema(DataGridView tbl)
         {
             if (tbl.Columns.Contains("Descuento") && tbl.Columns.Contains("CLAVE") && tbl.Columns.Contains("DESCRIPCIÓN"))
@@ -844,7 +897,6 @@ namespace Ensumex.Views
             tbl.Columns.Add(btnEliminar);
         }
 
-        // Inicializa la tabla si existe en el diseñador
         private void InicializarTabla()
         {
             var tbl = GetTbl();
@@ -855,7 +907,6 @@ namespace Ensumex.Views
             }
         }
 
-        // Habilita edición parcial (igual que Cotiza)
         private void HabilitarEdicionParcial()
         {
             var tbl = GetTbl();
@@ -895,14 +946,12 @@ namespace Ensumex.Views
                 var control = matches[0];
                 string text = null;
 
-                // TextBox / TextBoxBase
                 if (control is TextBox tb)
                 {
                     text = tb.Text;
                 }
                 else
                 {
-                    // Intentar leer propiedad Text por reflexión (soporta MaterialTextBox2 y otros)
                     var prop = control.GetType().GetProperty("Text");
                     if (prop != null)
                         text = prop.GetValue(control)?.ToString();
@@ -913,9 +962,6 @@ namespace Ensumex.Views
             }
             return 0m;
         }
-
-        // Helpers ///////////////////////////////////////////////////////////
-
         private DataGridView? GetTbl() => FindControlByName<DataGridView>("tbl_Cotizacion", "tblCotizacion", "dgvCotizacion", "dgvDetalleProductos", "dgvDetalle");
 
         private void SetDateIfExists(string controlName, object value)
@@ -992,7 +1038,6 @@ namespace Ensumex.Views
             }
         }
 
-        // Copiado de Cotiza: detecta prefijo y calcula siguiente folio
         private void ActualizarNumeroCotizacionEnLabel()
         {
             var tbl = GetTbl();
@@ -1122,7 +1167,6 @@ namespace Ensumex.Views
             }
         }
 
-        // Exponer agregar tabla guardada (igual que Cotiza)
         private void Btn_AñadirTabla_Click(object sender, EventArgs e)
         {
             var tbl = GetTbl();
@@ -1210,7 +1254,8 @@ namespace Ensumex.Views
             var resultados = productosCache
                 .Where(p =>
                     p.CLAVE.ToLower().Contains(texto) ||
-                    p.DESCRIPCIÓN.ToLower().Contains(texto))
+                    p.DESCRIPCIÓN.ToLower().Contains(texto)||
+                    p.EXIST.ToLower().Contains(texto))
                 .ToList();
 
             if (resultados.Any())

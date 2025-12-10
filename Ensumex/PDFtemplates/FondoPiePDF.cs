@@ -25,8 +25,6 @@ namespace Ensumex.PDFtemplates
             this.rutaFirma = rutaFirma;
             this.usuario = usuario;
         }
-
-        // No hacemos uso de OnEndPage para el pie cuando queremos solo en la última página.
         public override void OnEndPage(PdfWriter writer, Document document)
         {
             // Dejamos vacio si se usa la estrategia de "stampear" el pie solo en la última página.
@@ -143,9 +141,9 @@ namespace Ensumex.PDFtemplates
                         tablaPie.AddCell(celdaBanco);
                         tablaPie.AddCell(celdaDireccion);
 
-                        // posición vertical: usar el bottom margin + offset (mismos márgenes usados al crear el documento)
-                        float yPie = leftMargin + 105f; // leftMargin reused como bottom margin (en tu documento era 40)
-                        // WriteSelectedRows espera coordenadas en el sistema de la página (origen en bottom-left)
+                        
+                        float yPie = leftMargin + 105f; 
+                        
                         if (File.Exists(rutaFondo))
                         {
                             PdfContentByte fondo = stamper.GetUnderContent(lastPage);
@@ -154,10 +152,8 @@ namespace Ensumex.PDFtemplates
                             float pageWidth = pageSize.Width;
                             float pageHeight = pageSize.Height;
 
-                            // --- Escalar la imagen para que ocupe el 30% de la altura ---
                             float desiredHeight = pageHeight * 0.40f;
 
-                            // Mantener proporción
                             float proportion = desiredHeight / imgFondo.Height;
                             float newWidth = imgFondo.Width * proportion;
 
@@ -165,14 +161,14 @@ namespace Ensumex.PDFtemplates
 
                             // --- Centrar imagen en la parte inferior ---
                             float xPos = (pageWidth - newWidth) / 2;
-                            float yPos = 0; // parte inferior
+                            float yPos = yPie + 20f;
 
                             imgFondo.SetAbsolutePosition(xPos, yPos);
 
                             // Opacidad 50%
                             PdfGState transparencia = new PdfGState();
-                            transparencia.FillOpacity = 0.50f;
-                            transparencia.StrokeOpacity = 0.50f;
+                            transparencia.FillOpacity = 0.30f;
+                            transparencia.StrokeOpacity = 0.30f;
 
                             fondo.SaveState();
                             fondo.SetGState(transparencia);
@@ -187,13 +183,11 @@ namespace Ensumex.PDFtemplates
                     }
                     reader.Close();
                 }
-
-                // Reemplazar el pdf original por el temporal
                 File.Copy(tempPath, pdfPath, true);
             }
             catch
             {
-                // si hay fallo, no interrumpimos el flujo principal; limpiamos el temporal si existe
+                MessageBox.Show("Error al estampar el pie de página en el PDF.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
