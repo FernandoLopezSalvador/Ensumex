@@ -42,7 +42,6 @@ namespace Ensumex.Views
 
             IdCotizacion = idCotizacion;
 
-            // Asignar campos (ajusta nombres de controles según tu diseñador)
             Txt_Notaprincipal.Text = "En atención a su amable solicitud, me permito presentarle esta cotización para la venta y/o instalación de acuerdo a\r\nlo siguiente:";
             SetTextIfExists("lbl_NoCotiza", row["NumeroCotizacion"]?.ToString() ?? "");
             SetDateIfExists("dtpFecha", row["Fecha"]);
@@ -310,7 +309,6 @@ namespace Ensumex.Views
             }
         }
 
-        // Actualiza totales y valores de fila (subtotal/total por fila)
         private void ActualizarTotales()
         {
             var tbl = GetTbl();
@@ -546,7 +544,6 @@ namespace Ensumex.Views
                                     tablaCotizacion: tbl
                                 );
 
-                                // Generar PDF (igual que en Cotiza.cs)
                                 PDFGenerator.GenerarPDFCotizacion(
                                     rutaArchivo: sfd.FileName,
                                     numeroCotizacion: numero,
@@ -619,7 +616,6 @@ namespace Ensumex.Views
                     }
                     else
                     {
-                        // crear nueva
                         GuardarCotizacion();
                     }
 
@@ -709,7 +705,7 @@ namespace Ensumex.Views
                                 if (!string.IsNullOrEmpty(carpeta) && Directory.Exists(carpeta))
                                 {
                                     Process.Start(new ProcessStartInfo
-                                    {
+                                    {   
                                         FileName = "explorer.exe",
                                         Arguments = $"/select,\"{sfd.FileName}\"",
                                         WindowStyle = ProcessWindowStyle.Normal
@@ -1191,7 +1187,7 @@ namespace Ensumex.Views
             else MessageBox.Show("No hay productos para guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        private void Btn_Añadprod_Click(object sender, EventArgs e)
+        private void Btn_Añadprod_Click(object sender, EventArgs e) 
         {
             using (var productosForm = new Form())
             {
@@ -1213,7 +1209,6 @@ namespace Ensumex.Views
                         cantidad = cantidadFinal;
                         decimal subtotal = precioFinal * cantidad;
                         decimal total = subtotal;
-                        // Verificar si el producto ya está en la tabla
                         foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                         {
                             if (row.Cells[0].Value?.ToString() == clave)
