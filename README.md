@@ -10,7 +10,7 @@ Características principales
 
 👥 Gestión de clientes
 
-🧾 Generación de cotizaciones
+🧾 Generación de cotizaciones (PDF, Modificación)
 
 📊 Consulta de información desde base de datos
 
