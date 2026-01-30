@@ -180,7 +180,7 @@ namespace Ensumex.Views
                     foreach (DataGridViewColumn col in tbl_Cotizacion.Columns)
                         encabezados.Add(col.HeaderText);
 
-                    // --- GUARDAR EN BASE DE DATOS ---
+                    // GUARDAR EN BASE DE DATOS 
                     CotizacionRepository.GuardarCotizacionTablas(
                         numeroCotizacion: lbl_NoCotiza.Text,
                         fecha: DateTime.Now,
@@ -264,7 +264,7 @@ namespace Ensumex.Views
                     }
 
                     sfd.Filter = "Archivo PDF|*.pdf";
-                    sfd.FileName = $"{lbl_NoCotiza.Text}.pdf";
+                    sfd.FileName = $"cotizacion_{lbl_NoCotiza.Text}.pdf";
 
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
@@ -293,7 +293,6 @@ namespace Ensumex.Views
                             descuento: totalDescuentoCalculado,
                             total: decimal.TryParse(lbl_TotalNeto.Text.Replace("$", ""), out var tot) ? tot : 0,
                             notas: Txt_observaciones.Text,
-                            //notaprincipal: Txt_Notaprincipal.Text,
                             tablaCotizacion: tbl_Cotizacion
                         );
                         // Generar PDF

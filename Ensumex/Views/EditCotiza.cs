@@ -33,7 +33,6 @@ namespace Ensumex.Views
             HookCotizaBehavior();
         }
 
-        // Carga todo desde la BD usando el id
         public void LoadFromId(int idCotizacion)
         {
             var row = CotizacionRepository.ObtenerCotizacionPorId(idCotizacion);
@@ -137,7 +136,6 @@ namespace Ensumex.Views
                         tbl.Rows.Add(nuevaFila);
                     }
 
-                    // Formatos
                     if (tbl.Columns.Contains("PRECIO"))
                         tbl.Columns["PRECIO"].DefaultCellStyle.Format = "C2";
                     if (tbl.Columns.Contains("Subtotal"))
@@ -158,7 +156,7 @@ namespace Ensumex.Views
             }
         }
 
-        // ---- Comportamiento de Cotiza ----
+        //Comportamiento de Cotiza 
         private void CargarProductosCache()
         {
             var productoService = new ProductoServices1();
@@ -239,7 +237,6 @@ namespace Ensumex.Views
                 tbl.CellClick += Tbl_CellClick;
             }
 
-            // Usar Control en lugar de TextBox para encontrar MaterialTextBox2 del diseñador
             var txtInst = FindControlByName<Control>("txt_Costoinstalacion", "txtCostoinstalacion");
             if (txtInst != null)
             {
@@ -372,14 +369,12 @@ namespace Ensumex.Views
                     return;
                 }
 
-                // Recolectar datos comunes
                 var lblNumero = FindControlByName<Label>("lbl_NoCotiza", "txtNumeroCotizacion");
                 var txtNumeroCliente = FindControlByName<Control>("txt_NumeroCliente", "txtNumeroCliente");
                 string numero = lblNumero?.Text ?? "";
                 string numeroCliente = (txtNumeroCliente?.GetType().GetProperty("Text")?.GetValue(txtNumeroCliente)?.ToString()) ?? "";
                 decimal costoInstalacion = ParseDecimalTextBox("txt_Costoinstalacion", "txtCostoinstalacion");
                 decimal costoFlete = ParseDecimalTextBox("txt_Costoflete", "txtCostoflete");
-
                 decimal subtotal = 0m, descuento = 0m, total = 0m;
                 var lblSub = FindControlByName<Label>("lbl_Subtotal");
                 if (lblSub != null) decimal.TryParse(lblSub.Text.Replace("$", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out subtotal);
@@ -450,7 +445,7 @@ namespace Ensumex.Views
                                     usuario: usuarioActual
                                 );
 
-                                // Preguntar envío por WhatsApp (misma UX que en Cotiza)
+                                // Preguntar envío por WhatsApp 
                                 if (MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                                 {
                                     string noWhats = NormalizarNumeroWhatsApp(numeroCliente);
@@ -513,7 +508,7 @@ namespace Ensumex.Views
                         using (SaveFileDialog sfd = new SaveFileDialog())
                         {
                             sfd.Filter = "Archivo PDF|*.pdf";
-                            sfd.FileName = $"{numero}.pdf";
+                            sfd.FileName = $"cotizacion_{numero}.pdf";
                             if (sfd.ShowDialog() == DialogResult.OK)
                             {
                                 // calcular descuento total

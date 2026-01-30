@@ -42,10 +42,7 @@ namespace Ensumex.PDFtemplates
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
                 string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
                 string rutaPie = Path.Combine(Application.StartupPath, "IMG", "Pie.png");
-                // No asignamos writer.PageEvent; estampamos el pie solo en la última página tras cerrar el documento.
                 doc.Open();
-
-                // Fuentes
                 var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
                 var fontheader = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
                 var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
@@ -53,8 +50,6 @@ namespace Ensumex.PDFtemplates
                 var fontRojo = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.RED);
                 var fontCursiva = FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 10);
                 var fontGris = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.GRAY);
-
-                // Logo
                 string rutaLogo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
                 if (File.Exists(rutaLogo))
                 {
@@ -139,12 +134,6 @@ namespace Ensumex.PDFtemplates
 
                 tabla.WidthPercentage = 100;
 
-
-                //tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1f, 1.2f, 1f, 1.2f });
-
-                // Encabezados de tabla
-                //string[] headers = { "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "DESCUENTO  ($)", "IMPORTE", "TOTAL" };
-
                 foreach (string header in headers)
                 {
                     PdfPCell celda = new PdfPCell(new Phrase(header, fontheader))
@@ -168,7 +157,9 @@ namespace Ensumex.PDFtemplates
                     string cantidadStr = row.Cells["CANTIDAD"].Value?.ToString() ?? "0";
                     decimal.TryParse(cantidadStr, out decimal cantidad);
                     string unidad = row.Cells["UNIDAD"].Value?.ToString() ?? "";
+                    unidad = unidad.ToUpper();
                     string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString() ?? "";
+                    descripcion = descripcion.ToUpper();
                     string precioStr = row.Cells["PRECIO"].Value?.ToString() ?? "0";
                     decimal.TryParse(precioStr, out decimal precioUnitario);
                     int.TryParse(row.Cells["Descuento"].Value?.ToString() ?? "0", out int porcentajeDescuentoFila);
@@ -185,17 +176,13 @@ namespace Ensumex.PDFtemplates
                     string totalFormateado = totalLinea.ToString("C2", new CultureInfo("es-MX"));
 
                     BaseColor fondoFila = (pos % 2 == 0) ? colorFilaPar : colorFilaImpar;
-                    // Añadir celdas
-                    // #, CANT, UNID, DESCRIPCIÓN
                     tabla.AddCell(new PdfPCell(new Phrase(pos.ToString(), fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });
                     tabla.AddCell(new PdfPCell(new Phrase(cantidadStr, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });
                     tabla.AddCell(new PdfPCell(new Phrase(unidad, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_CENTER });
                     tabla.AddCell(new PdfPCell(new Phrase(descripcion, fontNormal)) { BackgroundColor = fondoFila });
 
-                    // PRECIO UNIT
                     tabla.AddCell(new PdfPCell(new Phrase(precioFormateado, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_RIGHT });
 
-                    // Si hay descuentos, agrega la columna
                     if (hayDescuentos)
                     {
                         tabla.AddCell(new PdfPCell(new Phrase("-" + descuentoFormateado, fontRojo))
@@ -275,12 +262,10 @@ namespace Ensumex.PDFtemplates
                 float footerReserve = 140f;
                 EnsureSpaceForContent(doc, writer, notas, fontNotas, footerReserve);
 
-                // Notas generales
                 doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
                 doc.Add(new Paragraph(notas, fontNotas));
                 doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes.\n- Agradecemos su preferencia.\n\n", fontNotas));
 
-                // Firma
                 PdfPTable tablaFirma = new PdfPTable(1)
                 {
                     WidthPercentage = 100
