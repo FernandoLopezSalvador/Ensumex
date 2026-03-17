@@ -12,7 +12,7 @@ namespace Ensumex.Controllers
     public static class FirebirdRepository
     {
         private static readonly string connFirebird = "User=SYSDBA;Password=masterkey;" +
-        "Database=192.168.1.251:C:\\Program Files (x86)\\Common Files\\Aspel\\Sistemas Aspel\\SAE9.00\\Empresa01\\Datos\\SAE90EMPRE01.FDB;" +
+        "Database=192.168.1.221:C:\\Program Files (x86)\\Common Files\\Aspel\\Sistemas Aspel\\SAE9.00\\Empresa01\\Datos\\SAE90EMPRE01.FDB;" +
         "Port=3050;Dialect=3;Charset=NONE;ServerType=0;";
 
         public static DataTable GetProductos()

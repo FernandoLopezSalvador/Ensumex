@@ -406,6 +406,7 @@
             Txt_Buscar.Size = new Size(287, 23);
             Txt_Buscar.TabIndex = 7;
             Txt_Buscar.TextChanged += textBox1_TextChanged;
+            Txt_Buscar.Enter += Txt_Buscar_Enter;
             // 
             // Btn_Cancelar
             // 

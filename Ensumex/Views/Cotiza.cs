@@ -52,7 +52,8 @@ namespace Ensumex.Views
         }
         private void InicializarTabla()
         {
-            tbl_Cotizacion.AllowUserToAddRows = true;
+            tbl_Cotizacion.AllowUserToAddRows = false;
+            tbl_Cotizacion.ReadOnly = true; 
             tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit;
         }
         private void InicializarFormulario()
@@ -180,7 +181,6 @@ namespace Ensumex.Views
                     foreach (DataGridViewColumn col in tbl_Cotizacion.Columns)
                         encabezados.Add(col.HeaderText);
 
-                    // GUARDAR EN BASE DE DATOS 
                     CotizacionRepository.GuardarCotizacionTablas(
                         numeroCotizacion: lbl_NoCotiza.Text,
                         fecha: DateTime.Now,
@@ -307,7 +307,7 @@ namespace Ensumex.Views
                             descuento: lbl_costoDescuento.Text.Replace("$", "").Trim(),
                             porcentajeDescuento: totalDescuentoCalculado,
                             notas: Txt_observaciones.Text,
-                            notaprincipal:Txt_Notaprincipal.Text,
+                            notaprincipal: Txt_Notaprincipal.Text,
                             tablaCotizacion: tbl_Cotizacion,
                             usuario: usuarioActual
                         );
@@ -755,7 +755,7 @@ namespace Ensumex.Views
             var resultados = productosCache
                 .Where(p =>
                     p.CLAVE.ToLower().Contains(texto) ||
-                    p.DESCRIPCIÓN.ToLower().Contains(texto)||
+                    p.DESCRIPCIÓN.ToLower().Contains(texto) ||
                     p.EXIST.ToLower().Contains(texto))
                 .ToList();
 
@@ -795,8 +795,21 @@ namespace Ensumex.Views
             this.Controls.Add(panelBusqueda);
             panelBusqueda.Location = new Point(Txt_Buscar.Left, Txt_Buscar.Bottom + 2);
             dgvBusqueda.CellDoubleClick += DgvBusqueda_CellDoubleClick;
+            dgvBusqueda.KeyDown += DgvBusqueda_KeyDown;
             dgvBusqueda.LostFocus += (s, e) => panelBusqueda.Visible = false;
             Txt_Buscar.LostFocus += (s, e) => { if (!panelBusqueda.Focused && !dgvBusqueda.Focused) panelBusqueda.Visible = false; };
+
+
+        }
+        private void DgvBusqueda_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && dgvBusqueda.CurrentRow != null)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                DgvBusqueda_CellDoubleClick(sender, null);
+            }
         }
 
         private void CargarProductosCache()
@@ -841,16 +854,14 @@ namespace Ensumex.Views
             tbl_Cotizacion.ReadOnly = false;
             foreach (DataGridViewColumn col in tbl_Cotizacion.Columns)
             {
-                col.ReadOnly = !(col.Name == "PRECIO" || col.Name == "Descuento" || col.Name == "CANTIDAD");
+                col.ReadOnly = !(col.Name == "PRECIO" || col.Name == "Descuento" || col.Name == "Descripcion" || col.Name == "CANTIDAD");
             }
         }
         private void ConfigurarBotones()
         {
-
             // ===== Btn_Cancelar =====
             Btn_Cancelar.IconChar = IconChar.TimesCircle;
             Btn_Cancelar.IconColor = Color.FromArgb(244, 67, 54);
-
             Btn_Cancelar.IconSize = 32;
             Btn_Cancelar.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_Cancelar.ImageAlign = ContentAlignment.MiddleLeft;
@@ -901,7 +912,6 @@ namespace Ensumex.Views
 
         private void iconButton1_Click(object sender, EventArgs e)
         {
-            // Guarda toda la tabla actual
             List<object[]> tablaActual = new();
             foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
             {
@@ -926,7 +936,7 @@ namespace Ensumex.Views
         }
 
         private void Btn_Añadprod_Click(object sender, EventArgs e)
-        {
+        { 
             using (var productosForm = new Form())
             {
                 var productControl = new Product
@@ -939,7 +949,6 @@ namespace Ensumex.Views
                 productosForm.Text = "Seleccionar Producto";
                 productControl.ProductoSeleccionado += (clave, descripcion, unidad, precio, cantidad) =>
                 {
-
                     try
                     {
                         decimal precioFinal = precio;
@@ -947,7 +956,7 @@ namespace Ensumex.Views
                         cantidad = cantidadFinal;
                         decimal subtotal = precioFinal * cantidad;
                         decimal total = subtotal;
-                        // Verificar si el producto ya está en la tabla
+
                         foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                         {
                             if (row.Cells[0].Value?.ToString() == clave)
@@ -1007,7 +1016,6 @@ namespace Ensumex.Views
         {
             try
             {
-                // Crear el formulario contenedor
                 using (Form formWrapper = new Form())
 
                 {
@@ -1040,7 +1048,6 @@ namespace Ensumex.Views
                         formWrapper.DialogResult = DialogResult.OK;
                         formWrapper.Close();
                     };
-
                     formWrapper.Controls.Add(prodControl);
                     formWrapper.Controls.Add(btnAceptar);
                     formWrapper.Controls.Add(btnCancelar);
@@ -1072,6 +1079,7 @@ namespace Ensumex.Views
                                 UseColumnTextForButtonValue = true
                             };
                             tbl_Cotizacion.Columns.Add(btnEliminar);
+                            
                         }
                     }
                 }
@@ -1105,6 +1113,11 @@ namespace Ensumex.Views
         private void Txt_Notaprincipal_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Txt_Buscar_Enter(object sender, EventArgs e)
+        {
+            
         }
     }
 }

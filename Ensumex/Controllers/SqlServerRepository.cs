@@ -10,7 +10,7 @@ namespace Ensumex.Controllers
 {
     public static class SqlServerRepository
     { 
-        private static readonly string connSqlServer = "Server=192.168.1.251;Database=Ensumex;User Id=appuser;Password=ensumex;";
+        private static readonly string connSqlServer = "Server=192.168.1.221;Database=Ensumex;User Id=appuser;Password=ensumex;";
 
         public static void InsertarProducto(DataRow row, SqlConnection conn, SqlTransaction transaction)
         {
