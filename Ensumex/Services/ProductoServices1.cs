@@ -16,10 +16,8 @@ namespace Ensumex.Services
         {
             try
             {
-                // Llama al DAO pasando la lista de precios
                 var productos = _productoDao.ObtenerProductoss(listaPrecio);
 
-                // Aplica el límite si se especifica
                 if (limite.HasValue && limite.Value > 0)
                 {
                     return productos.Take(limite.Value).ToList();

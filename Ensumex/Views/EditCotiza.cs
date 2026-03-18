@@ -54,7 +54,6 @@ namespace Ensumex.Views
             SetTextIfExists("Txt_observaciones", row["Notas"]?.ToString() ?? "");
             SetTextIfExists("txtEstado", row["Estado"]?.ToString() ?? "");
 
-            // Cargar detalle de productos desde la BD
             var detalle = CotizacionRepository.ObtenerDetallePorId(idCotizacion);
 
             var tbl = GetTbl();
@@ -156,7 +155,6 @@ namespace Ensumex.Views
             }
         }
 
-        //Comportamiento de Cotiza 
         private void CargarProductosCache()
         {
             var productoService = new ProductoServices1();

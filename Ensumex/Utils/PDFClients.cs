@@ -30,13 +30,11 @@ namespace Ensumex.Utils
                         {
                             var worksheet = workbook.Worksheets.Add("Clientes");
 
-                            // Agregar encabezados
                             for (int i = 0; i < tabla.Columns.Count; i++)
                             {
                                 worksheet.Cell(1, i + 1).Value = tabla.Columns[i].HeaderText;
                             }
 
-                            // Agregar datos
                             for (int i = 0; i < tabla.Rows.Count; i++)
                             {
                                 for (int j = 0; j < tabla.Columns.Count; j++)

@@ -194,7 +194,6 @@ namespace Ensumex.Views
                         notas: Txt_observaciones.Text,
                         tablas: tablasParaGuardar
                     );
-                    // --- GENERAR PDF ---
                     GeneraPDFTablas.GenerarPDFConTablas(
                         rutaArchivo: sfd.FileName,
                         tablas: tablasParaGuardar,
@@ -209,7 +208,6 @@ namespace Ensumex.Views
                         notas: Txt_observaciones.Text,
                         usuario: usuarioActual
                     );
-                    // Preguntar si desea enviar por WhatsApp
                     var enviarWhats = MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (enviarWhats == DialogResult.Yes)
                     {
@@ -269,7 +267,6 @@ namespace Ensumex.Views
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         decimal totalDescuentoCalculado = 0m;
-                        // Calcular descuento total de la cotización
                         foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
                         {
                             if (row.IsNewRow) continue;
@@ -281,7 +278,6 @@ namespace Ensumex.Views
                             decimal descuentoFila = (precio * cantidad) * (porcentajeDescuento / 100m);
                             totalDescuentoCalculado += descuentoFila;
                         }
-                        // Guardar cotización en base de datos
                         CotizacionRepository.GuardarCotizacion(
                             numeroCotizacion: lbl_NoCotiza.Text,
                             fecha: DateTime.Now,
@@ -295,7 +291,6 @@ namespace Ensumex.Views
                             notas: Txt_observaciones.Text,
                             tablaCotizacion: tbl_Cotizacion
                         );
-                        // Generar PDF
                         PDFGenerator.GenerarPDFCotizacion(
                             rutaArchivo: sfd.FileName,
                             numeroCotizacion: lbl_NoCotiza.Text,
@@ -312,7 +307,6 @@ namespace Ensumex.Views
                             usuario: usuarioActual
                         );
 
-                        // Preguntar si quiere enviar por WhatsApp
                         if (MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             string numeroCliente = NormalizarNumeroWhatsApp(txt_NumeroCliente.Text);
@@ -419,7 +413,6 @@ namespace Ensumex.Views
         {
             ActualizarTotales();
         }
-        // Método para actualizar los totales de la cotización
         private void ActualizarTotales()
         {
             decimal subtotalGeneral = 0;
@@ -705,25 +698,21 @@ namespace Ensumex.Views
 
                 string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString()?.ToUpper() ?? "";
 
-                // E = Calentadores (PRIORIDAD 1)
                 if ((descripcion.Contains("CALENT") || descripcion.Contains("CALENTADOR") || descripcion.Contains("CALENT.")) && prioridad > 1)
                 {
                     prefijo = "E";
                     prioridad = 1;
                 }
-                // D = Aires acondicionados (PRIORIDAD 2)
                 else if (descripcion.Contains("AIRE") && prioridad > 2)
                 {
                     prefijo = "D";
                     prioridad = 2;
                 }
-                // C = Bombas (PRIORIDAD 3)
                 else if ((descripcion.Contains("BOMBA") || descripcion.Contains("MOTOBOMBA") || descripcion.Contains("MOTB")) && prioridad > 3)
                 {
                     prefijo = "C";
                     prioridad = 3;
                 }
-                // F = Luminarias (PRIORIDAD 4)
                 else if ((descripcion.Contains("LUMINARIO") || descripcion.Contains("LUM SUM")) && prioridad > 4)
                 {
                     prefijo = "F";
@@ -731,7 +720,6 @@ namespace Ensumex.Views
                 }
             }
 
-            // Obtener último folio
             string ultimoFolio = CotizacionRepository.ObtenerUltimoFolioPorPrefijo(prefijo);
             int consecutivo = 1;
 
@@ -854,7 +842,7 @@ namespace Ensumex.Views
             tbl_Cotizacion.ReadOnly = false;
             foreach (DataGridViewColumn col in tbl_Cotizacion.Columns)
             {
-                col.ReadOnly = !(col.Name == "PRECIO" || col.Name == "Descuento" || col.Name == "Descripcion" || col.Name == "CANTIDAD");
+                col.ReadOnly = !(col.Name == "PRECIO" || col.Name == "Descuento" || col.Name == "DESCRIPCIÓN" || col.Name == "CANTIDAD");
             }
         }
         private void ConfigurarBotones()
@@ -1052,6 +1040,7 @@ namespace Ensumex.Views
                     formWrapper.Controls.Add(btnAceptar);
                     formWrapper.Controls.Add(btnCancelar);
                     formWrapper.CancelButton = btnCancelar;
+                    
 
                     if (formWrapper.ShowDialog() == DialogResult.OK)
                     {
@@ -1079,7 +1068,6 @@ namespace Ensumex.Views
                                 UseColumnTextForButtonValue = true
                             };
                             tbl_Cotizacion.Columns.Add(btnEliminar);
-                            
                         }
                     }
                 }
@@ -1095,6 +1083,7 @@ namespace Ensumex.Views
                 MessageBox.Show("Uno de los valores requeridos no fue proporcionado: " + ne.Message,
                                 "Dato faltante", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            
             catch (Exception ex)
             {
                 MessageBox.Show("Ocurrió un error al agregar el producto:\n" + ex.Message,
@@ -1109,9 +1098,8 @@ namespace Ensumex.Views
                 e.Cancel = true;
             }
         }
-
         private void Txt_Notaprincipal_Click(object sender, EventArgs e)
-        {
+        {   
 
         }
 

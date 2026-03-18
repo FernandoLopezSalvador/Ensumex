@@ -44,7 +44,6 @@ namespace Ensumex.Controllers
                     insertCmd.Parameters.AddWithValue("@Nombre", usuario.Nombre);
                     insertCmd.Parameters.AddWithValue("@Posicion", usuario.Posicion); 
                     insertCmd.Parameters.AddWithValue("@Correo", usuario.Correo);
-
                     int filasAfectadas = insertCmd.ExecuteNonQuery();
                     return filasAfectadas > 0;
                 }
@@ -58,8 +57,8 @@ namespace Ensumex.Controllers
                 byte[] hash = sha256.ComputeHash(bytes);
                 return BitConverter.ToString(hash).Replace("-", "").ToLower();
             }
-        }
 
+        }
         public bool ActualizarUsuario(string usuarioOriginal, Usuarios usuarioEditado, bool actualizarContraseña)
         {
             if (actualizarContraseña)

@@ -30,14 +30,14 @@ namespace Ensumex.Utils
             {
                 boton.BackColor = hoverBackColor;
                 boton.IconColor = hoverIconColor;
-                boton.ForeColor = hoverIconColor;  // cambia también el texto para que contraste con fondo hover
+                boton.ForeColor = hoverIconColor;  
             };
 
             boton.MouseLeave += (s, e) =>
             {
-                boton.BackColor = Color.Transparent; // o algún color base del tema si quieres
+                boton.BackColor = Color.Transparent; 
                 boton.IconColor = iconNormalColor;
-                boton.ForeColor = hoverIconColor; // restaurar color original del texto
+                boton.ForeColor = hoverIconColor; 
             };
         }
 
@@ -56,7 +56,6 @@ namespace Ensumex.Utils
                 ColoresBotones.IconoNormalOscuro :
                 ColoresBotones.IconoNormalClaro;
 
-            // Configura cada botón
             ConfigurarBoton(BtnCerrar, IconChar.SignOutAlt, Color.FromArgb(244, 67, 54));
             ConfigurarBoton(BtnInve, IconChar.Boxes, iconColorNormal);
             ConfigurarBoton(BtnCotiza, IconChar.FileInvoiceDollar, iconColorNormal);
@@ -64,7 +63,6 @@ namespace Ensumex.Utils
             ConfigurarBoton(BtnSincroniza, IconChar.SyncAlt, iconColorNormal);
             ConfigurarBoton(BtnInicio, IconChar.Home, iconColorNormal);
 
-            // Configura hover para cada botón
             ConfigurarHover(BtnInve,
                 esTemaOscuro ? ColoresBotones.HoverInveOscuro : ColoresBotones.HoverInveClaro,
                 Color.White,
