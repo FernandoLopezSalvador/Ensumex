@@ -170,7 +170,6 @@
             Txt_Notaprincipal.TextAlign = HorizontalAlignment.Left;
             Txt_Notaprincipal.TrailingIcon = null;
             Txt_Notaprincipal.UseSystemPasswordChar = false;
-            Txt_Notaprincipal.Click += Txt_Notaprincipal_Click;
             // 
             // txt_Costoflete
             // 
@@ -406,7 +405,7 @@
             Txt_Buscar.Size = new Size(287, 23);
             Txt_Buscar.TabIndex = 7;
             Txt_Buscar.TextChanged += textBox1_TextChanged;
-            Txt_Buscar.Enter += Txt_Buscar_Enter;
+            Txt_Buscar.KeyDown += Txt_Buscar_KeyDown;
             // 
             // Btn_Cancelar
             // 

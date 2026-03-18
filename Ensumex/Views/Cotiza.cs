@@ -53,7 +53,7 @@ namespace Ensumex.Views
         private void InicializarTabla()
         {
             tbl_Cotizacion.AllowUserToAddRows = false;
-            tbl_Cotizacion.ReadOnly = true; 
+            tbl_Cotizacion.ReadOnly = true;
             tbl_Cotizacion.CellBeginEdit += tbl_Cotizacion_CellBeginEdit;
         }
         private void InicializarFormulario()
@@ -776,7 +776,8 @@ namespace Ensumex.Views
                 AllowUserToDeleteRows = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                RowHeadersVisible = false
+                RowHeadersVisible = false,
+                MultiSelect = false
             };
             TablaFormat.AplicarEstilosTabla(dgvBusqueda);
             panelBusqueda.Controls.Add(dgvBusqueda);
@@ -796,7 +797,9 @@ namespace Ensumex.Views
                 e.Handled = true;
                 e.SuppressKeyPress = true;
 
-                DgvBusqueda_CellDoubleClick(sender, null);
+                int rowIndex = dgvBusqueda.CurrentRow.Index;
+
+                AgregarProductoDesdeBusqueda(rowIndex); 
             }
         }
 
@@ -818,6 +821,10 @@ namespace Ensumex.Views
         {
             if (e.RowIndex >= 0)
             {
+                AgregarProductoDesdeBusqueda(e.RowIndex);
+            }
+            /*if (e.RowIndex >= 0)
+            {
                 var row = dgvBusqueda.Rows[e.RowIndex];
                 string clave = row.Cells["CLAVE"].Value?.ToString();
                 string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString();
@@ -835,7 +842,48 @@ namespace Ensumex.Views
                 int lastRow = tbl_Cotizacion.Rows.Count - 1;
                 tbl_Cotizacion.CurrentCell = tbl_Cotizacion.Rows[lastRow].Cells["CANTIDAD"];
                 tbl_Cotizacion.BeginEdit(true);
+            }*/
+        }
+        private void AgregarProductoDesdeBusqueda(int rowIndex)
+        {
+            var row = dgvBusqueda.Rows[rowIndex];
+
+            // 🔹 Obtener datos (usa índices para evitar errores)
+            string clave = row.Cells[0].Value?.ToString() ?? "";
+            string descripcion = row.Cells[1].Value?.ToString() ?? "";
+            string unidad = row.Cells[2].Value?.ToString() ?? "";
+
+            string precioStr = row.Cells[3].Value?.ToString() ?? "0";
+
+            // 🔹 Limpiar precio
+            precioStr = precioStr.Replace("$", "").Replace(",", "").Trim();
+
+            decimal precio = 0;
+            decimal.TryParse(precioStr, out precio);
+
+            int cantidad = 1;
+            decimal total = precio * cantidad;
+
+            if (tbl_Cotizacion == null)
+            {
+                MessageBox.Show("Error: tabla de cotización no inicializada");
+                return;
             }
+
+            int rowIndexNuevo = tbl_Cotizacion.Rows.Add();
+
+            var newRow = tbl_Cotizacion.Rows[rowIndexNuevo];
+
+            newRow.Cells["Descuento"].Value = 0;
+            newRow.Cells["CLAVE"].Value = clave;
+            newRow.Cells["DESCRIPCIÓN"].Value = descripcion;
+            newRow.Cells["UNIDAD"].Value = unidad;
+            newRow.Cells["PRECIO"].Value = precio;
+            newRow.Cells["Subtotal"].Value = total;
+            newRow.Cells["Total"].Value = total;
+            newRow.Cells["CANTIDAD"].Value = cantidad;
+            HabilitarEdicionParcial();
+            panelBusqueda.Visible = false;
         }
         private void HabilitarEdicionParcial()
         {
@@ -924,7 +972,7 @@ namespace Ensumex.Views
         }
 
         private void Btn_Añadprod_Click(object sender, EventArgs e)
-        { 
+        {
             using (var productosForm = new Form())
             {
                 var productControl = new Product
@@ -1040,7 +1088,7 @@ namespace Ensumex.Views
                     formWrapper.Controls.Add(btnAceptar);
                     formWrapper.Controls.Add(btnCancelar);
                     formWrapper.CancelButton = btnCancelar;
-                    
+
 
                     if (formWrapper.ShowDialog() == DialogResult.OK)
                     {
@@ -1083,7 +1131,7 @@ namespace Ensumex.Views
                 MessageBox.Show("Uno de los valores requeridos no fue proporcionado: " + ne.Message,
                                 "Dato faltante", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            
+
             catch (Exception ex)
             {
                 MessageBox.Show("Ocurrió un error al agregar el producto:\n" + ex.Message,
@@ -1098,14 +1146,18 @@ namespace Ensumex.Views
                 e.Cancel = true;
             }
         }
-        private void Txt_Notaprincipal_Click(object sender, EventArgs e)
-        {   
 
-        }
-
-        private void Txt_Buscar_Enter(object sender, EventArgs e)
+        private void Txt_Buscar_KeyDown(object sender, KeyEventArgs e)
         {
-            
+            if (e.KeyCode == Keys.Enter && dgvBusqueda.CurrentRow != null)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                int rowIndex = dgvBusqueda.CurrentRow.Index;
+
+                AgregarProductoDesdeBusqueda(rowIndex); // ✅ correcto
+            }
         }
     }
 }

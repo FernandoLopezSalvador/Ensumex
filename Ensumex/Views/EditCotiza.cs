@@ -155,6 +155,7 @@ namespace Ensumex.Views
             }
         }
 
+        //Comportamiento de Cotiza 
         private void CargarProductosCache()
         {
             var productoService = new ProductoServices1();
