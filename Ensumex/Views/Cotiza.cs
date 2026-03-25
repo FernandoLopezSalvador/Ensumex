@@ -253,14 +253,16 @@ namespace Ensumex.Views
             try
             {
                 CotizacionRepository.GuardarSiNoExisteCliente(txt_NumeroCliente.Text, txt_Nombrecliente.Text);
+
+                int productos = tbl_Cotizacion.Rows.Cast<DataGridViewRow>().Count(r => !r.IsNewRow);
+                if (productos == 0)
+                {
+                    MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
-                    if (tbl_Cotizacion.Rows.Count <= 1)
-                    {
-                        MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-
                     sfd.Filter = "Archivo PDF|*.pdf";
                     sfd.FileName = $"cotizacion_{lbl_NoCotiza.Text}.pdf";
 
@@ -823,39 +825,19 @@ namespace Ensumex.Views
             {
                 AgregarProductoDesdeBusqueda(e.RowIndex);
             }
-            /*if (e.RowIndex >= 0)
-            {
-                var row = dgvBusqueda.Rows[e.RowIndex];
-                string clave = row.Cells["CLAVE"].Value?.ToString();
-                string descripcion = row.Cells["DESCRIPCIÓN"].Value?.ToString();
-                decimal precio = Convert.ToDecimal(row.Cells["PRECIO"].Value?.ToString().Replace("$", "").Trim() ?? "0");
-                int cantidad = 1;
-                string unidad = row.Cells["UNIDAD"].Value?.ToString();
-                decimal total = precio * cantidad;
-                tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precio, precio * cantidad, total, cantidad);
-                ActualizarNumeroCotizacionEnLabel();
-                ActualizarTotales();
-                ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
-                HabilitarEdicionParcial();
-                panelBusqueda.Visible = false;
-                Txt_Buscar.Clear();
-                int lastRow = tbl_Cotizacion.Rows.Count - 1;
-                tbl_Cotizacion.CurrentCell = tbl_Cotizacion.Rows[lastRow].Cells["CANTIDAD"];
-                tbl_Cotizacion.BeginEdit(true);
-            }*/
+            
         }
         private void AgregarProductoDesdeBusqueda(int rowIndex)
         {
+            if (dgvBusqueda.Rows.Count > 0)
+            {
+                dgvBusqueda.CurrentCell = dgvBusqueda.Rows[0].Cells[0];
+            }
             var row = dgvBusqueda.Rows[rowIndex];
-
-            // 🔹 Obtener datos (usa índices para evitar errores)
             string clave = row.Cells[0].Value?.ToString() ?? "";
             string descripcion = row.Cells[1].Value?.ToString() ?? "";
             string unidad = row.Cells[2].Value?.ToString() ?? "";
-
             string precioStr = row.Cells[3].Value?.ToString() ?? "0";
-
-            // 🔹 Limpiar precio
             precioStr = precioStr.Replace("$", "").Replace(",", "").Trim();
 
             decimal precio = 0;
@@ -884,6 +866,7 @@ namespace Ensumex.Views
             newRow.Cells["CANTIDAD"].Value = cantidad;
             HabilitarEdicionParcial();
             panelBusqueda.Visible = false;
+            Txt_Buscar.Clear();
         }
         private void HabilitarEdicionParcial()
         {
@@ -1038,13 +1021,28 @@ namespace Ensumex.Views
                 clientesDao.GuardarCliente(nombreCliente);
             }
 
-            if (tablasGuardadas.Count > 0 && tbl_Cotizacion.Rows.Count >= 1)
+            int productos = tbl_Cotizacion.Rows.Cast<DataGridViewRow>().Count(r => !r.IsNewRow);
+
+            if (productos == 0 && tablasGuardadas.Count == 0)
             {
-                GuardarCotizacionTablas();
+                MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
-            else if (tbl_Cotizacion.Rows.Count > 1 && tablasGuardadas.Count == 0)
+
+            try
             {
-                GuardarCotizacion();
+                if (tablasGuardadas.Count > 0)
+                {
+                    GuardarCotizacionTablas();
+                }
+                else
+                {
+                    GuardarCotizacion();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ocurrió un error al guardar la cotización.\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1088,7 +1086,6 @@ namespace Ensumex.Views
                     formWrapper.Controls.Add(btnAceptar);
                     formWrapper.Controls.Add(btnCancelar);
                     formWrapper.CancelButton = btnCancelar;
-
 
                     if (formWrapper.ShowDialog() == DialogResult.OK)
                     {
@@ -1149,14 +1146,41 @@ namespace Ensumex.Views
 
         private void Txt_Buscar_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && dgvBusqueda.CurrentRow != null)
+            if (panelBusqueda.Visible && dgvBusqueda.Rows.Count > 0)
             {
-                e.Handled = true;
-                e.SuppressKeyPress = true;
+                if (e.KeyCode == Keys.Down)
+                {
+                    e.Handled = true;
 
-                int rowIndex = dgvBusqueda.CurrentRow.Index;
+                    int index = dgvBusqueda.CurrentCell?.RowIndex ?? -1;
 
-                AgregarProductoDesdeBusqueda(rowIndex); // ✅ correcto
+                    if (index < dgvBusqueda.Rows.Count - 1)
+                    {
+                        dgvBusqueda.CurrentCell = dgvBusqueda.Rows[index + 1].Cells[0];
+                    }
+                }
+                if (e.KeyCode == Keys.Up)
+                {
+                    e.Handled = true;
+
+                    int index = dgvBusqueda.CurrentCell?.RowIndex ?? 0;
+
+                    if (index > 0)
+                    {
+                        dgvBusqueda.CurrentCell = dgvBusqueda.Rows[index - 1].Cells[0];
+                    }
+                }
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.Handled = true;
+                    e.SuppressKeyPress = true;
+
+                    if (dgvBusqueda.CurrentRow != null)
+                    {
+                        int rowIndex = dgvBusqueda.CurrentRow.Index;
+                        AgregarProductoDesdeBusqueda(rowIndex);
+                    }
+                }
             }
         }
     }

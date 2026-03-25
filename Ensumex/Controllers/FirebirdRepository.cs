@@ -62,7 +62,6 @@ namespace Ensumex.Controllers
         public static DataTable GetCalentadoresParaMantenimiento()
         {
             var dt = new DataTable();
-
             string query = @"
                 SELECT F.CVE_DOC AS FOLIO, F.FECHA_DOC AS FECHA_VENTA,
                 C.NOMBRE AS CLIENTE, C.TELEFONO,P.CVE_ART, P.DESCR AS PRODUCTO
@@ -79,6 +78,7 @@ namespace Ensumex.Controllers
                 ORDER BY 
                     F.FECHA_DOC DESC;
                 ";
+            
             using (FbConnection conn = new FbConnection(connFirebird))
             {
                 conn.Open();
