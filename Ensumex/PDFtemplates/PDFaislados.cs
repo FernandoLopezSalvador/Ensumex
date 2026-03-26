@@ -36,9 +36,7 @@ namespace Ensumex.PDFtemplates
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
                 string rutaFondo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
                 string rutaPie = Path.Combine(Application.StartupPath, "IMG", "Pie.png");
-                // No asignamos writer.PageEvent; estamparemos el pie solo en la última página.
                 doc.Open();
-                //Definir fuentes
                 var fontNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
                 var fontheader = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
                 var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10);
@@ -136,7 +134,6 @@ namespace Ensumex.PDFtemplates
                 foreach (DataGridViewRow row in tablaCotizacion.Rows)
                 {   
                     if (row.IsNewRow) continue; 
-                    // Datos de la fila
                     string cantidadStr = row.Cells["CANTIDAD"].Value?.ToString() ?? "0";
                     decimal.TryParse(cantidadStr, out decimal cantidad);
                     string unidad = row.Cells["UNIDAD"].Value?.ToString() ?? "";
@@ -148,7 +145,6 @@ namespace Ensumex.PDFtemplates
                     decimal descuentoFila = importe * (porcentajeDescuentoFila / 100m);
                     decimal total1 = importe - descuentoFila;
 
-                    // Formatear en moneda
                     string precioFormateado = precioUnitario.ToString("C2", new CultureInfo("es-MX"));
                     string descuentoFormateado = descuentoFila.ToString("C2", new CultureInfo("es-MX"));
                     string importeFormateado = importe.ToString("C2", new CultureInfo("es-MX"));
@@ -168,7 +164,6 @@ namespace Ensumex.PDFtemplates
 
                 doc.Add(tabla);
 
-                // Totales
                 doc.Add(new Paragraph("\n"));   
                 PdfPTable tablaTotales = new PdfPTable(2)
                 {
@@ -224,7 +219,6 @@ namespace Ensumex.PDFtemplates
                 doc.Close();
                 writer.Close();
 
-                // Estampar pie solo en la última página
                 FondoPiePDF.StampFooterToLastPage(rutaArchivo, rutaFondo, rutaPie, usuario);
 
                 MessageBox.Show("📄 PDF generado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -243,7 +237,6 @@ namespace Ensumex.PDFtemplates
             }
         }
 
-        // Misma lógica de estimación que en PDFGenerator para evitar solapamiento de notas y pie
         private static void EnsureSpaceForContent(Document doc, PdfWriter writer, string texto, iTextSharp.text.Font fontNotas, float footerReserve)
         {
             if (string.IsNullOrEmpty(texto))

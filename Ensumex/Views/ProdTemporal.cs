@@ -38,15 +38,13 @@ namespace Ensumex.Views
         }
         private void Validaemoneda(object sender, KeyPressEventArgs e)
         {
-            // Permitir solo números, punto decimal y retroceso
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
             {
-                e.Handled = true; // Ignorar la entrada
+                e.Handled = true;
             }
-            // Permitir solo un punto decimal
             if (e.KeyChar == '.' && sender is TextBox textBox && textBox.Text.Contains('.'))
             {
-                e.Handled = true; // Ignorar la entrada
+                e.Handled = true; 
             }
         }
         private void ValidarYFormatearMoneda_Leave(object sender, EventArgs e)
@@ -54,14 +52,11 @@ namespace Ensumex.Views
             if (sender is not TextBox txt)
                 return;
 
-            // Si está vacío, no hacer nada
             if (string.IsNullOrWhiteSpace(txt.Text))
                 return;
 
-            // Validar que el texto sea un decimal válido
             if (decimal.TryParse(txt.Text, out decimal valor))
             {
-                // Formatear como moneda sin símbolo
                 txt.Text = valor.ToString("N2");
             }
             else
@@ -79,10 +74,9 @@ namespace Ensumex.Views
 
         private void txb_cantidadTemp_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Permitir solo números, punto decimal y retroceso
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
-                e.Handled = true; // Ignorar la entrada
+                e.Handled = true; 
             }
         }
 

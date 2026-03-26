@@ -8,7 +8,6 @@ namespace Ensumex.Models
 {
     internal class CotizacionesRepository
     {
-        //buscar en la base de datos las cotizaciones de los clientes
 
     }
 }

@@ -154,8 +154,6 @@ namespace Ensumex.Views
                 }
             }
         }
-
-        //Comportamiento de Cotiza 
         private void CargarProductosCache()
         {
             var productoService = new ProductoServices1();
@@ -384,7 +382,6 @@ namespace Ensumex.Views
 
                 string notas = FindControlByName<TextBox>("Txt_observaciones", "txtNotas")?.Text ?? "";
 
-                // Si hay tablas guardadas -> tablas múltiples
                 if (tablasGuardadas.Count > 0 && tbl.Rows.Count >=1)
                 {
                     var tablasParaGuardar = new List<List<object[]>>(tablasGuardadas);
@@ -425,7 +422,6 @@ namespace Ensumex.Views
                                     tablas: tablasParaGuardar
                                 );
 
-                                // Generar PDF con tablas
                                 List<string> encabezados = new();
                                 foreach (DataGridViewColumn col in tbl.Columns) encabezados.Add(col.HeaderText);
 
@@ -444,7 +440,6 @@ namespace Ensumex.Views
                                     usuario: usuarioActual
                                 );
 
-                                // Preguntar envío por WhatsApp 
                                 if (MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                                 {
                                     string noWhats = NormalizarNumeroWhatsApp(numeroCliente);
@@ -468,7 +463,6 @@ namespace Ensumex.Views
                             }
                             else
                             {
-                                // Actualizar sin generar PDF
                                 CotizacionRepository.ActualizarCotizacionTablas(
                                     idCotizacion: this.IdCotizacion,
                                     numeroCotizacion: numero,
@@ -489,28 +483,24 @@ namespace Ensumex.Views
                     }
                     else
                     {
-                        // Crear nueva
                         GuardarCotizacionTablas();
                     }
 
                     return;
                 }
 
-                // Caso: una sola tabla (detalle)
                 if (tbl.Rows.Count >= 1 && tablasGuardadas.Count == 0)
                 {
                     CotizacionRepository.GuardarSiNoExisteCliente(numeroCliente, nombreCliente);
 
                     if (this.IdCotizacion > 0)
                     {
-                        // Actualizar cotización existente
                         using (SaveFileDialog sfd = new SaveFileDialog())
                         {
                             sfd.Filter = "Archivo PDF|*.pdf";
                             sfd.FileName = $"cotizacion_{numero}.pdf";
                             if (sfd.ShowDialog() == DialogResult.OK)
                             {
-                                // calcular descuento total
                                 decimal totalDescuentoCalculado = 0m;
                                 foreach (DataGridViewRow row in tbl.Rows)
                                 {
@@ -577,7 +567,6 @@ namespace Ensumex.Views
                             }
                             else
                             {
-                                // Actualizar sin PDF
                                 decimal totalDescuentoCalculado = 0m;
                                 foreach (DataGridViewRow row in tbl.Rows)
                                 {

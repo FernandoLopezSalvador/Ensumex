@@ -28,7 +28,6 @@ namespace Ensumex.Views
 
         private void Configurarboton()
         {
-            // BtnInve - Inventario
             Btn_DescargarClients.IconChar = IconChar.Download; 
             Btn_DescargarClients.IconColor = Color.FromArgb(33, 150, 243); 
             Btn_DescargarClients.IconSize = 32;

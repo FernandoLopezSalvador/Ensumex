@@ -46,7 +46,6 @@ namespace Ensumex.PDFtemplates
                 var fontGris = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.GRAY);
                 var fontheader = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
 
-                // LOGO
                 string rutaLogo = Path.Combine(Application.StartupPath, "IMG", "Logo.png");
                 if (File.Exists(rutaLogo))
                 {
@@ -56,7 +55,6 @@ namespace Ensumex.PDFtemplates
                     doc.Add(logo);
                 }
 
-                // ENCABEZADO
                 Paragraph titulo = new Paragraph("Cotización:" + numeroCotizacion, fontNegrita);
                 titulo.Alignment = Element.ALIGN_RIGHT;
                 doc.Add(titulo);
@@ -90,7 +88,6 @@ namespace Ensumex.PDFtemplates
                     };
                     pdfTable.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1.2f, 1.3f, 1.1f, 1.2f });
 
-                    // Encabezados
                     string[] headers = { "#", "CANT", "UNID", "DESCRIPCIÓN", "PRECIO UNIT", "DESCUENTO  ($)", "IMPORTE", "TOTAL" };
                     
                     foreach (string header in headers)
@@ -111,7 +108,6 @@ namespace Ensumex.PDFtemplates
                     foreach (var row in tabla)
                     {
                         BaseColor bgColor = (pos % 2 == 0) ? colorPar : colorImpar;
-                        // Datos del producto
                         string cantidadStr = row[7]?.ToString() ?? "0";
                         string unidad = row[3]?.ToString() ?? "";
                         string descripcion = row[2]?.ToString() ?? "";

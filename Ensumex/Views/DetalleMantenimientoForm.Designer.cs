@@ -70,6 +70,7 @@
             // 
             // btnGuardar
             // 
+            btnGuardar.Anchor = AnchorStyles.None;
             btnGuardar.Location = new Point(129, 248);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(75, 23);
@@ -82,7 +83,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(374, 295);
+            ClientSize = new Size(342, 295);
             Controls.Add(btnGuardar);
             Controls.Add(txtObservaciones);
             Controls.Add(txtRealizadoPor);

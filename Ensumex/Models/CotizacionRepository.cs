@@ -23,7 +23,6 @@ namespace Ensumex.Models
             decimal descuento,
             decimal total,
             string notas,
-            //string notaprincipal,
             DataGridView tablaCotizacion)
         {
             using (var conn = ConnectionToSql.GetConnection())
@@ -282,7 +281,6 @@ namespace Ensumex.Models
             {
                 conn.Open();
 
-                // Verificar si ya existe por CLAVE o por NOMBRE
                 using (var cmdCheck = new SqlCommand(@"
                     SELECT COUNT(*) 
                     FROM CLIE01 
@@ -292,10 +290,9 @@ namespace Ensumex.Models
                     cmdCheck.Parameters.AddWithValue("@NombreCliente", nombreCliente);
                     int exists = Convert.ToInt32(cmdCheck.ExecuteScalar() ?? 0);
                     if (exists > 0)
-                        return; // ya existe, nada que hacer
+                        return; 
                 }
 
-                // Si no se proporcionó numeroCliente, generar uno nuevo numérico seguro
                 if (string.IsNullOrWhiteSpace(numeroCliente))
                 {
                     using (var cmdNewKey = new SqlCommand(@"
@@ -307,7 +304,6 @@ namespace Ensumex.Models
                     }
                 }
 
-                // Insertar
                 using (var cmdInsert = new SqlCommand(@"
                     INSERT INTO CLIE01 (CLAVE, STATUS, NOMBRE)
                     VALUES (@NumeroCliente, @Status, @NombreCliente);", conn))
@@ -391,7 +387,6 @@ namespace Ensumex.Models
                 {
                     try
                     {
-                        // Actualizar encabezado
                         using (var cmdUpd = new SqlCommand(@"
                             UPDATE Cotizacion
                             SET NumeroCotizacion = @NumeroCotizacion,
@@ -422,14 +417,12 @@ namespace Ensumex.Models
                                 throw new InvalidOperationException("No se encontró la cotización a actualizar.");
                         }
 
-                        // Borrar detalles anteriores
                         using (var cmdDel = new SqlCommand("DELETE FROM CotizacionDetalle WHERE IdCotizacion = @IdCotizacion;", conn, tran))
                         {
                             cmdDel.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
                             cmdDel.ExecuteNonQuery();
                         }
 
-                        // Insertar nuevos detalles
                         foreach (DataGridViewRow row in tablaCotizacion.Rows)
                         {
                             if (row.IsNewRow) continue;
@@ -483,7 +476,6 @@ namespace Ensumex.Models
                 {
                     try
                     {
-                        // Actualizar encabezado
                         using (var cmdUpd = new SqlCommand(@"
                             UPDATE Cotizacion
                             SET NumeroCotizacion = @NumeroCotizacion,
@@ -514,14 +506,12 @@ namespace Ensumex.Models
                                 throw new InvalidOperationException("No se encontró la cotización a actualizar.");
                         }
 
-                        // Borrar detalles anteriores
                         using (var cmdDel = new SqlCommand("DELETE FROM CotizacionDetalle WHERE IdCotizacion = @IdCotizacion;", conn, tran))
                         {
                             cmdDel.Parameters.AddWithValue("@IdCotizacion", idCotizacion);
                             cmdDel.ExecuteNonQuery();
                         }
 
-                        // Insertar nuevos detalles desde las tablas
                         foreach (var tabla in tablas)
                         {
                             foreach (var row in tabla)

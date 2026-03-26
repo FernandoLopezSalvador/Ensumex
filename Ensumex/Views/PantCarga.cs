@@ -28,11 +28,11 @@ namespace Ensumex.Views
             this.CenterToScreen();
             this.Opacity = 0.0;
             this.FormBorderStyle = FormBorderStyle.None;
-            this.BackColor = Color.FromArgb(33, 33, 33); // Dark grey
+            this.BackColor = Color.FromArgb(33, 33, 33); 
             this.StartPosition = FormStartPosition.CenterScreen;
             progressBar1.Style = ProgressBarStyle.Continuous;
-            progressBar1.ForeColor = Color.FromArgb(3, 169, 244); // Material Blue
-            progressBar1.BackColor = Color.FromArgb(189, 189, 189); // Grey
+            progressBar1.ForeColor = Color.FromArgb(3, 169, 244); 
+            progressBar1.BackColor = Color.FromArgb(189, 189, 189); 
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -91,8 +91,8 @@ namespace Ensumex.Views
             for (int i = 0; i <= 100; i++)
             {
                 progressBar1.Value = i;
-                LblEstado.Text = $"Cargando{new string('.', (i / 10) % 4)} {i}%"; // Animación puntos
-                await Task.Delay(40); // velocidad de carga simulada
+                LblEstado.Text = $"Cargando{new string('.', (i / 10) % 4)} {i}%"; 
+                await Task.Delay(40); 
             }
         }
 

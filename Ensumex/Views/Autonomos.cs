@@ -383,10 +383,8 @@ namespace Ensumex.Views
             ClientesDao clientesDao = new ClientesDao();
             string nombreCliente = txt_Nombrecliente.Text;
 
-            // Verificar si el cliente existe
             if (!clientesDao.ClienteExiste(nombreCliente))
             {
-                // Si no existe, guardar cliente solo con clave y nombre
                 clientesDao.GuardarCliente(nombreCliente);
             }
             GuardarCotizacion();
@@ -395,7 +393,6 @@ namespace Ensumex.Views
         {
             try
             {
-                // Guardar cliente si no existe
                 CotizacionRepository.GuardarSiNoExisteCliente(txt_NumeroCliente.Text, txt_Nombrecliente.Text);
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
@@ -424,7 +421,7 @@ namespace Ensumex.Views
                             decimal descuentoFila = (precio * cantidad) * (porcentajeDescuento / 100m);
                             totalDescuentoCalculado += descuentoFila;
                         }
-                        // Generar PDF de la cotización
+
                         PDFaislados.GenerarPDFCotizacion(
                             rutaArchivo: sfd.FileName,
                             numeroCotizacion: lbl_NoCotiza.Text,
@@ -439,7 +436,6 @@ namespace Ensumex.Views
                             usuario: usuarioActual
                         );
 
-                        // Preguntar si quiere enviar por WhatsApp
                         if (MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             string numeroCliente = NormalizarNumeroWhatsApp(txt_NumeroCliente.Text);
@@ -453,7 +449,6 @@ namespace Ensumex.Views
                                 string mensaje = $"Hola, le comparto la cotización {lbl_NoCotiza.Text}. Adjunto el PDF.";
                                 EnviarCotizacionPorWhatsApp(numeroCliente, mensaje);
 
-                                // Abrir carpeta donde se guardó el PDF
                                 string carpeta = Path.GetDirectoryName(sfd.FileName);
                                 if (!string.IsNullOrEmpty(carpeta) && Directory.Exists(carpeta))
                                 {
@@ -473,7 +468,6 @@ namespace Ensumex.Views
                             }
                         }
 
-                        // Abrir el PDF generado
                         Process.Start(new ProcessStartInfo
                         {
                             FileName = sfd.FileName,
@@ -493,7 +487,6 @@ namespace Ensumex.Views
         }
         private string NormalizarNumeroWhatsApp(string numero)
         {
-            // Elimina espacios y guiones
             numero = numero.Replace(" ", "").Replace("-", "");
             if (numero.StartsWith("521") && numero.Length == 13)
                 return numero;
@@ -573,7 +566,6 @@ namespace Ensumex.Views
         {
             try
             {
-                // Crear el formulario contenedor
                 using (Form formWrapper = new Form())
                 {
                     formWrapper.Text = "Agregar Producto";
@@ -609,13 +601,11 @@ namespace Ensumex.Views
                         formWrapper.Close();
                     };
 
-                    // Agregar controles al formulario
                     formWrapper.Controls.Add(prodControl);
                     formWrapper.Controls.Add(btnAceptar);
                     formWrapper.Controls.Add(btnCancelar);
                     formWrapper.CancelButton = btnCancelar;
 
-                    // Mostrar formulario como modal
                     if (formWrapper.ShowDialog() == DialogResult.OK)
                     {
                         string clave = prodControl.Clave;
@@ -624,7 +614,7 @@ namespace Ensumex.Views
                         decimal precioUnitario = prodControl.PrecioUnitarioTemp;
                         int cantidad = (int)prodControl.cantidad;
                         decimal subtotal = precioUnitario * cantidad;
-                        decimal total = subtotal; // Aquí puedes aplicar lógica de descuento si es necesario
+                        decimal total = subtotal; 
 
                         Tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precioUnitario, subtotal, total, cantidad);
                         ActualizarNumeroCotizacionEnLabel();
@@ -632,7 +622,6 @@ namespace Ensumex.Views
                         ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
                         HabilitarEdicionParcial();
 
-                        // Asegura que la columna de "Eliminar" solo se agregue una vez
                         if (!Tbl_Cotizacion.Columns.Contains("Eliminar"))
                         {
                             DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn
@@ -648,7 +637,6 @@ namespace Ensumex.Views
                 }
             }
 
-            //Manejo de excepciones para errores comunes
             catch (FormatException fe)
             {
                 MessageBox.Show("Error en el formato de los valores numéricos: " + fe.Message,
@@ -809,7 +797,6 @@ namespace Ensumex.Views
         private void Tbl_Cotizacion_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
             var row = Tbl_Cotizacion.Rows[e.RowIndex];
-            // Evita edición en filas vacías
             if (row.IsNewRow || string.IsNullOrWhiteSpace(row.Cells["Descripción"].Value?.ToString()))
             {
                 e.Cancel = true;

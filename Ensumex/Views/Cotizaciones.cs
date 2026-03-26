@@ -41,7 +41,6 @@ namespace Ensumex.Views
                 };
                 tabla_cotizaciones.Columns.Add(btnDetalle);
             }
-            // Agregar botón Editar
             if (!tabla_cotizaciones.Columns.Contains("Editar"))
             {
                 var btnEditar = new DataGridViewButtonColumn

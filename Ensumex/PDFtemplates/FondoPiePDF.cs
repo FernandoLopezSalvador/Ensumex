@@ -27,10 +27,8 @@ namespace Ensumex.PDFtemplates
         }
         public override void OnEndPage(PdfWriter writer, Document document)
         {
-            // Dejamos vacio si se usa la estrategia de "stampear" el pie solo en la última página.
         }
 
-        // Método público para estampar el pie en la última página de un PDF ya existente.
         public static void StampFooterToLastPage(string pdfPath, string rutaFondo, string rutaFirma, string usuario)
         {
             if (!File.Exists(pdfPath)) return;
@@ -47,16 +45,13 @@ namespace Ensumex.PDFtemplates
                         var pageSize = reader.GetPageSize(lastPage);
                         float leftMargin = 40f;
                         float rightMargin = 40f;
-                        // total width para la tabla del pie (igual márgenes que usas al crear el documento)
                         float totalWidth = pageSize.Width - leftMargin - rightMargin;
 
-                        // Fuentes locales (compatibles con las usadas al crear el PDF)
                         var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 9, BaseColor.DARK_GRAY);
                         var fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
                         var fontNormalGrande = FontFactory.GetFont(FontFactory.HELVETICA, 9, BaseColor.DARK_GRAY);
                         var fontBoldGrande = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
 
-                        // construir tablaPie similar a la que tenías
                         PdfPTable tablaPie = new PdfPTable(2)
                         {
                             TotalWidth = totalWidth
@@ -159,13 +154,11 @@ namespace Ensumex.PDFtemplates
 
                             imgFondo.ScaleAbsolute(newWidth, desiredHeight);
 
-                            // --- Centrar imagen en la parte inferior ---
                             float xPos = (pageWidth - newWidth) / 2;
                             float yPos = yPie + 20f;
 
                             imgFondo.SetAbsolutePosition(xPos, yPos);
 
-                            // Opacidad 50%
                             PdfGState transparencia = new PdfGState();
                             transparencia.FillOpacity = 0.30f;
                             transparencia.StrokeOpacity = 0.30f;

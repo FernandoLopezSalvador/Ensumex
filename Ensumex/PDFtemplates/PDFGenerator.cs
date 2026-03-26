@@ -59,7 +59,6 @@ namespace Ensumex.PDFtemplates
                     doc.Add(logo);
                 }
 
-                // Encabezado
                 Paragraph titulo = new Paragraph("Cotización: " + numeroCotizacion, fontNegrita)
                 {
                     Alignment = Element.ALIGN_RIGHT
@@ -103,15 +102,12 @@ namespace Ensumex.PDFtemplates
                     }
                 }
 
-
-                // Tabla de productos
                 PdfPTable tabla;
 
                 string[] headers;
 
                 if (hayDescuentos)
                 {
-                    // Con la columna descuento
                     tabla = new PdfPTable(8);
                     tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 2.8f, 1f, 1.2f, 1f, 1.2f });
 
@@ -122,7 +118,6 @@ namespace Ensumex.PDFtemplates
                 }
                 else
                 {
-                    // Sin columna descuento
                     tabla = new PdfPTable(7);
                     tabla.SetWidths(new float[] { 0.5f, 0.6f, 0.8f, 3f, 1f, 1f, 1.2f });
 
@@ -153,7 +148,6 @@ namespace Ensumex.PDFtemplates
                 {
                     if (row.IsNewRow) continue;
 
-                    // Datos de la fila
                     string cantidadStr = row.Cells["CANTIDAD"].Value?.ToString() ?? "0";
                     decimal.TryParse(cantidadStr, out decimal cantidad);
                     string unidad = row.Cells["UNIDAD"].Value?.ToString() ?? "";
@@ -164,12 +158,10 @@ namespace Ensumex.PDFtemplates
                     decimal.TryParse(precioStr, out decimal precioUnitario);
                     int.TryParse(row.Cells["Descuento"].Value?.ToString() ?? "0", out int porcentajeDescuentoFila);
 
-                    // Cálculos
                     decimal descuentoUnitario = precioUnitario * (porcentajeDescuentoFila / 100m);
                     decimal importeUnitario = precioUnitario - descuentoUnitario; 
                     decimal totalLinea = importeUnitario * cantidad; 
 
-                    // Formatear en moneda
                     string precioFormateado = precioUnitario.ToString("C2", new CultureInfo("es-MX"));
                     string descuentoFormateado = descuentoUnitario.ToString("C2", new CultureInfo("es-MX"));
                     string importeFormateado = importeUnitario.ToString("C2", new CultureInfo("es-MX"));
@@ -192,7 +184,6 @@ namespace Ensumex.PDFtemplates
                         });
                     }
 
-                    // IMPORTE
                     tabla.AddCell(new PdfPCell(new Phrase(importeFormateado, fontNormal))
                     {
                         BackgroundColor = fondoFila,
@@ -211,7 +202,6 @@ namespace Ensumex.PDFtemplates
 
                 doc.Add(tabla);
 
-                // Totales (sin cambios relevantes)
                 doc.Add(new Paragraph("\n"));
                 PdfPTable tablaTotales = new PdfPTable(2)
                 {

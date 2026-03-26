@@ -7,8 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Ensumex.Controllers; // Asegúrate de tener el using correcto
-
+using Ensumex.Controllers; 
 namespace Ensumex.Views
 {
     public partial class DetallesMant : UserControl

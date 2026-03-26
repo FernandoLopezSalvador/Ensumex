@@ -14,7 +14,6 @@ namespace Ensumex.Models
         {
             try
             {
-                // Verifica que el usuario esté definido
                 if (string.IsNullOrEmpty(UsuarioLoginCache.Usuario))
                 {
                     MessageBox.Show("El usuario no está definido. Por favor, inicie sesión nuevamente.",
@@ -22,11 +21,9 @@ namespace Ensumex.Models
                     return;
                 }
 
-                // Instancia de UsuarioDao para obtener los datos
                 var usuarioDao = new UsuarioDao();
                 var datosUsuario = usuarioDao.ObtenerDatosUsuario(UsuarioLoginCache.Usuario);
 
-                // Verifica si datosUsuario es un valor predeterminado (tupla vacía)
                 if (datosUsuario.Equals(default((string Nombre, string Posicion))))
                 {
                     MessageBox.Show("No se encontraron datos para el usuario especificado.",
@@ -36,7 +33,6 @@ namespace Ensumex.Models
                     return;
                 }
 
-                // Asigna los datos a los labels
                 lblUsuario.Text = datosUsuario.Nombre ?? "N/A";
                 lblPosicion.Text = datosUsuario.Posicion ?? "N/A";
             }

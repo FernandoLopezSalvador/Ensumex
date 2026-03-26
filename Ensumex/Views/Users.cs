@@ -192,7 +192,6 @@ namespace Ensumex.Views
                 textNewCorreo.Text = fila.Cells["Correo"]?.Value?.ToString() ?? "";
                 cmb_NewPosicion.SelectedItem = fila.Cells["Posicion"]?.Value?.ToString();
                 textNewContraseña.Text ="";
-
                 usuarioOriginal = textnewUsuario.Text;
                 editando = true;
                 btn_GuardarUsuario.Text = "Actualizar";

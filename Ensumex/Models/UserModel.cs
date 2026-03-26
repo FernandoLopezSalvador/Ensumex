@@ -17,29 +17,23 @@ namespace Ensumex.Models
         {
             try
             {
-                // Generar el hash de la contraseña
                 var hashedPassword = ObtenerHashSHA256(contraseña);
 
-                // Usar la conexión proporcionada por ConnectionToSql
                 using (var connection = GetConnection())
                 {
                     connection.Open();
 
-                    // Comando SQL para insertar el nuevo usuario
                     var command = new SqlCommand("INSERT INTO Usuarios (Usuario, Contraseña) VALUES (@Usuario, @Contraseña)", connection);
                     command.Parameters.AddWithValue("@Usuario", usuario);
                     command.Parameters.AddWithValue("@Contraseña", hashedPassword);
 
-                    // Ejecutar el comando
                     int rowsAffected = command.ExecuteNonQuery();
 
-                    // Retornar true si se insertó correctamente
                     return rowsAffected > 0;
                 }
             }
             catch (Exception ex)
             {
-                // Manejar errores (puedes registrar el error en un archivo de log)
                 Console.WriteLine($"Error al registrar usuario: {ex.Message}");
                 return false;
             }
@@ -60,11 +54,10 @@ namespace Ensumex.Models
                     command.Parameters.AddWithValue("@Contraseña", hash);
 
                     int count = (int)command.ExecuteScalar();
-                    return count > 0; // true si existe
+                    return count > 0; 
                 }
             }
         }
-        // Método para obtener el hash SHA256 de la contraseña
         private string ObtenerHashSHA256(string texto)
         {
             using (SHA256 sha256 = SHA256.Create())

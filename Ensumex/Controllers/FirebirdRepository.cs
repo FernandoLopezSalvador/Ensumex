@@ -73,6 +73,7 @@ namespace Ensumex.Controllers
                         P.CVE_ART STARTING WITH 'SCCAL'
                         OR P.CVE_ART STARTING WITH 'THCAL'
                         OR P.CVE_ART STARTING WITH 'ESCAL'
+                        
                     )
                     AND F.FECHA_DOC <= DATEADD(YEAR, -1, CURRENT_DATE)
                 ORDER BY 

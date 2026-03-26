@@ -17,7 +17,6 @@ namespace Ensumex.Views
     {
         public event Action<string, string, string, decimal, decimal> ProductoSeleccionado;
 
-        // Variable de clase para cachear todos los productos
         private List<dynamic> productosCache = new();
 
         public Product()
@@ -29,9 +28,8 @@ namespace Ensumex.Views
         }
         private void Configurarboton()
         {
-            // BtnInve - Inventario
-            Btn_DescargarProd.IconChar = IconChar.Download; // cajas para inventario
-            Btn_DescargarProd.IconColor = Color.FromArgb(33, 150, 243); // azul
+            Btn_DescargarProd.IconChar = IconChar.Download; 
+            Btn_DescargarProd.IconColor = Color.FromArgb(33, 150, 243); 
             Btn_DescargarProd.IconSize = 32;
             Btn_DescargarProd.TextImageRelation = TextImageRelation.ImageBeforeText;
             Btn_DescargarProd.ImageAlign = ContentAlignment.MiddleLeft;
@@ -44,7 +42,7 @@ namespace Ensumex.Views
             TablaFormat.AplicarEstilosTabla(tabla_productos);
             InicializarComboProductos();
             tabla_productos.CellDoubleClick += tabla_productos_CellDoubleClick;
-            tabla_productos.ReadOnly = true; // Hacer la tabla de productos de solo lectura
+            tabla_productos.ReadOnly = true; 
         }
         private void InicializarComboProductos()
         {
@@ -58,7 +56,7 @@ namespace Ensumex.Views
             try
             {
                 var productoService = new ProductoServices1();
-                var productos = productoService.ObtenerProductos(); // traer todos
+                var productos = productoService.ObtenerProductos(); 
 
                 productosCache = productos.Select(p => new
                 {
@@ -80,7 +78,6 @@ namespace Ensumex.Views
 
         private void CargarProductoss(int? limite = 100000)
         {
-            // Limpia la tabla antes de cargar nuevos datos y carga los productos
             try
             {
                 var productosFiltrados = productosCache.Take(limite ?? productosCache.Count).ToList();
@@ -109,7 +106,6 @@ namespace Ensumex.Views
             tabla_productos.DataSource = filtrados;
         }
 
-        // Método para buscar en el DataGridView
         private void BuscarEnGrid(string texto)
         {
             if (string.IsNullOrWhiteSpace(texto))
@@ -121,7 +117,6 @@ namespace Ensumex.Views
                 }
                 return;
             }
-            // Suspende el layout y el enlace de datos para mejorar el rendimiento
             tabla_productos.SuspendLayout();
             CurrencyManager cm = (CurrencyManager)BindingContext[tabla_productos.DataSource];
             cm.SuspendBinding();
@@ -144,7 +139,6 @@ namespace Ensumex.Views
             cm.ResumeBinding();
             tabla_productos.ResumeLayout();
         }
-        // Evento para manejar el cambio de selección en el ComboBox de productos
         private void cmb_productos_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -167,7 +161,6 @@ namespace Ensumex.Views
         {
             PDFClients.ExportarClientes(tabla_productos, "Productos.xlsx");
         }
-        // Evento para manejar el doble clic en una celda del DataGridView y seleccionar un producto
         private void tabla_productos_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -222,10 +215,9 @@ namespace Ensumex.Views
         {
             if (e.KeyCode == Keys.Enter && tabla_productos.CurrentRow != null)
             {
-                e.Handled = true; // Evita que el Enter haga sonar un beep
-                e.SuppressKeyPress = true; // No pase a la siguiente celda
+                e.Handled = true; 
+                e.SuppressKeyPress = true; 
 
-                // Obtener la fila seleccionada
                 var row = tabla_productos.CurrentRow;
 
                 string clave = row.Cells["CLAVE"].Value?.ToString();
@@ -235,7 +227,7 @@ namespace Ensumex.Views
                     row.Cells["ULT_COSTO"].Value?.ToString().Replace("$", "").Trim() ?? "0"
                 );
                 decimal cantidad = 1;
-                // Invocar el evento para notificar al formulario padre
+              
                 ProductoSeleccionado?.Invoke(clave, descripcion, unidad, precio, cantidad);
             }
         }

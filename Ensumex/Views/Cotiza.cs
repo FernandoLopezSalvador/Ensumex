@@ -78,7 +78,7 @@ namespace Ensumex.Views
         {
             TablaFormat.AplicarEstilosTabla(tbl_Cotizacion);
         }
-
+        
         private void ConfigurarEventos()
         {
             tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
