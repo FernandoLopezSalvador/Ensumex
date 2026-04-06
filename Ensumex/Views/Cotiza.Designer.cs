@@ -50,6 +50,7 @@
             Btn_Guardar = new FontAwesome.Sharp.IconButton();
             Btn_NuevoProd = new FontAwesome.Sharp.IconButton();
             materialLabel8 = new MaterialSkin.Controls.MaterialLabel();
+            btn_descuentocompleto = new Button();
             lbl_costoDescuento = new MaterialSkin.Controls.MaterialLabel();
             lbl_TotalNeto = new MaterialSkin.Controls.MaterialLabel();
             lbl_Subtotal = new MaterialSkin.Controls.MaterialLabel();
@@ -102,6 +103,7 @@
             tableLayoutPanel1.Controls.Add(Btn_Guardar, 4, 3);
             tableLayoutPanel1.Controls.Add(Btn_NuevoProd, 5, 3);
             tableLayoutPanel1.Controls.Add(materialLabel8, 0, 3);
+            tableLayoutPanel1.Controls.Add(btn_descuentocompleto, 4, 4);
             tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
@@ -462,6 +464,17 @@
             materialLabel8.TabIndex = 36;
             materialLabel8.Text = "Nota Principal";
             // 
+            // btn_descuentocompleto
+            // 
+            btn_descuentocompleto.Anchor = AnchorStyles.None;
+            btn_descuentocompleto.Location = new Point(623, 191);
+            btn_descuentocompleto.Name = "btn_descuentocompleto";
+            btn_descuentocompleto.Size = new Size(129, 23);
+            btn_descuentocompleto.TabIndex = 38;
+            btn_descuentocompleto.Text = "Aplicar descuento:";
+            btn_descuentocompleto.UseVisualStyleBackColor = true;
+            btn_descuentocompleto.Click += button1_Click;
+            // 
             // lbl_costoDescuento
             // 
             lbl_costoDescuento.Anchor = AnchorStyles.None;
@@ -725,5 +738,6 @@
         private MaterialSkin.Controls.MaterialTextBox2 Txt_Notaprincipal;
         private MaterialSkin.Controls.MaterialLabel materialLabel1;
         private MaterialSkin.Controls.MaterialLabel materialLabel8;
+        private Button btn_descuentocompleto;
     }
 }

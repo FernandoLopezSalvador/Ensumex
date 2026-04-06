@@ -78,7 +78,7 @@ namespace Ensumex.Views
         {
             TablaFormat.AplicarEstilosTabla(tbl_Cotizacion);
         }
-        
+
         private void ConfigurarEventos()
         {
             tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
@@ -308,7 +308,6 @@ namespace Ensumex.Views
                             tablaCotizacion: tbl_Cotizacion,
                             usuario: usuarioActual
                         );
-
                         if (MessageBox.Show("¿Desea enviar la cotización por WhatsApp al cliente?", "Enviar por WhatsApp", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             string numeroCliente = NormalizarNumeroWhatsApp(txt_NumeroCliente.Text);
@@ -331,7 +330,6 @@ namespace Ensumex.Views
                                         WindowStyle = ProcessWindowStyle.Normal
                                     });
                                 }
-
                                 MessageBox.Show("Se abrió WhatsApp Web y la carpeta de la cotización. Adjunte el PDF manualmente en el chat.", "WhatsApp", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                             else
@@ -801,7 +799,7 @@ namespace Ensumex.Views
 
                 int rowIndex = dgvBusqueda.CurrentRow.Index;
 
-                AgregarProductoDesdeBusqueda(rowIndex); 
+                AgregarProductoDesdeBusqueda(rowIndex);
             }
         }
 
@@ -825,7 +823,7 @@ namespace Ensumex.Views
             {
                 AgregarProductoDesdeBusqueda(e.RowIndex);
             }
-            
+
         }
         private void AgregarProductoDesdeBusqueda(int rowIndex)
         {
@@ -1005,7 +1003,6 @@ namespace Ensumex.Views
             }
             ActualizarNumeroCotizacionEnLabel();
         }
-
         private void Btn_Cancelar_Click(object sender, EventArgs e)
         {
             limpiaCampos();
@@ -1020,7 +1017,6 @@ namespace Ensumex.Views
             {
                 clientesDao.GuardarCliente(nombreCliente);
             }
-
             int productos = tbl_Cotizacion.Rows.Cast<DataGridViewRow>().Count(r => !r.IsNewRow);
 
             if (productos == 0 && tablasGuardadas.Count == 0)
@@ -1028,7 +1024,6 @@ namespace Ensumex.Views
                 MessageBox.Show("No hay productos en la cotización.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             try
             {
                 if (tablasGuardadas.Count > 0)
@@ -1117,7 +1112,6 @@ namespace Ensumex.Views
                     }
                 }
             }
-
             catch (FormatException fe)
             {
                 MessageBox.Show("Error en el formato de los valores numéricos: " + fe.Message,
@@ -1151,9 +1145,7 @@ namespace Ensumex.Views
                 if (e.KeyCode == Keys.Down)
                 {
                     e.Handled = true;
-
                     int index = dgvBusqueda.CurrentCell?.RowIndex ?? -1;
-
                     if (index < dgvBusqueda.Rows.Count - 1)
                     {
                         dgvBusqueda.CurrentCell = dgvBusqueda.Rows[index + 1].Cells[0];
@@ -1162,9 +1154,7 @@ namespace Ensumex.Views
                 if (e.KeyCode == Keys.Up)
                 {
                     e.Handled = true;
-
                     int index = dgvBusqueda.CurrentCell?.RowIndex ?? 0;
-
                     if (index > 0)
                     {
                         dgvBusqueda.CurrentCell = dgvBusqueda.Rows[index - 1].Cells[0];
@@ -1181,6 +1171,37 @@ namespace Ensumex.Views
                         AgregarProductoDesdeBusqueda(rowIndex);
                     }
                 }
+            }
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string input = Microsoft.VisualBasic.Interaction.InputBox(
+                    "Ingrese el porcentaje de descuento:",
+                    "Descuento Global",
+                    "0"
+                );
+
+                if (!int.TryParse(input, out int descuento) || descuento < 0 || descuento > 50)
+                {
+                    MessageBox.Show("Ingrese un valor válido entre 0 y 50.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                foreach (DataGridViewRow row in tbl_Cotizacion.Rows)
+                {
+                    if (row.IsNewRow) continue;
+                    row.Cells["Descuento"].Value = descuento;
+                }
+
+                ActualizarTotales();    
+
+                MessageBox.Show("Descuento aplicado a todos los productos.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al aplicar descuento:\n" + ex.Message);
             }
         }
     }

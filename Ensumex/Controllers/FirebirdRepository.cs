@@ -1,4 +1,5 @@
-﻿using FirebirdSql.Data.FirebirdClient;
+﻿using Ensumex.Clases;
+using FirebirdSql.Data.FirebirdClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,84 +12,96 @@ namespace Ensumex.Controllers
 {
     public static class FirebirdRepository
     {
-        private static readonly string connFirebird = "User=SYSDBA;Password=masterkey;" +
-        "Database=192.168.1.163:C:\\Program Files (x86)\\Common Files\\Aspel\\Sistemas Aspel\\SAE9.00\\Empresa01\\Datos\\SAE90EMPRE01.FDB;" +
-        "Port=3050;Dialect=3;Charset=NONE;ServerType=0;";
-
         public static DataTable GetProductos()
         {
             var productos = new DataTable();
-            using (FbConnection conn = new FbConnection(connFirebird))
+
+            using (FbConnection conn = ConnectionToFirebird.GetConnection())
             {
                 conn.Open();
-                using (FbCommand cmd = new FbCommand("SELECT CVE_ART, DESCR, UNI_MED, COSTO_PROM, ULT_COSTO, EXIST FROM INVE01", conn))
+
+                using (FbCommand cmd = new FbCommand(
+                    "SELECT CVE_ART, DESCR, UNI_MED, COSTO_PROM, ULT_COSTO, EXIST FROM INVE01", conn))
                 using (FbDataAdapter adapter = new FbDataAdapter(cmd))
                 {
                     adapter.Fill(productos);
                 }
             }
+
             return productos;
         }
 
         public static DataTable GetClientes()
         {
             var clientes = new DataTable();
-            using (FbConnection conn = new FbConnection(connFirebird))
+
+            using (FbConnection conn = ConnectionToFirebird.GetConnection())
             {
                 conn.Open();
-                using (FbCommand cmd = new FbCommand("SELECT CLAVE, STATUS, NOMBRE,TELEFONO, CALLE, COLONIA, MUNICIPIO, EMAILPRED FROM CLIE01", conn))
+
+                using (FbCommand cmd = new FbCommand(
+                    "SELECT CLAVE, STATUS, NOMBRE, TELEFONO, CALLE, COLONIA, MUNICIPIO, EMAILPRED FROM CLIE01", conn))
                 using (FbDataAdapter adapter = new FbDataAdapter(cmd))
-                {       
+                {
                     adapter.Fill(clientes);
                 }
             }
+
             return clientes;
         }
 
         public static DataTable GetPrecios()
         {
             var precios = new DataTable();
-            using (FbConnection conn = new FbConnection(connFirebird))
+
+            using (FbConnection conn = ConnectionToFirebird.GetConnection())
             {
                 conn.Open();
-                using (FbCommand cmd = new FbCommand("SELECT CVE_ART, CVE_PRECIO, PRECIO FROM PRECIO_X_PROD01", conn))
+
+                using (FbCommand cmd = new FbCommand(
+                    "SELECT CVE_ART, CVE_PRECIO, PRECIO FROM PRECIO_X_PROD01", conn))
                 using (FbDataAdapter adapter = new FbDataAdapter(cmd))
                 {
                     adapter.Fill(precios);
                 }
             }
+
             return precios;
         }
+
         public static DataTable GetCalentadoresParaMantenimiento()
         {
             var dt = new DataTable();
+
             string query = @"
                 SELECT F.CVE_DOC AS FOLIO, F.FECHA_DOC AS FECHA_VENTA,
-                C.NOMBRE AS CLIENTE, C.TELEFONO,P.CVE_ART, P.DESCR AS PRODUCTO
-                FROM FACTF01 F JOIN PAR_FACTF01 PF ON F.CVE_DOC = PF.CVE_DOC
-                JOIN INVE01 P  ON PF.CVE_ART = P.CVE_ART
+                       C.NOMBRE AS CLIENTE, C.TELEFONO,
+                       P.CVE_ART, P.DESCR AS PRODUCTO
+                FROM FACTF01 F
+                JOIN PAR_FACTF01 PF ON F.CVE_DOC = PF.CVE_DOC
+                JOIN INVE01 P ON PF.CVE_ART = P.CVE_ART
                 JOIN CLIE01 C ON F.CVE_CLPV = C.CLAVE
                 WHERE 
                     (
                         P.CVE_ART STARTING WITH 'SCCAL'
                         OR P.CVE_ART STARTING WITH 'THCAL'
                         OR P.CVE_ART STARTING WITH 'ESCAL'
-                        
                     )
                     AND F.FECHA_DOC <= DATEADD(YEAR, -1, CURRENT_DATE)
-                ORDER BY 
-                    F.FECHA_DOC DESC;
-                ";
-            
-            using (FbConnection conn = new FbConnection(connFirebird))
+                ORDER BY F.FECHA_DOC DESC;
+            ";
+
+            using (FbConnection conn = ConnectionToFirebird.GetConnection())
             {
                 conn.Open();
+
                 using (FbCommand cmd = new FbCommand(query, conn))
                 using (FbDataAdapter adapter = new FbDataAdapter(cmd))
                 {
                     adapter.Fill(dt);
                 }
             }
+
             return dt;
         }
     }
