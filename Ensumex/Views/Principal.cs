@@ -236,6 +236,12 @@ namespace Ensumex.Forms
         {
             progressBar1.Visible = true;
             BtnSincroniza.Enabled = false;
+            BtnCotiza.Enabled = false;
+            BtnClient.Enabled = false;
+            BtnInicio.Enabled = false;
+            Btn_Autonom.Enabled = false;
+            BtnInve.Enabled = false;
+            Btn_Mantenimientos.Enabled = false;
             progressBar1.Value = 0;
 
             try
@@ -259,6 +265,12 @@ namespace Ensumex.Forms
             finally
             {
                 BtnSincroniza.Enabled = true;
+                BtnCotiza.Enabled = true;
+                BtnClient.Enabled = true;
+                BtnInicio.Enabled = true;
+                Btn_Autonom.Enabled = true;
+                BtnInve.Enabled = true;
+                Btn_Mantenimientos.Enabled = true;
             }
         }
 
@@ -269,7 +281,6 @@ namespace Ensumex.Forms
                 "Confirmar cierre de sesión",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
-
             if (confirmResult == DialogResult.Yes)
             {
                 UsuarioLoginCache.Limpiar();

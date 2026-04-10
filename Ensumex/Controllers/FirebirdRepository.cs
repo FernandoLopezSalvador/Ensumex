@@ -46,7 +46,6 @@ namespace Ensumex.Controllers
                     adapter.Fill(clientes);
                 }
             }
-
             return clientes;
         }
 
@@ -65,7 +64,6 @@ namespace Ensumex.Controllers
                     adapter.Fill(precios);
                 }
             }
-
             return precios;
         }
 

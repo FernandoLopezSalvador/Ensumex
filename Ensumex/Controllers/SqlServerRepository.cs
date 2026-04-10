@@ -10,7 +10,7 @@ namespace Ensumex.Controllers
 {
     public static class SqlServerRepository
     { 
-        private static readonly string connSqlServer = "Server=192.168.1.163;Database=Ensumex;User Id=appuser;Password=ensumex;";
+        private static readonly string connSqlServer = "Server=Ensumex;Database=Ensumex;User Id=appuser;Password=ensumex;";
 
         public static void InsertarProducto(DataRow row, SqlConnection conn, SqlTransaction transaction)
         {
@@ -346,14 +346,14 @@ namespace Ensumex.Controllers
             {
                 conn.Open();
                 string query = @"
-            SELECT 
-                D.Id,C.NOMBRE AS Cliente,D.FechaMantenimiento,
-                D.RealizadoPor,D.Observaciones  
-                FROM DetallesMantenimientos D
-                INNER JOIN Mantenimientos M ON D.MantenimientoId = M.Id
-                INNER JOIN CLIE01 C ON M.ClienteId = C.CLAVE
-                WHERE D.MantenimientoId = @id
-                ORDER BY D.FechaMantenimiento DESC";
+                    SELECT 
+                        D.Id,C.NOMBRE AS Cliente,D.FechaMantenimiento,
+                        D.RealizadoPor,D.Observaciones  
+                        FROM DetallesMantenimientos D
+                        INNER JOIN Mantenimientos M ON D.MantenimientoId = M.Id
+                        INNER JOIN CLIE01 C ON M.ClienteId = C.CLAVE
+                        WHERE D.MantenimientoId = @id
+                        ORDER BY D.FechaMantenimiento DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -392,7 +392,6 @@ namespace Ensumex.Controllers
                     var result = cmd.ExecuteScalar();
                     clienteId = result?.ToString();
                 }
-
                 if (!string.IsNullOrEmpty(clienteId))
                 {
                     using (var cmd = new SqlCommand("UPDATE CLIE01 SET TELEFONO = @Telefono WHERE CLAVE = @ClienteId", conn))

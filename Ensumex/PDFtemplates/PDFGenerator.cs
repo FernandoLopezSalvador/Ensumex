@@ -174,7 +174,7 @@ namespace Ensumex.PDFtemplates
                     tabla.AddCell(new PdfPCell(new Phrase(descripcion, fontNormal)) { BackgroundColor = fondoFila });
 
                     tabla.AddCell(new PdfPCell(new Phrase(precioFormateado, fontNormal)) { BackgroundColor = fondoFila, HorizontalAlignment = Element.ALIGN_RIGHT });
-
+                    
                     if (hayDescuentos)
                     {
                         tabla.AddCell(new PdfPCell(new Phrase("-" + descuentoFormateado, fontRojo))
