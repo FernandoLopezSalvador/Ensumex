@@ -77,7 +77,7 @@ namespace Ensumex.PDFtemplates
                 }
 
                 doc.Add(new Paragraph("Presente", fontNegrita));
-                doc.Add(new Paragraph("\nEn atención a su amable solicitud, me permito presentarle esta cotización para el suministro y/o instalación de acuerdo a lo siguiente:\n\n", fontNormal));
+                doc.Add(new Paragraph("\n-Precios sujetos a cambios sin previo aviso.\nEn atención a su amable solicitud, me permito presentarle esta cotización para el suministro y/o instalación de acuerdo a lo siguiente:\n\n", fontNormal));
 
                 PdfPTable tabla = new PdfPTable(8)
                 {

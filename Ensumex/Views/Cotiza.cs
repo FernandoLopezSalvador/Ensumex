@@ -510,30 +510,24 @@ namespace Ensumex.Views
             {
                 ["CALENTADOR"] = "-Garantía contra defectos de fabricación en calentador solar: 5 años, la garantía aplica en termo tanque únicamente. No aplica la garantía por omisión en los cuidados que requiere el equipo de acuerdo al manual de instalación y póliza de garantía que se le entrega.\n" +
                 "-Se requiere un anticipo mínimo del 50% al confirmar el pedido.\n" +
-                "-No incluye material de plomería ni mano de obra para instalación.\n" +
-                "-Precios sujetos a cambios sin previo aviso.\n",
+                "-No incluye material de plomería ni mano de obra para instalación.\n",
 
                 ["CALENT"] = "-Garantía contra defectos de fabricación en calentador solar: 5 años, la garantía aplica en termo tanque únicamente. No aplica la garantía por omisión en los cuidados que requiere el equipo de acuerdo al manual de instalación y póliza de garantía que se le entrega.\n" +
                 "-Se requiere un anticipo mínimo del 50% al confirmar el pedido.\n" +
-                "-No incluye material de plomería ni mano de obra para instalación.\n" +
-                "-Precios sujetos a cambios sin previo aviso.\n",
+                "-No incluye material de plomería ni mano de obra para instalación.\n",
 
                 ["AIRE ACONDICIONADO"] = "-Garantía: 3 años contra defectos de fabricación.\n" +
-                    "-El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n" +
-                    "-Precios sujetos a cambios sin previo aviso.\n",
+                    "-El Aire Acondicionado lo puede pagar a 6 MSI con tarjetas BBVA pero sería precio sin descuento.\n",
 
                 ["MOTOBOMBA"] = "-Garantía: 1 año contra defectos de fabricación.\n" +
-                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
-                    "-Precios sujetos a cambios sin previo aviso.\n",
+                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n",
 
                 ["MOT:BOMB"] = "-Garantía: 1 año contra defectos de fabricación.\n" +
-                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n" +
-                    "-Precios sujetos a cambios sin previo aviso.\n",
+                    "-Equipos sobre pedido, es necesario el 60% de anticipo. Entrega de 5 a 10 días hábiles.\n",
 
                 ["BOMBA"] = "-Garantía: 2 años en bomba motor y arrancador.\n" +
                     "-Equipos sobre pedido. Es necesario un anticipo del 60%.\n" +
-                    "-Entrega de 3 a 5 días hábiles.\n" +
-                    "-Precios sujetos a cambios sin previo aviso.\n",
+                    "-Entrega de 3 a 5 días hábiles.\n",
 
                 ["MANTENIMIENTO"] = "-Mantenimiento correctivo de unidad tipo paquete incluye:\nLocalización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante.\n" +
                     "Mantenimiento preventivo de unidad tipo paquete incluye:\n" +
@@ -545,8 +539,7 @@ namespace Ensumex.Views
                     "Revisión y ajuste de terminales eléctricas.\n" +
                     "Revisión y ajuste de la carga de gas refrigerante.\n" +
                     "-Se requiere anticipo del 50% para comenzar el trabajo.\n" +
-                    "-Los trabajos tardan de 3 a 4 días en quedar terminados.\n" +
-                    "-Precios sujetos a cambios sin previo aviso.\n",
+                    "-Los trabajos tardan de 3 a 4 días en quedar terminados.\n",
 
                 ["MANTEMIN"] = "-Mantenimiento correctivo de unidad tipo paquete incluye:\nLocalización de fugas, vacío del sistema de refrigeración y recarga de gas refrigerante.\n" +
                     "Mantenimiento preventivo de unidad tipo paquete incluye:\n" +

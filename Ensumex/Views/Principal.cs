@@ -58,7 +58,7 @@ namespace Ensumex.Forms
         }
         private void InicializarFormulario()
         {
-
+            
             progressBar1.Visible = false; 
             this.WindowState = FormWindowState.Maximized;
             panel1.Cursor = Cursors.Hand;
@@ -84,7 +84,6 @@ namespace Ensumex.Forms
             Color startColor = btn.BackColor;
             int steps = 20;
             int delay = duration / steps;
-
             float stepR = (targetColor.R - startColor.R) / (float)steps;
             float stepG = (targetColor.G - startColor.G) / (float)steps;
             float stepB = (targetColor.B - startColor.B) / (float)steps;
@@ -96,7 +95,6 @@ namespace Ensumex.Forms
                     int r = (int)(startColor.R + stepR * i);
                     int g = (int)(startColor.G + stepG * i);
                     int b = (int)(startColor.B + stepB * i);
-
                     Color intermediateColor = Color.FromArgb(r, g, b);
 
                     btn.Invoke((Action)(() =>

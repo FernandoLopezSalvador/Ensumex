@@ -254,7 +254,7 @@ namespace Ensumex.PDFtemplates
 
                 doc.Add(new Paragraph("\nNOTAS:", fontNegrita));
                 doc.Add(new Paragraph(notas, fontNotas));
-                doc.Add(new Paragraph("- Sin otro particular, quedo a sus órdenes.\n- Agradecemos su preferencia.\n\n", fontNotas));
+                doc.Add(new Paragraph("\n-Precios sujetos a cambios sin previo aviso.\n-Sin otro particular, quedo a sus órdenes.\n-Agradecemos su preferencia.\n\n", fontNotas));
 
                 PdfPTable tablaFirma = new PdfPTable(1)
                 {
