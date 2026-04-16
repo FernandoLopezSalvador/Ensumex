@@ -22,12 +22,11 @@ namespace Ensumex.Views
         private Panel panelBusqueda;
         private DataGridView dgvBusqueda;
         private List<dynamic> productosCache = new();
-
         public EditCotiza(string usuario)
         {
             InitializeComponent();
             usuarioActual = usuario;
-            InicializarTabla();         
+            InicializarTabla();
             CargarProductosCache();
             InicializarPanelBusqueda();
             HookCotizaBehavior();
@@ -164,7 +163,7 @@ namespace Ensumex.Views
                 DESCRIPCIÓN = p.DESCR ?? "N/A",
                 UNIDAD = p.UNI_MED ?? "N/A",
                 PRECIO = p.PRECIO != 0 ? (p.PRECIO * 1.16m).ToString("C2") : "$0.00",
-                EXIST= p.EXIST > 0 ? p.EXIST.ToString() : "0"
+                EXIST = p.EXIST > 0 ? p.EXIST.ToString() : "0"
             }).ToList<dynamic>();
         }
         private void InicializarPanelBusqueda()
@@ -308,24 +307,25 @@ namespace Ensumex.Views
             var tbl = GetTbl();
             if (tbl == null) return;
 
+            tbl.EndEdit();
+
             decimal subtotalGeneral = 0m;
             decimal totalDescuento = 0m;
 
             foreach (DataGridViewRow row in tbl.Rows)
             {
                 if (row.IsNewRow) continue;
-
                 decimal precio = 0m;
                 decimal cantidad = 1m;
                 int porcentajeDescuento = 0;
 
-                object precioObj = GetCellValue(row, tbl, "PRECIO", 4);
-                object cantidadObj = GetCellValue(row, tbl, "CANTIDAD", 7);
-                object descObj = GetCellValue(row, tbl, "Descuento", 0);
+                var precioStr = row.Cells["PRECIO"].Value?.ToString();
+                var cantidadStr = row.Cells["CANTIDAD"].Value?.ToString();
+                var descStr = row.Cells["Descuento"].Value?.ToString();
 
-                decimal.TryParse(precioObj?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out precio);
-                decimal.TryParse(cantidadObj?.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out cantidad);
-                int.TryParse(descObj?.ToString(), out porcentajeDescuento);
+                decimal.TryParse(precioStr, NumberStyles.Currency | NumberStyles.Number, CultureInfo.CurrentCulture, out precio);
+                decimal.TryParse(cantidadStr, NumberStyles.Number, CultureInfo.CurrentCulture, out cantidad);
+                int.TryParse(descStr, out porcentajeDescuento);
 
                 if (cantidad <= 0) cantidad = 1;
 
@@ -333,8 +333,15 @@ namespace Ensumex.Views
                 decimal descuentoFila = filaSubtotal * (porcentajeDescuento / 100m);
                 decimal filaTotal = filaSubtotal - descuentoFila;
 
-                SetCellIfExists(row, tbl, "Subtotal", filaSubtotal, 5);
-                SetCellIfExists(row, tbl, "TotalDescuento", filaTotal, 6);
+                if (tbl.Columns.Contains("Subtotal"))
+                    row.Cells[tbl.Columns["Subtotal"].Index].Value = filaSubtotal;
+                else
+                    row.Cells[5].Value = filaSubtotal;
+
+                if (tbl.Columns.Contains("TotalDescuento"))
+                    row.Cells[tbl.Columns["TotalDescuento"].Index].Value = filaTotal;
+                else
+                    row.Cells[6].Value = filaTotal;
 
                 subtotalGeneral += filaSubtotal;
                 totalDescuento += descuentoFila;
@@ -345,6 +352,7 @@ namespace Ensumex.Views
 
             SetTextIfExists("lbl_Subtotal", subtotalGeneral.ToString("C"));
             SetTextIfExists("lbl_costoDescuento", $"-{totalDescuento:C}");
+
             decimal totalNeto = (subtotalGeneral - totalDescuento) + instalacion + flete;
             SetTextIfExists("lbl_TotalNeto", totalNeto.ToString("C"));
         }
@@ -382,7 +390,7 @@ namespace Ensumex.Views
 
                 string notas = FindControlByName<TextBox>("Txt_observaciones", "txtNotas")?.Text ?? "";
 
-                if (tablasGuardadas.Count > 0 && tbl.Rows.Count >=1)
+                if (tablasGuardadas.Count > 0 && tbl.Rows.Count >= 1)
                 {
                     var tablasParaGuardar = new List<List<object[]>>(tablasGuardadas);
                     List<object[]> tablaActual = new();
@@ -688,7 +696,7 @@ namespace Ensumex.Views
                                 if (!string.IsNullOrEmpty(carpeta) && Directory.Exists(carpeta))
                                 {
                                     Process.Start(new ProcessStartInfo
-                                    {   
+                                    {
                                         FileName = "explorer.exe",
                                         Arguments = $"/select,\"{sfd.FileName}\"",
                                         WindowStyle = ProcessWindowStyle.Normal
@@ -1170,7 +1178,7 @@ namespace Ensumex.Views
             else MessageBox.Show("No hay productos para guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        private void Btn_Añadprod_Click(object sender, EventArgs e) 
+        private void Btn_Añadprod_Click(object sender, EventArgs e)
         {
             using (var productosForm = new Form())
             {
@@ -1232,7 +1240,7 @@ namespace Ensumex.Views
             var resultados = productosCache
                 .Where(p =>
                     p.CLAVE.ToLower().Contains(texto) ||
-                    p.DESCRIPCIÓN.ToLower().Contains(texto)||
+                    p.DESCRIPCIÓN.ToLower().Contains(texto) ||
                     p.EXIST.ToLower().Contains(texto))
                 .ToList();
 
@@ -1245,6 +1253,123 @@ namespace Ensumex.Views
             else
             {
                 panelBusqueda.Visible = false;
+            }
+        }
+
+        private void tbl_Cotizacion_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                var colName = tbl_Cotizacion.Columns[e.ColumnIndex].Name;
+
+                string colPrecio = "PRECIO";
+                string colCantidad = "CANTIDAD";
+                string colSubtotal = "Subtotal";
+                string colDescuento = "Descuento";
+
+                if (colName == colDescuento || colName == colPrecio || colName == colCantidad || colName == colSubtotal)
+                {
+                    ActualizarTotales();
+                }
+            }
+        }
+
+        private void tbl_Cotizacion_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            ActualizarTotales();
+        }
+
+        private void tbl_Cotizacion_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            ActualizarTotales();
+        }
+
+        private void Btn_NuevoProd_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (Form formWrapper = new Form())
+
+                {
+                    formWrapper.Text = "Agregar Producto";
+                    formWrapper.Size = new Size(400, 300);
+                    formWrapper.StartPosition = FormStartPosition.CenterParent;
+                    var prodControl = new ProdTemporal
+                    {
+                        Dock = DockStyle.Fill
+                    };
+                    Button btnAceptar = new Button
+                    {
+                        Text = "Aceptar", 
+                        Dock = DockStyle.Bottom
+                    };
+                    Button btnCancelar = new Button
+                    {
+                        Text = "Cancelar",
+                        Dock = DockStyle.Bottom,
+                        DialogResult = DialogResult.Cancel
+                    };
+
+                    btnAceptar.Click += (s, e) =>
+                    {
+                        if (string.IsNullOrWhiteSpace(prodControl.Descripcion))
+                        {
+                            MessageBox.Show("El producto debe tener descripción.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                        formWrapper.DialogResult = DialogResult.OK;
+                        formWrapper.Close();
+                    };
+                    formWrapper.Controls.Add(prodControl);
+                    formWrapper.Controls.Add(btnAceptar);
+                    formWrapper.Controls.Add(btnCancelar);
+                    formWrapper.CancelButton = btnCancelar;
+
+                    if (formWrapper.ShowDialog() == DialogResult.OK)
+                    {
+                        string clave = prodControl.Clave;
+                        string descripcion = prodControl.Descripcion;
+                        string unidad = prodControl.Unidentrada;
+                        decimal precioUnitario = prodControl.PrecioUnitarioTemp;
+                        int cantidad = (int)prodControl.cantidad;
+                        decimal subtotal = precioUnitario * cantidad;
+                        decimal total = subtotal;
+
+                        tbl_Cotizacion.Rows.Add(0, clave, descripcion, unidad, precioUnitario, subtotal, total, cantidad);
+                        ActualizarNumeroCotizacionEnLabel();
+                        ActualizarTotales();
+                        ActualizarObservacionesPorProducto(descripcion, reemplazar: true);
+                        HabilitarEdicionParcial();
+
+                        if (!tbl_Cotizacion.Columns.Contains("Eliminar"))
+                        {
+                            DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn
+                            {
+                                Name = "Eliminar",
+                                HeaderText = "Acción",
+                                Text = "Eliminar",
+                                UseColumnTextForButtonValue = true
+                            };
+                            tbl_Cotizacion.Columns.Add(btnEliminar);
+                        }
+                    }
+                }
+            }
+            catch (FormatException fe)
+            {
+                MessageBox.Show("Error en el formato de los valores numéricos: " + fe.Message,
+                                "Formato incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (NullReferenceException ne)
+            {
+                MessageBox.Show("Uno de los valores requeridos no fue proporcionado: " + ne.Message,
+                                "Dato faltante", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error al agregar el producto:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

@@ -437,6 +437,7 @@
             Btn_NuevoProd.TabIndex = 34;
             Btn_NuevoProd.Text = "PRODUCTO";
             Btn_NuevoProd.UseVisualStyleBackColor = true;
+            Btn_NuevoProd.Click += Btn_NuevoProd_Click;
             // 
             // materialLabel8
             // 
@@ -623,6 +624,9 @@
             tbl_Cotizacion.RowHeadersWidth = 51;
             tbl_Cotizacion.Size = new Size(663, 69);
             tbl_Cotizacion.TabIndex = 8;
+            tbl_Cotizacion.CellEndEdit += tbl_Cotizacion_CellEndEdit;
+            tbl_Cotizacion.CellEnter += tbl_Cotizacion_CellEnter;
+            tbl_Cotizacion.CellValueChanged += tbl_Cotizacion_CellValueChanged;
             // 
             // Btn_AñadirTabla
             // 

@@ -39,23 +39,55 @@ namespace Ensumex.PDFtemplates
                 using (var reader = new PdfReader(pdfPath))
                 {
                     int lastPage = reader.NumberOfPages;
+                    var pageSize = reader.GetPageSize(lastPage);
+
+                    // márgenes y posición estimada del pie (coincide con la lógica previa)
+                    float leftMargin = 40f;
+                    float rightMargin = 40f;
+                    float totalWidth = pageSize.Width - leftMargin - rightMargin;
+                    float yPieDefault = leftMargin + 105f; // valor usado anteriormente
+
+                    // Extraer la posición más baja de texto en la última página
+                    float minTextY = float.MaxValue;
+                    try
+                    {
+                        var parser = new iTextSharp.text.pdf.parser.PdfReaderContentParser(reader);
+                        var listener = new TextPositionRenderListener();
+                        parser.ProcessContent(lastPage, listener);
+                        if (listener.MinY != float.MaxValue) minTextY = listener.MinY;
+                        else minTextY = 0; // sin texto detectado
+                    }
+                    catch
+                    {
+                        // si falla extracción, forzar comportamiento conservador (insertar página nueva)
+                        minTextY = 0;
+                    }
+
+                    bool requierePaginaNueva = false;
+                    // Si el contenido más bajo está por debajo (o muy cerca) de la posición del pie,
+                    // consideramos que hay riesgo de solapamiento y añadimos página nueva.
+                    float margenSeguridad = 10f; // ajuste fino
+                    if (minTextY <= yPieDefault + margenSeguridad)
+                        requierePaginaNueva = true;
+
                     using (var fs = new FileStream(tempPath, FileMode.Create, FileAccess.Write))
                     using (var stamper = new PdfStamper(reader, fs))
                     {
-                        var pageSize = reader.GetPageSize(lastPage);
-                        float leftMargin = 40f;
-                        float rightMargin = 40f;
-                        float totalWidth = pageSize.Width - leftMargin - rightMargin;
+                        int targetPage = lastPage;
+                        if (requierePaginaNueva)
+                        {
+                            // Insertar página nueva al final con mismo tamaño
+                            int footerPageIndex = lastPage + 1;
+                            stamper.InsertPage(footerPageIndex, pageSize);
+                            targetPage = footerPageIndex;
+                        }
 
                         var fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 9, BaseColor.DARK_GRAY);
                         var fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
                         var fontNormalGrande = FontFactory.GetFont(FontFactory.HELVETICA, 9, BaseColor.DARK_GRAY);
                         var fontBoldGrande = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
 
-                        PdfPTable tablaPie = new PdfPTable(2)
-                        {
-                            TotalWidth = totalWidth
-                        };
+                        PdfPTable tablaPie = new PdfPTable(2) { TotalWidth = totalWidth };
                         tablaPie.SetWidths(new float[] { 1.35f, 1.35f });
 
                         PdfPTable tablaBanco = new PdfPTable(1) { WidthPercentage = 100 };
@@ -77,7 +109,7 @@ namespace Ensumex.PDFtemplates
                             {
                                 Border = Rectangle.NO_BORDER,
                                 PaddingBottom = 2f,
-                                PaddingTop = 2f
+                                PaddingTop = 2f 
                             };
 
                             fila.AddCell(c1);
@@ -136,32 +168,36 @@ namespace Ensumex.PDFtemplates
                         tablaPie.AddCell(celdaBanco);
                         tablaPie.AddCell(celdaDireccion);
 
-                        
-                        float yPie = leftMargin + 105f; 
-                        
+                        // Estampa fondo (si existe) y tabla pie en la página objetivo
+                        float pageWidth = pageSize.Width;
+                        float pageHeight = pageSize.Height;
+
                         if (File.Exists(rutaFondo))
                         {
-                            PdfContentByte fondo = stamper.GetUnderContent(lastPage);
+                            PdfContentByte fondo = stamper.GetUnderContent(targetPage);
                             iTextSharp.text.Image imgFondo = iTextSharp.text.Image.GetInstance(rutaFondo);
 
-                            float pageWidth = pageSize.Width;
-                            float pageHeight = pageSize.Height;
-
                             float desiredHeight = pageHeight * 0.40f;
-
                             float proportion = desiredHeight / imgFondo.Height;
                             float newWidth = imgFondo.Width * proportion;
-
                             imgFondo.ScaleAbsolute(newWidth, desiredHeight);
 
                             float xPos = (pageWidth - newWidth) / 2;
-                            float yPos = yPie + 20f;
+                            float yPos;
+                            if (requierePaginaNueva)
+                            {
+                                // centrar verticalmente en la nueva página
+                                yPos = (pageHeight - desiredHeight) / 2;
+                            }
+                            else
+                            {
+                                // colocación similar a la original
+                                yPos = yPieDefault + 20f;
+                            }
 
                             imgFondo.SetAbsolutePosition(xPos, yPos);
 
-                            PdfGState transparencia = new PdfGState();
-                            transparencia.FillOpacity = 0.30f;
-                            transparencia.StrokeOpacity = 0.30f;
+                            PdfGState transparencia = new PdfGState { FillOpacity = 0.30f, StrokeOpacity = 0.30f };
 
                             fondo.SaveState();
                             fondo.SetGState(transparencia);
@@ -169,8 +205,9 @@ namespace Ensumex.PDFtemplates
                             fondo.RestoreState();
                         }
 
-                        PdfContentByte over = stamper.GetOverContent(lastPage);
-                        tablaPie.WriteSelectedRows(0, -1, leftMargin, yPie, over);
+                        PdfContentByte over = stamper.GetOverContent(targetPage);
+                        float yPieToUse = requierePaginaNueva ? 140f : yPieDefault;
+                        tablaPie.WriteSelectedRows(0, -1, leftMargin, yPieToUse, over);
 
                         stamper.Close();
                     }
@@ -198,6 +235,32 @@ namespace Ensumex.PDFtemplates
                 PaddingBottom = 3f,
                 PaddingTop = 2f
             };
+        }
+
+        // Listener para obtener coordenadas Y del texto en una página
+        private class TextPositionRenderListener : iTextSharp.text.pdf.parser.IRenderListener
+        {
+            public float MinY { get; private set; } = float.MaxValue;
+
+            public void BeginTextBlock() { }
+            public void EndTextBlock() { }
+            public void RenderImage(iTextSharp.text.pdf.parser.ImageRenderInfo renderInfo) { }
+
+            public void RenderText(iTextSharp.text.pdf.parser.TextRenderInfo renderInfo)
+            {
+                try
+                {
+                    var descentLine = renderInfo.GetDescentLine();
+                    var start = descentLine.GetStartPoint();
+                    // start es Vector; el índice 1 es la coordenada Y
+                    float y = start[1];
+                    if (y < MinY) MinY = y;
+                }
+                catch
+                {
+                    // ignorar errores de extracción de posición
+                }
+            }
         }
     }
 }
