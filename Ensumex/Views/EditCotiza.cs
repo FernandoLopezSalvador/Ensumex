@@ -569,11 +569,10 @@ namespace Ensumex.Views
                                         MessageBox.Show("Se abrió WhatsApp Web y la carpeta de la cotización. Adjunte el PDF manualmente en el chat.", "WhatsApp", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                     }
                                 }
-
                                 Process.Start(new ProcessStartInfo { FileName = sfd.FileName, UseShellExecute = true });
                                 MessageBox.Show("Cotización actualizada y PDF generado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
-                            else
+                            else 
                             {
                                 decimal totalDescuentoCalculado = 0m;
                                 foreach (DataGridViewRow row in tbl.Rows)
@@ -946,6 +945,7 @@ namespace Ensumex.Views
 
                 if (!string.IsNullOrWhiteSpace(text) && decimal.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out var v))
                     return v;
+                    
             }
             return 0m;
         }
@@ -1321,10 +1321,10 @@ namespace Ensumex.Views
                         formWrapper.Close();
                     };
                     formWrapper.Controls.Add(prodControl);
-                    formWrapper.Controls.Add(btnAceptar);
+                    formWrapper.Controls.Add(btnAceptar); 
                     formWrapper.Controls.Add(btnCancelar);
                     formWrapper.CancelButton = btnCancelar;
-
+                    
                     if (formWrapper.ShowDialog() == DialogResult.OK)
                     {
                         string clave = prodControl.Clave;
@@ -1360,7 +1360,7 @@ namespace Ensumex.Views
                 MessageBox.Show("Error en el formato de los valores numéricos: " + fe.Message,
                                 "Formato incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            catch (NullReferenceException ne)
+            catch (NullReferenceException ne)    
             {
                 MessageBox.Show("Uno de los valores requeridos no fue proporcionado: " + ne.Message,
                                 "Dato faltante", MessageBoxButtons.OK, MessageBoxIcon.Warning);
